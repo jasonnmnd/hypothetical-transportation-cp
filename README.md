@@ -1,2 +1,2 @@
-# ece-458
-senior design course project!
+# ECE-458
+Senior design course project!
