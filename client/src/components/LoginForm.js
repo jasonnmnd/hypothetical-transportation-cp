@@ -3,14 +3,18 @@ import React, { useState } from "react";
 function LoginForm( {Login, error} ) {
     const [details, setDetails] = useState({email: "", password: ""});
 
-    const submitHandler = e => {
+    const parentSubmitHandler = e => {
         e.preventDefault();
+        Login(details);
+    }
 
+    const adminSubmitHandler = e => {
+        e.preventDefault();
         Login(details);
     }
 
     return (
-        <form onSubmit={submitHandler}>
+        <form>
             <div className="form-inner">
                 <h2>Sign in to your account</h2>
                 {
@@ -28,7 +32,12 @@ function LoginForm( {Login, error} ) {
                     <input type="password" name="password" id="password" onChange={e => setDetails({...details, password: e.target.value})} value={details.password}/>
                 </div>
 
-                <input type="submit" value="Login as Parent"/>
+                <div class="divider15px"/>
+                <button onClick={parentSubmitHandler}>Login as Parent</button>
+                
+                <div class="divider15px"/>
+                <button onClick={adminSubmitHandler}>Login as Admin</button>
+                
 
             </div>
         </form>

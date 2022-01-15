@@ -90,7 +90,7 @@ form .form-inner .form-group input:focus {
     box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.2);
 }
 
-form .form-inner input[type="submit"] {
+form button {
     display: inline-block;
     padding: 10px 15px;
     border-radius: 8px;
@@ -104,8 +104,15 @@ form .form-inner input[type="submit"] {
     height: 50px;
 }
 
-form .form-inner input[type="submit"]:hover {
-    background-color: #ffdd99;
+form button:hover{
+    background-color: #FFDD99;
+}
+
+/* Used to add spacing between buttons*/
+.divider15px{
+    width:15px;
+    height:auto;
+    display:inline-block;
 }
 
 /*
