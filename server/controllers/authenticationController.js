@@ -1,4 +1,5 @@
 const User = require("../models/user");
+
 exports.auth_sign_up = function (req, res, next) {
   const user = new User({
     username: req.body.username,

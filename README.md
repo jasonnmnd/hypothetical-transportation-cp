@@ -16,16 +16,28 @@ In a separate terminal, inside the `client` directory:
 npm start
 ```
 
-For the database, follow the instructions on the MongoDB website.  Afterwards,
+For the database, follow the instructions on the MongoDB website. Afterwards,
+
 ```
 brew services start mongodb-community@5.0
 ```
+
 The corresponding shutdown instruction is `stop`.
 
 ## Endpoints
+
 To hit the `/school/create` endpoint, try:
+
 ```
 curl -H "Content-Type: application/json" -d '{"name":"Duke University","address":"Durham"}' http://localhost:3001/school/create
+```
+
+To authenticate, try the following:
+
+```
+curl -H "Content-Type: application/json" -d '{"username":"<USERNAME>","password":"<PASSWORD>"}' http://localhost:3001/signup
+curl --cookie-jar jarfile -H "Content-Type: application/json" -d '{"username":"<USERNAME>","password":"<PASSWORD>"}' http://localhost:3001/log-in
+curl --cookie jarfile http://localhost:3001/current-user
 ```
 
 ## Troubleshooting
