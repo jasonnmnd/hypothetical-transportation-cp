@@ -5,6 +5,16 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const systemRouter = require("./routes/systemRoutes");
 
+// Authentication
+const passport = require("passport");
+const session = require("express-session");
+const LocalStrategy = require("passport-local").Strategy;
+
+app.use(session({ secret: "cats", resave: false, saveUninitialized: true }));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(express.urlencoded({ extended: false }));
+
 const port = process.env.PORT || 3001;
 
 mongoose.connect(process.env.MONGO_URI, {
