@@ -22,6 +22,12 @@ brew services start mongodb-community@5.0
 ```
 The corresponding shutdown instruction is `stop`.
 
+## Endpoints
+To hit the `/school/create` endpoint, try:
+```
+curl -H "Content-Type: application/json" -d '{"name":"Duke University","address":"Durham"}' http://localhost:3001/school/create
+```
+
 ## Troubleshooting
 
 - `npm install -g nodemon` may be necessary (installing Nodemon globally) to ensure that the command to start the server
