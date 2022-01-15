@@ -16,6 +16,12 @@ In a separate terminal, inside the `client` directory:
 npm start
 ```
 
+For the database, follow the instructions on the MongoDB website.  Afterwards,
+```
+brew services start mongodb-community@5.0
+```
+The corresponding shutdown instruction is `stop`.
+
 ## Troubleshooting
 
 - `npm install -g nodemon` may be necessary (installing Nodemon globally) to ensure that the command to start the server
