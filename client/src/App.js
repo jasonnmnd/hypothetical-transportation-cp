@@ -54,6 +54,7 @@ function App() {
       details.password === parentUser.password
     ) {
       console.log("Logged in");
+      setError("");
       setUser({
         //name: details.name,
         email: details.email,
@@ -73,6 +74,8 @@ function App() {
       details.password === adminUser.password
     ) {
       console.log("Logged in");
+      setError("");
+
       fetch("http://localhost:3001/log-in", {
         body: JSON.stringify({
           username: details.email,
