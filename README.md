@@ -3,6 +3,17 @@
 Senior design course project!
 
 ## Getting Started
+
+### Running the frontend
+
+Inside the 'client' directory:
+
+```
+npm start
+```
+
+Saved changes are propogated automatically
+
 ### Running the Stack
 Inside the `server` directory:
 
