@@ -70,6 +70,7 @@ app.use(cors());
 app.use("/", systemRouter);
 
 app.get("/", (req, res) => {
+  console.log("Endpoint Hit");
   res.send("Hello World!");
 });
 
