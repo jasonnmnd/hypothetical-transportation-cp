@@ -1,26 +1,22 @@
 import React, { useState } from "react";
 
-function LoginForm( {Login, error} ) {
+function LoginForm( {parentLogin, adminLogin, error} ) {
     const [details, setDetails] = useState({email: "", password: ""});
 
     const parentSubmitHandler = e => {
         e.preventDefault();
-        Login(details);
+        parentLogin(details);
     }
 
     const adminSubmitHandler = e => {
         e.preventDefault();
-        Login(details);
+        adminLogin(details);
     }
 
     return (
         <form>
             <div className="form-inner">
                 <h2>Sign in to your account</h2>
-                {
-                /* ERROR! */
-                (error) !="" ? (<div className="error">{error}</div>) : ""
-                }
 
                 <div className="form-group">
                     <label htmlFor="email">Email:</label>
@@ -34,10 +30,14 @@ function LoginForm( {Login, error} ) {
 
                 <div class="divider15px"/>
                 <button onClick={parentSubmitHandler}>Login as Parent</button>
-                
+
                 <div class="divider15px"/>
                 <button onClick={adminSubmitHandler}>Login as Admin</button>
                 
+                {
+                /* ERROR! */
+                (error) !="" ? (<div className="error">{error}</div>) : ""
+                }
 
             </div>
         </form>

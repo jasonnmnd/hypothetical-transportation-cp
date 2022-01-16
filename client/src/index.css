@@ -108,6 +108,16 @@ form button:hover{
     background-color: #FFDD99;
 }
 
+.error {
+    font-weight: bold;
+    text-align: center;
+    color: #ff0000;
+    font-size: 24px;
+    padding-top: 20px;
+    transition: 0.4s;
+    
+}
+
 /* Used to add spacing between buttons*/
 .divider15px{
     width:15px;
