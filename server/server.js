@@ -21,7 +21,13 @@ mongoose.connect(process.env.MONGO_URI, {
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "MongoDB connection error:"));
 
-app.use(session({ secret: "cats", resave: false, saveUninitialized: true }));
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+  })
+);
 
 passport.use(
   new LocalStrategy((username, password, done) => {
@@ -70,8 +76,8 @@ app.get("/", (req, res) => {
 app.post(
   "/log-in",
   passport.authenticate("local", {
-    successRedirect: "/",
-    failureRedirect: "/",
+    successRedirect: "/good",
+    failureRedirect: "/bad",
   })
 );
 
