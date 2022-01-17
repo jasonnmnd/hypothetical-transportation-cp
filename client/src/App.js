@@ -28,16 +28,19 @@ function App() {
     students:[
       {
         name:"Al",
+        id: "123",
         school: "A high school",
         route: "#1",
       },
       {
         name:"Hugo",
+        id:"456",
         school: "B high school",
         route: "#2",
       },
       {
         name:"James",
+        id:"567",
         school: "C high school",
         route: "none",
       },
@@ -132,6 +135,8 @@ function App() {
   };
 
   // make admin and user pages have their own respective components to simplify this mess here?
+  // the table currently show all student information, looks like it should just show the student name
+  // and when clicked on name navigate to a new page to show student information
   return (
     <div className="App">
       {user.email === "" ? (
@@ -163,6 +168,7 @@ function App() {
           <table>
               <tr>
                 <th>Name</th>
+                <th>ID</th>
                 <th>School</th>
                 <th>Route</th>
               </tr>
@@ -170,6 +176,7 @@ function App() {
                 return(
                 <tr>
                   <td>{student.name}</td>
+                  <td>{student.id}</td>
                   <td>{student.school}</td>
                   <td>{student.route}</td>
                 </tr>
