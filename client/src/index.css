@@ -125,6 +125,22 @@ form button:hover{
     display:inline-block;
 }
 
+.page{
+    width:80%;
+    height: 80%;
+    background-color: #FFF;
+    height:auto;
+    padding: 15px 30px;
+}
+
+table{
+    width:100%;
+    border: 1px solid black;
+}
+td{
+    border: 1px solid black;
+}
+
 /*
 Welcome Screen, remove later
 */
@@ -133,7 +149,7 @@ Welcome Screen, remove later
     width: 100%;
     max-width: 480px;
     background-color: #FFF;
-    padding: 15px 30px;
+    /* padding: 15px 30px; */
 }
 
 .welcome h2 {

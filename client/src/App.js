@@ -13,14 +13,44 @@ function App() {
   // });
 
   const adminUser = {
+    name:"I'm an admin",
     email: "admin@admin.com",
     password: "admin123",
+    admin:true,
+    students:[],
   };
 
   const parentUser = {
+    name: "Virginia",
     email: "parent@parent.com",
     password: "parent123",
+    admin:false,
+    students:[
+      {
+        name:"Al",
+        school: "A high school",
+        route: "#1",
+      },
+      {
+        name:"Hugo",
+        school: "B high school",
+        route: "#2",
+      },
+      {
+        name:"James",
+        school: "C high school",
+        route: "none",
+      },
+    ],
   };
+
+  const emptyUser = {
+    name:"",
+    email:"",
+    password:"",
+    admin:false,
+    students:[],
+  }
 
   // Example POST method implementation:
   async function postData(url = "", data = {}) {
@@ -42,7 +72,7 @@ function App() {
   }
 
   //const [user, setUser] = useState({name: "", email: ""});
-  const [user, setUser] = useState({ email: "" });
+  const [user, setUser] = useState(emptyUser);
   const [error, setError] = useState("");
 
   const parentLogin = (details) => {
@@ -55,10 +85,10 @@ function App() {
     ) {
       console.log("Logged in");
       setError("");
-      setUser({
+      setUser(
         //name: details.name,
-        email: details.email,
-      });
+        parentUser
+      );
     } else {
       //console.log("Details do not match");
       setError("Details do not match!");
@@ -86,10 +116,9 @@ function App() {
         },
         method: "POST",
       });
-      setUser({
-        //name: details.name,
-        email: details.email,
-      });
+      setUser(
+        adminUser
+      );
     } else {
       //console.log("Details do not match");
       setError("Details do not match!");
@@ -99,25 +128,56 @@ function App() {
   //TODO: Currently just uses a ternary to determine which page to display, consider changing
   const Logout = () => {
     console.log("Logout");
-    setUser({ email: "" });
+    setUser(emptyUser);
   };
 
+  // make admin and user pages have their own respective components to simplify this mess here?
   return (
     <div className="App">
-      {user.email !== "" ? (
-        <div className="welcome">
-          <h2>
-            Welcome, <span>{"NAME HERE"}</span>
-          </h2>
-          <button onClick={Logout}>Logout</button>
-        </div>
-      ) : (
+      {user.email === "" ? (
         <LoginForm
           parentLogin={parentLogin}
           adminLogin={adminLogin}
           error={error}
         ></LoginForm>
-      )}
+      ):
+      user.admin===true?(
+        <div className="welcome">
+          <h2>
+            Welcome, <span>{user.name}</span>
+          </h2>
+          <button onClick={Logout}>Logout</button>
+        </div>
+      ):(
+        <div className="page">
+          <div className="welcome">
+            <h2>
+              Welcome, <span>{user.name}</span>
+            </h2>
+            <button onClick={Logout}>Logout</button>
+          </div>
+          <br></br>
+          <h2>
+            Your Students
+          </h2>
+          <table>
+              <tr>
+                <th>Name</th>
+                <th>School</th>
+                <th>Route</th>
+              </tr>
+              {user.students.map((student) =>{
+                return(
+                <tr>
+                  <td>{student.name}</td>
+                  <td>{student.school}</td>
+                  <td>{student.route}</td>
+                </tr>
+                )})}
+          </table>
+        </div>
+      )
+      }
     </div>
   );
 }
