@@ -25,3 +25,16 @@ th {
 td {
   background-color: #d3d3d3;
 }
+
+button {
+    display: inline-block;
+    padding: 10px 15px;
+    border-radius: 8px;
+    background-color: #ffae07;
+    background-size: 200%;
+    background-position: 0%;
+    transition: 0.4s;
+    color: #FFF;
+    font-weight: 700;
+    cursor: pointer;
+}
