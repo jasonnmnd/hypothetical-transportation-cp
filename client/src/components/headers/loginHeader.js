@@ -11,7 +11,7 @@ function LoginHeader(){
                 
             </div>
 
-            <div className="divider400px"/>
+            {/* <div className="divider400px"/> */}
 
             <div className="loginHeader-text">
                 <h1>Hypothetical Transportation</h1>

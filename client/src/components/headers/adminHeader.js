@@ -11,7 +11,7 @@ function AdminHeader(){
                 
             </div>
 
-            <div className="divider600px"/>
+            {/* <div className="divider600px"/> */}
 
             <div className="adminHeader-text">
                 <h1>Admin Portal</h1>

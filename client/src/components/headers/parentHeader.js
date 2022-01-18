@@ -11,7 +11,7 @@ function ParentHeader(){
                 
             </div>
 
-            <div className="divider600px"/>
+            {/* <div className="divider600px"/> */}
 
             <div className="parentHeader-text">
                 <h1>Parent Portal</h1>
