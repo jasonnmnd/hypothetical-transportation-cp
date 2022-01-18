@@ -1,7 +1,7 @@
 import React from "react";
-import Logo from './11.png';
+import Logo from '../assets/headerLogo.png';
 
-function Header(){
+function ParentHeader(){
 
     return(
         <div className="header">
@@ -9,4 +9,4 @@ function Header(){
         </div>
     )
 }
-export default Header;
+export default ParentHeader;

@@ -2,7 +2,9 @@ import { Route, Link } from "react-router-dom";
 import React from "react";
 import { useState, useEffect } from "react";
 import LoginForm from "./components/LoginForm";
-import Header from "./components/header/header";
+import LoginHeader from "./components/headers/loginHeader";
+import AdminHeader from "./components/headers/adminHeader";
+import ParentHeader from "./components/headers/parentHeader";
 
 function App() {
   //Login details, move to database for security
@@ -163,15 +165,18 @@ function App() {
   return (
     <div className="App">
       {user.email === "" ? (
-        <LoginForm
-          parentLogin={parentLogin}
-          adminLogin={adminLogin}
-          error={error}
-        ></LoginForm>
+        <div>
+          <LoginHeader></LoginHeader>
+          <LoginForm
+            parentLogin={parentLogin}
+            adminLogin={adminLogin}
+            error={error}
+          ></LoginForm>
+        </div>
       ):
       user.admin===true?(
         <div className="page">
-          <Header></Header>
+          <LoginHeader></LoginHeader>
           <div className="sidebar">
             <ul>
               <li><button className="currentPage" onClick={WelcomePage}>Main</button></li>
@@ -218,7 +223,7 @@ function App() {
         </div>
       ):(
         <div className="page">
-          <Header></Header>
+          <LoginHeader></LoginHeader>
           <div className="welcome">
             <h2>
               Welcome, <span>{user.name}</span>
