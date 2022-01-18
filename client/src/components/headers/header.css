@@ -1,0 +1,83 @@
+.loginHeader{
+    position:absolute;
+    display: flex;
+    left:0;
+    top:0;
+    height:13%;
+    width:100%;
+    background-color: #ffae07;
+    padding: 20px 20px;
+}
+
+.loginHeader-text {
+    color: #FFF;
+    padding: 10px;
+    font-size: 30px;
+    font-family: cursive;
+}
+
+.divider400px{
+    width:400px;
+    height:auto;
+    display:inline-block;
+}
+
+.divider600px{
+    width:600px;
+    height:auto;
+    display:inline-block;
+}
+
+.loginHeader{
+    position:absolute;
+    display: flex;
+    left:0;
+    top:0;
+    height:13%;
+    width:100%;
+    background-color: #ffae07;
+    padding: 20px 20px;
+}
+
+.loginHeader-text {
+    color: #FFF;
+    padding: 10px;
+    font-size: 30px;
+    font-family: cursive;
+}
+
+.parentHeader{
+    position:absolute;
+    display: flex;
+    left:0;
+    top:0;
+    height:13%;
+    width:100%;
+    background-color: #ffae07;
+    padding: 20px 20px;
+}
+
+.parentHeader-text {
+    color: #FFF;
+    padding: 10px;
+    font-size: 30px;
+    font-family: cursive;
+}
+
+.adminHeader{
+    position:absolute;
+    display: flex;
+    left:0;
+    top:0;
+    height:13%;
+    width:100%;
+    background-color: #ffae07;
+    padding: 20px 20px;
+}
+
+.adminHeader-text {
+    color: #FFF;
+    padding: 10px;
+    font-size: 30px;
+    font-family: cursive;
+}

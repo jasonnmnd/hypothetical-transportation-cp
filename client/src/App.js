@@ -176,7 +176,7 @@ function App() {
       ):
       user.admin===true?(
         <div className="page">
-          <LoginHeader></LoginHeader>
+          <AdminHeader></AdminHeader>
           <div className="sidebar">
             <ul>
               <li><button className="currentPage" onClick={WelcomePage}>Main</button></li>
@@ -223,7 +223,7 @@ function App() {
         </div>
       ):(
         <div className="page">
-          <LoginHeader></LoginHeader>
+          <ParentHeader></ParentHeader>
           <div className="welcome">
             <h2>
               Welcome, <span>{user.name}</span>

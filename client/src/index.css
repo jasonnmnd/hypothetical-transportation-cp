@@ -190,16 +190,6 @@ td{
     background-color: #FFF;
 }
 
-.header{
-    position:absolute;
-    left:0;
-    top:0;
-    height:13%;
-    width:100%;
-    background-color: #ffae07;
-    padding: 20px 20px;
-}
-
 /*
 Welcome Screen, remove later
 */
