@@ -2,8 +2,30 @@ import React from "react";
 import AdminHeader from "../headers/adminHeader";
 import "./adminPage.css";
 
+const WelcomePage = () => {
+    //Somehow redirect back to welcome page (ie, slash nothing)
+  };
+
+const UserList = () => {
+//Somehow redirect to user list page (ie, slash users)
+};
+
+const SchoolList = () => {
+//Somehow redirect to school list page (ie, slash schools)
+};
+const RouteList = () => {
+//Somehow redirect to route list page (ie, slash routes)
+};
+const StudentList = () => {
+//Somehow redirect to student list page (ie, slash students)
+};
+
+const Account = () => {
+//Somehow redirect to account page
+};
+
 //This page will be used for the admin page to declutter App.js
-function adminPage( {WelcomePage, UserList, StudentList, SchoolList, RouteList, user, Logout} ) {
+function adminPage( {user, Logout} ) {
     return (
         <div className="page">
             <AdminHeader></AdminHeader>

@@ -131,37 +131,12 @@ function App() {
     }
   };
 
-  //TODO: Currently just uses a ternary to determine which page to display, consider changing
   const Logout = () => {
     console.log("Logout");
     setUser(emptyUser);
   };
 
-  const WelcomePage = () => {
-    //Somehow redirect back to welcome page (ie, slash nothing)
-  };
-
-  const UserList = () => {
-    //Somehow redirect to user list page (ie, slash users)
-  };
-
-  const SchoolList = () => {
-    //Somehow redirect to school list page (ie, slash schools)
-  };
-  const RouteList = () => {
-    //Somehow redirect to route list page (ie, slash routes)
-  };
-  const StudentList = () => {
-    //Somehow redirect to student list page (ie, slash students)
-  };
-
-  const Account = () => {
-    //Somehow redirect to account page
-  };
-
-  // make admin and user pages have their own respective components to simplify this mess here?
-  // the table currently show all student information, looks like it should just show the student name
-  // and when clicked on name navigate to a new page to show student information
+  //TODO: Currently just uses a ternary to determine which page to display, consider changing
   return (
     <div className="App">
       {user.email === "" ? (
@@ -175,7 +150,7 @@ function App() {
         </div>
       ):
       user.admin === true?(
-        <AdminPage WelcomePage={WelcomePage} UserList={UserList} StudentList={StudentList} SchoolList={SchoolList} RouteList={RouteList} user={user} Logout={Logout}/>
+        <AdminPage user={user} Logout={Logout}/>
       ):(
         <ParentPage user={user} Logout={Logout}/>
         
