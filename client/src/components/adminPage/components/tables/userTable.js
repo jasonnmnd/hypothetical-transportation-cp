@@ -1,6 +1,6 @@
 import React from 'react'
 
-function adminTable() {
+function userTable() {
     return (
         <div>
             
@@ -8,4 +8,4 @@ function adminTable() {
     )
 }
 
-export default adminTable
+export default userTable
