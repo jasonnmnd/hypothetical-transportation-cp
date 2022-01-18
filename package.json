@@ -1,0 +1,36 @@
+{
+  "name": "ece-458",
+  "version": "1.0.0",
+  "description": "Senior design course project!",
+  "main": "index.js",
+  "scripts": {
+    "dev": "webpack --mode development --watch ./backend/frontend/src/index.js --output-path ./backend/frontend/static/frontend/main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danamulligan/ece-458.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/danamulligan/ece-458/issues"
+  },
+  "homepage": "https://github.com/danamulligan/ece-458#readme",
+  "devDependencies": {
+    "@babel/core": "^7.16.7",
+    "@babel/preset-env": "^7.16.8",
+    "@babel/preset-react": "^7.16.7",
+    "babel-loader": "^8.2.3",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "webpack": "^5.66.0",
+    "webpack-cli": "^4.9.1"
+  },
+  "dependencies": {
+    "prop-types": "^15.8.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-router-dom": "^6.2.1",
+    "web-vitals": "^2.1.3"
+  }
+}
