@@ -131,6 +131,7 @@ form button:hover{
     background-color: #FFF;
     height:auto;
     padding: 15px 30px;
+    float:right;
 }
 
 table{
@@ -141,14 +142,73 @@ td{
     border: 1px solid black;
 }
 
+.header{
+    position:absolute;
+    left:0;
+    top:0;
+    height:15%;
+    width:100%;
+    background-color: #ffae07;
+    padding: 20px 20px;
+}
+
+.sidebar {
+    height: 100%;
+    width: 15%;
+    position: absolute;
+    left: 0;
+    top: 15%;
+    padding-top: 40px;
+    background-color: rgb(148, 148, 148);
+}
+
+.logo {
+    max-width: 100px;
+    height:auto;
+}
+
+.sidebar button{
+
+    display: inline-block;
+    width:100%;
+    padding: 10px 15px;
+    border-radius: 8px;
+    background-color: #535353;
+    background-size: 200%;
+    background-position: 0%;
+    transition: 0.4s;
+    color: #FFF;
+    font-weight: 700;
+    cursor: pointer;
+}
+.sidebar .currentPage{
+    background-color: #000000;
+}
+.sidebar button:hover {
+    background-color: #b8b8b8;
+}
+
+.main-content {
+    position:absolute;
+    left:15%;
+    top: 15%;
+    width:100%;
+    height:100%;
+    float:auto;
+    padding: 40px 20px;
+
+    background-color: #FFF;
+}
+
 /*
 Welcome Screen, remove later
 */
 
 .welcome {
     width: 100%;
-    max-width: 480px;
+    /* max-width: 480px; */
     background-color: #FFF;
+    
     /* padding: 15px 30px; */
 }
 
