@@ -5,6 +5,7 @@ import LoginForm from "./components/LoginForm";
 import LoginHeader from "./components/headers/loginHeader";
 import AdminHeader from "./components/headers/adminHeader";
 import ParentHeader from "./components/headers/parentHeader";
+import ParentTable from "./components/parentPage/components/parentTable";
 
 function App() {
   //Login details, move to database for security
@@ -222,36 +223,37 @@ function App() {
           </div>
         </div>
       ):(
-        <div className="page">
-          <ParentHeader></ParentHeader>
-          <div className="welcome">
-            <h2>
-              Welcome, <span>{user.name}</span>
-            </h2>
-            <button onClick={Logout}>Logout</button>
-          </div>
-          <br></br>
-          <h2>
-            Your Students
-          </h2>
-          <table>
-              <tr>
-                <th>Name</th>
-                <th>ID</th>
-                <th>School</th>
-                <th>Route</th>
-              </tr>
-              {user.students.map((student) =>{
-                return(
-                <tr>
-                  <td>{student.name}</td>
-                  <td>{student.id}</td>
-                  <td>{student.school}</td>
-                  <td>{student.route}</td>
-                </tr>
-                )})}
-          </table>
-        </div>
+        <ParentTable />
+        // <div className="page">
+        //   <ParentHeader></ParentHeader>
+        //   <div className="welcome">
+        //     <h2>
+        //       Welcome, <span>{user.name}</span>
+        //     </h2>
+        //     <button onClick={Logout}>Logout</button>
+        //   </div>
+        //   <br></br>
+        //   <h2>
+        //     Your Students
+        //   </h2>
+        //   <table>
+        //       <tr>
+        //         <th>Name</th>
+        //         <th>ID</th>
+        //         <th>School</th>
+        //         <th>Route</th>
+        //       </tr>
+        //       {user.students.map((student) =>{
+        //         return(
+        //         <tr>
+        //           <td>{student.name}</td>
+        //           <td>{student.id}</td>
+        //           <td>{student.school}</td>
+        //           <td>{student.route}</td>
+        //         </tr>
+        //         )})}
+        //   </table>
+        // </div>
       )
       }
     </div>
