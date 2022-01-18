@@ -1,10 +1,22 @@
 import React from "react";
-//This page will be used for the parent page to declutter App.js
+import ParentHeader from "../headers/parentHeader";
+import ParentTable from "./components/parentTable";
 
-function parentPage() {
+function parentPage( {user, Logout} ) {
     return (
-        <div>
-            
+        <div className="page">
+          <ParentHeader></ParentHeader>
+          <div className="welcome">
+            <h2>
+              Welcome, <span>{user.name}</span>
+            </h2>
+            <button onClick={Logout}>Logout</button>
+          </div>
+          <br></br>
+          <h2>
+            Your Students
+          </h2>
+          <ParentTable />
         </div>
     )
 }

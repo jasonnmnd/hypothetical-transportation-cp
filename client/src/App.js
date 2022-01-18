@@ -3,9 +3,8 @@ import React from "react";
 import { useState, useEffect } from "react";
 import LoginForm from "./components/LoginForm";
 import LoginHeader from "./components/headers/loginHeader";
-import AdminHeader from "./components/headers/adminHeader";
-import ParentHeader from "./components/headers/parentHeader";
-import ParentTable from "./components/parentPage/components/parentTable";
+import AdminPage from "./components/adminPage/adminPage";
+import ParentPage from "./components/parentPage/parentPage";
 
 function App() {
   //Login details, move to database for security
@@ -175,85 +174,11 @@ function App() {
           ></LoginForm>
         </div>
       ):
-      user.admin===true?(
-        <div className="page">
-          <AdminHeader></AdminHeader>
-          <div className="sidebar">
-            <ul>
-              <li><button className="currentPage" onClick={WelcomePage}>Main</button></li>
-              <br></br>
-              <li><button onClick={UserList}>Users</button></li>
-              <br></br>
-              <li><button onClick={StudentList}>Students</button></li>
-              <br></br>
-              <li><button onClick={SchoolList}>Schools</button></li>
-              <br></br>
-              <li><button onClick={RouteList}>Routes</button></li>
-            </ul>
-          </div>
-          <div className="main-content">
-            <div className="welcome">
-              <h2>
-                Welcome, <span>{user.name}</span>
-              </h2>
-              <p>
-                This should act as a short navigation overview, the "flavour text"
-              </p>
-              <p>
-                Click the "Users" button in the Menu to see a list of all users on site
-              </p>
-              <p>
-                Click the "Students" button in the Menu to see a list of all students on site
-              </p>
-
-              <p>
-                Click the "Schools" button in the Menu to see a list of all schools on site
-              </p>
-
-              <p>
-                Click the "Routes" button in the Menu to see a list of all bus routes on site
-              </p>
-
-              <p>
-              (currently none works, expecting each button to redirect to another page and render different components)
-              </p>
-              <br></br>
-              <button onClick={Logout}>Logout</button>
-            </div>
-          </div>
-        </div>
+      user.admin === true?(
+        <AdminPage WelcomePage={WelcomePage} UserList={UserList} StudentList={StudentList} SchoolList={SchoolList} RouteList={RouteList} user={user} Logout={Logout}/>
       ):(
-        <ParentTable />
-        // <div className="page">
-        //   <ParentHeader></ParentHeader>
-        //   <div className="welcome">
-        //     <h2>
-        //       Welcome, <span>{user.name}</span>
-        //     </h2>
-        //     <button onClick={Logout}>Logout</button>
-        //   </div>
-        //   <br></br>
-        //   <h2>
-        //     Your Students
-        //   </h2>
-        //   <table>
-        //       <tr>
-        //         <th>Name</th>
-        //         <th>ID</th>
-        //         <th>School</th>
-        //         <th>Route</th>
-        //       </tr>
-        //       {user.students.map((student) =>{
-        //         return(
-        //         <tr>
-        //           <td>{student.name}</td>
-        //           <td>{student.id}</td>
-        //           <td>{student.school}</td>
-        //           <td>{student.route}</td>
-        //         </tr>
-        //         )})}
-        //   </table>
-        // </div>
+        <ParentPage user={user} Logout={Logout}/>
+        
       )
       }
     </div>
