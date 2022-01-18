@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, Fragment } from 'react';
 import "../parentPage.css";
 import mockData from "../mock-data.json" //Mock data that we are eventually expecting from the backend
+import ParentRow from './parentRow';
 
 function ParentTable() {
 
@@ -12,8 +13,8 @@ function ParentTable() {
     //Parent can click and view student
     const handleViewClick = (event, student) => {
         event.preventDefault();
-        //setViewStudent(student.id);
-        console.log(student);
+        setViewStudent(student.id);
+        console.log(student.id);
     };
 
 
@@ -30,20 +31,13 @@ function ParentTable() {
                     </tr>
                 </thead>
                 <tbody>
-                    {students.map((student) => 
-                        <tr>
-                            <td>{student.name}</td>
-                            <td>{student.id}</td>
-                            <td>{student.school}</td>
-                            <td>{student.route}</td>
-                            <td>
-                                <button type="button" onClick={(event, student) => handleViewClick(event, student)}>View</button>
-                            </td>
-                        </tr>
-                    )}
+                    {students.map((student) => (
+                        <Fragment>
+                            <ParentRow student={student} handleViewClick={handleViewClick}/>
+                        </Fragment>
+                        ))}
                 </tbody>
             </table>
-            
         </div>
     )
 }
