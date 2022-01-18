@@ -8,7 +8,7 @@ const ParentRow = ( {student, handleViewClick} ) => {
             <td>{student.school}</td>
             <td>{student.route}</td>
             <td>
-                <button type="button" onClick={(event, student) => handleViewClick(event, student)}>View</button>
+                <button type="button" onClick={() => handleViewClick(student)}>View</button>
             </td>
         </tr>
     );

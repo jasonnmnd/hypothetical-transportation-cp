@@ -11,8 +11,8 @@ function ParentTable() {
     const [viewStudent, setViewStudent] = useState(null);
 
     //Parent can click and view student
-    const handleViewClick = (event, student) => {
-        event.preventDefault();
+    const handleViewClick = (student) => {
+        // event.preventDefault();
         setViewStudent(student.id);
         console.log(student.id);
     };
