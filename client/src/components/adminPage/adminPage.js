@@ -1,5 +1,6 @@
 import React from "react";
 import AdminHeader from "../headers/adminHeader";
+import "./adminPage.css";
 
 //This page will be used for the admin page to declutter App.js
 function adminPage( {WelcomePage, UserList, StudentList, SchoolList, RouteList, user, Logout} ) {
