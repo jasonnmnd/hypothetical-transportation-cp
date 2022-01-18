@@ -31,8 +31,8 @@ function ParentTable() {
                     </tr>
                 </thead>
                 <tbody>
-                    {students.map((student) => (
-                        <Fragment>
+                    {students.map((student,i) => (
+                        <Fragment key={i}>
                             <ParentRow student={student} handleViewClick={handleViewClick}/>
                         </Fragment>
                         ))}
