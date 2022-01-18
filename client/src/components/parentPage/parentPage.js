@@ -13,9 +13,13 @@ function parentPage( {user, Logout} ) {
             </h2>
           </div>
           <br></br>
-          <h2>
-            Your Students
-          </h2>
+
+          <div className="page-description">
+            <h2>
+                Your Students
+            </h2>
+          </div>
+          
           <ParentTable />
           <button onClick={Logout}>Logout</button>
           <button>Account</button>

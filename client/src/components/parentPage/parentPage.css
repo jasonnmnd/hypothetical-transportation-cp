@@ -10,8 +10,7 @@ table {
     width: 100%;
   }
 
-th,
-td {
+th, td {
   border: 1px solid #ffffff;
   text-align: left;
   padding: 8px;
@@ -26,6 +25,29 @@ td {
   background-color: #d3d3d3;
 }
 
+.welcome {
+    width: 100%;
+    /* max-width: 480px; */
+    background-color: #FFF;
+    margin-top: 200px;
+    text-align: center;
+    
+    /* padding: 15px 30px; */
+}
+
+.welcome h2 {
+    color: #888;
+    font-size: 28px;
+    font-weight: 500;
+    margin-bottom: 30px;
+}
+
+.welcome h2 span {
+    color: #FE4880;
+    font-weight: 700;
+}
+
+
 button {
     display: inline-block;
     padding: 10px 15px;
@@ -37,4 +59,10 @@ button {
     color: #FFF;
     font-weight: 700;
     cursor: pointer;
+}
+
+.page-description h2 {
+    text-align: center;
+    font-size: 35x;
+    color: #000;
 }
