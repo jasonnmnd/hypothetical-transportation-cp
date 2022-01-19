@@ -1,5 +1,5 @@
 import React, { useState, Fragment } from 'react';
-import "../parentPage.css";
+//import "../parentPage.css";
 import mockData from "../mock-data.json" //Mock data that we are eventually expecting from the backend
 import ParentRow from './parentRow';
 
