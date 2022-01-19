@@ -6,10 +6,7 @@ function Header( {textToDisplay} ){
 
     return(
         <div className = "header">
-            <div className="header-logo">
-                //<img src={Logo} className="logo"></img>
-                
-            </div>
+
 
             {/* <div className="divider400px"/> */}
 
