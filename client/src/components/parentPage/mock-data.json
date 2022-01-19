@@ -1,0 +1,50 @@
+[
+    {
+        "name": "Bob",
+        "id": 123,
+        "school": "Cool School",
+        "route": 1
+    },
+    {
+        "name": "Jason",
+        "id": 124,
+        "school": "Notre Dame",
+        "route": 2
+    },
+    {
+        "name": "Dana",
+        "id": 1243,
+        "school": "Duke",
+        "route": 3
+    },
+    {
+        "name": "George",
+        "id": 1543,
+        "school": "Georgia Tech",
+        "route": 4
+    },
+    {
+        "name": "Lucy",
+        "id": 1223,
+        "school": "Virginia Tech",
+        "route": 5
+    },
+    {
+        "name": "Milan",
+        "id": 342,
+        "school": "UNC",
+        "route": 6
+    },
+    {
+        "name": "Mike",
+        "id": 123,
+        "school": "Wake Forest",
+        "route": 7
+    },
+    {
+        "name": "Jane",
+        "id": 1233,
+        "school": "NC State",
+        "route": 8
+    }
+]
