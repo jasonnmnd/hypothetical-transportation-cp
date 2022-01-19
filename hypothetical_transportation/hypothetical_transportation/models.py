@@ -8,7 +8,10 @@ from django.db import models
 class User(model.Model):
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
-    email = models.EmailField()
+    email = models.EmailField(max_length=100, unique=True)
+    password = models.CharField(max_length=256) # stored password hash
+    address = models.CharField(max_length=140, blank=True) # ev1 required only if there are students belonging to this user
+    admin = models.BooleanField(default=False) 
 
 
 class Route(models.Model):
@@ -20,11 +23,12 @@ class School(models.Model):
     address = models.CharField(max_length=140)
     name = model.CharField(max_length=100)
 
+
 class Student(models.Model):
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
-    address = models.CharField(max_length=140)
     active = models.BooleanField(default=True)
+    student_id = models.
     usid = models.ForeignKey(
         'School', 
         on_delete=models.CASCADE,
