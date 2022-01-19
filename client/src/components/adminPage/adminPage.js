@@ -1,47 +1,16 @@
 import React from "react";
-import AdminHeader from "../headers/adminHeader";
+import Sidebar from "./components/sidebar/Sidebar";
+import sidebardata from "./components/sidebar/sidebardata.json";
+import Header from "../header/Header";
 import "./adminPage.css";
 
-const WelcomePage = () => {
-    //Somehow redirect back to welcome page (ie, slash nothing)
-  };
-
-const UserList = () => {
-//Somehow redirect to user list page (ie, slash users)
-};
-
-const SchoolList = () => {
-//Somehow redirect to school list page (ie, slash schools)
-};
-const RouteList = () => {
-//Somehow redirect to route list page (ie, slash routes)
-};
-const StudentList = () => {
-//Somehow redirect to student list page (ie, slash students)
-};
-
-const Account = () => {
-//Somehow redirect to account page
-};
 
 //This page will be used for the admin page to declutter App.js
 function adminPage( {user, Logout} ) {
     return (
         <div className="page">
-            <AdminHeader></AdminHeader>
-            <div className="sidebar">
-            <ul>
-              <li><button className="currentPage" onClick={WelcomePage}>Main</button></li>
-              <br></br>
-              <li><button onClick={UserList}>Users</button></li>
-              <br></br>
-              <li><button onClick={StudentList}>Students</button></li>
-              <br></br>
-              <li><button onClick={SchoolList}>Schools</button></li>
-              <br></br>
-              <li><button onClick={RouteList}>Routes</button></li>
-            </ul>
-          </div>
+          <Header textToDisplay={"Admin Portal"}></Header>
+          <Sidebar buttons={sidebardata}></Sidebar>
           <div className="main-content">
             <div className="welcome">
               <h2>

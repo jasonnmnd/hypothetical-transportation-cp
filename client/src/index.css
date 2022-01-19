@@ -143,11 +143,11 @@ td{
 }
 
 .sidebar {
-    height: 100%;
+    height: 87%;
     width: 15%;
     position: absolute;
     left: 0;
-    top: 15%;
+    top: 13%;
     padding-top: 40px;
     background-color: rgb(148, 148, 148);
 }
@@ -176,9 +176,9 @@ td{
 .main-content {
     position:absolute;
     left:15%;
-    top: 15%;
-    width:100%;
-    height:100%;
+    top: 13%;
+    width:85%;
+    height:87%;
     float:auto;
     padding: 40px 20px;
 

@@ -1,12 +1,12 @@
 import React from "react";
-import ParentHeader from "../headers/parentHeader";
 import ParentTable from "./components/parentTable";
+import Header from "../header/Header";
 import "./parentPage.css";
 
 function parentPage( {user, Logout} ) {
     return (
         <div className="page">
-          <ParentHeader></ParentHeader>
+          <Header textToDisplay={"Parent Portal"}></Header>
           <div className="welcome">
             <h2>
               Welcome, <span>{user.name}</span>
