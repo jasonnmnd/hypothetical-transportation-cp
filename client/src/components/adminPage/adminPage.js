@@ -1,7 +1,7 @@
 import React from "react";
-import AdminHeader from "../headers/adminHeader";
 import Sidebar from "./components/sidebar/Sidebar";
 import sidebardata from "./components/sidebar/sidebardata.json";
+import Header from "../header/Header";
 import "./adminPage.css";
 
 
@@ -9,8 +9,8 @@ import "./adminPage.css";
 function adminPage( {user, Logout} ) {
     return (
         <div className="page">
-            <AdminHeader></AdminHeader>
-            <Sidebar buttons={sidebardata}></Sidebar>
+          <Header textToDisplay={"Admin Portal"}></Header>
+          <Sidebar buttons={sidebardata}></Sidebar>
           <div className="main-content">
             <div className="welcome">
               <h2>

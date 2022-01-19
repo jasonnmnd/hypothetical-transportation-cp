@@ -2,7 +2,6 @@ import { Route, Link } from "react-router-dom";
 import React from "react";
 import { useState, useEffect } from "react";
 import LoginForm from "./components/LoginForm";
-import LoginHeader from "./components/headers/loginHeader";
 import AdminPage from "./components/adminPage/adminPage";
 import ParentPage from "./components/parentPage/parentPage";
 
@@ -141,7 +140,6 @@ function App() {
     <div className="App">
       {user.email === "" ? (
         <div>
-          <LoginHeader></LoginHeader>
           <LoginForm
             parentLogin={parentLogin}
             adminLogin={adminLogin}
