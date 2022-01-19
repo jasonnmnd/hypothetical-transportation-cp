@@ -2,7 +2,7 @@ import React from "react";
 import Sidebar from "./components/sidebar/Sidebar";
 import sidebardata from "./components/sidebar/sidebardata.json";
 import Header from "../header/Header";
-//import "./adminPage.css";
+import "./adminPage.css";
 
 
 //This page will be used for the admin page to declutter App.js

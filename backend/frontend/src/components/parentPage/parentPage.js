@@ -1,7 +1,7 @@
 import React from "react";
 import ParentTable from "./components/parentTable";
 import Header from "../header/Header";
-//import "./parentPage.css";
+import "./parentPage.css";
 
 function parentPage( {user, Logout} ) {
     return (
