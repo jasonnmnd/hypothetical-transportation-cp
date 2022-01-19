@@ -7,6 +7,9 @@ class User(models.Model):
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     email = models.EmailField()
+    # password = models.CharField(max_length=256) # stored password hash
+    address = models.CharField(max_length=140, blank=True) # ev1 required only if there are students belonging to this user
+    admin = models.BooleanField(default=False)
 
 
 class Route(models.Model):

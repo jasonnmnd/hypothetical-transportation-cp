@@ -14,6 +14,12 @@ npm run dev
 ```
 
 ### Running the Stack
+#### First Time Installation
+```
+./scripts/start_django.sh
+python3 manage.py makemigrations
+python3 manage.py migrate
+```
 
 ```
 python3 manage.py runserver
