@@ -6,41 +6,20 @@ Senior design course project!
 
 ### Running the frontend
 
-Inside the 'client' directory:
+Compiles frontend content to be served. Package manager will hang and `Ctrl-C` can be used.
 
 ```
-npm start
+npm install
+npm run dev
 ```
-
-Saved changes are propogated automatically
 
 ### Running the Stack
-Inside the `server` directory:
 
 ```
-nodemon server.js
+python3 manage.py runserver
 ```
-
-If this doesn't work, `node server.js` can be used instead.
-
-In a separate terminal, inside the `client` directory:
-
-```
-npm start
-```
-
-For the database, follow the instructions on the MongoDB website. Afterwards,
-
-```
-brew services start mongodb-community@5.0
-```
-
-The corresponding shutdown instruction is `stop`. 
 
 ### Testing
-```
-npm run test
-```
 
 ## Endpoints
 
@@ -61,7 +40,7 @@ curl --cookie jarfile http://localhost:3001/current-user
 ## Troubleshooting
 
 - `npm install -g nodemon` may be necessary (installing Nodemon globally) to ensure that the command to start the server
-  works.  If this doesn't work, the `node` can be used instead for starting the server.
+  works. If this doesn't work, the `node` can be used instead for starting the server.
 - Make sure to run `npm install` in both directories.
 - Make sure to create a `config.env` file for future use inside the `server` folder. We'll probably add credentials into
   the file.
