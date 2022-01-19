@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Header from "./header/Header";
 
 function LoginForm({ parentLogin, adminLogin, error }) {
   const [details, setDetails] = useState({ email: "", password: "" });
@@ -14,6 +15,8 @@ function LoginForm({ parentLogin, adminLogin, error }) {
   };
 
   return (
+    <div>
+    <Header textToDisplay={"Hypothetical Transportation"}></Header>
     <form>
       <div className="form-inner">
         <h2>Sign in to your account</h2>
@@ -54,6 +57,7 @@ function LoginForm({ parentLogin, adminLogin, error }) {
         }
       </div>
     </form>
+    </div>
   );
 }
 

@@ -1,0 +1,26 @@
+.header{
+    position:absolute;
+    display: flex;
+    left:0;
+    top:0;
+    height:13%;
+    width:100%;
+    background-color: #ffae07;
+    padding: 20px 20px;
+}
+
+.header-text {
+    margin:auto;
+    color: #FFF;
+    /* padding: 10px; */
+    font-size: 30px;
+    font-family: cursive;
+}
+
+.logo {
+    max-width: 100px;
+    height:auto;
+    position: absolute;
+    left:1%;
+    top: 10%;
+}

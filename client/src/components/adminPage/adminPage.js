@@ -1,5 +1,5 @@
 import React from "react";
-import AdminHeader from "../headers/adminHeader";
+import Header from "../header/Header";
 import "./adminPage.css";
 
 const WelcomePage = () => {
@@ -28,7 +28,7 @@ const Account = () => {
 function adminPage( {user, Logout} ) {
     return (
         <div className="page">
-            <AdminHeader></AdminHeader>
+            <Header textToDisplay={"Admin Portal"}></Header>
             <div className="sidebar">
             <ul>
               <li><button className="currentPage" onClick={WelcomePage}>Main</button></li>
