@@ -2,6 +2,9 @@ import { Route, Link } from "react-router-dom";
 import React from "react";
 import { useState, useEffect } from "react";
 import LoginForm from "./components/LoginForm";
+import LoginHeader from "./components/headers/loginHeader";
+import AdminPage from "./components/adminPage/adminPage";
+import ParentPage from "./components/parentPage/parentPage";
 
 function App() {
   //Login details, move to database for security
@@ -13,14 +16,47 @@ function App() {
   // });
 
   const adminUser = {
+    name:"I'm an admin",
     email: "admin@admin.com",
     password: "admin123",
+    admin:true,
+    students:[],
   };
 
   const parentUser = {
+    name: "Virginia",
     email: "parent@parent.com",
     password: "parent123",
+    admin:false,
+    students:[
+      {
+        name:"Al",
+        id: "123",
+        school: "A high school",
+        route: "#1",
+      },
+      {
+        name:"Hugo",
+        id:"456",
+        school: "B high school",
+        route: "#2",
+      },
+      {
+        name:"James",
+        id:"567",
+        school: "C high school",
+        route: "none",
+      },
+    ],
   };
+
+  const emptyUser = {
+    name:"",
+    email:"",
+    password:"",
+    admin:false,
+    students:[],
+  }
 
   // Example POST method implementation:
   async function postData(url = "", data = {}) {
@@ -42,7 +78,7 @@ function App() {
   }
 
   //const [user, setUser] = useState({name: "", email: ""});
-  const [user, setUser] = useState({ email: "" });
+  const [user, setUser] = useState(emptyUser);
   const [error, setError] = useState("");
 
   const parentLogin = (details) => {
@@ -55,10 +91,10 @@ function App() {
     ) {
       console.log("Logged in");
       setError("");
-      setUser({
+      setUser(
         //name: details.name,
-        email: details.email,
-      });
+        parentUser
+      );
     } else {
       //console.log("Details do not match");
       setError("Details do not match!");
@@ -86,38 +122,40 @@ function App() {
         },
         method: "POST",
       });
-      setUser({
-        //name: details.name,
-        email: details.email,
-      });
+      setUser(
+        adminUser
+      );
     } else {
       //console.log("Details do not match");
       setError("Details do not match!");
     }
   };
 
-  //TODO: Currently just uses a ternary to determine which page to display, consider changing
   const Logout = () => {
     console.log("Logout");
-    setUser({ email: "" });
+    setUser(emptyUser);
   };
 
+  //TODO: Currently just uses a ternary to determine which page to display, consider changing
   return (
     <div className="App">
-      {user.email !== "" ? (
-        <div className="welcome">
-          <h2>
-            Welcome, <span>{"NAME HERE"}</span>
-          </h2>
-          <button onClick={Logout}>Logout</button>
+      {user.email === "" ? (
+        <div>
+          <LoginHeader></LoginHeader>
+          <LoginForm
+            parentLogin={parentLogin}
+            adminLogin={adminLogin}
+            error={error}
+          ></LoginForm>
         </div>
-      ) : (
-        <LoginForm
-          parentLogin={parentLogin}
-          adminLogin={adminLogin}
-          error={error}
-        ></LoginForm>
-      )}
+      ):
+      user.admin === true?(
+        <AdminPage user={user} Logout={Logout}/>
+      ):(
+        <ParentPage user={user} Logout={Logout}/>
+        
+      )
+      }
     </div>
   );
 }
