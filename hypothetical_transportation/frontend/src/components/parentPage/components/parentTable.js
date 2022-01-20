@@ -1,7 +1,7 @@
 import React, { useState, Fragment } from 'react';
 import "../parentPage.css";
 import mockData from "../mock-data.json" //Mock data that we are eventually expecting from the backend
-import ParentRow from './parentRow';
+import ParentRow from './ParentRow';
 
 function ParentTable() {
 
@@ -20,7 +20,7 @@ function ParentTable() {
 
     return (
         <div className="parentTable-container">
-            <table>
+            <table className='center'>
                 <thead>
                     <tr>
                         <th>Student Name</th>

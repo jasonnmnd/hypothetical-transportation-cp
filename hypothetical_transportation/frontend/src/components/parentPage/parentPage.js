@@ -1,30 +1,43 @@
 import React from "react";
-import ParentTable from "./components/parentTable";
+import ParentTable from "./components/ParentTable";
 import Header from "../header/Header";
+import { Routes, Route, Navigate } from "react-router-dom";
 import "./parentPage.css";
+import { Link } from 'react-router-dom';
 
-function parentPage( {user, Logout} ) {
+function ParentPage( {user, Logout} ) {
     return (
-        <div className="page">
+      
+        <div className="parent-page">
           <Header textToDisplay={"Parent Portal"}></Header>
-          <div className="welcome">
-            <h2>
-              Welcome, <span>{user.name}</span>
-            </h2>
-          </div>
-          <br></br>
 
-          <div className="page-description">
-            <h2>
-                Your Students
-            </h2>
+          {user.email==="" ? (<Navigate to="/"></Navigate>):
+          (
+          <div>
+            <div className="welcome">
+              <h2>
+                Welcome, <span>{user.name}</span>
+              </h2>
+                <button onClick={Logout}>Logout</button>
+                <button>
+                  <Link to={"/parent/account"}>
+                      Account
+                  </Link></button>
+            </div>
+            <br></br>
+
+            <div className="page-description">
+              <h2>
+                  Your Students
+              </h2>
+            </div>
+            
+            <ParentTable />
           </div>
-          
-          <ParentTable />
-          <button onClick={Logout}>Logout</button>
-          <button>Account</button>
+          )}
         </div>
+
     )
 }
 
-export default parentPage
+export default ParentPage
