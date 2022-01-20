@@ -132,10 +132,10 @@ function App() {
   };
 
   return (
-  <Provider store={store}>
+  //<Provider store={store}>
       <div className="App">
         <Routes>
-          <Route path="/" element={<LoginForm adminLogin={adminLogin} parentLogin={parentLogin} user={user} error={error}/>}></Route>
+          <Route path="/home" element={<LoginForm adminLogin={adminLogin} parentLogin={parentLogin} user={user} error={error}/>}></Route>
           <Route path="/parent" element={<ParentPage user={user} Logout={Logout}/>}></Route>
           <Route path="/parent/account" element={<AccountPage user={user}/>}></Route>
           <Route exact path="/admin/*" element={<AdminPage user={user} Logout={Logout}/>}></Route>
@@ -145,7 +145,7 @@ function App() {
           <Route exact path="/admin/routes" element={<AdminRoutesPage />}></Route>
         </Routes>
       </div>
-  </Provider>
+  //</Provider>
   );
 }
 
