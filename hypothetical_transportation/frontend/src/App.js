@@ -5,6 +5,9 @@ import LoginForm from "./components/LoginForm";
 import AdminPage from "./components/adminPage/adminPage";
 import ParentPage from "./components/parentPage/parentPage";
 
+import { Provider } from 'react-redux';
+import store from './store';
+
 function App() {
   //Login details, move to database for security
   // useEffect(() => {
@@ -137,6 +140,7 @@ function App() {
 
   //TODO: Currently just uses a ternary to determine which page to display, consider changing
   return (
+  <Provider store={store}>
     <div className="App">
       {user.email === "" ? (
         <div>
@@ -155,6 +159,7 @@ function App() {
       )
       }
     </div>
+  </Provider>
   );
 }
 
