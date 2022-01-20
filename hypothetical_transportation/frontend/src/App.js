@@ -10,6 +10,9 @@ import AdminStudentsPage from "./components/adminPage/pages/AdminStudentsPage";
 import AdminRoutesPage from "./components/adminPage/pages/AdminRoutesPage";
 import AdminSchoolsPage from "./components/adminPage/pages/AdminSchoolsPage";
 import AccountPage from "./components/parentPage/pages/AccountPage";
+import { Provider } from 'react-redux';
+import store from './store';
+
 function App() {
   //Login details, move to database for security
 
@@ -129,6 +132,7 @@ function App() {
   };
 
   return (
+  <Provider store={store}>
       <div className="App">
         <Routes>
           <Route path="/" element={<LoginForm adminLogin={adminLogin} parentLogin={parentLogin} user={user} error={error}/>}></Route>
@@ -141,6 +145,7 @@ function App() {
           <Route exact path="/admin/routes" element={<AdminRoutesPage />}></Route>
         </Routes>
       </div>
+  </Provider>
   );
 }
 
