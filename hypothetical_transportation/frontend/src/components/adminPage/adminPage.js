@@ -1,8 +1,5 @@
 import React, {useState} from "react";
-import Sidebar from "./components/sidebar/Sidebar";
-import sidebardata from "./components/sidebar/sidebardata.json";
 import Header from "../header/Header";
-import AdminTable from "./components/table/AdminTable";
 import "./adminPage.css";
 import { Navigate, Link } from "react-router-dom";
 import SidebarSliding from "./components/sidebar/SidebarSliding";

@@ -20,6 +20,32 @@
     gap: 100px;
 }
 
+.info-fields {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: baseline;
+} 
+
+.info-fields h2 {
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.middle-justify {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.admin-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 200px;
+    align-items: baseline;
+}
+
 .page{
     width:80%;
     height: 80%;
@@ -191,5 +217,28 @@ td {
 }
 
 .admin-edit-page button:hover {
+    background-color: #ffdd99;
+} 
+
+.edit-delete-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 200px;
+}
+
+.edit-delete-buttons button {
+    display: inline-block;
+    padding: 10px 15px;
+    border-radius: 8px;
+    background-color: #ffae07;
+    background-size: 200%;
+    background-position: 0%;
+    transition: 0.4s;
+    color: #FFF;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.edit-delete-buttons button:hover {
     background-color: #ffdd99;
 } 
