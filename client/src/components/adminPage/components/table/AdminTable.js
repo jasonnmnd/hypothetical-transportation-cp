@@ -22,7 +22,7 @@ function AdminTable({title, header, data}) {
                         {header.map((h,i)=>{
                             return <th key={i}>{h}</th>
                         })}
-                        <th>Details</th>
+                        <th>actions</th>
                     </tr>
                 </thead>
                 <tbody>
