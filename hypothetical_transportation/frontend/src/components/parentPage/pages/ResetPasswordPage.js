@@ -1,6 +1,7 @@
 import React from "react";
 import Header from "../../header/Header";
 import { useState } from "react";
+import { Link } from 'react-router-dom';
 
 function AccountPage({save}){
     const [values, setValue] = useState({ old: "", new: "", confirm:"" });
@@ -54,6 +55,9 @@ function AccountPage({save}){
                         <button onClick={resetHandler}>Confirm</button>
                     </div>
                 </form>
+                <button><Link to={"/parent/account"}>
+                      Back
+                  </Link></button>
             </div>
         </div>
     );
