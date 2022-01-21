@@ -53,8 +53,8 @@ function AdminUsersPage() {
         <div className='table-and-buttons'>
             <AdminTable title={title} header={header} data={data} />
             <div className="prev-next-buttons">
-                    <button onClick={handlePrevClick}>Prev</button>
-                    <button onClick={handleNextClick}>Next</button> 
+                <button onClick={handlePrevClick}>Prev</button>
+                <button onClick={handleNextClick}>Next</button> 
             </div>
           </div>
     </div>

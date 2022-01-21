@@ -39,11 +39,27 @@ function AdminRoutesPage() {
     }
   ]
 
+  const handlePrevClick = () => {
+    //API Call here to get new data to display for next page
+    console.log("Prev Clicked");
+  }
+
+  const handleNextClick = () => {
+    //API Call here to get new data to display for next page
+    console.log("Next Clicked");
+  }
+
   return (
     <div className='admin-page'>
         <SidebarSliding/>
         <Header textToDisplay={"Admin Portal"}></Header>
-        <AdminTable title={title} header={header} data={data}></AdminTable>
+        <div className='table-and-buttons'>
+          <AdminTable title={title} header={header} data={data}></AdminTable>
+          <div className="prev-next-buttons">
+              <button onClick={handlePrevClick}>Prev</button>
+              <button onClick={handleNextClick}>Next</button> 
+          </div>
+        </div>
     </div>
   )
 }
