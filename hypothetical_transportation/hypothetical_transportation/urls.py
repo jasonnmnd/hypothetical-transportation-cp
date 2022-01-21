@@ -21,4 +21,5 @@ urlpatterns = [
     path('api/', include('backend.urls')),
     path('home/', include('frontend.urls')),
     path('', include('login.urls')),
+    path('', include('accounts.urls')),
 ]

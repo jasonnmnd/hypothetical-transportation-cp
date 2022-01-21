@@ -1,14 +1,16 @@
 from django.db import models
-
+from django.contrib.auth.models import User
 
 # Create your models here.
 
-class User(models.Model):
+
+class UserProfile(models.Model):
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     email = models.EmailField()
     # password = models.CharField(max_length=256) # stored password hash
-    address = models.CharField(max_length=140, blank=True) # ev1 required only if there are students belonging to this user
+    address = models.CharField(max_length=140,
+                               blank=True)  # ev1 required only if there are students belonging to this user
     admin = models.BooleanField(default=False)
 
 
@@ -36,6 +38,6 @@ class Student(models.Model):
         on_delete=models.CASCADE,
     )
     guardian = models.ForeignKey(
-        User,
+        User, related_name='students',
         on_delete=models.CASCADE,
     )

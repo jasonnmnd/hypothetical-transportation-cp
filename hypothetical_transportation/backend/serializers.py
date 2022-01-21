@@ -1,10 +1,10 @@
 from rest_framework import serializers
-from .models import User, Route, School, Student
+from .models import UserProfile, Route, School, Student
 
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
+        model = UserProfile
         fields = '__all__'
 
 
