@@ -128,14 +128,14 @@ function App() {
 
   const Logout = () => {
     setUser(emptyUser);
-    return <Navigate to="/"></Navigate>
+    return <Navigate to=""></Navigate>
   };
 
   return (
   //<Provider store={store}>
       <div className="App">
         <Routes>
-          <Route exact path="/home/*" element={<LoginForm adminLogin={adminLogin} parentLogin={parentLogin} user={user} error={error}/>}></Route>
+          <Route exact path="/home" element={<LoginForm adminLogin={adminLogin} parentLogin={parentLogin} user={user} error={error}/>}></Route>
           <Route exact path="/parent" element={<ParentPage user={user} Logout={Logout}/>}></Route>
           <Route exact path="/parent/account" element={<AccountPage user={user}/>}></Route>
           <Route exact path="/admin/*" element={<AdminPage user={user} Logout={Logout}/>}></Route>

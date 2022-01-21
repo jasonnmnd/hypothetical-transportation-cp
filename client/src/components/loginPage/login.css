@@ -1,5 +1,9 @@
 .login-form {
+<<<<<<< HEAD:client/src/components/loginPage/login.css
     background-image: url(../../../public/schoolbusBackground.jpg);
+=======
+    background-image: url('../../../public/schoolbusBackground.jpg');
+>>>>>>> d67de4e33fe252fc0c551b6a714a95c8067646a4:hypothetical_transportation/frontend/src/components/loginPage/login.css
     height: 100vh;
     display: flex;
     align-items: center;
