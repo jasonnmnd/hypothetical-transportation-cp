@@ -7,4 +7,10 @@ from django.utils.translation import gettext_lazy as _
 
 class User(AbstractUser):
     # https://stackoverflow.com/questions/49134831/django-make-user-email-required
-    email = models.EmailField(_('email address'), blank=False)
+    email = models.EmailField(
+        _('email address'),
+        help_text=_('Required'),
+        blank=False,
+        unique=True,
+        null=False
+    )
