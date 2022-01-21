@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 # Create your models here.
+from django.conf import settings
 
 
 class UserProfile(models.Model):
@@ -38,6 +39,6 @@ class Student(models.Model):
         on_delete=models.CASCADE,
     )
     guardian = models.ForeignKey(
-        User, related_name='students',
+        settings.AUTH_USER_MODEL, related_name='students',
         on_delete=models.CASCADE,
     )
