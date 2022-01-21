@@ -1,11 +1,10 @@
 .login-form {
-    background-image: url('../../../public/schoolbusBackground.jpg');
     height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     background-position: center;
-    background-repeat: no-repeat;
+    background-repeat:repeat;
     background-size: cover;
 }
 
