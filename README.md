@@ -28,19 +28,9 @@ python3 manage.py runserver
 ### Testing
 
 ## Endpoints
-
-To hit the `/school/create` endpoint, try:
-
+### Authentication Endpoints
 ```
-curl -H "Content-Type: application/json" -d '{"name":"Duke University","address":"Durham"}' http://localhost:3001/school/create
-```
-
-To authenticate, try the following:
-
-```
-curl -H "Content-Type: application/json" -d '{"username":"<USERNAME>","password":"<PASSWORD>"}' http://localhost:3001/signup
-curl --cookie-jar jarfile -H "Content-Type: application/json" -d '{"username":"<USERNAME>","password":"<PASSWORD>"}' http://localhost:3001/log-in
-curl --cookie jarfile http://localhost:3001/current-user
+curl -X GET --header "Authorization: Token <TOKEN>" http://localhost:8000/api/auth/user
 ```
 
 ## Troubleshooting
