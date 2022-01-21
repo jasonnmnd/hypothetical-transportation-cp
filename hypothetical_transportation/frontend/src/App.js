@@ -56,6 +56,7 @@ function App() {
     email:"",
     password:"",
     admin:false,
+    address: "",
     students:[],
   }
 
@@ -64,6 +65,7 @@ function App() {
     email: "admin@admin.com",
     password: "admin123",
     admin:true,
+    address: "",
     students:[],
   };
   
@@ -72,6 +74,7 @@ function App() {
     email: "parent@parent.com",
     password: "parent123",
     admin:false,
+    address: "4015 E27th Ave",
     students:[
       {
         name:"Al",

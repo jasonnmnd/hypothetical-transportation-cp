@@ -12,6 +12,7 @@ function AccountPage({user}){
                 <h1>Account Details</h1>
                 <p>Name: {user.name}</p>
                 <p>Email: {user.email}</p>
+                <p>Address: {user.address}</p>
                 <button>
                     <Link to={"/parent/password"}>
                         Change Password
