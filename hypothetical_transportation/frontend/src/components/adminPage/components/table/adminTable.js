@@ -1,5 +1,6 @@
-import React, { Fragment } from 'react'
-import AdminRow from "./AdminRow"
+import React, { Fragment } from 'react';
+import AdminRow from "./AdminRow";;
+import "../../adminPage.css"
 //input1: title - text
 //input2: header - list
 //input3: the data - objects whose key is list and value is waht should be in table
@@ -14,15 +15,15 @@ function AdminTable({title, header, data}) {
 
 
     return (
-        <div >
-            <h1 className='center'>{title}</h1>
+        <div className='adminTable-container'>
+            <h1>{title}</h1>
             <table className='center'>
                 <thead>
                     <tr>
                         {header.map((h,i)=>{
                             return <th key={i}>{h}</th>
                         })}
-                        <th>Details</th>
+                        <th>actions</th>
                     </tr>
                 </thead>
                 <tbody>

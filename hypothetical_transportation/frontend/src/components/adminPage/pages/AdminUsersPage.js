@@ -2,8 +2,7 @@ import React from 'react';
 import SidebarSliding from '../components/sidebar/SidebarSliding';
 import Header from '../../header/Header';
 import AdminTable from '../components/table/AdminTable';
-
-
+import "../adminPage.css";
 
 function AdminUsersPage() {
 
@@ -12,7 +11,7 @@ function AdminUsersPage() {
   const header = ["name", "email"]
   const data = [
     {
-      name: "mom1",
+      name: "TEST",
       email: "mom1@gmail.com"
     },
 
@@ -29,6 +28,11 @@ function AdminUsersPage() {
     {
       name: "mom4",
       email: "mom4@gmail.com"
+    },
+
+    {
+      name: "mom5",
+      email: "mom5@gmail.com"
     }
   ]
 
