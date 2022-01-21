@@ -32,8 +32,15 @@ function AdminPage( {user, Logout} ) {
           :(
           <div className="main-content">
             <div className="welcome">
-              <h2>Welcome, <span>{user.name}</span></h2>
-              <button onClick={Logout}>Logout</button>
+              <h2>Welcome,<span>{user.name}</span></h2>
+              <h3><p>Select an option from the sidebar for administrative abilities</p></h3>
+              <h3><p>You can edit parental users, students, schools, and routes</p></h3>
+              <div className="home-buttons">
+                <button onClick={Logout}>Logout</button>
+
+                {/* Change to Account Edit */}
+                <button onClick={Logout}>Account</button> 
+              </div>
             </div>              
           </div>)}
         </div>)

@@ -100,8 +100,15 @@ td {
 }
 
 .welcome h2 {
+    color: #000;
+    font-size: 32px;
+    font-weight: 500;
+    margin-bottom: 30px;
+}
+
+.welcome h3 {
     color: #888;
-    font-size: 28px;
+    font-size: 22px;
     font-weight: 500;
     margin-bottom: 30px;
 }
@@ -127,3 +134,36 @@ td {
 .welcome button:hover {
     background-color: #ffdd99;
 } 
+
+.home-buttons {
+    align-items: center;
+}
+
+.prev-next-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.prev-next-buttons button{
+    display: inline-block;
+    padding: 10px 15px;
+    border-radius: 8px;
+    background-color: #ffae07;
+    background-size: 200%;
+    background-position: 0%;
+    transition: 0.4s;
+    color: #FFF;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.prev-next-buttons button:hover {
+    background-color: #ffdd99;
+} 
+
+.table-and-buttons {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}

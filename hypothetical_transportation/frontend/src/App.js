@@ -54,7 +54,7 @@ function App() {
   }
 
   const adminUser = {
-    name:"I'm an admin",
+    name:"Admin",
     email: "admin@admin.com",
     password: "admin123",
     admin:true,
