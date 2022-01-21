@@ -8,4 +8,4 @@ npm install webpack
 brew install pip
 pip3 install psycopg2
 # download postgresql if you can't login using using postgres
-python -m pip3 install Django
+pip3 install Django
