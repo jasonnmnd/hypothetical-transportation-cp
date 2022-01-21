@@ -11,6 +11,10 @@ import AdminRoutesPage from "./components/adminPage/pages/AdminRoutesPage";
 import AdminSchoolsPage from "./components/adminPage/pages/AdminSchoolsPage";
 import AccountPage from "./components/parentPage/pages/AccountPage";
 import AdminEditPage from "./components/adminPage/pages/AdminEditPage";
+import AdminUserDetails from "./components/adminPage/pages/AdminUserDetails";
+import AdminStudentDetails from "./components/adminPage/pages/AdminStudentDetails";
+import AdminSchoolDetails from "./components/adminPage/pages/AdminSchoolDetails";
+import AdminRouteDetails from "./components/adminPage/pages/AdminRouteDetails";
 import { Provider } from 'react-redux';
 import store from './store';
 
@@ -145,6 +149,10 @@ function App() {
           <Route exact path="/admin/schools" element={<AdminSchoolsPage />}></Route>
           <Route exact path="/admin/routes" element={<AdminRoutesPage />}></Route>
           <Route path="/admin/edit" element={<AdminEditPage />}></Route>
+          <Route path="/admin/userdetails/*" element={<AdminUserDetails />}></Route>
+          <Route path="/admin/studentdetails/*" element={<AdminStudentDetails />}></Route>
+          <Route path="/admin/schooldetails/*" element={<AdminSchoolDetails />}></Route>
+          <Route path="/admin/routedetails/*" element={<AdminRouteDetails />}></Route>
         </Routes>
       </div>
   //</Provider>
