@@ -11,6 +11,15 @@
     cursor: pointer;
 }
 
+.admin-edit-page {
+    height: 150vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 100px;
+}
+
 .page{
     width:80%;
     height: 80%;
@@ -167,3 +176,20 @@ td {
     flex-direction: column;
     justify-content: space-between;
 }
+
+.admin-edit-page button {
+    display: inline-block;
+    padding: 10px 15px;
+    border-radius: 8px;
+    background-color: #ffae07;
+    background-size: 200%;
+    background-position: 0%;
+    transition: 0.4s;
+    color: #FFF;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.admin-edit-page button:hover {
+    background-color: #ffdd99;
+} 

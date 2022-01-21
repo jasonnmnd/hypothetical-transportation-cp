@@ -10,6 +10,7 @@ import AdminStudentsPage from "./components/adminPage/pages/AdminStudentsPage";
 import AdminRoutesPage from "./components/adminPage/pages/AdminRoutesPage";
 import AdminSchoolsPage from "./components/adminPage/pages/AdminSchoolsPage";
 import AccountPage from "./components/parentPage/pages/AccountPage";
+import AdminEditPage from "./components/adminPage/pages/AdminEditPage";
 import { Provider } from 'react-redux';
 import store from './store';
 
@@ -138,11 +139,12 @@ function App() {
           <Route exact path="/" element={<LoginForm adminLogin={adminLogin} parentLogin={parentLogin} user={user} error={error}/>}></Route>
           <Route exact path="/parent" element={<ParentPage user={user} Logout={Logout}/>}></Route>
           <Route exact path="/parent/account" element={<AccountPage user={user}/>}></Route>
-          <Route exact path="/admin/*" element={<AdminPage user={user} Logout={Logout}/>}></Route>
+          <Route path="/admin/*" element={<AdminPage user={user} Logout={Logout}/>}></Route>
           <Route exact path="/admin/users" element={<AdminUsersPage />}></Route>
           <Route exact path="/admin/students" element={<AdminStudentsPage />}></Route>
           <Route exact path="/admin/schools" element={<AdminSchoolsPage />}></Route>
           <Route exact path="/admin/routes" element={<AdminRoutesPage />}></Route>
+          <Route path="/admin/edit" element={<AdminEditPage />}></Route>
         </Routes>
       </div>
   //</Provider>
