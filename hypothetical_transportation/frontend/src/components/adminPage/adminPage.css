@@ -11,6 +11,39 @@
     cursor: pointer;
 }
 
+.search {
+    width:100%;
+    height:40px;
+    position:relative;
+    background-color: white;
+}
+
+form .search-inner {
+    position: relative;
+    display: flex;
+    background-color: #FFF;
+    justify-content: space-around;
+    flex-flow: row wrap;
+    padding: 30px;
+    z-index: 2;
+}
+.search-inner .search-group label {
+    font-size: 24px;
+}
+.search-inner .search-group:focus-within label {
+    color: #FFAE07;
+}
+form .search-inner .search-group input:focus {
+    box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.2);
+}
+
+form .search-inner .search-group input {
+    width: 50vw;
+    height: 40px;
+    background-color: rgb(189, 189, 189);
+}
+
+
 .admin-edit-page {
     height: 150vh;
     display: flex;

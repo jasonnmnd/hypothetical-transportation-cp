@@ -2,6 +2,7 @@ import React from 'react';
 import SidebarSliding from '../components/sidebar/SidebarSliding';
 import Header from '../../header/Header';
 import AdminTable from "../components/table/AdminTable";
+import Searchbar from "../components/searchbar/SearchBar"
 
 function AdminStudentsPage() {
 
@@ -43,6 +44,10 @@ function AdminStudentsPage() {
 
   ]
 
+  const search = (value)=>{
+    //somehow get backend to update data (with usestate?)
+  }
+
   const handlePrevClick = () => {
     //API Call here to get new data to display for next page
     console.log("Prev Clicked");
@@ -58,6 +63,7 @@ function AdminStudentsPage() {
         <SidebarSliding/>
         <Header textToDisplay={"Admin Portal"}></Header>
         <div className='table-and-buttons'>
+          <Searchbar buttons={header} search={search}></Searchbar>
           <AdminTable title={title} header={header} data={data}/>
             <div className="prev-next-buttons">
                       <button onClick={handlePrevClick}>Prev</button>
