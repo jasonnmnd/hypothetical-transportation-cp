@@ -64,10 +64,6 @@ function AdminStudentDetails() {
                         <button onClick={() => {
                           setOpenModal(true);
                         }}>Delete User</button>
-
-                      <Link to="/admin/students">
-                        <button>Go Back To Students</button>
-                      </Link>
                   </div>
                     <Link to="/admin/students">
                       <button className='button'>Go Back To Students</button>
