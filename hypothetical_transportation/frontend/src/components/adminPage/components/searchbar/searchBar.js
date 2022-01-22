@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "../../adminPage.css"
 
 //input: a list of buttons - filter by options
 //search: takes in 2 inputs? the filter option, and the inputted text

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Link } from 'react-router-dom';
 import "../parentPage.css";
 
-function AccountPage({save}){
+function AccountPage({save, message}){
     const [values, setValue] = useState({ old: "", new: "", confirm:"" });
     const resetHandler = (e) => {
         e.preventDefault();
@@ -54,6 +54,7 @@ function AccountPage({save}){
 
                         <div className="divider15px" />
                         <button onClick={resetHandler}>Confirm</button>
+                        {<div className="message">{message}</div>}
                     </div>
                 </form>
                 <Link to={"/parent/account"}>

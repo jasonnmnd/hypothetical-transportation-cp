@@ -23,7 +23,7 @@ function LoginForm( {adminLogin, parentLogin, user, error} ) {
         {user.name === "" ? (
         <div>
           <Header textToDisplay={"Hypothetical Transportation"}></Header>
-          <form>
+          <form className="login">
             <div className="form-inner">
               <h2>Sign in to your account</h2>
 
