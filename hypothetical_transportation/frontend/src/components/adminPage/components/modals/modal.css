@@ -65,10 +65,10 @@
     cursor: pointer;
   }
   
-  #cancelBtn {
+  #confirmBtn {
     background-color: crimson;
   }
 
-  #confirmBtn {
+  #cancelBtn {
     background-color: #ffae07;
   }

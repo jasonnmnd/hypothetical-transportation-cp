@@ -1,6 +1,11 @@
 import React from 'react';
 import "./modal.css";
 
+/*
+Majority of code from this tutorial to make a pop-up modal: https://www.youtube.com/watch?v=ZCvemsUfwPQ
+Edited slightly for our own purposes of a confirmation screen and extra functionality
+*/
+
 function DeleteModal( {closeModal, handleConfirmDelete} ) {
   return (
     <div className='modalBackground'>
