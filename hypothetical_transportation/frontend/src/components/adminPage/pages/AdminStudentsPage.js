@@ -2,7 +2,6 @@ import React from 'react';
 import SidebarSliding from '../components/sidebar/SidebarSliding';
 import Header from '../../header/Header';
 import AdminTable from "../components/table/AdminTable";
-import Searchbar from "../components/searchbar/SearchBar"
 
 function AdminStudentsPage() {
 
@@ -62,9 +61,8 @@ function AdminStudentsPage() {
     <div className='admin-page'>
         <SidebarSliding/>
         <Header textToDisplay={"Admin Portal"}></Header>
-        <Searchbar buttons={header} search={search}></Searchbar>
         <div className='table-and-buttons'>
-          <AdminTable title={title} header={header} data={data}/>
+          <AdminTable title={title} header={header} data={data} search={search}/>
           <div className="prev-next-buttons">
               <button onClick={handlePrevClick}>Prev</button>
               <button onClick={handleNextClick}>Next</button> 
