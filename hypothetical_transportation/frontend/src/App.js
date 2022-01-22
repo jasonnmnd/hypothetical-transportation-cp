@@ -155,7 +155,7 @@ function App() {
           <Route path="/parent/*" element={<ParentPage user={user} Logout={Logout}/>}></Route>
           <Route exact path="/parent/account" element={<AccountPage user={user}/>}></Route>
           <Route exact path="/parent/password" element={<ResetPasswordPage save={reset} message={resetMessage}/>}></Route>
-          <Route exact path="/parent/student/:id" element={<ParentStudentDetails ></ParentStudentDetails>}/>
+          <Route exact path="/parent/student/:school/:id" element={<ParentStudentDetails ></ParentStudentDetails>}/>
           <Route path="/admin/*" element={<AdminPage user={user} Logout={Logout}/>}></Route>
           <Route exact path="/admin/users" element={<AdminUsersPage />}></Route>
           <Route exact path="/admin/students" element={<AdminStudentsPage />}></Route>

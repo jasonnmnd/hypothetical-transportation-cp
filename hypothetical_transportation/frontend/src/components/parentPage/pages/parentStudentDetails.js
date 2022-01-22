@@ -8,7 +8,7 @@ function ParentStudentDetails(){
     const exampleStudent = {
         name:"Al",
         id: param.id,
-        school: "A high school",
+        school: param.school,
         route: "#1",
     }
 
