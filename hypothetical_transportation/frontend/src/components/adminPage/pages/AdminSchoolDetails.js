@@ -12,6 +12,7 @@ function AdminSchoolDetails() {
   const exampleSchool = {
     id:param.id,
     name: "I am a school",
+    address: "xxx road",
     routes:[
       {
         id:100,
@@ -68,6 +69,11 @@ function AdminSchoolDetails() {
             <div className='info-fields'>
               <h2>Name: </h2>
               <h3>{exampleSchool.name}</h3>
+            </div>
+
+            <div className='info-fields'>
+              <h2>Address: </h2>
+              <h3>{exampleSchool.address}</h3>
             </div>
 
             <div className='info-fields'>
