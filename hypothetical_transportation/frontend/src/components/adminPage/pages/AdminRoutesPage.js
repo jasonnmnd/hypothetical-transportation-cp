@@ -1,7 +1,7 @@
 import React from 'react';
 import SidebarSliding from '../components/sidebar/SidebarSliding';
 import Header from '../../header/Header';
-import AdminTable from '../components/table/AdminTable';
+import AdminTable from '../components/table/AdTable';
 
 function AdminRoutesPage() {
 

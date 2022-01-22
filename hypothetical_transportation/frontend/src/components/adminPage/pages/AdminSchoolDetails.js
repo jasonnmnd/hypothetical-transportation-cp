@@ -3,7 +3,7 @@ import Header from '../../header/Header';
 import "../adminPage.css";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import DeleteModal from '../components/modals/DeleteModal';
-import AdminTable from '../components/table/AdminTable';
+import AdminTable from '../components/table/AdTable';
 
 
 function AdminSchoolDetails() {
@@ -15,9 +15,11 @@ function AdminSchoolDetails() {
     routes:[
       {
         id:100,
+        name: "route#1",
       },
       {
         id:800,
+        name: "route#8",
       }
     ],
     students:[
