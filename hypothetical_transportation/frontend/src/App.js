@@ -148,7 +148,7 @@ function App() {
   }
 
   return (
-  //<Provider store={store}>
+  <Provider store={store}>
       <div className="App">
         <Routes>
           <Route exact path="/" element={<LoginForm adminLogin={adminLogin} parentLogin={parentLogin} user={user} error={error}/>}></Route>
@@ -169,7 +169,7 @@ function App() {
           <Route exact path="/admin/route/:id" element={<AdminRouteDetails />}/>
         </Routes>
       </div>
-  //</Provider>
+  </Provider>
   );
 }
 

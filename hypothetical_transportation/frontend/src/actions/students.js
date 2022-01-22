@@ -17,3 +17,30 @@ export const getStudents = () => (dispatch, getState) => {
     .catch((err) => console.log(err));
 };
 
+// DELETE STUDENTS
+export const deleteStudents = (id) => (dispatch) => {
+  axios
+    .delete(`/api/Students/${id}`)
+    .then(res => {
+      dispatch({
+        type: DELETE_STUDENT,
+        payload: id
+      });
+    })
+    .catch(err => console.log(err));
+}
+
+// ADD STUDENT
+export const addStudent = (student) => (dispatch) => {
+  axios
+    .post('/api/Students/', student)
+    .then((res) => {
+      dispatch({
+        type: ADD_STUDENT,
+        payload: res.data,
+      });
+    })
+    .catch((err) => console.log(err));
+};
+
+
