@@ -20,7 +20,7 @@ function ParentPage( {user, Logout} ) {
               </h2>
               <div className="button-spacing">
                 <button onClick={Logout}>Logout</button>
-                <Link to={"/parent/account"}>
+                <Link to={"/account"}>
                     <button>Account</button>
                 </Link>
               </div>

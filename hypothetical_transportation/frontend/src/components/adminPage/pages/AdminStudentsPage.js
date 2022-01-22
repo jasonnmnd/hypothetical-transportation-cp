@@ -1,8 +1,7 @@
-import React from 'react';
+import React,{useState} from 'react';
 import SidebarSliding from '../components/sidebar/SidebarSliding';
 import Header from '../../header/Header';
 import AdminTable from "../components/table/AdminTable";
-import Searchbar from "../components/searchbar/SearchBar"
 
 function AdminStudentsPage() {
 
@@ -44,8 +43,11 @@ function AdminStudentsPage() {
 
   ]
 
+  const [dispdata, setData]=useState(data)
+
   const search = (value)=>{
     //somehow get backend to update data (with usestate?)
+    value.by===""? setData(data): setData(data.filter(data=>data[value.by].toLowerCase().includes(value.value.toLowerCase())))
   }
 
   const handlePrevClick = () => {
@@ -62,9 +64,8 @@ function AdminStudentsPage() {
     <div className='admin-page'>
         <SidebarSliding/>
         <Header textToDisplay={"Admin Portal"}></Header>
-        <Searchbar buttons={header} search={search}></Searchbar>
         <div className='table-and-buttons'>
-          <AdminTable title={title} header={header} data={data}/>
+          <AdminTable title={title} header={header} data={dispdata} search={search}/>
           <div className="prev-next-buttons">
               <button onClick={handlePrevClick}>Prev</button>
               <button onClick={handleNextClick}>Next</button> 

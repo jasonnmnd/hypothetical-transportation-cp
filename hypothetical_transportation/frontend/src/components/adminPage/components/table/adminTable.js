@@ -2,13 +2,14 @@ import React, { Fragment, useState } from 'react';
 import AdminRow from "./AdminRow";
 import "../../adminPage.css";
 import { useNavigate } from 'react-router-dom';
+import Searchbar from "../searchbar/SearchBar"
 
 //input1: title - text
 //input2: header - list
 //input3: the data - objects whose key is list and value is waht should be in table
 // input2 and input3 shouhld correspond...?
 //do we want to add a "route to address" input?
-function AdminTable({title, header, data}) {
+function AdminTable({title, header, data, search}) {
     //click and view details
 
     const nav = useNavigate();
@@ -39,6 +40,7 @@ function AdminTable({title, header, data}) {
     return (
         <div className='adminTable-container'>
             <h1>{title}</h1>
+            <Searchbar buttons={header} search={search}></Searchbar>
             <table className='center'>
                 <thead>
                     <tr>

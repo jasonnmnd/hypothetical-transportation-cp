@@ -9,8 +9,8 @@ import AdminUsersPage from "./components/adminPage/pages/AdminUsersPage";
 import AdminStudentsPage from "./components/adminPage/pages/AdminStudentsPage";
 import AdminRoutesPage from "./components/adminPage/pages/AdminRoutesPage";
 import AdminSchoolsPage from "./components/adminPage/pages/AdminSchoolsPage";
-import AccountPage from "./components/parentPage/pages/AccountPage";
-import ResetPasswordPage from "./components/parentPage/pages/ResetPasswordPage";
+import AccountPage from "./components/accountPage/AccountPage";
+import ResetPasswordPage from "./components/accountPage/ResetPasswordPage";
 import AdminEditPage from "./components/adminPage/pages/AdminEditPage";
 import AdminUserDetails from "./components/adminPage/pages/AdminUserDetails";
 import AdminStudentDetails from "./components/adminPage/pages/AdminStudentDetails";
@@ -153,8 +153,8 @@ function App() {
         <Routes>
           <Route exact path="/" element={<LoginForm adminLogin={adminLogin} parentLogin={parentLogin} user={user} error={error}/>}></Route>
           <Route path="/parent/*" element={<ParentPage user={user} Logout={Logout}/>}></Route>
-          <Route exact path="/parent/account" element={<AccountPage user={user}/>}></Route>
-          <Route exact path="/parent/password" element={<ResetPasswordPage save={reset} message={resetMessage}/>}></Route>
+          <Route exact path="/account" element={<AccountPage user={user}/>}></Route>
+          <Route exact path="/account/password" element={<ResetPasswordPage save={reset} message={resetMessage}/>}></Route>
           <Route exact path="/parent/student/:school/:id" element={<ParentStudentDetails ></ParentStudentDetails>}/>
           <Route path="/admin/*" element={<AdminPage user={user} Logout={Logout}/>}></Route>
           <Route exact path="/admin/users" element={<AdminUsersPage />}></Route>

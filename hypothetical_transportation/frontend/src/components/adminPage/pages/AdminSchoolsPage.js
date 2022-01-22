@@ -40,12 +40,16 @@ function AdminSchoolsPage() {
     console.log("Next Clicked");
   }
 
+  const search = (value)=>{
+    //somehow get backend to update data (with usestate?)
+  }
+
   return (
     <div className='admin-page'>
         <SidebarSliding/>
         <Header textToDisplay={"Admin Portal"}></Header>
         <div className='table-and-buttons'>
-          <AdminTable title={title} header={header} data={data} />
+          <AdminTable title={title} header={header} data={data} search={search}/>
             <div className="prev-next-buttons">
               <button onClick={handlePrevClick}>Prev</button>
               <button onClick={handleNextClick}>Next</button> 
