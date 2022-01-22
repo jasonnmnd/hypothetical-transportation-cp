@@ -9,30 +9,35 @@ function AdminRoutesPage() {
   const header = ["route", "school", "num_students"]
   const data = [
     {
+      id: 122,
       route: 1,
       school: "Random Elementary School",
       num_students: 20
     },
 
     {
+      id:888,
       route: 2,
       school: "Random Middle School",
       num_students: 2
     },
 
     {
+      id:999,
       route: 3,
       school: "Random High School",
       num_students: 4
     },
 
     {
+      id:900,
       route: 4,
       school: "Random University",
       num_students: 30
     },
 
     {
+      id:999,
       route: 5,
       school: "Another Random High School",
       num_students: 300

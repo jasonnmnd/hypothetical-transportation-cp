@@ -10,35 +10,35 @@ function AdminStudentsPage() {
   const header=["name","studentid","school","route"]
   const data = [
     {
+      id:111,
       name: "Anna",
       studentid: 12,
       school: "School 1",
       route:1,
-      id:1,
     },
 
     {
+      id:222,
       name: "Emma",
       studentid: 1223,
       school: "School 2",
       route:4,
-      id:4,
     },
 
     {
+      id:332,
       name: "Mark",
       studentid: 1213214,
       school: "School 3",
       route:3,
-      id:6,
     },
 
     {
+      id:4441,
       name: "Sam",
       studentid: 23423,
       school: "School 4",
       route:4,
-      id:5,
     }
 
   ]
@@ -47,7 +47,7 @@ function AdminStudentsPage() {
 
   const search = (value)=>{
     //somehow get backend to update data (with usestate?)
-    value.by===""? setData(data): setData(data.filter(data=>data[value.by].toLowerCase().includes(value.value.toLowerCase())))
+    value.by===""? setData(data): setData(data.filter(data=> typeof data[value.by]==="string"? data[value.by].toLowerCase().includes(value.value.toLowerCase()): data[value.by].toString().includes(value.value.toString())))
   }
 
   const handlePrevClick = () => {

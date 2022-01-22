@@ -10,23 +10,28 @@ function AdminSchoolsPage() {
   const header = ["school"]
   const data = [
     {
-      school: "Random Elementary School"
+      id: 123,
+      name: "Random Elementary School"
     },
 
     {
-      school: "Random Middle School",
+      id: 124,
+      name: "Random Middle School",
     },
 
     {
-      school: "Random High School",
+      id:555,
+      name: "Random High School",
     },
 
     {
-      school: "Random University",
+      id:577,
+      name: "Random University",
     },
 
     {
-      school: "Another Random High School",
+      id:899,
+      name: "Another Random High School",
     }
   ]
 
