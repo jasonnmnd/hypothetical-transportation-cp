@@ -149,7 +149,7 @@ function App() {
       <div className="App">
         <Routes>
           <Route exact path="/" element={<LoginForm adminLogin={adminLogin} parentLogin={parentLogin} user={user} error={error}/>}></Route>
-          <Route exact path="/parent" element={<ParentPage user={user} Logout={Logout}/>}></Route>
+          <Route path="/parent/*" element={<ParentPage user={user} Logout={Logout}/>}></Route>
           <Route exact path="/parent/account" element={<AccountPage user={user}/>}></Route>
           <Route exact path="/parent/password" element={<ResetPasswordPage save={reset}/>}></Route>
           <Route path="/admin/*" element={<AdminPage user={user} Logout={Logout}/>}></Route>
