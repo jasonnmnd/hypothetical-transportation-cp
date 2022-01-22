@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import Header from '../../header/Header';
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import "../adminPage.css";
 import DeleteModal from '../components/modals/DeleteModal';
+import AdminTable from '../components/table/AdminTable';
 
 function AdminUserDetails() {
+  const navigate = useNavigate();
   const param = useParams();
   const exampleUser = {
     id:param.id,
@@ -12,20 +14,23 @@ function AdminUserDetails() {
     email: "firstlast@gmail.com",
     students:[
         {
+          id:444,
           name:"Al",
-          id: "123",
+          studentid: "123",
           school: "A high school",
           route: "#1",
         },
         {
+          id:555,
           name:"Hugo",
-          id:"456",
+          studentid:"456",
           school: "B high school",
           route: "#2",
         },
         {
+          id:666,
           name:"James",
-          id:"567",
+          studentid:"567",
           school: "C high school",
           route: "none",
         }
@@ -55,21 +60,27 @@ function AdminUserDetails() {
                     <h2>Email: </h2>
                     <h3>{exampleUser.email}</h3>
                 </div>
+                {/* Table for Students Here */}
                 <div className='info-fields'>
-                    <h2>Students: </h2>
+                    {/* <h2>Students: </h2> */}
+                    <AdminTable title={"Students"} header={Object.keys(exampleUser.students[0])} data={exampleUser.students}/>
+                    {/* {
+                      exampleUser.students.map((s,i)=>{
+                        return <Link to={`/admin/student/${s.id}`} id={i}><button className='button'>{s.name}</button></Link>
+                      })
+                    } */}
                 </div>
 
-                {/* Table for Students Here */}
-
                 <div className='edit-delete-buttons'>
-                  <Link to={`/admin/edit/student/${exampleUser.id}`}><button>Edit User</button></Link>
+                  <Link to={`/admin/edit/user/${exampleUser.id}`}><button>Edit User</button></Link>
                   <button onClick={() => {
                     setOpenModal(true);
                   }}>Delete User</button>
                 </div>
                   <Link to="/admin/users">
-                    <button className='button'>Go Back To Users</button>
+                    <button className='button'> To Users</button>
                   </Link>
+                  <button onClick={() => navigate(-1)} className='button'>Go Back</button>
             </div>
             {openModal && <DeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}
         </div>
