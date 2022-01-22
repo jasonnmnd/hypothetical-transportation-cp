@@ -1,11 +1,10 @@
 .login-form {
-    background-image: url('../../../public/schoolbusBackground.jpg');
-    height: 100vh;
+    height: 130vh;
     display: flex;
     align-items: center;
     justify-content: center;
     background-position: center;
-    background-repeat: no-repeat;
+    background-repeat:repeat;
     background-size: cover;
 }
 
@@ -16,14 +15,14 @@ input, button {
     outline: none;
 }
 
-form {
+.login {
     display: block;
     position: relative;
     height: 500px;
     width: 500px;
 }
 
-form:after {
+.login:after {
     content: '';
     display: block;
     position: absolute;
@@ -35,7 +34,7 @@ form:after {
     background-image: linear-gradient(to bottom right, #FFAE07, #000);
 }
 
-form .form-inner {
+.login .form-inner {
     position: relative;
     display: block;
     background-color: #FFF;
@@ -44,7 +43,7 @@ form .form-inner {
     height: 500px;
 }
 
-form .form-inner h2 {
+.login .form-inner h2 {
     color: #000;
     font-size: 28px;
     font-weight: 500;
@@ -52,7 +51,7 @@ form .form-inner h2 {
     text-align: center;
 }
 
-form .form-inner .form-group {
+.login .form-inner .form-group {
     display: block;
     width: 450px;
     margin-bottom: 25px;
@@ -70,7 +69,15 @@ form .form-inner .form-group {
     color: #FFAE07;
 }
 
-form .form-inner .form-group input {
+form input{
+    background-color: #D3D3D3;
+    border-radius: 8px;
+    transition: 0.4s;
+    width: 40vw;
+    padding: 10px 15px;
+}
+
+.login .form-inner .form-group input {
     display: block;
     width: 100%;
     padding: 10px 15px;
@@ -79,11 +86,11 @@ form .form-inner .form-group input {
     transition: 0.4s;
 }
 
-form .form-inner .form-group input:focus {
+.login .form-inner .form-group input:focus {
     box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.2);
 }
 
-form button {
+.login button {
     display: inline-block;
     padding: 10px 15px;
     border-radius: 8px;
@@ -97,7 +104,7 @@ form button {
     height: 50px;
 }
 
-form button:hover{
+.login button:hover{
     background-color: #FFDD99;
 }
 

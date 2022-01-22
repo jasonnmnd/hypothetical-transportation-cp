@@ -16,13 +16,14 @@ function ParentPage( {user, Logout} ) {
           <div>
             <div className="welcome">
               <h2>
-                Welcome, <span>{user.name}</span>
+                Welcome,<span>{user.name}</span>
               </h2>
+              <div className="button-spacing">
                 <button onClick={Logout}>Logout</button>
-                <button>
-                  <Link to={"/parent/account"}>
-                      Account
-                  </Link></button>
+                <Link to={"/account"}>
+                    <button>Account</button>
+                </Link>
+              </div>
             </div>
             <br></br>
 

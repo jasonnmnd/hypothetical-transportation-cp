@@ -1,28 +1,52 @@
-import React, { Fragment } from 'react'
-import AdminRow from "./AdminRow"
+import React, { Fragment, useState } from 'react';
+import AdminRow from "./AdminRow";
+import "../../adminPage.css";
+import { useNavigate } from 'react-router-dom';
+import Searchbar from "../searchbar/SearchBar"
+
 //input1: title - text
 //input2: header - list
 //input3: the data - objects whose key is list and value is waht should be in table
 // input2 and input3 shouhld correspond...?
 //do we want to add a "route to address" input?
-function AdminTable({title, header, data}) {
+function AdminTable({title, header, data, search}) {
     //click and view details
-    const handleViewClick = (id) => {
-        console.log(id);
+
+    const nav = useNavigate();
+    const [rowData, setData] = useState(null);
+
+    const handleViewClick = (d) => {
+        setData(d);
+        console.log(d);
         //route to /title?somethingid=id => title determins routing to student, route, school, user
+        if (title === 'Parent Users') {
+            nav(`/admin/user/${d.id}`);
+        } 
+
+        else if (title === 'Students'){
+            nav(`/admin/student/${d.id}`);
+        }
+
+        else if (title === "Schools") {
+            nav(`/admin/school/${d.id}`);
+        }
+
+        else if (title === "Routes") {
+            nav(`/admin/route/${d.id}`);
+        }
     };
 
-
     return (
-        <div >
-            <h1 className='center'>{title}</h1>
+        <div className='adminTable-container'>
+            <h1>{title}</h1>
+            <Searchbar buttons={header} search={search}></Searchbar>
             <table className='center'>
                 <thead>
                     <tr>
                         {header.map((h,i)=>{
                             return <th key={i}>{h}</th>
                         })}
-                        <th>Details</th>
+                        <th>actions</th>
                     </tr>
                 </thead>
                 <tbody>
