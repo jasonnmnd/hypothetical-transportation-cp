@@ -2,6 +2,7 @@ import React from "react";
 import Header from "../../header/Header";
 import { useState } from "react";
 import { Link } from 'react-router-dom';
+import "../parentPage.css";
 
 function AccountPage({save, message}){
     const [values, setValue] = useState({ old: "", new: "", confirm:"" });
@@ -56,9 +57,9 @@ function AccountPage({save, message}){
                         {<div className="message">{message}</div>}
                     </div>
                 </form>
-                <button><Link to={"/parent/account"}>
-                      Back
-                  </Link></button>
+                <Link to={"/parent/account"}>
+                      <button>Back</button>
+                </Link>
             </div>
         </div>
     );

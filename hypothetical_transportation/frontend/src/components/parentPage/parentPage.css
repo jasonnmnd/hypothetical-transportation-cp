@@ -111,3 +111,9 @@ button {
     font-size: 35x;
     color: #000;
 }
+
+.button-spacing {
+  display: flex;
+  justify-content: center;
+  gap: 100px;
+}
