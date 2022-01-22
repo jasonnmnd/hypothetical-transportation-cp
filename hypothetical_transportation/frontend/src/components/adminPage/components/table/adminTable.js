@@ -39,7 +39,7 @@ function AdminTable({title, header, data, search}) {
     return (
         <div className='adminTable-container'>
             <h1>{title}</h1>
-            <Searchbar buttons={header} search={search}></Searchbar>
+            {search? <Searchbar buttons={header} search={search}></Searchbar> : ""}
             <table className='center'>
                 <thead>
                     <tr>

@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import Header from '../../header/Header';
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import "../adminPage.css";
 import DeleteModal from '../components/modals/DeleteModal';
 import AdminTable from '../components/table/AdminTable';
 
 function AdminUserDetails() {
+  const navigate = useNavigate();
   const param = useParams();
   const exampleUser = {
     id:param.id,
@@ -77,8 +78,9 @@ function AdminUserDetails() {
                   }}>Delete User</button>
                 </div>
                   <Link to="/admin/users">
-                    <button className='button'>Go Back To Users</button>
+                    <button className='button'> To Users</button>
                   </Link>
+                  <button onClick={() => navigate(-1)} className='button'>Go Back</button>
             </div>
             {openModal && <DeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}
         </div>
