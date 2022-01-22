@@ -3,7 +3,7 @@ import Header from '../../header/Header';
 import "../adminPage.css";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import DeleteModal from '../components/modals/DeleteModal';
-import AdminTable from '../components/table/AdTable';
+import AdminTable from '../components/table/AdminTable';
 
 
 function AdminSchoolDetails() {
