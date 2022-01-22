@@ -77,9 +77,9 @@ function AdminUserDetails() {
                     setOpenModal(true);
                   }}>Delete User</button>
                 </div>
-                  <Link to="/admin/users">
+                  {/* <Link to="/admin/users">
                     <button className='button'> To Users</button>
-                  </Link>
+                  </Link> */}
                   <button onClick={() => navigate(-1)} className='button'>Go Back</button>
             </div>
             {openModal && <DeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}

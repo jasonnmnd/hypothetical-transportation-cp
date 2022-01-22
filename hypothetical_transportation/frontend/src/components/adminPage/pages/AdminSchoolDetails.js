@@ -95,9 +95,9 @@ function AdminSchoolDetails() {
               setOpenModal(true);
             }}>Delete School</button>
           </div>
-          <Link to="/admin/schools">
+          {/* <Link to="/admin/schools">
             <button className='button'> To Schools</button>
-          </Link>
+          </Link> */}
           <button onClick={() => navigate(-1)} className='button'>Go Back</button>
           </div>
           {openModal && <DeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}
