@@ -18,6 +18,7 @@ import AdminSchoolDetails from "./components/adminPage/pages/AdminSchoolDetails"
 import AdminRouteDetails from "./components/adminPage/pages/AdminRouteDetails";
 import { Provider } from 'react-redux';
 import store from './store';
+import ParentStudentDetails from "./components/parentPage/pages/ParentStudentDetails";
 
 function App() {
   //Login details, move to database for security
@@ -154,6 +155,7 @@ function App() {
           <Route path="/parent/*" element={<ParentPage user={user} Logout={Logout}/>}></Route>
           <Route exact path="/parent/account" element={<AccountPage user={user}/>}></Route>
           <Route exact path="/parent/password" element={<ResetPasswordPage save={reset} message={resetMessage}/>}></Route>
+          <Route exact path="/parent/student/:id" element={<ParentStudentDetails ></ParentStudentDetails>}/>
           <Route path="/admin/*" element={<AdminPage user={user} Logout={Logout}/>}></Route>
           <Route exact path="/admin/users" element={<AdminUsersPage />}></Route>
           <Route exact path="/admin/students" element={<AdminStudentsPage />}></Route>
