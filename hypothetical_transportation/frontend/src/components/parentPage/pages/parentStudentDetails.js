@@ -1,14 +1,14 @@
 import React from "react";
 import "../parentPage.css";
 import Header from "../../header/Header";
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 function ParentStudentDetails(){
-
+    const param= useParams();
     const exampleStudent = {
         name:"Al",
-        id: "123",
-        school: "A high school",
+        id: param.id,
+        school: param.school,
         route: "#1",
     }
 
