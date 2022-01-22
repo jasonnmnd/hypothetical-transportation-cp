@@ -1,9 +1,8 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import ParentPage from "./components/parentPage/ParentPage";
 import AdminPage from "./components/adminPage/AdminPage";
-import { Routes, Route , Navigate} from "react-router-dom";
+import { Routes, Route, Navigate, BrowserRouter} from "react-router-dom";
 import LoginForm from "./components/loginPage/LoginForm.js"
 import AdminUsersPage from "./components/adminPage/pages/AdminUsersPage";
 import AdminStudentsPage from "./components/adminPage/pages/AdminStudentsPage";
@@ -16,11 +15,14 @@ import AdminUserDetails from "./components/adminPage/pages/AdminUserDetails";
 import AdminStudentDetails from "./components/adminPage/pages/AdminStudentDetails";
 import AdminSchoolDetails from "./components/adminPage/pages/AdminSchoolDetails";
 import AdminRouteDetails from "./components/adminPage/pages/AdminRouteDetails";
-import { Provider } from 'react-redux';
-import store from './store';
 import ParentStudentDetails from "./components/parentPage/pages/ParentStudentDetails";
+//import PrivateRoute from "./components/common/PrivateRoute";
+import { loadUser } from "./actions/auth";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import { login } from "./actions/auth";
 
-function App() {
+function App( {store, login} ) {
   //Login details, move to database for security
 
   // useEffect(() => {
@@ -103,8 +105,14 @@ function App() {
   const [error, setError] = useState("");
   const [resetMessage, setMessage] = useState("");
 
+  const propTypes = {
+    login: PropTypes.func.isRequired,
+    isAuthenticated: PropTypes.bool,
+  };
+
   const parentLogin = (details) => {
     //console.log(details);
+    login(details.email, details.password);
 
     //TODO: Change to implement backend with database
     if (
@@ -122,7 +130,8 @@ function App() {
 
   const adminLogin = (details) => {
     //console.log(details);
-
+    login(details.email, details.password);
+    //console.log(isAuthenticated);
     //TODO: Change to implement backend with database
     if (
       details.email === adminUser.email &&
@@ -147,9 +156,13 @@ function App() {
     //change message according to backend output -> if old pw doesnt match, if new pw != confirm, if everything is right & succeed
   }
 
+  useEffect(() => {
+    store.dispatch(loadUser());
+  }, []);
+
   return (
-  <Provider store={store}>
-      <div className="App">
+    <div className="App">
+      <BrowserRouter>
         <Routes>
           <Route exact path="/" element={<LoginForm adminLogin={adminLogin} parentLogin={parentLogin} user={user} error={error}/>}></Route>
           <Route path="/parent/*" element={<ParentPage user={user} Logout={Logout}/>}></Route>
@@ -168,9 +181,12 @@ function App() {
           <Route exact path="/admin/school/:id" element={<AdminSchoolDetails />}/>
           <Route exact path="/admin/route/:id" element={<AdminRouteDetails />}/>
         </Routes>
-      </div>
-  </Provider>
+      </BrowserRouter>
+    </div>
   );
 }
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated
+});
 
-export default App;
+export default connect(mapStateToProps, { login })(App);
