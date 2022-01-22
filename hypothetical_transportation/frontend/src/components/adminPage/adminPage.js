@@ -27,7 +27,7 @@ function AdminPage( {user, Logout} ) {
                 <button onClick={Logout}>Logout</button>
 
                 {/* Change to Account Edit */}
-                <button onClick={Logout}>Account</button> 
+                <Link to={"/account"}><button>Account</button> </Link>
               </div>
               <Link to={"/admin/edit"}>
                 <button>This Button is Used To Test Edit Page</button>

@@ -47,7 +47,7 @@ function AdminStudentsPage() {
 
   const search = (value)=>{
     //somehow get backend to update data (with usestate?)
-    value.by===""? setData(data): setData(data.filter(data=>data[value.by].includes(value.value)))
+    value.by===""? setData(data): setData(data.filter(data=>data[value.by].toLowerCase().includes(value.value.toLowerCase())))
   }
 
   const handlePrevClick = () => {

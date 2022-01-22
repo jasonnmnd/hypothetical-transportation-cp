@@ -4,7 +4,7 @@ import "../../adminPage.css"
 //input: a list of buttons - filter by options
 //search: takes in 2 inputs? the filter option, and the inputted text
 function SearchBar({buttons, search}){
-    const [values, setValue] = useState({by:"", value:""})
+    const [values, setValue] = useState({by:buttons[0], value:""})
     
     const searchHandler = (e)=>{
         e.preventDefault();
@@ -18,7 +18,6 @@ function SearchBar({buttons, search}){
                     <label>
                     Filter By:
                     <select value={values.by} onChange={(e) => setValue({ ...values, by: e.target.value })}>
-                        <option value=''></option>
                         {buttons.map((b,i)=>{
                             return <option value={b} key={i}>{b}</option>
                         })}
