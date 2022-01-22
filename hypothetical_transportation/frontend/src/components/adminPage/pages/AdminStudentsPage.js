@@ -62,13 +62,13 @@ function AdminStudentsPage() {
     <div className='admin-page'>
         <SidebarSliding/>
         <Header textToDisplay={"Admin Portal"}></Header>
+        <Searchbar buttons={header} search={search}></Searchbar>
         <div className='table-and-buttons'>
-          <Searchbar buttons={header} search={search}></Searchbar>
           <AdminTable title={title} header={header} data={data}/>
-            <div className="prev-next-buttons">
-                <button onClick={handlePrevClick}>Prev</button>
-                <button onClick={handleNextClick}>Next</button> 
-            </div>
+          <div className="prev-next-buttons">
+              <button onClick={handlePrevClick}>Prev</button>
+              <button onClick={handleNextClick}>Next</button> 
+          </div>
         </div>
     </div>
     
