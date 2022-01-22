@@ -7,7 +7,7 @@ function AdminSchoolsPage() {
 
   //Mock Users Data (API Call later for real data)
   const title = "Schools"
-  const header = ["school"]
+  const header = ["name"]
   const data = [
     {
       id: 123,

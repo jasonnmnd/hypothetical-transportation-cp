@@ -60,7 +60,6 @@ function AdminStudentDetails() {
                   {/* Table for Students Here */}
 
                   <div className='edit-delete-buttons'>
-                      <button>Edit Student</button>
                         <Link to={`/admin/edit/student/${exampleStudent.id}`}><button>Edit Student</button></Link>
                         <button onClick={() => {
                           setOpenModal(true);
