@@ -57,12 +57,17 @@ function AdminUserDetails() {
                 </div>
                 <div className='info-fields'>
                     <h2>Students: </h2>
+                    {
+                      exampleUser.students.map((s,i)=>{
+                        return <Link to={`/admin/student/${s.id}`} id={i}><button className='button'>{s.name}</button></Link>
+                      })
+                    }
                 </div>
 
                 {/* Table for Students Here */}
 
                 <div className='edit-delete-buttons'>
-                  <Link to={`/admin/edit/student/${exampleUser.id}`}><button>Edit User</button></Link>
+                  <Link to={`/admin/edit/user/${exampleUser.id}`}><button>Edit User</button></Link>
                   <button onClick={() => {
                     setOpenModal(true);
                   }}>Delete User</button>

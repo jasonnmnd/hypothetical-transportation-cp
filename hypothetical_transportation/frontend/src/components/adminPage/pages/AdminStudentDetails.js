@@ -12,9 +12,9 @@ function AdminStudentDetails() {
     name: "First Last",
     id: param.id,
     student_id: 444,
-    school: "Random school",
-    route: 1,
-    parent_name: "Example Parent",
+    school: "Random school",//change this to school id for easier query?
+    route: 1, //change this to route id for easier query?
+    parent_name: "Example Parent",//change this to parent id for easier query? then ask backend to pass parent name and email information?
     parent_email: "parent@parent.com"
   }
 
@@ -63,7 +63,7 @@ function AdminStudentDetails() {
                         <Link to={`/admin/edit/student/${exampleStudent.id}`}><button>Edit Student</button></Link>
                         <button onClick={() => {
                           setOpenModal(true);
-                        }}>Delete User</button>
+                        }}>Delete Student</button>
                   </div>
                     <Link to="/admin/students">
                       <button className='button'>Go Back To Students</button>
