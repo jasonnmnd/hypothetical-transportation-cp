@@ -8,31 +8,36 @@ function AdminUsersPage() {
 
   //Mock Users Data (API Call later for real data)
   const title = "Parent Users"
-  const header = ["name", "email"]
+  const header = ["name", "email", "id"]
   const data = [
     {
       name: "TEST",
-      email: "mom1@gmail.com"
+      email: "mom1@gmail.com",
+      id: 132
     },
 
     {
       name: "mom2",
-      email: "mom2@gmail.com"
+      email: "mom2@gmail.com",
+      id: 1
     },
 
     {
       name: "mom3",
-      email: "mom3@gmail.com"
+      email: "mom3@gmail.com",
+      id: 2
     },
 
     {
       name: "mom4",
-      email: "mom4@gmail.com"
+      email: "mom4@gmail.com",
+      id: 3
     },
 
     {
       name: "mom5",
-      email: "mom5@gmail.com"
+      email: "mom5@gmail.com",
+      id: 23
     }
   ]
 

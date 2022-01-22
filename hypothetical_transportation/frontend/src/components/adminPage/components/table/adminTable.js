@@ -1,6 +1,8 @@
-import React, { Fragment } from 'react';
-import AdminRow from "./AdminRow";;
-import "../../adminPage.css"
+import React, { Fragment, useState } from 'react';
+import AdminRow from "./AdminRow";
+import "../../adminPage.css";
+import { useNavigate } from 'react-router-dom';
+
 //input1: title - text
 //input2: header - list
 //input3: the data - objects whose key is list and value is waht should be in table
@@ -8,9 +10,29 @@ import "../../adminPage.css"
 //do we want to add a "route to address" input?
 function AdminTable({title, header, data}) {
     //click and view details
-    const handleViewClick = (id) => {
-        console.log(id);
+
+    const nav = useNavigate();
+    const [rowData, setData] = useState(null);
+
+    const handleViewClick = (d) => {
+        setData(d);
+        console.log(d);
         //route to /title?somethingid=id => title determins routing to student, route, school, user
+        if (title === 'Parent Users') {
+            nav(`/admin/viewuser/${d.name}/${d.id}`);
+        } 
+
+        else if (title === 'Students'){
+            nav(`/admin/viewstudent/${d.school}/${d.id}`);
+        }
+
+        else if (title === "Schools") {
+            nav(`/admin/viewschool/${d.school}`);
+        }
+
+        else if (title === "Routes") {
+            nav(`/admin/viewroute/${d.route}`);
+        }
     };
 
 

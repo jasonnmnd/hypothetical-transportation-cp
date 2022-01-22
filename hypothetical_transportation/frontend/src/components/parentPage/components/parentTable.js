@@ -2,8 +2,6 @@ import React, { useState, Fragment } from 'react';
 import "../parentPage.css";
 import mockData from "../mock-data.json" //Mock data that we are eventually expecting from the backend
 import ParentRow from './ParentRow';
-import { Routes, Route, Navigate } from 'react-router-dom';
-import ParentStudentDetails from '../pages/ParentStudentDetails';
 import { useNavigate } from 'react-router-dom'
 
 function ParentTable() {

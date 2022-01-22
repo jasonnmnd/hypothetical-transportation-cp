@@ -162,10 +162,10 @@ function App() {
           <Route exact path="/admin/schools" element={<AdminSchoolsPage />}></Route>
           <Route exact path="/admin/routes" element={<AdminRoutesPage />}></Route>
           <Route path="/admin/edit" element={<AdminEditPage />}></Route>
-          <Route path="/admin/userdetails/*" element={<AdminUserDetails />}></Route>
-          <Route path="/admin/studentdetails/*" element={<AdminStudentDetails />}></Route>
-          <Route path="/admin/schooldetails/*" element={<AdminSchoolDetails />}></Route>
-          <Route path="/admin/routedetails/*" element={<AdminRouteDetails />}></Route>
+          <Route exact path="/admin/viewuser/:name/:id" element={<AdminUserDetails />}/>
+          <Route exact path="/admin/viewstudent/:school/:id" element={<AdminStudentDetails />}/>
+          <Route exact path="/admin/viewschool/:school" element={<AdminSchoolDetails />}/>
+          <Route exact path="/admin/viewroute/:route" element={<AdminRouteDetails />}/>
         </Routes>
       </div>
   //</Provider>

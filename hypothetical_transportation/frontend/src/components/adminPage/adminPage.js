@@ -32,22 +32,6 @@ function AdminPage( {user, Logout} ) {
               <Link to={"/admin/edit"}>
                 <button>This Button is Used To Test Edit Page</button>
               </Link>
-
-              <Link to={"/admin/userdetails/"}>
-                <button>This Button is Used To Test User Details Page</button>
-              </Link>
-
-              <Link to={"/admin/studentdetails/"}>
-                <button>This Button is Used To Test Student Details Page</button>
-              </Link>
-
-              <Link to={"/admin/schooldetails/"}>
-                <button>This Button is Used To Test School Details Page</button>
-              </Link>
-
-              <Link to={"/admin/routedetails/"}>
-                <button>This Button is Used To Test Route Details Page</button>
-              </Link>
             </div>              
           </div>)}
         </div>)

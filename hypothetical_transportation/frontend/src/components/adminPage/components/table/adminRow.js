@@ -8,7 +8,7 @@ const AdminRow = ( {header, data, handleViewClick}) => {
                 return <td key={i}>{data[h]}</td>
             })}
             <td>
-                <button onClick={() => handleViewClick(data.id)}>View</button>
+                <button onClick={() => handleViewClick(data)}>View</button>
             </td>
         </tr>
     );
