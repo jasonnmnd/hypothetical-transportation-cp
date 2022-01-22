@@ -6,41 +6,46 @@ import AdminTable from '../components/table/AdminTable';
 function AdminRoutesPage() {
 
   const title = "Routes"
-  const header = ["route", "school", "num_students"]
+  const header = ["name", "school", "num_students", "description"]
   const data = [
     {
       id: 122,
-      route: 1,
+      name: 1,
       school: "Random Elementary School",
-      num_students: 20
+      num_students: 20,
+      description: "xxx",
     },
 
     {
       id:888,
-      route: 2,
+      name: 2,
       school: "Random Middle School",
-      num_students: 2
+      num_students: 2,
+      description: "xxx",
     },
 
     {
       id:999,
-      route: 3,
+      name: 3,
       school: "Random High School",
-      num_students: 4
+      num_students: 4,
+      description: "xxx",
     },
 
     {
       id:900,
-      route: 4,
+      name: 4,
       school: "Random University",
-      num_students: 30
+      num_students: 30,
+      description: "xxx",
     },
 
     {
       id:999,
-      route: 5,
+      name: 5,
       school: "Another Random High School",
-      num_students: 300
+      num_students: 300,
+      description: "xxx",
     }
   ]
 
