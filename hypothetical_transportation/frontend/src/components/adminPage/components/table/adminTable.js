@@ -20,19 +20,19 @@ function AdminTable({title, header, data, search}) {
         console.log(d);
         //route to /title?somethingid=id => title determins routing to student, route, school, user
         if (title === 'Parent Users') {
-            nav(`/admin/viewuser/${d.name}/${d.id}`);
+            nav(`/admin/user/${d.id}`);
         } 
 
         else if (title === 'Students'){
-            nav(`/admin/viewstudent/${d.school}/${d.id}`);
+            nav(`/admin/student/${d.id}`);
         }
 
         else if (title === "Schools") {
-            nav(`/admin/viewschool/${d.school}`);
+            nav(`/admin/school/${d.id}`);
         }
 
         else if (title === "Routes") {
-            nav(`/admin/viewroute/${d.route}`);
+            nav(`/admin/route/${d.id}`);
         }
     };
 

@@ -159,13 +159,14 @@ function App() {
           <Route path="/admin/*" element={<AdminPage user={user} Logout={Logout}/>}></Route>
           <Route exact path="/admin/users" element={<AdminUsersPage />}></Route>
           <Route exact path="/admin/students" element={<AdminStudentsPage />}></Route>
+          <Route exact path="/admin/edit/:column/:id" element={<AdminEditPage />}></Route>
           <Route exact path="/admin/schools" element={<AdminSchoolsPage />}></Route>
           <Route exact path="/admin/routes" element={<AdminRoutesPage />}></Route>
           <Route path="/admin/edit" element={<AdminEditPage />}></Route>
-          <Route exact path="/admin/viewuser/:name/:id" element={<AdminUserDetails />}/>
-          <Route exact path="/admin/viewstudent/:school/:id" element={<AdminStudentDetails />}/>
-          <Route exact path="/admin/viewschool/:school" element={<AdminSchoolDetails />}/>
-          <Route exact path="/admin/viewroute/:route" element={<AdminRouteDetails />}/>
+          <Route exact path="/admin/user/:id" element={<AdminUserDetails />}/>
+          <Route exact path="/admin/student/:id" element={<AdminStudentDetails />}/>
+          <Route exact path="/admin/school/:id" element={<AdminSchoolDetails />}/>
+          <Route exact path="/admin/route/:id" element={<AdminRouteDetails />}/>
         </Routes>
       </div>
   //</Provider>

@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
 import Header from '../../header/Header';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import "../adminPage.css";
 import DeleteModal from '../components/modals/DeleteModal';
 
 function AdminStudentDetails() {
 
+  const param = useParams();
+
   const exampleStudent = {
     name: "First Last",
-    id: 123,
-    school: "Example School",
+    id: param.id,
+    student_id: 444,
+    school: "Random school",
     route: 1,
     parent_name: "Example Parent",
     parent_email: "parent@parent.com"
@@ -24,7 +27,7 @@ function AdminStudentDetails() {
   }
 
   return (
-    <>  
+    <> 
         <Header textToDisplay={"Admin Portal"}></Header>
         <div className='middle-justify'>
           <div className='admin-details'>
@@ -35,7 +38,7 @@ function AdminStudentDetails() {
                   </div>
                   <div className='info-fields'>
                       <h2>StudentID: </h2>
-                      <h3>{exampleStudent.id}</h3>
+                      <h3>{exampleStudent.student_id}</h3>
                   </div>
                   <div className='info-fields'>
                       <h2>School: </h2>
@@ -58,9 +61,14 @@ function AdminStudentDetails() {
 
                   <div className='edit-delete-buttons'>
                       <button>Edit Student</button>
-                      <button onClick={() => {
-                        setOpenModal(true);
+                        <Link to={`/admin/edit/student/${exampleStudent.id}`}><button>Edit Student</button></Link>
+                        <button onClick={() => {
+                          setOpenModal(true);
                         }}>Delete User</button>
+
+                      <Link to="/admin/students">
+                        <button>Go Back To Students</button>
+                      </Link>
                   </div>
                     <Link to="/admin/students">
                       <button className='button'>Go Back To Students</button>
