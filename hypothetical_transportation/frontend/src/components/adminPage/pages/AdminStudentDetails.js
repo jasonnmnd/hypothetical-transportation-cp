@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Header from '../../header/Header';
 import { Link } from 'react-router-dom';
 import "../adminPage.css";
+import DeleteModal from '../components/modals/DeleteModal';
 
 function AdminStudentDetails() {
 
@@ -12,6 +13,14 @@ function AdminStudentDetails() {
     route: 1,
     parent_name: "Example Parent",
     parent_email: "parent@parent.com"
+  }
+
+  const [openModal, setOpenModal] = useState(false);
+
+  const handleConfirmDelete = () => {
+    //Replace with API call to delete student
+    //Route back to students page
+    console.log("DELETED STUDENT");
   }
 
   return (
@@ -49,12 +58,15 @@ function AdminStudentDetails() {
 
                   <div className='edit-delete-buttons'>
                       <button>Edit Student</button>
-                      <button>Delete User</button>
-                      <Link to="/admin/students">
-                        <button>Go Back To Students</button>
-                      </Link>
+                      <button onClick={() => {
+                        setOpenModal(true);
+                        }}>Delete User</button>
                   </div>
+                    <Link to="/admin/students">
+                      <button className='button'>Go Back To Students</button>
+                    </Link>
               </div>
+              {openModal && <DeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}
             </div>
     </>
   );

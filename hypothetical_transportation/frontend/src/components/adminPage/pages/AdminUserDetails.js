@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Header from '../../header/Header';
 import { Link } from "react-router-dom";
 import "../adminPage.css";
+import DeleteModal from '../components/modals/DeleteModal';
 
 function AdminUserDetails() {
 
@@ -29,8 +30,16 @@ function AdminUserDetails() {
             }
           ]
     }
+  const [openModal, setOpenModal] = useState(false);
 
+  const handleConfirmDelete = () => {
+    //Replace with API call to delete user
+    //Route back to students page
+    console.log("DELETED USER");
+  }
+  
   return (
+    
     <>  
         <Header textToDisplay={"Admin Portal"}></Header>
         <div className='middle-justify'>
@@ -52,12 +61,15 @@ function AdminUserDetails() {
 
                 <div className='edit-delete-buttons'>
                     <button>Edit User</button>
-                    <button>Delete User</button>
-                    <Link to="/admin/users">
-                      <button>Go Back To Users</button>
-                    </Link>
+                    <button onClick={() => {
+                      setOpenModal(true);
+                      }}>Delete User</button>  
                 </div>
+                  <Link to="/admin/users">
+                    <button className='button'>Go Back To Users</button>
+                  </Link>
             </div>
+            {openModal && <DeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}
         </div>
     </>
   );

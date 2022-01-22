@@ -36,7 +36,6 @@ function AdminTable({title, header, data, search}) {
         }
     };
 
-
     return (
         <div className='adminTable-container'>
             <h1>{title}</h1>

@@ -104,7 +104,8 @@ background-color: #ffdd99;
     flex-direction: column;
     justify-content: center;
     padding-top: 200px;
-    align-items: baseline;
+    align-items: center;
+    gap: 20px;
 }
 
 .page{
@@ -232,7 +233,9 @@ td {
 } 
 
 .home-buttons {
-    align-items: center;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
 }
 
 .prev-next-buttons {

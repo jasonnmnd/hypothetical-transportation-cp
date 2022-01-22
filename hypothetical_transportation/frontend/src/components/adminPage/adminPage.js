@@ -25,9 +25,9 @@ function AdminPage( {user, Logout} ) {
               <h3><p>You can edit parental users, students, schools, and routes</p></h3>
               <div className="home-buttons">
                 <button onClick={Logout}>Logout</button>
-
-                {/* Change to Account Edit */}
-                <Link to={"/account"}><button>Account</button> </Link>
+                <Link to={"/account"}>
+                  <button>Account</button> 
+                </Link>
               </div>
               <Link to={"/admin/edit"}>
                 <button>This Button is Used To Test Edit Page</button>
