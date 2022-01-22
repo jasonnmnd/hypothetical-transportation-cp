@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import Header from '../../header/Header';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import "../adminPage.css";
 import DeleteModal from '../components/modals/DeleteModal';
 
 function AdminStudentDetails() {
-
+  const navigate = useNavigate();
   const param = useParams();
 
   const exampleStudent = {
@@ -66,8 +66,9 @@ function AdminStudentDetails() {
                         }}>Delete Student</button>
                   </div>
                     <Link to="/admin/students">
-                      <button className='button'>Go Back To Students</button>
+                      <button className='button'>To Students</button>
                     </Link>
+                    <button onClick={() => navigate(-1)} className='button'>Go Back</button>
               </div>
               {openModal && <DeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}
             </div>
