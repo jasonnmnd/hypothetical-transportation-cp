@@ -3,7 +3,7 @@ import Header from "../../header/Header";
 import { useState } from "react";
 import { Link } from 'react-router-dom';
 
-function AccountPage({save}){
+function AccountPage({save, message}){
     const [values, setValue] = useState({ old: "", new: "", confirm:"" });
     const resetHandler = (e) => {
         e.preventDefault();
@@ -53,6 +53,7 @@ function AccountPage({save}){
 
                         <div className="divider15px" />
                         <button onClick={resetHandler}>Confirm</button>
+                        {<div className="message">{message}</div>}
                     </div>
                 </form>
                 <button><Link to={"/parent/account"}>

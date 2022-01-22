@@ -100,6 +100,7 @@ function App() {
 
   const [user, setUser] = useState(emptyUser);
   const [error, setError] = useState("");
+  const [resetMessage, setMessage] = useState("");
 
   const parentLogin = (details) => {
     //console.log(details);
@@ -141,7 +142,8 @@ function App() {
   };
 
   const reset = (inputs)=>{
-    //somehow make backend do the htings
+    //somehow make backend do the things
+    //change message according to backend output -> if old pw doesnt match, if new pw != confirm, if everything is right & succeed
   }
 
   return (
@@ -151,7 +153,7 @@ function App() {
           <Route exact path="/" element={<LoginForm adminLogin={adminLogin} parentLogin={parentLogin} user={user} error={error}/>}></Route>
           <Route exact path="/parent" element={<ParentPage user={user} Logout={Logout}/>}></Route>
           <Route exact path="/parent/account" element={<AccountPage user={user}/>}></Route>
-          <Route exact path="/parent/password" element={<ResetPasswordPage save={reset}/>}></Route>
+          <Route exact path="/parent/password" element={<ResetPasswordPage save={reset} message={resetMessage}/>}></Route>
           <Route path="/admin/*" element={<AdminPage user={user} Logout={Logout}/>}></Route>
           <Route exact path="/admin/users" element={<AdminUsersPage />}></Route>
           <Route exact path="/admin/students" element={<AdminStudentsPage />}></Route>
