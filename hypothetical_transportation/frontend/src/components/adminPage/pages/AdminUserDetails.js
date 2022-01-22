@@ -1,5 +1,6 @@
 import React from 'react';
 import Header from '../../header/Header';
+import { Link } from "react-router-dom";
 import "../adminPage.css";
 
 function AdminUserDetails() {
@@ -36,15 +37,15 @@ function AdminUserDetails() {
             <div className='admin-details'>
                 <h1>User Details</h1>
                 <div className='info-fields'>
-                    <h2>Name:</h2>
+                    <h2>Name: </h2>
                     <h3>{exampleUser.name}</h3>
                 </div>
                 <div className='info-fields'>
-                    <h2>Email:</h2>
-                    <h3>{exampleUser.name}</h3>
+                    <h2>Email: </h2>
+                    <h3>{exampleUser.email}</h3>
                 </div>
                 <div className='info-fields'>
-                    <h2>Students:</h2>
+                    <h2>Students: </h2>
                 </div>
 
                 {/* Table for Students Here */}
@@ -52,6 +53,9 @@ function AdminUserDetails() {
                 <div className='edit-delete-buttons'>
                     <button>Edit User</button>
                     <button>Delete User</button>
+                    <Link to="/admin/users">
+                      <button>Go Back To Users</button>
+                    </Link>
                 </div>
             </div>
         </div>
