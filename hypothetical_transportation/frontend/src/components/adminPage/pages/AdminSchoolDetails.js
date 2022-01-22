@@ -3,6 +3,7 @@ import Header from '../../header/Header';
 import "../adminPage.css";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import DeleteModal from '../components/modals/DeleteModal';
+import AdminTable from '../components/table/AdminTable';
 
 
 function AdminSchoolDetails() {
@@ -21,20 +22,23 @@ function AdminSchoolDetails() {
     ],
     students:[
       {
-        name:"Al",
         id: "123",
+        name:"Al",
+        studentid:"444",
         school: "A high school",
         route: "#1",
       },
       {
-        name:"Hugo",
         id:"456",
+        name:"Hugo",
+        studentid:"234",
         school: "B high school",
         route: "#2",
       },
       {
-        name:"James",
         id:"567",
+        name:"James",
+        studentid:"555",
         school: "C high school",
         route: "none",
       }
@@ -65,21 +69,23 @@ function AdminSchoolDetails() {
             </div>
 
             <div className='info-fields'>
-              <h2>Associated students: </h2>
-              {
+              {/* <h2>Associated students: </h2> */}
+              <AdminTable title={"Associated Students"} header={Object.keys(exampleSchool.students[0])} data={exampleSchool.students}/>
+              {/* {
                   exampleSchool.students.map((s,i)=>{
                     return <Link to={`/admin/student/${s.id}`} id={i}><button className='button'>{s.name}</button></Link>
                   })
-                }
+                } */}
             </div>
 
             <div className='info-fields'>
-              <h2>Associated Routes: </h2>
-              {
+              {/* <h2>Associated Routes: </h2> */}
+              <AdminTable title={"Associated Routes"} header={Object.keys(exampleSchool.routes[0])} data={exampleSchool.routes}/>
+              {/* {
                   exampleSchool.routes.map((s,i)=>{
                     return <Link to={`/admin/route/${s.id}`} id={i}><button className='button'>{s.id}</button></Link>
                   })
-                }
+                } */}
             </div>
           <div className='edit-delete-buttons'>
             <Link to={`/admin/edit/school/${exampleSchool.id}`}><button>Edit School</button></Link>

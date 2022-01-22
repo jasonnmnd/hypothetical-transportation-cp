@@ -19,19 +19,19 @@ function AdminTable({title, header, data, search}) {
         setData(d);
         console.log(d);
         //route to /title?somethingid=id => title determins routing to student, route, school, user
-        if (title === 'Parent Users') {
+        if (title.toLowerCase().includes('user')) {
             nav(`/admin/user/${d.id}`);
         } 
 
-        else if (title === 'Students'){
+        else if (title.toLowerCase().includes('student')){
             nav(`/admin/student/${d.id}`);
         }
 
-        else if (title === "Schools") {
+        else if (title.toLowerCase().includes('school')) {
             nav(`/admin/school/${d.id}`);
         }
 
-        else if (title === "Routes") {
+        else if (title.toLowerCase().includes('route')) {
             nav(`/admin/route/${d.id}`);
         }
     };
