@@ -52,7 +52,7 @@ function AdminSchoolsPage() {
 
 
   const searchSchool = (i1,i2) => {
-    axios.get(`/api/route?${i1}Includes='${i2}'`)
+    axios.get(`/api/school?${i1}Includes='${i2}'`)
         .then(res => {
           console.log(`/api/school?${i1}Includes='${i2}'`)
           setSchools(res.data);

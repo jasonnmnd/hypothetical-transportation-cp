@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import Header from '../../header/Header';
 import { Link, useNavigate, useParams } from "react-router-dom";
 import "../adminPage.css";
 import DeleteModal from '../components/modals/DeleteModal';
 import AdminTable from '../components/table/AdminTable';
 import SidebarSliding from '../components/sidebar/SidebarSliding';
+import axios from 'axios';
+
 
 function AdminUserDetails() {
   const navigate = useNavigate();
@@ -45,6 +47,43 @@ function AdminUserDetails() {
     //Route back to students page
     console.log("DELETED USER");
   }
+
+
+  const emptyUser = {
+    id: 0,
+    first_name: "",
+    last_name: "",
+    email: "",
+    address: "",
+    admin:"",
+  }
+
+  const emptyStudents = [{
+  }]
+
+  const [user, setUser] = useState(emptyUser);
+  const [students, setStudents] = useState(emptyStudents);
+
+  const getUser = () => {
+    axios.get(`/api/user/${param.id}`)
+        .then(res => {
+          setUser(res.data);
+        }).catch(err => console.log(err));
+    }
+  
+  const getStudents = () => {
+    axios.get(`/api/student?user=${param.id}`)
+        .then(res => {
+          setStudents(res.data);
+        }).catch(err => console.log(err));
+    }
+
+  useEffect(() => {
+    getUser();
+    getStudents();
+  }, []);
+
+
   
   return (
     
@@ -56,11 +95,15 @@ function AdminUserDetails() {
                 <h1>User Details</h1>
                 <div className='info-fields'>
                     <h2>Name: </h2>
-                    <h3>{exampleUser.name}</h3>
+                    <h3>{user.first_name} {user.last_name}</h3>
                 </div>
                 <div className='info-fields'>
                     <h2>Email: </h2>
-                    <h3>{exampleUser.email}</h3>
+                    <h3>{user.email}</h3>
+                </div>
+                <div className='info-fields'>
+                    <h2>Address: </h2>
+                    <h3>{user.address}</h3>
                 </div>
                 {/* Table for Students Here */}
                 <div className='info-fields'>
@@ -74,7 +117,7 @@ function AdminUserDetails() {
                 </div>
 
                 <div className='edit-delete-buttons'>
-                  <Link to={`/admin/edit/user/${exampleUser.id}`}><button>Edit User</button></Link>
+                  <Link to={`/admin/edit/user/${user.id}`}><button>Edit User</button></Link>
                   <button onClick={() => {
                     setOpenModal(true);
                   }}>Delete User</button>
