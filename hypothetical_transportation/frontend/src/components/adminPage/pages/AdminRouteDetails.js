@@ -4,6 +4,7 @@ import "../adminPage.css";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import DeleteModal from '../components/modals/DeleteModal';
 import AdminTable from '../components/table/AdminTable';
+import SidebarSliding from '../components/sidebar/SidebarSliding';
 
 
 function AdminRouteDetails() {
@@ -54,6 +55,7 @@ function AdminRouteDetails() {
   return (
     <>  
         <Header textToDisplay={"Admin Portal"}></Header>
+        <SidebarSliding/>
         <div className='middle-justify'>
           <div className='admin-details'>
             <h1>Route Details</h1>
@@ -80,9 +82,9 @@ function AdminRouteDetails() {
                 setOpenModal(true);
               }}>Delete Route</button>
             </div>
-            <Link to="/admin/routes">
+            {/* <Link to="/admin/routes">
               <button className='button'> To Routes</button>
-            </Link>
+            </Link> */}
             <button onClick={() => navigate(-1)} className='button'>Go Back</button>
           </div>
           {openModal && <DeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}

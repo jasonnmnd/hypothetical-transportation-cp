@@ -3,6 +3,7 @@ import Header from '../../header/Header';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import "../adminPage.css";
 import DeleteModal from '../components/modals/DeleteModal';
+import SidebarSliding from '../components/sidebar/SidebarSliding';
 
 function AdminStudentDetails() {
   const navigate = useNavigate();
@@ -38,6 +39,7 @@ function AdminStudentDetails() {
   return (
     <> 
         <Header textToDisplay={"Admin Portal"}></Header>
+        <SidebarSliding/>
         <div className='middle-justify'>
           <div className='admin-details'>
                   <h1>Student Details</h1>

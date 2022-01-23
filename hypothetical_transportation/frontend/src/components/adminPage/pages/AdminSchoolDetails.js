@@ -4,6 +4,7 @@ import "../adminPage.css";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import DeleteModal from '../components/modals/DeleteModal';
 import AdminTable from '../components/table/AdminTable';
+import SidebarSliding from '../components/sidebar/SidebarSliding';
 
 
 function AdminSchoolDetails() {
@@ -61,6 +62,7 @@ function AdminSchoolDetails() {
   return (
     <>  
         <Header textToDisplay={"Admin Portal"}></Header>
+        <SidebarSliding/>
         <div className='middle-justify'>
           <div className='admin-details'>
 
