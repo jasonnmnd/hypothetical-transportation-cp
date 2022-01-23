@@ -2,9 +2,10 @@ import React, { useState, Fragment } from 'react';
 import "../parentPage.css";
 import mockData from "../mock-data.json" //Mock data that we are eventually expecting from the backend
 import ParentRow from './ParentRow';
+import { useNavigate } from 'react-router-dom'
 
 function ParentTable() {
-
+    const nav = useNavigate();
     //useState to set students
     const [students, setStudents] = useState(mockData);
     //record which student we want to view
@@ -15,6 +16,8 @@ function ParentTable() {
         // event.preventDefault();
         setViewStudent(student.id);
         console.log(student.id);
+        nav(`/parent/student/${student.school}/${student.id}`);
+        //return <Navigate to={`/parent/viewstudent/${student.id}`}></Navigate>
     };
 
 

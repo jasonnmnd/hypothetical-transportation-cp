@@ -5,6 +5,7 @@
 .parent-page h2 {
   background-color: #FFF;
 }
+
 .parentTable-container {
     display: flex;
     flex-direction: column;
@@ -15,12 +16,13 @@
 table {
     border-collapse: collapse;
     width: 100%;
-  }
-  .center{
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;
-  }
+}
+
+.center{
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
 
 th, td {
   border: 1px solid #ffffff;
@@ -49,6 +51,10 @@ td {
   font-weight: 700;
   cursor: pointer;
 }
+
+.parentTable-container button:hover {
+  background-color: #ffdd99;
+} 
 
 
 .welcome {
@@ -82,7 +88,7 @@ button {
     background-size: 200%;
     background-position: 0%;
     transition: 0.4s;
-    color: #FFF;
+    color: #000;
     font-weight: 700;
     cursor: pointer;
 }
@@ -108,4 +114,36 @@ button {
     text-align: center;
     font-size: 35x;
     color: #000;
+}
+
+.button-spacing {
+  display: flex;
+  justify-content: center;
+  gap: 100px;
+}
+
+.middle-justify {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.parent-details {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: 200px;
+  align-items: baseline;
+}
+
+.info-fields {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: baseline;
+} 
+
+.info-fields h2 {
+  font-size: 30px;
+  font-weight: bold;
 }

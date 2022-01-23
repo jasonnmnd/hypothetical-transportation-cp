@@ -1,19 +1,28 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import ParentPage from "./components/parentPage/ParentPage";
 import AdminPage from "./components/adminPage/AdminPage";
-import { Routes, Route , Navigate} from "react-router-dom";
+import { Routes, Route, Navigate, BrowserRouter} from "react-router-dom";
 import LoginForm from "./components/loginPage/LoginForm.js"
 import AdminUsersPage from "./components/adminPage/pages/AdminUsersPage";
 import AdminStudentsPage from "./components/adminPage/pages/AdminStudentsPage";
 import AdminRoutesPage from "./components/adminPage/pages/AdminRoutesPage";
 import AdminSchoolsPage from "./components/adminPage/pages/AdminSchoolsPage";
-import AccountPage from "./components/parentPage/pages/AccountPage";
-import { Provider } from 'react-redux';
-import store from './store';
+import AccountPage from "./components/accountPage/AccountPage";
+import ResetPasswordPage from "./components/accountPage/ResetPasswordPage";
+import AdminEditPage from "./components/adminPage/pages/AdminEditPage";
+import AdminUserDetails from "./components/adminPage/pages/AdminUserDetails";
+import AdminStudentDetails from "./components/adminPage/pages/AdminStudentDetails";
+import AdminSchoolDetails from "./components/adminPage/pages/AdminSchoolDetails";
+import AdminRouteDetails from "./components/adminPage/pages/AdminRouteDetails";
+import ParentStudentDetails from "./components/parentPage/pages/ParentStudentDetails";
+//import PrivateRoute from "./components/common/PrivateRoute";
+import { loadUser } from "./actions/auth";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import { login } from "./actions/auth";
 
-function App() {
+function App( {store, login} ) {
   //Login details, move to database for security
 
   // useEffect(() => {
@@ -50,14 +59,16 @@ function App() {
     email:"",
     password:"",
     admin:false,
+    address: "",
     students:[],
   }
 
   const adminUser = {
-    name:"I'm an admin",
+    name:"Admin",
     email: "admin@admin.com",
     password: "admin123",
     admin:true,
+    address: "",
     students:[],
   };
   
@@ -66,6 +77,7 @@ function App() {
     email: "parent@parent.com",
     password: "parent123",
     admin:false,
+    address: "4015 E27th Ave",
     students:[
       {
         name:"Al",
@@ -91,9 +103,16 @@ function App() {
 
   const [user, setUser] = useState(emptyUser);
   const [error, setError] = useState("");
+  const [resetMessage, setMessage] = useState("");
+
+  const propTypes = {
+    login: PropTypes.func.isRequired,
+    isAuthenticated: PropTypes.bool,
+  };
 
   const parentLogin = (details) => {
     //console.log(details);
+    login(details.email, details.password);
 
     //TODO: Change to implement backend with database
     if (
@@ -111,7 +130,8 @@ function App() {
 
   const adminLogin = (details) => {
     //console.log(details);
-
+    login(details.email, details.password);
+    //console.log(isAuthenticated);
     //TODO: Change to implement backend with database
     if (
       details.email === adminUser.email &&
@@ -128,25 +148,45 @@ function App() {
 
   const Logout = () => {
     setUser(emptyUser);
-    return <Navigate to=""></Navigate>
+    return <Navigate to="/"></Navigate>
   };
 
+  const reset = (inputs)=>{
+    //somehow make backend do the things
+    //change message according to backend output -> if old pw doesnt match, if new pw != confirm, if everything is right & succeed
+  }
+
+  useEffect(() => {
+    store.dispatch(loadUser());
+  }, []);
+
   return (
-  //<Provider store={store}>
-      <div className="App">
+    <div className="App">
+      <BrowserRouter>
         <Routes>
-          <Route exact path="/home" element={<LoginForm adminLogin={adminLogin} parentLogin={parentLogin} user={user} error={error}/>}></Route>
-          <Route exact path="/parent" element={<ParentPage user={user} Logout={Logout}/>}></Route>
-          <Route exact path="/parent/account" element={<AccountPage user={user}/>}></Route>
-          <Route exact path="/admin/*" element={<AdminPage user={user} Logout={Logout}/>}></Route>
+          <Route exact path="/" element={<LoginForm adminLogin={adminLogin} parentLogin={parentLogin} user={user} error={error}/>}></Route>
+          <Route path="/parent/*" element={<ParentPage user={user} Logout={Logout}/>}></Route>
+          <Route exact path="/account" element={<AccountPage user={user}/>}></Route>
+          <Route exact path="/account/password" element={<ResetPasswordPage save={reset} message={resetMessage}/>}></Route>
+          <Route exact path="/parent/student/:school/:id" element={<ParentStudentDetails ></ParentStudentDetails>}/>
+          <Route path="/admin/*" element={<AdminPage user={user} Logout={Logout}/>}></Route>
           <Route exact path="/admin/users" element={<AdminUsersPage />}></Route>
           <Route exact path="/admin/students" element={<AdminStudentsPage />}></Route>
+          <Route exact path="/admin/edit/:column/:id" element={<AdminEditPage />}></Route>
           <Route exact path="/admin/schools" element={<AdminSchoolsPage />}></Route>
           <Route exact path="/admin/routes" element={<AdminRoutesPage />}></Route>
+          <Route path="/admin/edit" element={<AdminEditPage />}></Route>
+          <Route exact path="/admin/user/:id" element={<AdminUserDetails />}/>
+          <Route exact path="/admin/student/:id" element={<AdminStudentDetails />}/>
+          <Route exact path="/admin/school/:id" element={<AdminSchoolDetails />}/>
+          <Route exact path="/admin/route/:id" element={<AdminRouteDetails />}/>
         </Routes>
-      </div>
-  //</Provider>
+      </BrowserRouter>
+    </div>
   );
 }
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated
+});
 
-export default App;
+export default connect(mapStateToProps, { login })(App);

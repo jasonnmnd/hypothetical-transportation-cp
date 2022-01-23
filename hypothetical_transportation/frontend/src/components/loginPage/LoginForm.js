@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Header from "../header/Header";
 import { Navigate } from "react-router-dom";
 import "./login.css";
+import image from "../../../public/schoolbusBackground.jpg";
 
 function LoginForm( {adminLogin, parentLogin, user, error} ) {
     
@@ -18,11 +19,11 @@ function LoginForm( {adminLogin, parentLogin, user, error} ) {
   };
 
   return (
-      <div className="login-form">
+      <div className="login-form" style ={ { backgroundImage: `url(${image})` } }>
         {user.name === "" ? (
         <div>
           <Header textToDisplay={"Hypothetical Transportation"}></Header>
-          <form>
+          <form className="login">
             <div className="form-inner">
               <h2>Sign in to your account</h2>
 
