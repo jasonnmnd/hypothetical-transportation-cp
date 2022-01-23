@@ -1,5 +1,4 @@
 from rest_framework import permissions
-from django.contrib.auth.models import Group
 
 
 # Source: https://stackoverflow.com/questions/19313314/django-rest-framework-viewset-per-action-permissions

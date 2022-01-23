@@ -20,7 +20,7 @@ npm run dev
 python3 manage.py makemigrations
 python3 manage.py migrate
 ```
-
+#### Starting the Server
 ```
 python3 manage.py runserver
 ```

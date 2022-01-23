@@ -2,10 +2,16 @@ import json
 
 from .models import UserProfile, Student, School, Route
 from rest_framework import viewsets, permissions
+from rest_framework.views import APIView
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from .serializers import UserSerializer, StudentSerializer, RouteSerializer, SchoolSerializer
 from .permissions import IsAdminOrReadOnlyParent
+
+
+class MapsAPI(APIView):
+    def get(self, request, format=None):
+        return Response("Hello, World!")
 
 
 class UserViewSet(viewsets.ModelViewSet):
