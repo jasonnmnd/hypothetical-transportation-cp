@@ -4,6 +4,7 @@ import Header from '../../header/Header';
 import AdminPage from '../AdminPage';
 import "../adminPage.css";
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import SidebarSliding from '../components/sidebar/SidebarSliding';
 
 function AdminEditPage() {
   const navigate = useNavigate();
@@ -21,8 +22,9 @@ function AdminEditPage() {
   return (
       <div className='admin-edit-page'>
         <Header textToDisplay={"Admin Portal"}></Header>
+        <SidebarSliding/>
         <EditForm title={"Edit "+param.column} fields={fields} obj={obj} setobj={setobj}></EditForm>
-        <Link to={`/admin/${param.column}s`}><button>To {param.column}</button></Link>
+        {/* <Link to={`/admin/${param.column}s`}><button>To {param.column}</button></Link> */}
         <button onClick={() => navigate(-1)} className='button'>Go Back</button>
       </div>
     );

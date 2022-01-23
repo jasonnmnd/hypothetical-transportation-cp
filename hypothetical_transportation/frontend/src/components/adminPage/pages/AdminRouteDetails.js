@@ -4,6 +4,7 @@ import "../adminPage.css";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import DeleteModal from '../components/modals/DeleteModal';
 import AdminTable from '../components/table/AdminTable';
+import SidebarSliding from '../components/sidebar/SidebarSliding';
 
 
 function AdminRouteDetails() {
@@ -54,6 +55,7 @@ function AdminRouteDetails() {
   return (
     <>  
         <Header textToDisplay={"Admin Portal"}></Header>
+        <SidebarSliding/>
         <div className='middle-justify'>
           <div className='admin-details'>
             <h1>Route Details</h1>
@@ -69,7 +71,7 @@ function AdminRouteDetails() {
 
             <div className='info-fields'>
               <h2>School: </h2>
-              <Link to={`/admin/school/${exampleRoute.school.id}`}><button className='button'>{exampleRoute.school.name}</button></Link>
+              <Link to={`/admin/school/${exampleRoute.school.id}`}><button className='button'><h3>{exampleRoute.school.name}</h3></button></Link>
             </div>
 
             <AdminTable title={"Associated Students"} header={Object.keys(exampleRoute.students[0])} data={exampleRoute.students}/>
