@@ -18,17 +18,32 @@ function EditForm({title, fields, obj, setobj}) {
                     <h2>{title}</h2>
                     {
                         fields.map((field,i)=>{
-                            return (<div className="form-group" key={i}>
-                            <label htmlFor={field}>{field}</label>
-                            <input
-                                type={field}
-                                name={field}
-                                id={field}
-                                value={obj[field]}
-                                onChange={(e)=>{
-                                    setobj({...obj, [field]: e.target.value})
-                                }}
-                            />
+                            return typeof(obj[field])==="boolean" ? 
+                            (<div className="form-group" key={i}>
+                                <label htmlFor={field}>{field}</label>
+                                <input
+                                    className="checkbox"
+                                    type="checkbox"
+                                    name={field}
+                                    id={field}
+                                    checked={obj[field]}
+                                    onChange={(e)=>{
+                                        setobj({...obj, [field]: e.target.checked})
+                                    }}
+                                />
+                            </div>):
+                            (<div className="form-group" key={i}>
+                                <label htmlFor={field}>{field}</label>
+                                <input
+                                    className="input"
+                                    type={typeof(obj[field])}
+                                    name={field}
+                                    id={field}
+                                    value={obj[field]}
+                                    onChange={(e)=>{
+                                        setobj({...obj, [field]: e.target.value})
+                                    }}
+                                />
                             </div>)
                         })
                     }

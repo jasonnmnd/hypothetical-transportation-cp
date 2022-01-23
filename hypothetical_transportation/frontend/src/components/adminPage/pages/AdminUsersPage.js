@@ -46,7 +46,7 @@ function AdminUsersPage() {
     axios.get(`/api/user?${i1}Includes='${i2}'`)
         .then(res => {
           console.log(`/api/user?${i1}Includes='${i2}'`)
-          setSchools(res.data);
+          setUsers(res.data);
         }).catch(err => console.log(err));
   }
   

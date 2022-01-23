@@ -55,7 +55,7 @@ function AdminUserDetails() {
     last_name: "",
     email: "",
     address: "",
-    admin:"",
+    admin:true,
   }
 
   const emptyStudents = [{
