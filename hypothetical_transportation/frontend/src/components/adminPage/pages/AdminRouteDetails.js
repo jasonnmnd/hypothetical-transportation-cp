@@ -80,9 +80,9 @@ function AdminRouteDetails() {
                 setOpenModal(true);
               }}>Delete Route</button>
             </div>
-            <Link to="/admin/routes">
+            {/* <Link to="/admin/routes">
               <button className='button'> To Routes</button>
-            </Link>
+            </Link> */}
             <button onClick={() => navigate(-1)} className='button'>Go Back</button>
           </div>
           {openModal && <DeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}
