@@ -67,13 +67,13 @@ function AdminSchoolsPage() {
   //   getSchools();
   // }, []);
 
-  const emptySchool = [{
+  const emptySchools = [{
     id: 0,
     name: "",
     address: "",
   }]
 
-  const [schools, setSchools] = useState(emptySchool);
+  const [schools, setSchools] = useState(emptySchools);
 
   const getSchools = () => {
     axios.get('/api/school/')
