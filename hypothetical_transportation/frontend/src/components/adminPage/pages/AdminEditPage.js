@@ -24,7 +24,7 @@ function AdminEditPage() {
         <Header textToDisplay={"Admin Portal"}></Header>
         <SidebarSliding/>
         <EditForm title={"Edit "+param.column} fields={fields} obj={obj} setobj={setobj}></EditForm>
-        <Link to={`/admin/${param.column}s`}><button>To {param.column}</button></Link>
+        {/* <Link to={`/admin/${param.column}s`}><button>To {param.column}</button></Link> */}
         <button onClick={() => navigate(-1)} className='button'>Go Back</button>
       </div>
     );
