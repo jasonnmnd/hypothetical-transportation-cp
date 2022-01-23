@@ -134,7 +134,7 @@ function AdminSchoolDetails() {
                 } */}
             </div>
           <div className='edit-delete-buttons'>
-            <Link to={`/admin/edit/school/${exampleSchool.id}`}><button>Edit School</button></Link>
+            <Link to={`/admin/edit/school/${school.id}`}><button>Edit School</button></Link>
             <button onClick={() => {
               setOpenModal(true);
             }}>Delete School</button>
