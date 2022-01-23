@@ -11,38 +11,6 @@ function AdminSchoolsPage() {
 
   //Mock Users Data (API Call later for real data)
   const title = "Schools"
-  const header = ["id", "name", "address"]
-  const data = [
-    {
-      id: 123,
-      name: "Random Elementary School",
-      address: "123 West Street"
-    },
-
-    {
-      id: 124,
-      name: "Random Middle School",
-      address: "345 Main Street"
-    },
-
-    {
-      id:555,
-      name: "Random High School",
-      address: "123 Test Rd."
-    },
-
-    {
-      id:577,
-      name: "Random University",
-      address: "456 Test Circle"
-    },
-
-    {
-      id:899,
-      name: "Another Random High School",
-      address: "987 Test Way"
-    }
-  ]
 
   const handlePrevClick = () => {
     //API Call here to get new data to display for next page
@@ -52,10 +20,6 @@ function AdminSchoolsPage() {
   const handleNextClick = () => {
     //API Call here to get new data to display for next page
     console.log("Next Clicked");
-  }
-
-  const search = (value)=>{
-    //somehow get backend to update data (with usestate?)
   }
 
   // const propTypes = {
@@ -78,16 +42,28 @@ function AdminSchoolsPage() {
   const getSchools = () => {
     axios.get('/api/school/')
         .then(res => {
-            console.log(res.data);
             setSchools(res.data);
         }).catch(err => console.log(err));
     }
 
   useEffect(() => {
     getSchools();
-    console.log(schools);
   }, []);
 
+
+  const searchSchool = (i1,i2) => {
+    axios.get(`/api/route?${i1}Includes='${i2}'`)
+        .then(res => {
+          console.log(`/api/school?${i1}Includes='${i2}'`)
+          setSchools(res.data);
+        }).catch(err => console.log(err));
+  }
+  
+
+  const search = (value)=>{
+    //somehow get backend to update data (with usestate?)
+    searchSchool(value.by, value.value)
+  }
 
   return (
     <div className='admin-page'>
@@ -95,7 +71,7 @@ function AdminSchoolsPage() {
         <Header textToDisplay={"Admin Portal"}></Header>
         <div className='table-and-buttons'>
           {/* <AdminTable title={title} header={header} data={data} search={search}/> */}
-          <AdminTable title={title} header={header} data={schools} search={search}/>
+          <AdminTable title={title} header={Object.keys(emptySchools[0])} data={schools} search={search}/>
             <div className="prev-next-buttons">
               <button onClick={handlePrevClick}>Prev</button>
               <button onClick={handleNextClick}>Next</button> 

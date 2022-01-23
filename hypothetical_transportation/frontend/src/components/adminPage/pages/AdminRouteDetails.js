@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from '../../header/Header';
 import "../adminPage.css";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import DeleteModal from '../components/modals/DeleteModal';
 import AdminTable from '../components/table/AdminTable';
 import SidebarSliding from '../components/sidebar/SidebarSliding';
+import axios from 'axios';
 
 
 function AdminRouteDetails() {
@@ -24,7 +25,7 @@ function AdminRouteDetails() {
     id:param.id,
     name: "Routie",
     school: {
-      id:"44",
+      id:"1",
       name: "school",
     },
     description: "xxxxxxxx",
@@ -52,6 +53,31 @@ function AdminRouteDetails() {
       }
     ]
   }
+
+
+
+  const emptyRoute = {
+    id: 0,
+    name: "",
+    description: "",
+  }
+
+  const [route, setRoute] = useState(emptyRoute);
+  
+  const getRoutes = () => {
+    axios.get(`/api/route/${param.id}`)
+        .then(res => {
+            setRoute(res.data);
+        }).catch(err => console.log(err));
+    }
+
+  useEffect(() => {
+    getRoutes();
+  }, []);
+
+
+
+
   return (
     <>  
         <Header textToDisplay={"Admin Portal"}></Header>
@@ -61,12 +87,12 @@ function AdminRouteDetails() {
             <h1>Route Details</h1>
             <div className='info-fields'>
               <h2>Name: </h2>
-              <h3>{exampleRoute.name}</h3>
+              <h3>{route.name}</h3>
             </div>
 
             <div className='info-fields'>
               <h2>Description: </h2>
-              <h3>{exampleRoute.description}</h3>
+              <h3>{route.description}</h3>
             </div>
 
             <div className='info-fields'>

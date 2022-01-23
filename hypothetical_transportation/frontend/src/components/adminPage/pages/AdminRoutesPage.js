@@ -1,53 +1,42 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import SidebarSliding from '../components/sidebar/SidebarSliding';
 import Header from '../../header/Header';
 import AdminTable from '../components/table/AdminTable';
+import axios from 'axios';
 
 function AdminRoutesPage() {
 
   const title = "Routes"
-  const header = ["name", "school", "num_students", "description"]
-  const data = [
-    {
-      id: 122,
-      name: 1,
-      school: "Random Elementary School",
-      num_students: 20,
-      description: "xxx",
-    },
 
-    {
-      id:888,
-      name: 2,
-      school: "Random Middle School",
-      num_students: 2,
-      description: "xxx",
-    },
+  const emptyRoute = [{
+    id: 0,
+    name: "",
+    description: "",
+  }]
 
-    {
-      id:999,
-      name: 3,
-      school: "Random High School",
-      num_students: 4,
-      description: "xxx",
-    },
+  const [routes, setRoutes] = useState(emptyRoute);
+  
+  const getRoutes = () => {
+    axios.get(`/api/route/`)
+        .then(res => {
+          setRoutes(res.data);
+        }).catch(err => console.log(err));
+  }
 
-    {
-      id:900,
-      name: 4,
-      school: "Random University",
-      num_students: 30,
-      description: "xxx",
-    },
+  const searchRoute = (i1,i2) => {
+    axios.get(`/api/route?${i1}Includes='${i2}'`)
+        .then(res => {
+          console.log(`/api/route?${i1}Includes='${i2}'`)
+          setRoutes(res.data);
+        }).catch(err => console.log(err));
+  }
+  
+  useEffect(() => {
+    getRoutes();
+  }, []);
 
-    {
-      id:999,
-      name: 5,
-      school: "Another Random High School",
-      num_students: 300,
-      description: "xxx",
-    }
-  ]
+
+
 
   const handlePrevClick = () => {
     //API Call here to get new data to display for next page
@@ -61,6 +50,7 @@ function AdminRoutesPage() {
 
   const search = (value)=>{
     //somehow get backend to update data (with usestate?)
+    searchRoute(value.by, value.value);
   }
 
   return (
@@ -68,7 +58,7 @@ function AdminRoutesPage() {
         <SidebarSliding/>
         <Header textToDisplay={"Admin Portal"}></Header>
         <div className='table-and-buttons'>
-          <AdminTable title={title} header={header} data={data} search={search}></AdminTable>
+          <AdminTable title={title} header={Object.keys(emptyRoute[0])} data={routes} search={search}></AdminTable>
           <div className="prev-next-buttons">
               <button onClick={handlePrevClick}>Prev</button>
               <button onClick={handleNextClick}>Next</button> 
