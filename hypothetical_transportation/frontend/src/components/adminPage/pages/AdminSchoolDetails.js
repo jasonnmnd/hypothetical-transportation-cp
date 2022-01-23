@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from '../../header/Header';
 import "../adminPage.css";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import DeleteModal from '../components/modals/DeleteModal';
 import AdminTable from '../components/table/AdminTable';
 import SidebarSliding from '../components/sidebar/SidebarSliding';
+import axios from 'axios';
 
 
 function AdminSchoolDetails() {
@@ -58,6 +59,41 @@ function AdminSchoolDetails() {
     console.log("DELETED USER");
   }
   
+  const emptySchool = {
+    id: 0,
+    name: "",
+    address: "",
+  }
+
+  const emptyRoute = [{
+    id: 0,
+    name: "",
+    description: "",
+  }]
+
+  const [school, setSchool] = useState(emptySchool);
+  const [routes, setRoutes] = useState(emptyRoute);
+
+  const getSchool = () => {
+    axios.get(`/api/school/${param.id}`)
+        .then(res => {
+            setSchool(res.data);
+        }).catch(err => console.log(err));
+    }
+  
+  const getRoutes = () => {
+    axios.get(`/api/route?school=${param.id}`)
+        .then(res => {
+            setRoutes(res.data);
+        }).catch(err => console.log(err));
+    }
+
+  useEffect(() => {
+    getSchool();
+    getRoutes();
+  }, []);
+
+
 
   return (
     <>  
@@ -70,12 +106,12 @@ function AdminSchoolDetails() {
 
             <div className='info-fields'>
               <h2>Name: </h2>
-              <h3>{exampleSchool.name}</h3>
+              <h3>{school.name}</h3>
             </div>
 
             <div className='info-fields'>
               <h2>Address: </h2>
-              <h3>{exampleSchool.address}</h3>
+              <h3>{school.address}</h3>
             </div>
 
             <div className='info-fields'>
@@ -90,7 +126,7 @@ function AdminSchoolDetails() {
 
             <div className='info-fields'>
               {/* <h2>Associated Routes: </h2> */}
-              <AdminTable title={"Associated Routes"} header={Object.keys(exampleSchool.routes[0])} data={exampleSchool.routes}/>
+              <AdminTable title={"Associated Routes"} header={Object.keys(emptyRoute[0])} data={routes}/>
               {/* {
                   exampleSchool.routes.map((s,i)=>{
                     return <Link to={`/admin/route/${s.id}`} id={i}><button className='button'>{s.id}</button></Link>
