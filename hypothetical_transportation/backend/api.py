@@ -5,6 +5,7 @@ from rest_framework import viewsets, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from .serializers import UserSerializer, StudentSerializer, RouteSerializer, SchoolSerializer
+from .permissions import IsAdminOrReadOnlyParent
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -31,7 +32,7 @@ class UserViewSet(viewsets.ModelViewSet):
 class RouteViewSet(viewsets.ModelViewSet):
     queryset = Route.objects.all()
     permission_classes = [
-        permissions.AllowAny
+        IsAdminOrReadOnlyParent
     ]
     serializer_class = RouteSerializer
 
@@ -51,6 +52,7 @@ class StudentViewSet(viewsets.ModelViewSet):
     serializer_class = StudentSerializer
 
     def get_queryset(self):
+        # TODO: modify this method to only return a filtered list corresponding to the parent
         return self.request.user.students.all()
 
     def perform_create(self, serializer):
