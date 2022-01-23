@@ -7,7 +7,8 @@ import { GET_STUDENTS, DELETE_STUDENT, ADD_STUDENT } from './types';
 // GET STUDENTS
 export const getStudents = () => (dispatch, getState) => {
   axios
-    .get('/api/Students/', tokenConfig(getState))
+    //.get('/api/student/', tokenConfig(getState))
+    .get('/api/student/')
     .then((res) => {
       dispatch({
         type: GET_STUDENTS,
