@@ -16,4 +16,4 @@ COPY requirements.txt /code/
 RUN pip install -r requirements.txt
 
 # move entire current directory into new dir
-COPY . /code/
+COPY ./hypothetical_transportation /code/
