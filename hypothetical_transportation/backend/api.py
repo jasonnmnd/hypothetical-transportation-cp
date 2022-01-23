@@ -56,13 +56,14 @@ class SchoolViewSet(viewsets.ModelViewSet):
 
 class StudentViewSet(viewsets.ModelViewSet):
     permission_classes = [
-        permissions.IsAuthenticated
+        # permissions.IsAuthenticated
+        permissions.AllowAny
     ]
     serializer_class = StudentSerializer
 
     def get_queryset(self):
-        # TODO: modify this method to only return a filtered list corresponding to the parent
+        # modify to return all if admin
         return self.request.user.students.all()
 
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+        serializer.save(guardian=self.request.user)
