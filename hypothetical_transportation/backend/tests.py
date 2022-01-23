@@ -26,12 +26,23 @@ class StudentCreation(TestCase):
         self.factory = RequestFactory()
         self.client = Client()
 
-    def test_save(self):
-        response = self.client.post('/api/auth/login',
-                                    json.dumps({'email': 'stanpines@mysteryshack.com', 'password': 'mysteryshack'}),
-                                    content_type='application/json')
-        auth_token = response.data['token']
-        response = self.client.get('/api/auth/user',
-                                   Authorization=f'Token {auth_token}')
+    def test_end_to_end_authentication(self):
+        login_response = self.client.post('/api/auth/login',
+                                          json.dumps(
+                                              {'email': 'stanpines@mysteryshack.com', 'password': 'mysteryshack'}),
+                                          content_type='application/json')
+        auth_token = login_response.data['token']
+        get_self_response = self.client.get('/api/auth/user',
+                                            HTTP_AUTHORIZATION=f'Token {auth_token}')
+        self.assertEqual(get_self_response.data['username'], 'stan.pines')
 
-        print(response.data)
+        get_student_response = self.client.get('/api/student/',
+                                               HTTP_AUTHORIZATION=f'Token {auth_token}')
+
+        self.assertEqual(len(get_student_response.data), 2)
+
+        self.client.post('/api/auth/logout',
+                         HTTP_AUTHORIZATION=f'Token {auth_token}')
+        logged_out_check_response = self.client.get('/api/auth/user',
+                                                    HTTP_AUTHORIZATION=f'Token {auth_token}')
+        self.assertEqual(logged_out_check_response.data['detail'].code, 'authentication_failed')
