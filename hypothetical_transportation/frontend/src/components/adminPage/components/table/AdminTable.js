@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from 'react';
-import AdminRow from "./AdminRow";
+import AdminRow from "./ARow";
 import "../../adminPage.css";
 import { useNavigate } from 'react-router-dom';
 import Searchbar from "../searchbar/SearchBar"

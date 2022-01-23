@@ -5,7 +5,7 @@ const AdminRow = ( {header, data, handleViewClick}) => {
     return (
         <tr>
             {header.map((h,i)=>{
-                return <td key={i}>{data[h]}</td>
+                return <td key={i}>{data[h].toString().length > 25 ? data[h].toString().slice(0,25)+"...":data[h]}</td>
             })}
             <td>
                 <button onClick={() => handleViewClick(data)}>View</button>
