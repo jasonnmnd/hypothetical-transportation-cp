@@ -13,6 +13,9 @@ class MapsAPI(APIView):
     def get(self, request, format=None):
         return Response("Hello, World!")
 
+    def post(self, request, format=None):
+        return Response("Hello, World!")
+
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = UserProfile.objects.all()
