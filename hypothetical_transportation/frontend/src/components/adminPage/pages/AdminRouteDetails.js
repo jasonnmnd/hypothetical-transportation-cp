@@ -69,7 +69,7 @@ function AdminRouteDetails() {
 
             <div className='info-fields'>
               <h2>School: </h2>
-              <Link to={`/admin/school/${exampleRoute.school.id}`}><button className='button'>{exampleRoute.school.name}</button></Link>
+              <Link to={`/admin/school/${exampleRoute.school.id}`}><button className='button'><h3>{exampleRoute.school.name}</h3></button></Link>
             </div>
 
             <AdminTable title={"Associated Students"} header={Object.keys(exampleRoute.students[0])} data={exampleRoute.students}/>
