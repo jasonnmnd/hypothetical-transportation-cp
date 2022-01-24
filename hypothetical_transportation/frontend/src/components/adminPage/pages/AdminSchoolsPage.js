@@ -77,8 +77,8 @@ function AdminSchoolsPage() {
               <button onClick={handlePrevClick}>Prev</button>
               <button onClick={handleNextClick}>Next</button> 
               <Link to="/admin/new/school">
-                    <button className='button'> New</button>
-                  </Link>
+                <button className='button'> New</button>
+              </Link>
             </div>
         </div>
     </div>
