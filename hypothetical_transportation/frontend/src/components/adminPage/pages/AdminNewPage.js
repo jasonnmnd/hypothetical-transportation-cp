@@ -19,6 +19,7 @@ function AdminNewPage() {
           last_name: "",
           email: "",
           address: "",
+          admin: false,
         },
         route: {
           id: 0,

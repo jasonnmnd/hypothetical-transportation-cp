@@ -4,6 +4,7 @@ import Header from '../../header/Header';
 import AdminTable from '../components/table/AdminTable';
 import "../adminPage.css";
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 function AdminUsersPage() {
 
@@ -65,6 +66,10 @@ function AdminUsersPage() {
             <div className="prev-next-buttons">
                 <button onClick={handlePrevClick}>Prev</button>
                 <button onClick={handleNextClick}>Next</button> 
+                <Link to="/admin/new/user">
+                    <button className='button'> New</button>
+                  </Link>
+
             </div>
           </div>
     </div>
