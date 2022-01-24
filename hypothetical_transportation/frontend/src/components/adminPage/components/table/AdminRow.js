@@ -3,7 +3,7 @@ import "../../adminPage.css";
 
 const AdminRow = ( {header, data, handleViewClick}) => {
     return (
-        <tr>
+        <tr className={data["route"] == "" ? "tr-red" : "tr-gray"} >
             {header.map((h,i)=>{
                 return <td key={i}>{data[h].toString().length > 25 ? data[h].toString().slice(0,25)+"...":data[h]}</td>
             })}
