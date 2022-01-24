@@ -63,7 +63,7 @@ class AuthenticationObjectConsistency(TestCase):
                                                HTTP_AUTHORIZATION=f'Token {auth_token}')
 
         # Excludes Wendy by the design of the endpoint, assuming Stan is in the guardian group.
-        self.assertEqual(len(get_student_response.data), self.STANS_KIDS)
+        self.assertEqual(len(get_student_response.data['results']), self.STANS_KIDS)
         self.client.post('/api/auth/logout',
                          HTTP_AUTHORIZATION=f'Token {auth_token}')
         logged_out_check_response = self.client.get('/api/auth/user',

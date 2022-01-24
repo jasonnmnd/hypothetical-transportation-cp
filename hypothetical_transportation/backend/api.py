@@ -57,15 +57,15 @@ class SchoolViewSet(viewsets.ModelViewSet):
 
 class StudentViewSet(viewsets.ModelViewSet):
     permission_classes = [
-        # permissions.IsAuthenticated
-        permissions.AllowAny
+        permissions.IsAuthenticated
+        # permissions.AllowAny
     ]
     serializer_class = StudentSerializer
 
     def get_queryset(self):
         # modify to return all if admin
-        # return self.request.user.students.all()
-        return Student.objects.all()
+        return self.request.user.students.all()
+        # return Student.objects.all()
 
     def perform_create(self, serializer):
         serializer.save(guardian=self.request.user)
