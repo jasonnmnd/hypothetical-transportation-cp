@@ -1,0 +1,36 @@
+version: "3.9"
+   
+services:
+  db:
+    image: postgres
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=admin
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+  # requirements:
+  #   image: python:3.7-alpine
+  #   volumes:
+  #     - .:/code
+  #   working_dir: /code
+  #   command: pip install -r requirements.txt
+  web:
+    build: 
+      context: ./hypothetical_transportation
+      dockerfile: Dockerfile
+    platform: linux/amd64
+    
+    command: python hypothetical_transportation/manage.py migrate && python hypothetical_transportation/manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    environment:
+      - POSTGRES_DB=admin
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+    depends_on:
+      - db
+      # - requirements
+ 
