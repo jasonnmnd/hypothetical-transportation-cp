@@ -33,7 +33,7 @@ function AdminNewPage() {
         }
     }
     const [obj, setObj] = useState(emptyFields[param.column])
-    const fields=obj!==null? Object.keys(obj):[];
+    const fields=obj!==null? Object.keys(obj).filter((i)=>i!=="id"):[];
     
   
     return (
