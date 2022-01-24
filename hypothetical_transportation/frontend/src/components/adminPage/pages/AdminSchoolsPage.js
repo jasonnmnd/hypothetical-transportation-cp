@@ -3,6 +3,7 @@ import SidebarSliding from '../components/sidebar/SidebarSliding';
 import Header from '../../header/Header';
 import AdminTable from '../components/table/AdminTable';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 // import { connect } from 'react-redux';
 // import PropTypes from 'prop-types';
 // import { getSchools } from '../../../actions/schools';
@@ -75,6 +76,9 @@ function AdminSchoolsPage() {
             <div className="prev-next-buttons">
               <button onClick={handlePrevClick}>Prev</button>
               <button onClick={handleNextClick}>Next</button> 
+              <Link to="/admin/new/school">
+                <button className='button'> New</button>
+              </Link>
             </div>
         </div>
     </div>

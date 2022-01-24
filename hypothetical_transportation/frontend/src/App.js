@@ -21,6 +21,7 @@ import { loadUser } from "./actions/auth";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { login } from "./actions/auth";
+import AdminNewPage from "./components/adminPage/pages/AdminNewPage";
 
 function App( {store, login} ) {
   //Login details, move to database for security
@@ -175,11 +176,11 @@ function App( {store, login} ) {
           <Route exact path="/admin/edit/:column/:id" element={<AdminEditPage />}></Route>
           <Route exact path="/admin/schools" element={<AdminSchoolsPage />}></Route>
           <Route exact path="/admin/routes" element={<AdminRoutesPage />}></Route>
-          <Route path="/admin/edit" element={<AdminEditPage />}></Route>
           <Route exact path="/admin/user/:id" element={<AdminUserDetails />}/>
           <Route exact path="/admin/student/:id" element={<AdminStudentDetails />}/>
           <Route exact path="/admin/school/:id" element={<AdminSchoolDetails />}/>
           <Route exact path="/admin/route/:id" element={<AdminRouteDetails />}/>
+          <Route exact path="admin/new/:column" element={<AdminNewPage />}></Route>
         </Routes>
       </BrowserRouter>
     </div>

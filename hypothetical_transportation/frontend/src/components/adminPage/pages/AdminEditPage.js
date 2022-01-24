@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import EditForm from '../components/forms/EditForm';
+import EditForm from '../components/forms/AdminForm';
 import Header from '../../header/Header';
 import AdminPage from '../AdminPage';
 import "../adminPage.css";
@@ -13,7 +13,7 @@ function AdminEditPage() {
   const param = useParams();
   //query the database for param.column (student/user/school/route) and id equals param.id
   const [obj, setobj] = useState(null);
-  const getFields = () => {
+  const getOldData = () => {
     axios.get(`/api/${param.column}/${param.id}/`)
         .then(res => {
             setobj(res.data);
@@ -21,7 +21,7 @@ function AdminEditPage() {
     }
   
   useEffect(() => {
-    getFields();
+    getOldData();
   }, []);
   
 
@@ -33,7 +33,7 @@ function AdminEditPage() {
       <div className='admin-edit-page'>
         <Header textToDisplay={"Admin Portal"}></Header>
         <SidebarSliding/>
-        <EditForm title={"Edit "+param.column} fields={fields} obj={obj} setobj={setobj}></EditForm>
+        <EditForm title={"Edit "+param.column} fields={fields} obj={obj} setobj={setobj} action={"edit"}></EditForm>
         {/* <Link to={`/admin/${param.column}s`}><button>To {param.column}</button></Link> */}
         <button onClick={() => navigate(-1)} className='button'>Go Back</button>
       </div>
