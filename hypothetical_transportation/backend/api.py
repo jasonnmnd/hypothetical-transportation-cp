@@ -7,6 +7,8 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from .serializers import UserSerializer, StudentSerializer, RouteSerializer, SchoolSerializer
 from .permissions import IsAdminOrReadOnlyParent
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
 
 
 class MapsAPI(APIView):
@@ -31,12 +33,6 @@ class UserViewSet(viewsets.ModelViewSet):
         content = repr_str.split('\n')
         return Response(json.dumps(content))
 
-    # @action(detail=True, methods=['get'])
-    # def students(self, request, pk=None):
-    #     assoc_students = StudentViewSet.queryset.filter(guardian__pk=pk)
-    #     serial_student_data = StudentSerializer(assoc_students, many=True).data
-    #     return Response(serial_student_data)
-
 
 class RouteViewSet(viewsets.ModelViewSet):
     queryset = Route.objects.all()
@@ -47,11 +43,16 @@ class RouteViewSet(viewsets.ModelViewSet):
 
 
 class SchoolViewSet(viewsets.ModelViewSet):
-    queryset = School.objects.all()
+    serializer_class = SchoolSerializer
     permission_classes = [
         permissions.AllowAny
     ]
-    serializer_class = SchoolSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filterset_fields = ['name', 'address']
+    search_fields = ['name']
+
+    def get_queryset(self):
+        return School.objects.all()
 
 
 class StudentViewSet(viewsets.ModelViewSet):
@@ -63,7 +64,8 @@ class StudentViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         # modify to return all if admin
-        return self.request.user.students.all()
+        # return self.request.user.students.all()
+        return Student.objects.all()
 
     def perform_create(self, serializer):
         serializer.save(guardian=self.request.user)
