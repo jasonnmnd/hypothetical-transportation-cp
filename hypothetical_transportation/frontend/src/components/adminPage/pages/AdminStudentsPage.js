@@ -14,7 +14,7 @@ function AdminStudentsPage() {
       name: "Anna",
       studentid: 12,
       school: "School 1",
-      route:1,
+      route: "",
     },
 
     {
