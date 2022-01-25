@@ -12,7 +12,7 @@ WORKDIR /code
 # move requirements into new directory
 COPY requirements.txt /code/
 
-CMD "echo 'HI'"
+CMD ["npm", "run", "build"]
 
 # install requirements
 RUN pip install -r requirements.txt

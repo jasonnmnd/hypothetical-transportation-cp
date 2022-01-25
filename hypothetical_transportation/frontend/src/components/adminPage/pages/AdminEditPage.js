@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import EditForm from '../components/forms/AdminForm';
+import EditForm from '../components/forms/EditForm';
 import Header from '../../header/Header';
 import AdminPage from '../AdminPage';
 import "../adminPage.css";
@@ -11,6 +11,7 @@ import axios from 'axios';
 function AdminEditPage() {
   const navigate = useNavigate();
   const param = useParams();
+  // const col = param.column.includes("_") :param.column
   //query the database for param.column (student/user/school/route) and id equals param.id
   const [obj, setobj] = useState(null);
   const getOldData = () => {
@@ -19,6 +20,7 @@ function AdminEditPage() {
             setobj(res.data);
         }).catch(err => console.log(err));
     }
+  const fields=obj!==null? Object.keys(obj).filter((i)=>i!=="id"):[];
   
   useEffect(() => {
     getOldData();
@@ -27,7 +29,6 @@ function AdminEditPage() {
 
 
   
-  const fields=obj!==null? Object.keys(obj):[];
 
   return (
       <div className='admin-edit-page'>

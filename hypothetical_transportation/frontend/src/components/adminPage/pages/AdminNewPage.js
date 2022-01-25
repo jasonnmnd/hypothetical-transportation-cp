@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import EditForm from '../components/forms/AdminForm';
+import EditForm from '../components/forms/EditForm';
 import Header from '../../header/Header';
 import AdminPage from '../AdminPage';
 import "../adminPage.css";
@@ -33,7 +33,7 @@ function AdminNewPage() {
         }
     }
     const [obj, setObj] = useState(emptyFields[param.column])
-    const fields=obj!==null? Object.keys(obj):[];
+    const fields=obj!==null? Object.keys(obj).filter((i)=>i!=="id"):[];
     
   
     return (

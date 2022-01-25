@@ -17,11 +17,11 @@ services:
   #   command: pip install -r requirements.txt
   web:
     build: 
-      context: ./hypothetical_transportation
+      context: .
       dockerfile: Dockerfile
-    platform: linux/amd64
+    # platform: linux/amd64
     
-    command: python hypothetical_transportation/manage.py migrate && python hypothetical_transportation/manage.py runserver 0.0.0.0:8000
+    command: python hypothetical_transportation/manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/code
     ports:
