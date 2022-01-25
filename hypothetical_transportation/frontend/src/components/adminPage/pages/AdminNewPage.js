@@ -32,11 +32,11 @@ function AdminNewPage() {
           address: "",
         }
     }
-    const [obj, setObj] = useState(emptyFields[param.column])
-    const fields=obj!==null? Object.keys(obj).filter((i)=>i!=="id"):[];
-    
+    const col = param.column.includes("_") ?param.column.split("_")[1]:param.column
+    const [obj, setObj] = useState(emptyFields[col])
+    const fields=obj!==null? Object.keys(obj).filter((i)=>param.column.includes("parent")?i!=="id":i!=="id"&&i!=="address"):[];
   
-    return (
+    return ( 
       <>
         <Header textToDisplay={"Admin Portal"}></Header>
         <SidebarSliding/>
