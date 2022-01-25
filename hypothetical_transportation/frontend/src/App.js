@@ -168,7 +168,7 @@ function App( {store, login} ) {
           <Route exact path="/" element={<LoginForm adminLogin={adminLogin} parentLogin={parentLogin} user={user} error={error}/>}></Route>
           <Route path="/parent/*" element={<ParentPage user={user} Logout={Logout}/>}></Route>
           <Route exact path="/account" element={<AccountPage user={user}/>}></Route>
-          <Route exact path="/account/password" element={<ResetPasswordPage save={reset} message={resetMessage}/>}></Route>
+          <Route exact path="/account/password" element={<ResetPasswordPage user={user} save={reset} message={resetMessage}/>}></Route>
           <Route exact path="/parent/student/:school/:id" element={<ParentStudentDetails ></ParentStudentDetails>}/>
           <Route path="/admin/*" element={<AdminPage user={user} Logout={Logout}/>}></Route>
           <Route exact path="/admin/users" element={<AdminUsersPage />}></Route>

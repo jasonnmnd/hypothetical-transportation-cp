@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from 'react-router-dom';
+import SidebarSliding from "../adminPage/components/sidebar/SidebarSliding";
 import Header from "../header/Header";
 
 
@@ -7,7 +8,8 @@ function AccountPage({user}){
 
     return(
         <div>
-            <Header textToDisplay={"Parent Portal"}></Header>
+            <Header textToDisplay={user.admin? "Admin Portal": "Parent Portal"}></Header>
+            <SidebarSliding/>
             <div className="welcome">
                 <h1>Account Details</h1>
                 <p>Name: {user.name}</p>
