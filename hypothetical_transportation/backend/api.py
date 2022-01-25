@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from .serializers import UserSerializer, StudentSerializer, RouteSerializer, SchoolSerializer
 from .permissions import IsAdminOrReadOnlyParent
 from django_filters.rest_framework import DjangoFilterBackend
+from django.contrib.auth import get_user_model
 from rest_framework import filters
 
 
@@ -38,7 +39,7 @@ class MapsAPI(APIView):
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    queryset = UserProfile.objects.all()
+    queryset = get_user_model().objects.all()
     permission_classes = [
         permissions.AllowAny
     ]
