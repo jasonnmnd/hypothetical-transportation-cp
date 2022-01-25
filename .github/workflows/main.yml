@@ -1,4 +1,4 @@
-name: Build & Deploy
+name: Build & Deploy [DEV]
 
 on:
   push:
@@ -12,7 +12,7 @@ jobs:
         uses: appleboy/ssh-action@v0.1.2
         with:
           host: ${{secrets.DEV_SSH_HOST}}
-          key: ${{secrets.DEV_SSH_KEY}}
           username: ${{secrets.DEV_SSH_USERNAME}}
+          password: ${{secrets.DEV_SSH_PASSWORD}}
           script: |
             ls -la
