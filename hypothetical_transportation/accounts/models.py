@@ -3,7 +3,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
-# https://www.fomfus.com/articles/how-to-use-email-as-username-for-django-authentication-removing-the-username/
+# Tutorial: https://tech.serhatteker.com/post/2020-01/email-as-username-django/
 class CustomUserManager(BaseUserManager):
     """
     Custom user model manager where email is the unique identifiers
@@ -43,6 +43,8 @@ class User(AbstractUser):
     # https://stackoverflow.com/questions/49134831/django-make-user-email-required
     username = None
     email = models.EmailField(_('email address'), help_text=_('Required'), blank=False, unique=True, null=False)
+    full_name = models.CharField(_('full name'), max_length=300, help_text=_('Required'), blank=False, unique=True, null=False)
+    address = models.CharField(_('address'), max_length=300, blank=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
