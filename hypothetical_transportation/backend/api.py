@@ -1,15 +1,13 @@
-import json
-
-from .models import UserProfile, Student, School, Route
+from django.contrib.auth import get_user_model
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
 from rest_framework import viewsets, permissions
-from rest_framework.views import APIView
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from .models import School, Route, Student
 from .serializers import UserSerializer, StudentSerializer, RouteSerializer, SchoolSerializer
-from .permissions import IsAdminOrReadOnlyParent
-from django_filters.rest_framework import DjangoFilterBackend
-from django.contrib.auth import get_user_model
-from rest_framework import filters
 
 
 def parse_repr(repr_str: str) -> dict:
@@ -39,11 +37,13 @@ class MapsAPI(APIView):
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    queryset = get_user_model().objects.all()
+    serializer_class = UserSerializer
     permission_classes = [
         permissions.AllowAny
     ]
-    serializer_class = UserSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filterset_fields = '__all__'
+    queryset = get_user_model().objects.all()
 
     @action(detail=False)
     def fields(self, request):
@@ -52,12 +52,14 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
 class RouteViewSet(viewsets.ModelViewSet):
-    queryset = Route.objects.all()
+    serializer_class = RouteSerializer
     permission_classes = [
         # IsAdminOrReadOnlyParent
         permissions.AllowAny
     ]
-    serializer_class = RouteSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filterset_fields = '__all__'
+    queryset = Route.objects.all()
 
     @action(detail=False)
     def fields(self, request):
@@ -71,7 +73,7 @@ class SchoolViewSet(viewsets.ModelViewSet):
         permissions.AllowAny
     ]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
-    filterset_fields = ['name', 'address']
+    filterset_fields = '__all__'
     search_fields = ['name']
 
     # search_fields = [self.request.querystring]
@@ -86,16 +88,18 @@ class SchoolViewSet(viewsets.ModelViewSet):
 
 
 class StudentViewSet(viewsets.ModelViewSet):
-    permission_classes = [
-        permissions.IsAuthenticated
-        # permissions.AllowAny
-    ]
     serializer_class = StudentSerializer
+    permission_classes = [
+        # permissions.IsAuthenticated
+        permissions.AllowAny
+    ]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filterset_fields = '__all__'
 
     def get_queryset(self):
         # modify to return all if admin
-        return self.request.user.students.all()
-        # return Student.objects.all()
+        # return self.request.user.students.all()
+        return Student.objects.all()
 
     def perform_create(self, serializer):
         serializer.save(guardian=self.request.user)

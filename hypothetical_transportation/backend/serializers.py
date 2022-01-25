@@ -1,6 +1,7 @@
-from rest_framework import serializers
-from .models import UserProfile, Route, School, Student
 from django.contrib.auth import get_user_model
+from rest_framework import serializers
+
+from .models import Route, School, Student
 
 
 class UserSerializer(serializers.ModelSerializer):
