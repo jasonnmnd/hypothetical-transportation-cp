@@ -35,7 +35,7 @@ function AdminStudentsPage() {
 
     {
       id:4441,
-      name: "Sam",
+      name: "Bob",
       studentid: 23423,
       school: "School 4",
       route:4,
@@ -65,6 +65,9 @@ function AdminStudentsPage() {
         <SidebarSliding/>
         <Header textToDisplay={"Admin Portal"}></Header>
         <div className='middle-content'>
+          <div className='center-buttons'>
+              <button className='Add New Student'>Add New Student</button>
+          </div>
           <div className='table-and-buttons'>
             <AdminTable title={title} header={header} data={dispdata} search={search}/>
             <div className="prev-next-buttons">
