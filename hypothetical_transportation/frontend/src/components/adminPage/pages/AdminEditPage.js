@@ -20,7 +20,7 @@ function AdminEditPage() {
             setobj(res.data);
         }).catch(err => console.log(err));
     }
-  const fields=obj!==null? Object.keys(obj).filter((i)=>i!=="id"):[];
+  const fields=obj!==null? Object.keys(obj).filter((i)=>param.column.includes("parent")?i!=="id"&&i!=="admin":i!=="id"&&i!=="admin"&&i!=="address"):[];
   
   useEffect(() => {
     getOldData();
