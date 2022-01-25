@@ -94,6 +94,7 @@ function AdminUserDetails() {
     <>  
         <Header textToDisplay={"Admin Portal"}></Header>
         <SidebarSliding/>
+        {openModal && <DeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}
         <div className='middle-justify'>
             <div className='admin-details'>
                 <h1>User Details</h1>
@@ -131,7 +132,6 @@ function AdminUserDetails() {
                   </Link> */}
                   <button onClick={() => navigate(-1)} className='button'>Go Back</button>
             </div>
-            {openModal && <DeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}
         </div>
     </>
   );

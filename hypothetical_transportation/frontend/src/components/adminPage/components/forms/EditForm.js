@@ -70,6 +70,7 @@ function EditForm({column, fields, obj, setobj, action}) {
                         })
                     }
                     <div className="divider15px" />
+                    
                     <button onClick={submit}>Save</button>
                 </div>
             </form>

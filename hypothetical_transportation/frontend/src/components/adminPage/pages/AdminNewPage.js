@@ -37,13 +37,16 @@ function AdminNewPage() {
     
   
     return (
+      <>
+        <Header textToDisplay={"Admin Portal"}></Header>
+        <SidebarSliding/>
         <div className='admin-edit-page'>
-            <Header textToDisplay={"Admin Portal"}></Header>
-            <SidebarSliding/>
+            
             <EditForm column={param.column} fields={fields} obj={obj} setobj={setObj} action={"new"}></EditForm>
             {/* <Link to={`/admin/${param.column}s`}><button>To {param.column}</button></Link> */}
             <button onClick={() => navigate(-1)} className='button'>Go Back</button>
         </div>
+      </>
         );
 }
 

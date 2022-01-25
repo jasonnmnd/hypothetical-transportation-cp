@@ -72,12 +72,16 @@
   background-color: #ffdd99;
 }
 
+.adminTable-container h1 {
+  text-align: center;
+}
+
 .admin-edit-page {
-  height: 150vh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: top;
   gap: 100px;
 }
 
@@ -102,8 +106,7 @@
 .admin-details {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  padding-top: 200px;
+  justify-content: top;
   align-items: center;
   gap: 20px;
 }
@@ -329,4 +332,8 @@ td {
   color: #fff;
   font-weight: 700;
   cursor: pointer;
+}
+
+.middle-content {
+  margin-left: 200px;
 }
