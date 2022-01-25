@@ -27,6 +27,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
         '0.0.0.0',
         'hypothetical-transportation.colab.duke.edu',
+        'ht-dev.colab.duke.edu',
 ]
 
 # Application definition
