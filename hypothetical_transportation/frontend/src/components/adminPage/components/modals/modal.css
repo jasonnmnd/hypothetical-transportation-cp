@@ -72,3 +72,7 @@
 #cancelBtn {
   background-color: #ffae07;
 }
+
+.modalContainer .modal-form input {
+  max-width: 200px;
+}

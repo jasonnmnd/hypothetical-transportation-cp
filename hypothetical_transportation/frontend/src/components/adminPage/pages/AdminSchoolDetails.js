@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Header from '../../header/Header';
 import "../adminPage.css";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import DeleteModal from '../components/modals/DeleteModal';
+import FormDeleteModal from '../components/modals/FormDeleteModal';
 import AdminTable from '../components/table/AdminTable';
 import SidebarSliding from '../components/sidebar/SidebarSliding';
 import axios from 'axios';
@@ -53,10 +53,10 @@ function AdminSchoolDetails() {
 
   const [openModal, setOpenModal] = useState(false);
 
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = (schoolName) => {
     //Replace with API call to delete school and all its associated routes/students
     //Route back to students page
-    console.log("DELETED USER");
+    console.log(schoolName);
   }
   
   const emptySchool = {
@@ -99,7 +99,7 @@ function AdminSchoolDetails() {
     <>  
         <Header textToDisplay={"Admin Portal"}></Header>
         <SidebarSliding/>
-        {openModal && <DeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}
+        {openModal && <FormDeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}
         <div className='middle-justify'>
           <div className='admin-details'>
 
