@@ -13,9 +13,9 @@ class AuthenticationObjectConsistency(TestCase):
 
         school = School.objects.create(address='1111 Some St.', name='Eggbert Elementary')
         high_school = School.objects.create(address='7777 Some St.', name='Gravity Falls High School')
-        stan = get_user_model().objects.create_user('stan.pines', 'stanpines@mysteryshack.com', 'mysteryshack')
+        stan = get_user_model().objects.create_user('stanpines@mysteryshack.com', 'mysteryshack')
 
-        dan = get_user_model().objects.create(username='manly.dan', email='manlydan@gmail.com', password='wordpass')
+        dan = get_user_model().objects.create(email='manlydan@gmail.com', password='wordpass')
 
         mabel = Student.objects.create(first_name='Mabel', last_name='Pines', address='618 Gopher Road', active=True,
                                        school=school, routes=route, guardian=stan)
@@ -36,7 +36,7 @@ class AuthenticationObjectConsistency(TestCase):
         """
         self.client.post('/api/auth/register',
                          json.dumps(
-                             {'username': 'stanford.pines', 'email': 'stanfordpines@mysteryshack.com',
+                             {'email': 'stanfordpines@mysteryshack.com',
                               'password': 'mysteryshack'}),
                          content_type='application/json')
         num_users = len(get_user_model().objects.all())
@@ -57,7 +57,7 @@ class AuthenticationObjectConsistency(TestCase):
         # HTTP_AUTHORIZATION corresponds to the Authorization: Token {TOKEN_VALUE} header
         get_self_response = self.client.get('/api/auth/user',
                                             HTTP_AUTHORIZATION=f'Token {auth_token}')
-        self.assertEqual(get_self_response.data['username'], 'stan.pines')
+        self.assertEqual(get_self_response.data['email'], 'stanpines@mysteryshack.com')
 
         get_student_response = self.client.get('/api/student/',
                                                HTTP_AUTHORIZATION=f'Token {auth_token}')
