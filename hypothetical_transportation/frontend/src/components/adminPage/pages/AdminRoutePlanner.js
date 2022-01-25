@@ -2,6 +2,7 @@ import React from 'react';
 import Header from '../../header/Header';
 import SidebarSliding from '../components/sidebar/SidebarSliding';
 import { Link } from 'react-router-dom';
+import MapContainer from '../../maps/MapContainer';
 
 function AdminRoutePlanner() {
 
@@ -63,7 +64,7 @@ function AdminRoutePlanner() {
               {/* </Link> */}
             </div>
             <h2>Map of School and Students</h2>
-            <h1>// MAP OF SCHOOL AND STUDENT ADDRESSES HERE //</h1>
+            <MapContainer />
 
             <h2> Students at *this school* With No Routes </h2>
             <h1>// SHOW STUDENTS WITH NO ROUTES HERE //</h1>
