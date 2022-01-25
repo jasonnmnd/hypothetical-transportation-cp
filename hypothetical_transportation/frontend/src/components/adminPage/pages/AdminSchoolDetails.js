@@ -139,7 +139,11 @@ function AdminSchoolDetails() {
             <button onClick={() => {
               setOpenModal(true);
             }}>Delete School</button>
-            <button>Route Planner</button>
+
+            <Link to={`/admin/route/plan/${school.id}`}>
+              <button>Route Planner</button>
+            </Link>
+
           </div>
           {/* <Link to="/admin/schools">
             <button className='button'> To Schools</button>

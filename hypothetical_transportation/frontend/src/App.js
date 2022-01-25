@@ -16,6 +16,7 @@ import AdminStudentDetails from "./components/adminPage/pages/AdminStudentDetail
 import AdminSchoolDetails from "./components/adminPage/pages/AdminSchoolDetails";
 import AdminRouteDetails from "./components/adminPage/pages/AdminRouteDetails";
 import ParentStudentDetails from "./components/parentPage/pages/ParentStudentDetails";
+import AdminRoutePlanner from "./components/adminPage/pages/AdminRoutePlanner";
 //import PrivateRoute from "./components/common/PrivateRoute";
 import { loadUser } from "./actions/auth";
 import { connect } from "react-redux";
@@ -180,6 +181,7 @@ function App( {store, login} ) {
           <Route exact path="/admin/student/:id" element={<AdminStudentDetails />}/>
           <Route exact path="/admin/school/:id" element={<AdminSchoolDetails />}/>
           <Route exact path="/admin/route/:id" element={<AdminRouteDetails />}/>
+          <Route exact path="/admin/route/plan/:id" element={<AdminRoutePlanner />}/>
           <Route exact path="admin/new/:column" element={<AdminNewPage />}></Route>
         </Routes>
       </BrowserRouter>
