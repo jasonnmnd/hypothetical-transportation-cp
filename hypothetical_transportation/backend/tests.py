@@ -9,22 +9,20 @@ from django.contrib.auth import get_user_model
 # Create your tests here.
 class AuthenticationObjectConsistency(TestCase):
     def setUp(self):
-        route = Route.objects.create(name='School Route 1', description='')
-
-        school = School.objects.create(address='1111 Some St.', name='Eggbert Elementary')
-        high_school = School.objects.create(address='7777 Some St.', name='Gravity Falls High School')
         stan = get_user_model().objects.create_user(email='stanpines@mysteryshack.com', password='mysteryshack',
                                                     full_name='Stanley Pines', address='618 Gopher Road')
-
         dan = get_user_model().objects.create_user(email='manlydan@gmail.com', password='wordpass',
                                                    full_name='Manly Dan', address='')
+        school = School.objects.create(address='1111 Some St.', name='Eggbert Elementary')
+        high_school = School.objects.create(address='7777 Some St.', name='Gravity Falls High School')
+        route = Route.objects.create(name='School Route 1', description='', school=school)
 
         mabel = Student.objects.create(first_name='Mabel', last_name='Pines', address='618 Gopher Road', active=True,
-                                       school=school, routes=route, guardian=stan)
+                                       school=school, routes=route, guardian=stan, student_id=1)
         dipper = Student.objects.create(first_name='Dipper', last_name='Pines', address='618 Gopher Road',
-                                        active=True, school=school, routes=route, guardian=stan)
+                                        active=True, school=school, routes=route, guardian=stan, student_id=2)
         wendy = Student.objects.create(first_name='Wendy', last_name='Corduroy', address='618 Gopher Road', active=True,
-                                       school=high_school, routes=route, guardian=dan)
+                                       school=high_school, routes=route, guardian=dan, student_id=1)
 
         self.STANS_KIDS = len(stan.students.all())
         self.INIT_NUM_USERS = len(get_user_model().objects.all())
