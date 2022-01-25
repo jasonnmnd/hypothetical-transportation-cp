@@ -32,18 +32,21 @@ function AdminNewPage() {
           address: "",
         }
     }
-    const [obj, setObj] = useState(emptyFields[param.column])
-    const fields=obj!==null? Object.keys(obj).filter((i)=>i!=="id"):[];
-    
+    const col = param.column.includes("_") ?param.column.split("_")[1]:param.column
+    const [obj, setObj] = useState(emptyFields[col])
+    const fields=obj!==null? Object.keys(obj).filter((i)=>param.column.includes("parent")?i!=="id":i!=="id"&&i!=="address"):[];
   
-    return (
+    return ( 
+      <>
+        <Header textToDisplay={"Admin Portal"}></Header>
+        <SidebarSliding/>
         <div className='admin-edit-page'>
-            <Header textToDisplay={"Admin Portal"}></Header>
-            <SidebarSliding/>
-            <EditForm title={"New "+param.column} fields={fields} obj={obj} setobj={setObj} action={"new"}></EditForm>
+            
+            <EditForm column={param.column} fields={fields} obj={obj} setobj={setObj} action={"new"}></EditForm>
             {/* <Link to={`/admin/${param.column}s`}><button>To {param.column}</button></Link> */}
             <button onClick={() => navigate(-1)} className='button'>Go Back</button>
         </div>
+      </>
         );
 }
 
