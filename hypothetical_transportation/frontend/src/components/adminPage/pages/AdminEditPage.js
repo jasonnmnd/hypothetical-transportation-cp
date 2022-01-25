@@ -31,13 +31,15 @@ function AdminEditPage() {
   
 
   return (
-      <div className='admin-edit-page'>
-        <Header textToDisplay={"Admin Portal"}></Header>
-        <SidebarSliding/>
+    <>
+      <Header textToDisplay={"Admin Portal"}></Header>
+      <SidebarSliding/>
+      <div className='admin-edit-page'>  
         <EditForm column={col} fields={fields} obj={obj} setobj={setobj} action={"edit"}></EditForm>
         {/* <Link to={`/admin/${param.column}s`}><button>To {param.column}</button></Link> */}
         <button onClick={() => navigate(-1)} className='button'>Go Back</button>
       </div>
+    </>
     );
 }
 
