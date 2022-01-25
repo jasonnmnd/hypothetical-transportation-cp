@@ -59,14 +59,16 @@ function AdminRoutesPage() {
         <SidebarSliding/>
         <Header textToDisplay={"Admin Portal"}></Header>
         <div className='middle-content'>
+          <div className='center-buttons'>
+            <Link to="/admin/new/route">
+                <button className='button'>Add New Route</button>
+              </Link>
+          </div>
           <div className='table-and-buttons'>
             <AdminTable title={title} header={Object.keys(emptyRoute[0])} data={routes} search={search}></AdminTable>
             <div className="prev-next-buttons">
                 <button onClick={handlePrevClick}>Prev</button>
                 <button onClick={handleNextClick}>Next</button> 
-                <Link to="/admin/new/route">
-                  <button className='button'> New</button>
-                </Link>
             </div>
           </div>
         </div>
