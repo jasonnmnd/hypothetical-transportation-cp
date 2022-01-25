@@ -1,0 +1,45 @@
+{
+  "name": "ece-458",
+  "version": "1.0.0",
+  "description": "Senior design course project!",
+  "main": "index.js",
+  "scripts": {
+    "dev": "webpack --mode development --watch ./hypothetical_transportation/frontend/src/index.js --output-path ./hypothetical_transportation/frontend/static/frontend/main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danamulligan/ece-458.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/danamulligan/ece-458/issues"
+  },
+  "homepage": "https://github.com/danamulligan/ece-458#readme",
+  "devDependencies": {
+    "@babel/core": "^7.16.7",
+    "@babel/preset-env": "^7.16.8",
+    "@babel/preset-react": "^7.16.7",
+    "babel-loader": "^8.2.3",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "css-loader": "^6.5.1",
+    "file-loader": "^6.2.0",
+    "style-loader": "^3.3.1",
+    "webpack": "^5.66.0",
+    "webpack-cli": "^4.9.1"
+  },
+  "dependencies": {
+    "axios": "^0.25.0",
+    "prop-types": "^15.8.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-icons": "^4.3.1",
+    "react-redux": "^7.2.6",
+    "react-router-dom": "^6.2.1",
+    "redux": "^4.1.2",
+    "redux-devtools-extension": "^2.13.9",
+    "redux-thunk": "^2.4.1",
+    "web-vitals": "^2.1.3"
+  }
+}

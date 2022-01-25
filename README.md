@@ -6,62 +6,37 @@ Senior design course project!
 
 ### Running the frontend
 
-Inside the 'client' directory:
+Compiles frontend content to be served. Package manager will hang and `Ctrl-C` can be used.
 
 ```
-npm start
+npm install
+npm run dev
 ```
-
-Saved changes are propogated automatically
 
 ### Running the Stack
-Inside the `server` directory:
-
+#### First Time Installation
 ```
-nodemon server.js
-```
-
-If this doesn't work, `node server.js` can be used instead.
-
-In a separate terminal, inside the `client` directory:
-
-```
-npm start
+./scripts/start_django.sh
+python3 manage.py makemigrations
+python3 manage.py migrate
 ```
 
-For the database, follow the instructions on the MongoDB website. Afterwards,
-
 ```
-brew services start mongodb-community@5.0
+python3 manage.py runserver
 ```
-
-The corresponding shutdown instruction is `stop`. 
 
 ### Testing
-```
-npm run test
-```
 
 ## Endpoints
-
-To hit the `/school/create` endpoint, try:
-
+### Authentication Endpoints
 ```
-curl -H "Content-Type: application/json" -d '{"name":"Duke University","address":"Durham"}' http://localhost:3001/school/create
-```
-
-To authenticate, try the following:
-
-```
-curl -H "Content-Type: application/json" -d '{"username":"<USERNAME>","password":"<PASSWORD>"}' http://localhost:3001/signup
-curl --cookie-jar jarfile -H "Content-Type: application/json" -d '{"username":"<USERNAME>","password":"<PASSWORD>"}' http://localhost:3001/log-in
-curl --cookie jarfile http://localhost:3001/current-user
+curl -X GET --header "Authorization: Token <TOKEN>" http://localhost:8000/api/auth/user
 ```
 
 ## Troubleshooting
 
 - `npm install -g nodemon` may be necessary (installing Nodemon globally) to ensure that the command to start the server
-  works.  If this doesn't work, the `node` can be used instead for starting the server.
+  works. If this doesn't work, the `node` can be used instead for starting the server.
 - Make sure to run `npm install` in both directories.
 - Make sure to create a `config.env` file for future use inside the `server` folder. We'll probably add credentials into
   the file.
