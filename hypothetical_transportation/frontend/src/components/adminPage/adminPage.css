@@ -72,6 +72,10 @@
   background-color: #ffdd99;
 }
 
+.adminTable-container h1 {
+  text-align: center;
+}
+
 .admin-edit-page {
   height: 150vh;
   display: flex;
