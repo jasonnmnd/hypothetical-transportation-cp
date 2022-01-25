@@ -67,8 +67,11 @@ function AdminUsersPage() {
               <div className="prev-next-buttons">
                   <button onClick={handlePrevClick}>Prev</button>
                   <button onClick={handleNextClick}>Next</button> 
-                  <Link to="/admin/new/user">
-                    <button className='button'> New</button>
+                  <Link to="/admin/new/admin_user">
+                    <button className='button'> New Admin</button>
+                  </Link>
+                  <Link to="/admin/new/parent_user">
+                    <button className='button'> New Parent</button>
                   </Link>
 
               </div>

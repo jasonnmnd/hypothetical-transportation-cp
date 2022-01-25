@@ -110,6 +110,10 @@ function AdminUserDetails() {
                     <h2>Address: </h2>
                     <h3>{user.address}</h3>
                 </div>
+                <div className='info-fields'>
+                    <h2>Admin: </h2>
+                    <h3>{user.admin ? "true":"false"}</h3>
+                </div>
                 {/* Table for Students Here */}
                 <div className='info-fields'>
                     {/* <h2>Students: </h2> */}
