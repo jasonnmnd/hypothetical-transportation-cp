@@ -9,25 +9,30 @@ import { useNavigate } from "react-router-dom";
 //input3: a typed object matching the fields
 function EditForm({column, fields, obj, setobj, action}) {
     const navigate = useNavigate();
+    const col = column.includes("_") ?column.split("_")[1]:column
     const submit = (e) => {
+        // console.log(column);
+        // console.log(column.includes("admin"))
+        if(column.includes("admin")){
+            obj.admin=true;
+        }
         e.preventDefault();
-        console.log(obj);
+        // console.log(obj);
         //route to a post to save the data
         if(action==="edit"){
             axios
-                .put(`/api/${column}/${obj.id}/`,obj)
+                .put(`/api/${col}/${obj.id}/`,obj)
                 .then(res =>{
-                    console.log(obj)
-                    navigate(`/admin/${column}/${obj.id}/`)
+                    // console.log(obj)
+                    navigate(`/admin/${col}/${obj.id}/`)
 
                 }).catch(err => console.log(err));
         }else if(action==="new"){
-            console.log("new")
+            // console.log("new")
             axios
-                .post(`/api/${column}/`,obj)
+                .post(`/api/${col}/`,obj)
                 .then(res =>{
-                    console.log(obj)
-                    navigate(`/admin/${column}s/`)
+                    navigate(`/admin/${col}s/`)
 
                 }).catch(err => console.log(err));
         }
@@ -39,22 +44,8 @@ function EditForm({column, fields, obj, setobj, action}) {
                 <div className="form-inner">
                     <h2>{action+" "+column}</h2>
                     {
-                        fields.filter(f=>f!=="id").map((field,i)=>{
-                            return typeof(obj[field])==="boolean" ? 
-                            (<div className="form-group" key={i}>
-                                <label htmlFor={field}>{field}</label>
-                                <input
-                                    className="checkbox"
-                                    type="checkbox"
-                                    name={field}
-                                    id={field}
-                                    checked={obj[field]}
-                                    onChange={(e)=>{
-                                        setobj({...obj, [field]: e.target.checked})
-                                    }}
-                                />
-                            </div>):
-                            (<div className="form-group" key={i}>
+                        fields.filter(f=>f!=="id"&&f!=="admin").map((field,i)=>{
+                            return (<div className="form-group" key={i}>
                                 <label htmlFor={field}>{field}</label>
                                 <input
                                     className="input"
