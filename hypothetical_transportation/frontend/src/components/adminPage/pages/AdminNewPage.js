@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import EditForm from '../components/forms/AdminForm';
+import EditForm from '../components/forms/EditForm';
 import Header from '../../header/Header';
 import AdminPage from '../AdminPage';
 import "../adminPage.css";
@@ -33,14 +33,14 @@ function AdminNewPage() {
         }
     }
     const [obj, setObj] = useState(emptyFields[param.column])
-    const fields=obj!==null? Object.keys(obj):[];
+    const fields=obj!==null? Object.keys(obj).filter((i)=>i!=="id"):[];
     
   
     return (
         <div className='admin-edit-page'>
             <Header textToDisplay={"Admin Portal"}></Header>
             <SidebarSliding/>
-            <EditForm title={"New "+param.column} fields={fields} obj={obj} setobj={setObj} action={"new"}></EditForm>
+            <EditForm column={param.column} fields={fields} obj={obj} setobj={setObj} action={"new"}></EditForm>
             {/* <Link to={`/admin/${param.column}s`}><button>To {param.column}</button></Link> */}
             <button onClick={() => navigate(-1)} className='button'>Go Back</button>
         </div>

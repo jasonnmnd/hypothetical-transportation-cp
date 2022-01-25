@@ -55,19 +55,21 @@ function AdminUserDetails() {
     last_name: "",
     email: "",
     address: "",
-    admin:true,
+    admin:false,
   }
 
   const emptyStudents = [{
   }]
 
   const [user, setUser] = useState(emptyUser);
+  const [colum, setColumn] = useState("");
   const [students, setStudents] = useState(emptyStudents);
 
   const getUser = () => {
     axios.get(`/api/user/${param.id}`)
         .then(res => {
           setUser(res.data);
+          res.data.admin?setColumn("admin_user"):setColumn("parent_user")
         }).catch(err => console.log(err));
     }
   
@@ -81,6 +83,8 @@ function AdminUserDetails() {
   useEffect(() => {
     getUser();
     getStudents();
+    console.log(colum)
+
   }, []);
 
 
@@ -117,7 +121,7 @@ function AdminUserDetails() {
                 </div>
 
                 <div className='edit-delete-buttons'>
-                  <Link to={`/admin/edit/user/${user.id}`}><button>Edit User</button></Link>
+                  <Link to={`/admin/edit/${colum}/${user.id}`}><button>Edit User</button></Link>
                   <button onClick={() => {
                     setOpenModal(true);
                   }}>Delete User</button>
