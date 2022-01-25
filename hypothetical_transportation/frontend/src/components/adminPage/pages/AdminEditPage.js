@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import EditForm from '../components/forms/EditForm';
+import EditForm from '../components/forms/EForm';
 import Header from '../../header/Header';
 import AdminPage from '../AdminPage';
 import "../adminPage.css";
