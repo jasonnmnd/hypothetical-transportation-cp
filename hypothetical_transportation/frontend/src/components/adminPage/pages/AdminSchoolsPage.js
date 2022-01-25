@@ -70,15 +70,17 @@ function AdminSchoolsPage() {
     <div className='admin-page'>
         <SidebarSliding/>
         <Header textToDisplay={"Admin Portal"}></Header>
-        <div className='table-and-buttons'>
-          {/* <AdminTable title={title} header={header} data={data} search={search}/> */}
-          <AdminTable title={title} header={Object.keys(emptySchools[0])} data={schools} search={search}/>
-            <div className="prev-next-buttons">
-              <button onClick={handlePrevClick}>Prev</button>
-              <button onClick={handleNextClick}>Next</button> 
-              <Link to="/admin/new/school">
-                <button className='button'> New</button>
-              </Link>
+        <div className='middle-content'>
+          <div className='table-and-buttons'>
+            {/* <AdminTable title={title} header={header} data={data} search={search}/> */}
+            <AdminTable title={title} header={Object.keys(emptySchools[0])} data={schools} search={search}/>
+              <div className="prev-next-buttons">
+                <button onClick={handlePrevClick}>Prev</button>
+                <button onClick={handleNextClick}>Next</button> 
+                <Link to="/admin/new/school">
+                  <button className='button'> New</button>
+                </Link>
+              </div>
             </div>
         </div>
     </div>

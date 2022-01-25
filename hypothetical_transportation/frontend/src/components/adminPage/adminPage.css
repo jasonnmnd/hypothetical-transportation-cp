@@ -330,3 +330,7 @@ td {
   font-weight: 700;
   cursor: pointer;
 }
+
+.middle-content {
+  margin-left: 200px;
+}

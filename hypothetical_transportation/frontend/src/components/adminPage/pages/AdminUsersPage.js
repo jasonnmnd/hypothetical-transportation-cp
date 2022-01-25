@@ -61,17 +61,19 @@ function AdminUsersPage() {
     <div className='admin-page'>
         <SidebarSliding/>
         <Header textToDisplay={"Admin Portal"}></Header>
-        <div className='table-and-buttons'>
-            <AdminTable title={title} header={Object.keys(emptyUser[0])} data={users} search={search}/>
-            <div className="prev-next-buttons">
-                <button onClick={handlePrevClick}>Prev</button>
-                <button onClick={handleNextClick}>Next</button> 
-                <Link to="/admin/new/user">
-                  <button className='button'> New</button>
-                </Link>
+        <div className='middle-content'>
+          <div className='table-and-buttons'>
+              <AdminTable title={title} header={Object.keys(emptyUser[0])} data={users} search={search}/>
+              <div className="prev-next-buttons">
+                  <button onClick={handlePrevClick}>Prev</button>
+                  <button onClick={handleNextClick}>Next</button> 
+                  <Link to="/admin/new/user">
+                    <button className='button'> New</button>
+                  </Link>
 
-            </div>
+              </div>
           </div>
+        </div>
     </div>
   )
 }
