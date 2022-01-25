@@ -11,6 +11,25 @@ from .serializers import UserSerializer, StudentSerializer, RouteSerializer, Sch
 from .search import DynamicSearchFilter
 
 
+def get_filter_dict(model):
+    """
+    Constructs a dictionary of fields to search properties desired.
+
+    Assumes __all__ would be a safe alternative, and allows checking isnull for valid fields.
+
+    Based on this representation for the backend django-filter: https://django-filter.readthedocs.io/en/stable/ref/filterset.html#declaring-filterable-fields
+    :param model: Model to be filtered
+    :return:
+    """
+    fields_dict = dict()
+    for field in model._meta.get_fields():
+        permission_list = ['exact']
+        if field.null:
+            permission_list.append('isnull')
+        fields_dict[field.name] = permission_list
+    return fields_dict
+
+
 def parse_repr(repr_str: str) -> dict:
     """
     Parses a REST Django Serializer str representation into a dictionary of fields.
@@ -43,8 +62,10 @@ class UserViewSet(viewsets.ModelViewSet):
         permissions.AllowAny
     ]
     filter_backends = [DjangoFilterBackend, DynamicSearchFilter]
-    filterset_fields = '__all__'
-    queryset = get_user_model().objects.all()
+    filterset_fields = get_filter_dict(get_user_model())
+
+    def get_queryset(self):
+        return get_user_model().objects.all().distinct()
 
     @action(detail=False)
     def fields(self, request):
@@ -59,8 +80,10 @@ class RouteViewSet(viewsets.ModelViewSet):
         permissions.AllowAny
     ]
     filter_backends = [DjangoFilterBackend, DynamicSearchFilter]
-    filterset_fields = '__all__'
-    queryset = Route.objects.all()
+    filterset_fields = get_filter_dict(Route)
+
+    def get_queryset(self):
+        return Route.objects.all().distinct()
 
     @action(detail=False)
     def fields(self, request):
@@ -74,12 +97,12 @@ class SchoolViewSet(viewsets.ModelViewSet):
         permissions.AllowAny
     ]
     filter_backends = [DjangoFilterBackend, DynamicSearchFilter]
-    filterset_fields = '__all__'
+    filterset_fields = get_filter_dict(School)
 
     # search_fields = [self.request.querystring]
 
     def get_queryset(self):
-        return School.objects.all()
+        return School.objects.all().distinct()
 
     @action(detail=False)
     def fields(self, request):
@@ -94,12 +117,12 @@ class StudentViewSet(viewsets.ModelViewSet):
         permissions.AllowAny
     ]
     filter_backends = [DjangoFilterBackend, DynamicSearchFilter]
-    filterset_fields = '__all__'
+    filterset_fields = get_filter_dict(Student)
 
     def get_queryset(self):
         # modify to return all if admin
         # return self.request.user.students.all()
-        return Student.objects.all()
+        return Student.objects.all().distinct()
 
     def perform_create(self, serializer):
         serializer.save()
