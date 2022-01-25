@@ -11,11 +11,11 @@ import axios from 'axios';
 function AdminEditPage() {
   const navigate = useNavigate();
   const param = useParams();
-  // const col = param.column.includes("_") :param.column
+  const col = param.column.includes("_") ?param.column.split("_")[1]:param.column
   //query the database for param.column (student/user/school/route) and id equals param.id
   const [obj, setobj] = useState(null);
   const getOldData = () => {
-    axios.get(`/api/${param.column}/${param.id}/`)
+    axios.get(`/api/${col}/${param.id}/`)
         .then(res => {
             setobj(res.data);
         }).catch(err => console.log(err));
@@ -34,7 +34,7 @@ function AdminEditPage() {
       <div className='admin-edit-page'>
         <Header textToDisplay={"Admin Portal"}></Header>
         <SidebarSliding/>
-        <EditForm title={"Edit "+param.column} fields={fields} obj={obj} setobj={setobj} action={"edit"}></EditForm>
+        <EditForm column={col} fields={fields} obj={obj} setobj={setobj} action={"edit"}></EditForm>
         {/* <Link to={`/admin/${param.column}s`}><button>To {param.column}</button></Link> */}
         <button onClick={() => navigate(-1)} className='button'>Go Back</button>
       </div>

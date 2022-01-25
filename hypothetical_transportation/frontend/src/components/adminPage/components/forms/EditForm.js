@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 //input1: title of form
 //input2: list of fields?
 //input3: a typed object matching the fields
-function EditForm({title, fields, obj, setobj, action}) {
+function EditForm({column, fields, obj, setobj, action}) {
     const navigate = useNavigate();
     const submit = (e) => {
         e.preventDefault();
@@ -15,19 +15,19 @@ function EditForm({title, fields, obj, setobj, action}) {
         //route to a post to save the data
         if(action==="edit"){
             axios
-                .put(`/api/${title.slice(5,)}/${obj.id}/`,obj)
+                .put(`/api/${column}/${obj.id}/`,obj)
                 .then(res =>{
                     console.log(obj)
-                    navigate(`/admin/${title.slice(5,)}/${obj.id}/`)
+                    navigate(`/admin/${column}/${obj.id}/`)
 
                 }).catch(err => console.log(err));
         }else if(action==="new"){
             console.log("new")
             axios
-                .post(`/api/${title.slice(4,)}/`,obj)
+                .post(`/api/${column}/`,obj)
                 .then(res =>{
                     console.log(obj)
-                    navigate(`/admin/${title.slice(4,)}s/`)
+                    navigate(`/admin/${column}s/`)
 
                 }).catch(err => console.log(err));
         }
@@ -37,7 +37,7 @@ function EditForm({title, fields, obj, setobj, action}) {
         <div>
             <form>
                 <div className="form-inner">
-                    <h2>{title}</h2>
+                    <h2>{action+" "+column}</h2>
                     {
                         fields.filter(f=>f!=="id").map((field,i)=>{
                             return typeof(obj[field])==="boolean" ? 
