@@ -8,6 +8,7 @@ from rest_framework.views import APIView
 
 from .models import School, Route, Student
 from .serializers import UserSerializer, StudentSerializer, RouteSerializer, SchoolSerializer
+from .search import DynamicSearchFilter
 
 
 def parse_repr(repr_str: str) -> dict:
@@ -41,7 +42,7 @@ class UserViewSet(viewsets.ModelViewSet):
     permission_classes = [
         permissions.AllowAny
     ]
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filter_backends = [DjangoFilterBackend, DynamicSearchFilter]
     filterset_fields = '__all__'
     queryset = get_user_model().objects.all()
 
@@ -57,7 +58,7 @@ class RouteViewSet(viewsets.ModelViewSet):
         # IsAdminOrReadOnlyParent
         permissions.AllowAny
     ]
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filter_backends = [DjangoFilterBackend, DynamicSearchFilter]
     filterset_fields = '__all__'
     queryset = Route.objects.all()
 
@@ -72,9 +73,8 @@ class SchoolViewSet(viewsets.ModelViewSet):
     permission_classes = [
         permissions.AllowAny
     ]
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filter_backends = [DjangoFilterBackend, DynamicSearchFilter]
     filterset_fields = '__all__'
-    search_fields = ['name']
 
     # search_fields = [self.request.querystring]
 
@@ -93,7 +93,7 @@ class StudentViewSet(viewsets.ModelViewSet):
         # permissions.IsAuthenticated
         permissions.AllowAny
     ]
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filter_backends = [DjangoFilterBackend, DynamicSearchFilter]
     filterset_fields = '__all__'
 
     def get_queryset(self):
