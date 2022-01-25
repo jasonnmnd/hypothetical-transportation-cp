@@ -1,0 +1,20 @@
+name: Build & Deploy [DEV]
+
+on:
+  push:
+    branches: [ dev ]
+    
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy
+        uses: appleboy/ssh-action@v0.1.2
+        with:
+          host: ${{secrets.DEV_SSH_HOST}}
+          username: ${{secrets.DEV_SSH_USERNAME}}
+          password: ${{secrets.DEV_SSH_PASSWORD}}
+          script: |
+            cd ece-458
+            sudo docker-compose build
+            sudo docker-compose up -d
