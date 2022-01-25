@@ -98,11 +98,11 @@ class StudentViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         # modify to return all if admin
-        return self.request.user.students.all()
-        # return Student.objects.all()
+        # return self.request.user.students.all()
+        return Student.objects.all()
 
     def perform_create(self, serializer):
-        serializer.save(guardian=self.request.user)
+        serializer.save()
 
     @action(detail=False)
     def fields(self, request):

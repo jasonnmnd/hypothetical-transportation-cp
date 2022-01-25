@@ -31,14 +31,20 @@ class Student(models.Model):
     address = models.CharField(max_length=140)
     active = models.BooleanField(default=True)
     school = models.ForeignKey(
-        School,
+        School, related_name='students',
         on_delete=models.CASCADE,
     )
     routes = models.ForeignKey(
-        Route,
+        Route, related_name='students',
         on_delete=models.CASCADE,
     )
     guardian = models.ForeignKey(
         settings.AUTH_USER_MODEL, related_name='students',
         on_delete=models.CASCADE,
     )
+    student_id = models.IntegerField(null=True)
+
+    class Meta:
+        unique_together = ('school', 'student_id')
+
+
