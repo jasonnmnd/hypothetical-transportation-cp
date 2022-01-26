@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 
-//not sure if it's going to work
+//not sure if it's going to wor
 //right now, for some reason when clicking on save, it redirects to /?id=input&name=input
 //input1: title of form
 //input2: list of fields?
