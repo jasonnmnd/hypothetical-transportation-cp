@@ -13,14 +13,20 @@ npm install
 npm run dev
 ```
 
-### Running the Stack
+### Running the Backend Stack
 #### First Time Installation
 ```
 ./scripts/start_django.sh
 python3 manage.py makemigrations
 python3 manage.py migrate
 ```
+#### Seeding the Database
 
+```
+python3 manage.py flush
+python3 manage.py loaddata backend/fixtures/data.json
+```
+#### Starting the Server
 ```
 python3 manage.py runserver
 ```
