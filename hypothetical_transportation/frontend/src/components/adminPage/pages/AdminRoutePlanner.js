@@ -3,8 +3,13 @@ import Header from '../../header/Header';
 import SidebarSliding from '../components/sidebar/SidebarSliding';
 import { Link } from 'react-router-dom';
 import MapContainer from '../../maps/MapContainer';
+import AdminTable from '../components/table/AdminTable';
 
 function AdminRoutePlanner() {
+
+  const addToRoute =  ()=>{
+    console.log("add to route")
+  }
 
   const exampleRoute = {
     // id: param.id,
@@ -27,14 +32,14 @@ function AdminRoutePlanner() {
         name:"Hugo",
         studentid:"234",
         school: "B high school",
-        route: "#2",
+        route: "",
       },
       {
         id:"567",
         name:"James",
         studentid:"555",
         school: "C high school",
-        route: "none",
+        route: "",
       }
     ]
   }
@@ -68,6 +73,7 @@ function AdminRoutePlanner() {
 
             <h2> Students at *this school* With No Routes </h2>
             <h1>// SHOW STUDENTS WITH NO ROUTES HERE //</h1>
+            <AdminTable title={"Students"} header={Object.keys(exampleRoute.students[0])} data={exampleRoute.students.filter(i=>i.route==="")} actionName={"Add to Route"} action={addToRoute}/>
           </div>
         </div>
     </>
