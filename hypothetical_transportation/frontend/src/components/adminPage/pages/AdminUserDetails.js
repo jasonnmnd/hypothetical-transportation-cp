@@ -6,6 +6,7 @@ import DeleteModal from '../components/modals/DeleteModal';
 import AdminTable from '../components/table/AdminTable';
 import SidebarSliding from '../components/sidebar/SidebarSliding';
 import axios from 'axios';
+import AssistedLocationModal from '../components/modals/AssistedLocationModal';
 
 
 function AdminUserDetails() {
@@ -95,6 +96,7 @@ function AdminUserDetails() {
         <Header textToDisplay={"Admin Portal"}></Header>
         <SidebarSliding/>
         {openModal && <DeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}
+        {/* {openModal && <AssistedLocationModal closeModal={setOpenModal} handleConfirmAddress={handleConfirmAddress}/>} */}
         <div className='middle-justify'>
             <div className='admin-details'>
                 <h1>User Details</h1>
