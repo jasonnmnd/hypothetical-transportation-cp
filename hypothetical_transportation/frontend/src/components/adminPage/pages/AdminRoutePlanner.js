@@ -52,7 +52,7 @@ function AdminRoutePlanner() {
           <div className='admin-details'>
           <h1>Route Planner</h1>
 
-            <div className='info-fields'>
+            {/* <div className='info-fields'>
               <h2>Name: </h2>
               <h3>{exampleRoute.name}</h3>
             </div>
@@ -60,12 +60,12 @@ function AdminRoutePlanner() {
             <div className='info-fields'>
               <h2>Description: </h2>
               <h3>{exampleRoute.description}</h3>
-            </div>
+            </div> */}
 
             <div className='info-fields'>
               <h2>School: </h2>
               {/* <Link to={`/admin/school/${exampleRoute.school.id}`}> */}
-                <button className='button'><h3>{exampleRoute.school.name}</h3></button>
+                <button className='button'><h3>"School That Was Linked To Here"</h3></button>
               {/* </Link> */}
             </div>
             <h2>Map of School and Students</h2>
