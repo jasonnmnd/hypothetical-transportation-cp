@@ -11,6 +11,10 @@ function AdminRoutePlanner() {
     console.log("add to route")
   }
 
+  const removeFromRoute =  ()=>{
+    console.log("remove from this route")
+  }
+
   const exampleRoute = {
     // id: param.id,
     name: "Route #1",
@@ -70,6 +74,9 @@ function AdminRoutePlanner() {
             </div>
             <h2>Map of School and Students</h2>
             <MapContainer />
+
+            <h2> Students inside this Routes </h2>
+            <AdminTable title={"Students"} header={Object.keys(exampleRoute.students[0])} data={exampleRoute.students.filter(i=>i.route!=="")} actionName={"Remove From This Route"} action={removeFromRoute}/>
 
             <h2> Students at *this school* With No Routes </h2>
             <h1>// SHOW STUDENTS WITH NO ROUTES HERE //</h1>
