@@ -5,18 +5,15 @@ import "./login.css";
 import image from "../../../public/schoolbusBackground.jpg";
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { login } from "../../actions/auth";
+
 
 function LoginForm( props ) {
   const [details, setDetails] = useState({ email: "", password: "" });
 
-  const parentSubmitHandler = (e) => {
+  const submitHandler = (e) => {
     e.preventDefault();
-    props.parentLogin(details);
-  };
-
-  const adminSubmitHandler = (e) => {
-    e.preventDefault();
-    props.adminLogin(details);
+    props.login(details.email, details.password);
   };
 
   if (props.isAuthenticated) {
@@ -60,11 +57,8 @@ function LoginForm( props ) {
               </div>
 
               <div className="divider15px" />
-              <button onClick={parentSubmitHandler}>Login as Parent</button>
-
+              <button onClick={submitHandler}>Login as Parent</button>
               <div className="divider15px" />
-
-              <button onClick={adminSubmitHandler}>Login as Admin</button>
             </div>
           </form>
         </div>
@@ -73,9 +67,8 @@ function LoginForm( props ) {
 }
 
 LoginForm.propTypes = {
-    adminLogin: PropTypes.func.isRequired,
-    parentLogin: PropTypes.func.isRequired,
     isAuthenticated: PropTypes.bool,
+    login: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => ({
@@ -83,4 +76,4 @@ const mapStateToProps = (state) => ({
     user: state.auth.user
 });
 
-export default connect(mapStateToProps)(LoginForm)
+export default connect(mapStateToProps, { login })(LoginForm)

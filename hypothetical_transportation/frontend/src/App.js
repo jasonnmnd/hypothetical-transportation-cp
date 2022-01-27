@@ -21,11 +21,11 @@ import PrivateRoute from "./components/common/PrivateRoute";
 import { loadUser } from "./actions/auth";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { login } from "./actions/auth";
+
 import AdminNewPage from "./components/adminPage/pages/AdminNewPage";
 //import GeneralTable from "./components/common/generalTable";
 
-function App( {store, login} ) {
+function App( props ) {
   //Login details, move to database for security
 
   // useEffect(() => {
@@ -57,6 +57,8 @@ function App( {store, login} ) {
   //const [user, setUser] = useState({name: "", email: ""});
 
   //Handle main login accross the whole app
+
+
   const emptyUser = {
     name:"",
     email:"",
@@ -66,62 +68,13 @@ function App( {store, login} ) {
     students:[],
   }
 
-  const adminUser = {
-    name:"Admin",
-    email: "admin@admin.com",
-    password: "admin123",
-    admin:true,
-    address: "",
-    students:[],
-  };
-  
-  const parentUser = {
-    name: "Virginia",
-    email: "parent@parent.com",
-    password: "parent123",
-    admin:false,
-    address: "4015 E27th Ave",
-    students:[
-      {
-        name:"Al",
-        id: "123",
-        school: "A high school",
-        route: "#1",
-      },
-      {
-        name:"Hugo",
-        id:"456",
-        school: "B high school",
-        route: "#2",
-      },
-      {
-        name:"James",
-        id:"567",
-        school: "C high school",
-        route: "none",
-      },
-    ],
-  };
-  
-
   const [user, setUser] = useState(emptyUser);
-  const [error, setError] = useState("");
+
   const [resetMessage, setMessage] = useState("");
 
   const propTypes = {
     login: PropTypes.func.isRequired,
     isAuthenticated: PropTypes.bool,
-  };
-
-  const parentLogin = (details) => {
-    //console.log(details);
-    setUser(parentUser);
-    login(details.email, details.password);
-  };
-
-  const adminLogin = (details) => {
-    setUser(adminUser);
-    login(details.email, details.password);
   };
 
   const Logout = () => {
@@ -133,34 +86,13 @@ function App( {store, login} ) {
     //somehow make backend do the things
     //change message according to backend output -> if old pw doesnt match, if new pw != confirm, if everything is right & succeed
   }
-
-  const testingTableProps = [
-    {
-      username: "fred",
-      email: "aCat@animal.com",
-      school: "hunting school",
-      routeDesc: "this is the route of fred"
-    },
-    {
-      username: "allie",
-      email: "alsoaCat@animal.com",
-      school: "tracking school",
-      routeDesc: "this is the route of allie"
-    },
-    {
-      username: "max",
-      email: "adog@animal.com",
-      school: "fetching school",
-      routeDesc: "max stole this route"
-    }
-  ]
   
 
   return (
     <div className="App">
       <BrowserRouter>
         <Routes>
-            <Route exact path="/" element={<LoginForm adminLogin={adminLogin} parentLogin={parentLogin} />}></Route>
+            <Route exact path="/" element={<LoginForm />}></Route>
             <Route path="/parent/*" element={<PrivateRoute><ParentPage user={user} Logout={Logout}/></PrivateRoute>}></Route>
             <Route exact path="/account" element={<PrivateRoute><AccountPage user={user}/></PrivateRoute>}></Route>
             <Route exact path="/account/password" element={<PrivateRoute><ResetPasswordPage user={user} save={reset} message={resetMessage}/></PrivateRoute>}></Route>
@@ -182,8 +114,9 @@ function App( {store, login} ) {
     </div>
   );
 }
+
 const mapStateToProps = state => ({
   isAuthenticated: state.auth.isAuthenticated
 });
 
-export default connect(mapStateToProps, { login })(App);
+export default connect(mapStateToProps)(App);
