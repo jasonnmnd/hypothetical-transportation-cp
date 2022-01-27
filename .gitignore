@@ -42,5 +42,6 @@ venv3.7/
 /output/
 /cache/
 boilerplate.zip
-
+*.pyc
 /venv/
+/venv-ece/

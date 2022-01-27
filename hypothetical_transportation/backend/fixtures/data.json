@@ -70,8 +70,7 @@
   {
     "model": "backend.Student",
     "fields": {
-      "first_name": "Eleanor",
-      "last_name": "Shellstrop",
+      "full_name": "Eleanor Shellstrop",
       "address": "Neighborhood 12358W",
       "active": true,
       "school": 1,
@@ -83,8 +82,7 @@
   {
     "model": "backend.Student",
     "fields": {
-      "first_name": "Chidi",
-      "last_name": "Anagonye",
+      "full_name": "Chidi Anagonye",
       "address": "Neighborhood 12358W",
       "active": true,
       "school": 1,
@@ -96,8 +94,7 @@
   {
     "model": "backend.Student",
     "fields": {
-      "first_name": "Jason",
-      "last_name": "Mendoza",
+      "full_name": "Jason Mendoza",
       "address": "Neighborhood 12358W",
       "active": true,
       "school": 1,
@@ -109,8 +106,7 @@
   {
     "model": "backend.Student",
     "fields": {
-      "first_name": "Tahani",
-      "last_name": "Al-Jamil",
+      "full_name": "Tahani Al-Jamil",
       "address": "Neighborhood 12358W",
       "active": true,
       "school": 1,
