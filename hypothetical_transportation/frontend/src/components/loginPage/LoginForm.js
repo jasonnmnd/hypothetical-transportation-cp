@@ -3,27 +3,35 @@ import Header from "../header/Header";
 import { Navigate } from "react-router-dom";
 import "./login.css";
 import image from "../../../public/schoolbusBackground.jpg";
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
-function LoginForm( {adminLogin, parentLogin, user, error} ) {
-    
+function LoginForm( props ) {
   const [details, setDetails] = useState({ email: "", password: "" });
 
   const parentSubmitHandler = (e) => {
     e.preventDefault();
-    parentLogin(details);
+    props.parentLogin(details);
   };
 
   const adminSubmitHandler = (e) => {
     e.preventDefault();
-    adminLogin(details);
+    props.adminLogin(details);
   };
+
+  if (props.isAuthenticated) {
+    if(props.user.admin){
+      return <Navigate to="/admin" />;
+    }
+    return <Navigate to="/parent" />;
+  }
+  
 
   return (
       <div className="login-form" style ={ { backgroundImage: `url(${image})` } }>
-        {user.name === "" ? (
         <div>
           <Header textToDisplay={"Hypothetical Transportation"}></Header>
-          <form className="login">
+          <form className="login" >
             <div className="form-inner">
               <h2>Sign in to your account</h2>
 
@@ -57,22 +65,22 @@ function LoginForm( {adminLogin, parentLogin, user, error} ) {
               <div className="divider15px" />
 
               <button onClick={adminSubmitHandler}>Login as Admin</button>
-              {
-                /* ERROR! */
-                error !== "" ? <div className="error">{error}</div> : ""
-              }
             </div>
           </form>
         </div>
-        ): user.admin === true ? (
-          <Navigate to="/admin"></Navigate>
-
-        ):(
-          <Navigate to="/parent"></Navigate>
-        )
-        }
       </div>
   );
 }
 
-export default LoginForm;
+LoginForm.propTypes = {
+    adminLogin: PropTypes.func.isRequired,
+    parentLogin: PropTypes.func.isRequired,
+    isAuthenticated: PropTypes.bool,
+}
+
+const mapStateToProps = (state) => ({
+    isAuthenticated: state.auth.isAuthenticated,
+    user: state.auth.user
+});
+
+export default connect(mapStateToProps)(LoginForm)

@@ -22,10 +22,10 @@ function AdminUsersPage() {
   }
 
   const emptyUser = [{
-    id: 0,
     full_name: "",
     email: "",
     address: "",
+    is_staff: "",
   }]
 
   const [users, setUsers] = useState(emptyUser);
@@ -44,10 +44,10 @@ function AdminUsersPage() {
 
 
   const searchUser = (i1,i2) => {
-    axios.get(`/api/user?${i1}Includes='${i2}'`)
+    axios.get(`/api/user?search=${i2}&search_fields=${i1}`)
         .then(res => {
-          console.log(`/api/user?${i1}Includes='${i2}'`)
-          setUsers(res.data);
+          console.log(`/api/user?search=${i2}&search_fields=${i1}`)
+          setUsers(res.data.results);
         }).catch(err => console.log(err));
   }
   

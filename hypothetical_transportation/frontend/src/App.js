@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import "./App.css";
 import ParentPage from "./components/parentPage/ParentPage";
 import AdminPage from "./components/adminPage/AdminPage";
@@ -17,13 +17,13 @@ import AdminSchoolDetails from "./components/adminPage/pages/AdminSchoolDetails"
 import AdminRouteDetails from "./components/adminPage/pages/AdminRouteDetails";
 import ParentStudentDetails from "./components/parentPage/pages/ParentStudentDetails";
 import AdminRoutePlanner from "./components/adminPage/pages/AdminRoutePlanner";
-//import PrivateRoute from "./components/common/PrivateRoute";
+import PrivateRoute from "./components/common/PrivateRoute";
 import { loadUser } from "./actions/auth";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { login } from "./actions/auth";
 import AdminNewPage from "./components/adminPage/pages/AdminNewPage";
-import ManStudentPage from "./components/adminPage/pages/ManStudentPage";
+//import GeneralTable from "./components/common/generalTable";
 
 function App( {store, login} ) {
   //Login details, move to database for security
@@ -115,43 +115,17 @@ function App( {store, login} ) {
 
   const parentLogin = (details) => {
     //console.log(details);
+    setUser(parentUser);
     login(details.email, details.password);
-
-    //TODO: Change to implement backend with database
-    if (
-      details.email === parentUser.email &&
-      details.password === parentUser.password
-    ) {
-      console.log("Logged in");
-      //setError("");
-      setUser(parentUser);
-    } else {
-      //console.log("Details do not match");
-      setError("Details do not match!");
-    }
   };
 
   const adminLogin = (details) => {
-    //console.log(details);
+    setUser(adminUser);
     login(details.email, details.password);
-    //console.log(isAuthenticated);
-    //TODO: Change to implement backend with database
-    if (
-      details.email === adminUser.email &&
-      details.password === adminUser.password
-    ) {
-      console.log("Logged in");
-      //setError("");
-      setUser(adminUser);
-    } else {
-      //console.log("Details do not match");
-      setError("Details do not match!");
-    }
   };
 
   const Logout = () => {
     setUser(emptyUser);
-    setError("");
     return <Navigate to="/"></Navigate>
   };
 
@@ -160,34 +134,49 @@ function App( {store, login} ) {
     //change message according to backend output -> if old pw doesnt match, if new pw != confirm, if everything is right & succeed
   }
 
-  useEffect(() => {
-    store.dispatch(loadUser());
-  }, []);
+  const testingTableProps = [
+    {
+      username: "fred",
+      email: "aCat@animal.com",
+      school: "hunting school",
+      routeDesc: "this is the route of fred"
+    },
+    {
+      username: "allie",
+      email: "alsoaCat@animal.com",
+      school: "tracking school",
+      routeDesc: "this is the route of allie"
+    },
+    {
+      username: "max",
+      email: "adog@animal.com",
+      school: "fetching school",
+      routeDesc: "max stole this route"
+    }
+  ]
+  
 
   return (
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route exact path="/" element={<LoginForm adminLogin={adminLogin} parentLogin={parentLogin} user={user} error={error}/>}></Route>
-          <Route path="/parent/*" element={<ParentPage user={user} Logout={Logout}/>}></Route>
-          <Route exact path="/account" element={<AccountPage user={user}/>}></Route>
-          <Route exact path="/account/password" element={<ResetPasswordPage user={user} save={reset} message={resetMessage}/>}></Route>
-          <Route exact path="/parent/student/:school/:id" element={<ParentStudentDetails ></ParentStudentDetails>}/>
-          <Route path="/admin/*" element={<AdminPage user={user} Logout={Logout}/>}></Route>
-          <Route exact path="/admin/users" element={<AdminUsersPage />}></Route>
-          <Route exact path="/admin/students" element={<AdminStudentsPage />}></Route>
-          <Route exact path="/admin/edit/:column/:id" element={<AdminEditPage />}></Route>
-          <Route exact path="/admin/schools" element={<AdminSchoolsPage />}></Route>
-          <Route exact path="/admin/routes" element={<AdminRoutesPage />}></Route>
-          <Route exact path="/admin/user/:id" element={<AdminUserDetails />}/>
-          <Route exact path="/admin/student/:id" element={<AdminStudentDetails />}/>
-          <Route exact path="/admin/school/:id" element={<AdminSchoolDetails />}/>
-          <Route exact path="/admin/route/:id" element={<AdminRouteDetails />}/>
-          <Route exact path="/admin/route/plan/:id" element={<AdminRoutePlanner />}/>
-          <Route exact path="/admin/newstudent" element={<ManStudentPage action={"new"} />}></Route>
-          <Route exact path="/admin/editstudent/:id" element={<ManStudentPage action={"edit"} />}></Route>
-          <Route exact path="/admin/new/:column" element={<AdminNewPage />}></Route>
-
+            <Route exact path="/" element={<LoginForm adminLogin={adminLogin} parentLogin={parentLogin} />}></Route>
+            <Route path="/parent/*" element={<PrivateRoute><ParentPage user={user} Logout={Logout}/></PrivateRoute>}></Route>
+            <Route exact path="/account" element={<PrivateRoute><AccountPage user={user}/></PrivateRoute>}></Route>
+            <Route exact path="/account/password" element={<PrivateRoute><ResetPasswordPage user={user} save={reset} message={resetMessage}/></PrivateRoute>}></Route>
+            <Route exact path="/parent/student/:school/:id" element={<PrivateRoute><ParentStudentDetails ></ParentStudentDetails></PrivateRoute>}/>
+            <Route path="/admin/*" element={<PrivateRoute><AdminPage user={user} Logout={Logout}/></PrivateRoute>}></Route>
+            <Route exact path="/admin/users" element={<PrivateRoute><AdminUsersPage /></PrivateRoute>}></Route>
+            <Route exact path="/admin/students" element={<PrivateRoute><AdminStudentsPage /></PrivateRoute>}></Route>
+            <Route exact path="/admin/edit/:column/:id" element={<PrivateRoute><AdminEditPage /></PrivateRoute>}></Route>
+            <Route exact path="/admin/schools" element={<PrivateRoute><AdminSchoolsPage /></PrivateRoute>}></Route>
+            <Route exact path="/admin/routes" element={<PrivateRoute><AdminRoutesPage /></PrivateRoute>}></Route>
+            <Route exact path="/admin/user/:id" element={<PrivateRoute><AdminUserDetails /></PrivateRoute>}/>
+            <Route exact path="/admin/student/:id" element={<PrivateRoute><AdminStudentDetails /></PrivateRoute>}/>
+            <Route exact path="/admin/school/:id" element={<PrivateRoute><AdminSchoolDetails /></PrivateRoute>}/>
+            <Route exact path="/admin/route/:id" element={<PrivateRoute><AdminRouteDetails /></PrivateRoute>}/>
+            <Route exact path="/admin/route/plan/:id" element={<PrivateRoute><AdminRoutePlanner /></PrivateRoute>}/>
+            <Route exact path="admin/new/:column" element={<PrivateRoute><AdminNewPage /></PrivateRoute>}></Route>
         </Routes>
       </BrowserRouter>
     </div>
