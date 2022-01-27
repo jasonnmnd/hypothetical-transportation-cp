@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import "./modal.css";
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import Geocode from "react-geocode";
@@ -12,16 +12,18 @@ function AssistedLocationModal( {closeModal, handleConfirmAddress, address} ) {
     Geocode.setRegion("us");
     Geocode.setLocationType("ROOFTOP");
     Geocode.enableDebug();
-
-    Geocode.fromAddress(address).then(
-        (response) => {
-            const { lat, lng } = response.results[0].geometry.location;
-            console.log(lat, lng);
-            setUserLocation({lat: lat, lng: lng})
-        },
-        (error) => {
-            console.log(error);
+    
+    const getCoordsFromAddress = () => {
+        Geocode.fromAddress(address).then(
+            (response) => {
+                const { lat, lng } = response.results[0].geometry.location;
+                console.log(lat, lng);
+                setUserLocation({lat: lat, lng: lng})
+            },
+            (error) => {
+                console.log(error);
         });
+    }
     
     const center = { //Defaults to WF until address is entered
         lat: 35.9592086, lng:-78.5818128
@@ -32,6 +34,10 @@ function AssistedLocationModal( {closeModal, handleConfirmAddress, address} ) {
     const mapStyles = {        
         height: "75vh",
         width: "75%"};
+
+    useEffect(() => {
+        getCoordsFromAddress();
+    }, []);
 
   return (
     <div className='modalBackground'>
