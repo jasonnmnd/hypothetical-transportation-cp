@@ -40,6 +40,7 @@ class AuthenticationObjectConsistency(TestCase):
                               'full_name': 'Stanford Pines',
                               'password': 'mysteryshack',
                               'address': 'Mostly an alternative dimension',
+                              'groups': [],
                               }),
                          content_type='application/json')
         num_users = len(get_user_model().objects.all())
