@@ -6,6 +6,7 @@ import "../adminPage.css";
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import SidebarSliding from '../components/sidebar/SidebarSliding';
 import axios from 'axios';
+import AssistedLocationModal from '../components/modals/AssistedLocationModal';
 
 
 function AdminNewPage() {
@@ -34,6 +35,13 @@ function AdminNewPage() {
     const [obj, setObj] = useState(emptyFields[col])
     const fields=Object.keys(emptyFields[col]).filter((i)=>param.column.includes("admin")?i!=="school"&&i!=="address"&&i!=="is_staff":i!=="school"&&i!=="is_staff");
   
+    const [openModal, setOpenModal] = useState(false);
+    const fakeAddress = "101 Wannamaker Dr, Durham NC 27708"
+
+    const handleConfirmAddress = () => {
+      console.log("Address confirmed")
+    }
+
     return ( 
       <>
         <Header textToDisplay={"Admin Portal"}></Header>
@@ -41,7 +49,11 @@ function AdminNewPage() {
         <div className='admin-edit-page'>
             
             <EditForm column={param.column} fields={fields} obj={obj} setobj={setObj} action={"new"}></EditForm>
+            
+            {openModal && <AssistedLocationModal closeModal={setOpenModal} handleConfirmAddress={handleConfirmAddress} address={fakeAddress}></AssistedLocationModal>}
             {/* <Link to={`/admin/${param.column}s`}><button>To {param.column}</button></Link> */}
+            
+            <button onClick={() => setOpenModal(true)}>TEST MAP MODAL BUTTON</button>
             <button onClick={() => navigate(-1)} className='button'>Go Back</button>
         </div>
       </>
