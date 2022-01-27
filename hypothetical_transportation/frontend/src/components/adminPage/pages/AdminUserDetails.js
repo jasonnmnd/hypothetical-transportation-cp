@@ -16,9 +16,11 @@ function AdminUserDetails() {
   const [openModal, setOpenModal] = useState(false);
 
   const handleConfirmDelete = () => {
-    //Replace with API call to delete user
-    //Route back to students page
-    console.log("DELETED USER");
+    axios.delete(`/api/user/${param.id}`)
+        .then(res => {
+          console.log("DELETED User");
+          navigate(`/admin/users/`)
+        }).catch(err => console.log(err));
   }
 
 
@@ -89,16 +91,17 @@ function AdminUserDetails() {
                 <h1>User Details</h1>
                 <div className='info-fields'>
                     <h2>Name: </h2>
-                    <h3>{user.first_name} {user.last_name}</h3>
+                    <h3>{user.full_name}</h3>
                 </div>
                 <div className='info-fields'>
                     <h2>Email: </h2>
                     <h3>{user.email}</h3>
                 </div>
-                <div className='info-fields'>
+                {user.is_staff===false?<div className='info-fields'>
                     <h2>Address: </h2>
                     <h3>{user.address}</h3>
-                </div>
+                </div>:<div></div>
+                }
                 <div className='info-fields'>
                     <h2>Admin: </h2>
                     <h3>{user.is_staff ? "true":"false"}</h3>
