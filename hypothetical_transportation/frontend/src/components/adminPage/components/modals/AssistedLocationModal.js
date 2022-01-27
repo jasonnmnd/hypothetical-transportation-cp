@@ -25,8 +25,8 @@ function AssistedLocationModal( {closeModal, handleConfirmAddress, address} ) {
         });
     }
     
-    const center = { //Defaults to WF until address is entered
-        lat: 35.9592086, lng:-78.5818128
+    const center = { //Defaults to Duke until address is entered
+        lat: 36.0016944, lng:-78.9480547
     }
 
     const [userLocation, setUserLocation] = useState(center);
