@@ -4,22 +4,21 @@ import Header from "../header/Header";
 import { Routes, Route, Navigate } from "react-router-dom";
 import "./parentPage.css";
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
-function ParentPage( {user, Logout} ) {
+function ParentPage( props ) {
     return (
       
         <div className="parent-page">
           <Header textToDisplay={"Parent Portal"}></Header>
-
-          {user.email==="" ? (<Navigate to="/"></Navigate>):
-          (
           <div>
             <div className="welcome">
               <h2>
-                Welcome,<span>{user.name}</span>
+                Welcome,<span>{props.user.name}</span>
               </h2>
               <div className="button-spacing">
-                <button onClick={Logout}>Logout</button>
+                <button onClick={props.Logout}>Logout</button>
                 <Link to={"/account"}>
                     <button>Account</button>
                 </Link>
@@ -35,10 +34,25 @@ function ParentPage( {user, Logout} ) {
             
             <ParentTable />
           </div>
-          )}
+          
         </div>
 
     )
 }
 
-export default ParentPage
+ParentPage.propTypes = {
+    isAuthenticated: PropTypes.bool,
+    user: PropTypes.shape({
+      id: PropTypes.number,
+      username: PropTypes.string,
+      email: PropTypes.email
+    })
+}
+
+const mapStateToProps = (state) => ({
+    isAuthenticated: state.auth.isAuthenticated,
+    user: state.auth.user
+
+});
+
+export default connect(mapStateToProps)(ParentPage)
