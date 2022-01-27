@@ -20,8 +20,9 @@ class Route(models.Model):
 
 
 class Student(models.Model):
-    first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30)
+    # first_name = models.CharField(max_length=30)
+    # last_name = models.CharField(max_length=30)
+    full_name = models.CharField(max_length=140)
     address = models.CharField(max_length=140)
     active = models.BooleanField(default=True)
     school = models.ForeignKey(

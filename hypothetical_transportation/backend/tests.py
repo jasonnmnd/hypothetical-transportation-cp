@@ -17,11 +17,11 @@ class AuthenticationObjectConsistency(TestCase):
         high_school = School.objects.create(address='7777 Some St.', name='Gravity Falls High School')
         route = Route.objects.create(name='School Route 1', description='', school=school)
 
-        mabel = Student.objects.create(first_name='Mabel', last_name='Pines', address='618 Gopher Road', active=True,
+        mabel = Student.objects.create(full_name='Mabel Pines', address='618 Gopher Road', active=True,
                                        school=school, routes=route, guardian=stan, student_id=1)
-        dipper = Student.objects.create(first_name='Dipper', last_name='Pines', address='618 Gopher Road',
+        dipper = Student.objects.create(full_name='Dipper Pines', address='618 Gopher Road',
                                         active=True, school=school, routes=route, guardian=stan, student_id=2)
-        wendy = Student.objects.create(first_name='Wendy', last_name='Corduroy', address='618 Gopher Road', active=True,
+        wendy = Student.objects.create(full_name='Wendy Corduroy', address='618 Gopher Road', active=True,
                                        school=high_school, routes=route, guardian=dan, student_id=1)
 
         self.STANS_KIDS = len(stan.students.all())
