@@ -20,7 +20,7 @@ function LoginForm( props ) {
   };
 
   if (props.isAuthenticated) {
-    if(props.user.admin){
+    if(props.user.groups[0] == 1){
       return <Navigate to="/admin" />;
     }
     return <Navigate to="/parent" />;
