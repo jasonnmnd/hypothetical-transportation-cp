@@ -39,8 +39,7 @@ function AdminEditPage() {
             console.log(fields)
         }).catch(err => console.log(err));
     }
-
-  const fields=Object.keys(emptyFields[col]).filter((i)=>param.column.includes("parent")?i!=="":i!=="address");
+    const fields=Object.keys(emptyFields[col]).filter((i)=>param.column.includes("admin")?i!=="id"&&i!=="address"&&i!=="is_staff":i!=="id"&&i!=="is_staff");
   
   useEffect(() => {
     getOldData();

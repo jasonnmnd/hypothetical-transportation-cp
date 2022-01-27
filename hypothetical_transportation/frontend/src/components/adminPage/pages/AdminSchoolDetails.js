@@ -65,13 +65,32 @@ function AdminSchoolDetails() {
     address: "",
   }
 
+  const emptyStudent = {
+    student_id: "",
+    first_name: "",
+    last_name: "",
+    address: "",
+  }
+
+  const studentObject = [{
+    id: 0,
+    student_id: "",
+    first_name: "",
+    last_name: "",
+    address: "",
+    guardian: 0,
+    routes: 0,
+    school: 0,
+  }]
+
   const emptyRoute = [{
     id: 0,
     name: "",
     description: "",
   }]
 
-  const [school, setSchool] = useState(emptySchool);
+  const [school, setSchool] = useState(emptySchool);  
+  const [students, setStudents] = useState(studentObject);
   const [routes, setRoutes] = useState(emptyRoute);
 
   const getSchool = () => {
@@ -80,17 +99,27 @@ function AdminSchoolDetails() {
             setSchool(res.data);
         }).catch(err => console.log(err));
     }
+
+  const getStudent = () => {
+    axios.get(`/api/student?school=${param.id}`)
+        .then(res => {
+          console.log(res.data.results)
+            setStudents(res.data.results);
+        }).catch(err => console.log(err));
+    }
   
   const getRoutes = () => {
     axios.get(`/api/route?school=${param.id}`)
         .then(res => {
-            setRoutes(res.data);
+          console.log(res.data.results)
+            setRoutes(res.data.results);
         }).catch(err => console.log(err));
     }
 
   useEffect(() => {
     getSchool();
     getRoutes();
+    getStudent();
   }, []);
 
 
@@ -117,7 +146,7 @@ function AdminSchoolDetails() {
 
             <div className='info-fields'>
               {/* <h2>Associated students: </h2> */}
-              <AdminTable title={"Associated Students"} header={Object.keys(exampleSchool.students[0])} data={exampleSchool.students}/>
+              <AdminTable title={"Associated Students"} header={Object.keys(emptyStudent)} data={students}/>
               {/* {
                   exampleSchool.students.map((s,i)=>{
                     return <Link to={`/admin/student/${s.id}`} id={i}><button className='button'>{s.name}</button></Link>

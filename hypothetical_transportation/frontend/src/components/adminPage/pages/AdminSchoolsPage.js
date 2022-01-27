@@ -43,7 +43,7 @@ function AdminSchoolsPage() {
   const getSchools = () => {
     axios.get('/api/school/')
         .then(res => {
-            setSchools(res.data);
+            setSchools(res.data.results);
         }).catch(err => console.log(err));
     }
 
@@ -56,7 +56,7 @@ function AdminSchoolsPage() {
     axios.get(`/api/school?${i1}Includes='${i2}'`)
         .then(res => {
           console.log(`/api/school?${i1}Includes='${i2}'`)
-          setSchools(res.data);
+          setSchools(res.data.results);
         }).catch(err => console.log(err));
   }
   
