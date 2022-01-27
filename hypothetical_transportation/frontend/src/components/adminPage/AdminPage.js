@@ -29,9 +29,6 @@ function AdminPage( {user, Logout} ) {
                   <button>Account</button> 
                 </Link>
               </div>
-              <Link to={"/admin/edit"}>
-                <button>This Button is Used To Test Edit Page</button>
-              </Link>
             </div>              
           </div>)}
         </div>)

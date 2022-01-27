@@ -1,9 +1,10 @@
 import React from "react";
 import { useState } from "react";
 import { Link } from 'react-router-dom';
+import SidebarSliding from "../adminPage/components/sidebar/SidebarSliding";
 import Header from "../header/Header";
 
-function AccountPage({save, message}){
+function ResetPasswordPage({user, save, message}){
     const [values, setValue] = useState({ old: "", new: "", confirm:"" });
     const resetHandler = (e) => {
         e.preventDefault();
@@ -12,7 +13,8 @@ function AccountPage({save, message}){
       };
     return(
         <div className={"parent-page"}>
-            <Header textToDisplay={"Parent Portal"}></Header>
+            <Header textToDisplay={user.admin? "Admin Portal": "Parent Portal"}></Header>
+            <SidebarSliding/>
             <div className="welcome">
                 <form className={"center"}>
                     <div className="form-inner">
@@ -56,11 +58,11 @@ function AccountPage({save, message}){
                         {<div className="message">{message}</div>}
                     </div>
                 </form>
-                <Link to={"/parent/account"}>
-                      <button>Back</button>
+                <Link to={"/account"}>
+                    <button>Back</button>
                 </Link>
             </div>
         </div>
     );
 }
-export default AccountPage;
+export default ResetPasswordPage;

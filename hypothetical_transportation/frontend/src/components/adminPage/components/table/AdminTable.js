@@ -9,7 +9,7 @@ import Searchbar from "../searchbar/SearchBar"
 //input3: the data - objects whose key is list and value is waht should be in table
 // input2 and input3 shouhld correspond...?
 //do we want to add a "route to address" input?
-function AdminTable({title, header, data, search}) {
+function AdminTable({title, header, data, search, actionName, action}) {
     //click and view details
 
     const nav = useNavigate();
@@ -50,11 +50,11 @@ function AdminTable({title, header, data, search}) {
                     </tr>
                 </thead>
                 <tbody>
-                    {data.map((d,i) => (
+                    {data!==null?data.map((d,i) => (
                         <Fragment key={i}>
-                            <AdminRow header={header} data={d} handleViewClick={handleViewClick}></AdminRow>
+                            <AdminRow header={header} data={d} actionName = {actionName?actionName:"View"} action={action? action:handleViewClick}></AdminRow>
                         </Fragment>
-                    ))}
+                    )):<div></div>}
                 </tbody>
             </table>
         </div>

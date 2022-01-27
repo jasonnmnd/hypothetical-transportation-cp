@@ -113,7 +113,6 @@ class SchoolViewSet(viewsets.ModelViewSet):
 class StudentViewSet(viewsets.ModelViewSet):
     serializer_class = StudentSerializer
     permission_classes = [
-        # permissions.IsAuthenticated
         permissions.AllowAny
     ]
     filter_backends = [DjangoFilterBackend, DynamicSearchFilter]

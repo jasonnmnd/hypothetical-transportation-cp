@@ -1,20 +1,21 @@
-import React,{useState} from 'react';
+import React,{useEffect, useState} from 'react';
 import SidebarSliding from '../components/sidebar/SidebarSliding';
 import Header from '../../header/Header';
 import AdminTable from "../components/table/AdminTable";
+import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 function AdminStudentsPage() {
 
   //Mock Student Data (API Call Later for Real Data)
   const title = "Students"
-  const header=["name","studentid","school","route"]
   const data = [
     {
       id:111,
       name: "Anna",
       studentid: 12,
       school: "School 1",
-      route:1,
+      route: "",
     },
 
     {
@@ -35,7 +36,7 @@ function AdminStudentsPage() {
 
     {
       id:4441,
-      name: "Sam",
+      name: "Bob",
       studentid: 23423,
       school: "School 4",
       route:4,
@@ -43,11 +44,51 @@ function AdminStudentsPage() {
 
   ]
 
-  const [dispdata, setData]=useState(data)
+  const studentObject = [{
+    id: 0,
+    student_id: "",
+    first_name: "",
+    last_name: "",
+    address: "",
+    guardian: 0,
+    routes: 0,
+    school: 0,
+  }]
+
+  const emptyStudent = {
+    student_id: "",
+    first_name: "",
+    last_name: "",
+    school: "",
+  }
+
+  const [students, setStudents] = useState(studentObject);
+
+  const getStudent = () => {
+    axios.get(`/api/student/`)
+        .then(res => {
+          console.log(res.data.results)
+            setStudents(res.data.results);
+        }).catch(err => console.log(err));
+    }
+  
+
+  useEffect(() => {
+    getStudent();
+  }, []);
+
+  const searchStudent = (i1,i2) => {
+    axios.get(`/api/student?${i1}Includes='${i2}'`)
+        .then(res => {
+          console.log(`/api/student?${i1}Includes='${i2}'`)
+          setStudents(res.data.results);
+        }).catch(err => console.log(err));
+  }
+  
 
   const search = (value)=>{
     //somehow get backend to update data (with usestate?)
-    value.by===""? setData(data): setData(data.filter(data=> typeof data[value.by]==="string"? data[value.by].toLowerCase().includes(value.value.toLowerCase()): data[value.by].toString().includes(value.value.toString())))
+    searchStudent(value.by, value.value)
   }
 
   const handlePrevClick = () => {
@@ -60,15 +101,24 @@ function AdminStudentsPage() {
     console.log("Next Clicked");
   }
 
+  
+
   return (
     <div className='admin-page'>
         <SidebarSliding/>
         <Header textToDisplay={"Admin Portal"}></Header>
-        <div className='table-and-buttons'>
-          <AdminTable title={title} header={header} data={dispdata} search={search}/>
-          <div className="prev-next-buttons">
-              <button onClick={handlePrevClick}>Prev</button>
-              <button onClick={handleNextClick}>Next</button> 
+        <div className='middle-content'>
+          <div className='center-buttons'>
+            <Link to="/admin/newstudent/">
+              <button className='button'>Add New Student</button>
+            </Link>          
+          </div>
+          <div className='table-and-buttons'>
+            <AdminTable title={title} header={Object.keys(emptyStudent)} data={students} search={search}/>
+            <div className="prev-next-buttons">
+                <button onClick={handlePrevClick}>Prev</button>
+                <button onClick={handleNextClick}>Next</button> 
+            </div>
           </div>
         </div>
     </div>

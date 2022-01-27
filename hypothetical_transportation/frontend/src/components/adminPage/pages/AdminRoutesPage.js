@@ -1,48 +1,43 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import SidebarSliding from '../components/sidebar/SidebarSliding';
 import Header from '../../header/Header';
 import AdminTable from '../components/table/AdminTable';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 function AdminRoutesPage() {
 
   const title = "Routes"
-  const header = ["route", "school", "num_students"]
-  const data = [
-    {
-      id: 122,
-      route: 1,
-      school: "Random Elementary School",
-      num_students: 20
-    },
 
-    {
-      id:888,
-      route: 2,
-      school: "Random Middle School",
-      num_students: 2
-    },
+  const emptyRoute = [{
+    id: 0,
+    name: "",
+    description: "",
+  }]
 
-    {
-      id:999,
-      route: 3,
-      school: "Random High School",
-      num_students: 4
-    },
+  const [routes, setRoutes] = useState(emptyRoute);
+  
+  const getRoutes = () => {
+    axios.get(`/api/route/`)
+        .then(res => {
+          setRoutes(res.data);
+        }).catch(err => console.log(err));
+  }
 
-    {
-      id:900,
-      route: 4,
-      school: "Random University",
-      num_students: 30
-    },
+  const searchRoute = (i1,i2) => {
+    axios.get(`/api/route?${i1}Includes='${i2}'`)
+        .then(res => {
+          console.log(`/api/route?${i1}Includes='${i2}'`)
+          setRoutes(res.data);
+        }).catch(err => console.log(err));
+  }
+  
+  useEffect(() => {
+    getRoutes();
+  }, []);
 
-    {
-      id:999,
-      route: 5,
-      school: "Another Random High School",
-      num_students: 300
-    }
-  ]
+
+
 
   const handlePrevClick = () => {
     //API Call here to get new data to display for next page
@@ -56,17 +51,25 @@ function AdminRoutesPage() {
 
   const search = (value)=>{
     //somehow get backend to update data (with usestate?)
+    searchRoute(value.by, value.value);
   }
 
   return (
     <div className='admin-page'>
         <SidebarSliding/>
         <Header textToDisplay={"Admin Portal"}></Header>
-        <div className='table-and-buttons'>
-          <AdminTable title={title} header={header} data={data} search={search}></AdminTable>
-          <div className="prev-next-buttons">
-              <button onClick={handlePrevClick}>Prev</button>
-              <button onClick={handleNextClick}>Next</button> 
+        <div className='middle-content'>
+          <div className='center-buttons'>
+            <Link to="/admin/new/route">
+                <button className='button'>Add New Route</button>
+              </Link>
+          </div>
+          <div className='table-and-buttons'>
+            <AdminTable title={title} header={Object.keys(emptyRoute[0])} data={routes} search={search}></AdminTable>
+            <div className="prev-next-buttons">
+                <button onClick={handlePrevClick}>Prev</button>
+                <button onClick={handleNextClick}>Next</button> 
+            </div>
           </div>
         </div>
     </div>

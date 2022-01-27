@@ -36,10 +36,12 @@ npm-debug.log
 
 # General
 /{{project_name}}-venv/
-/venv/
-venv/
+/venv3.7/
+venv3.7/
 /env/
 /output/
 /cache/
 boilerplate.zip
 *.pyc
+/venv/
+/venv-ece/

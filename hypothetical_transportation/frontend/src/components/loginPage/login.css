@@ -9,7 +9,7 @@
 }
 
 input, button {
-    appearance: none;
+    /* appearance: none; */
     background: none;
     border: none;
     outline: none;

@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from '../../header/Header';
 import "../adminPage.css";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import DeleteModal from '../components/modals/DeleteModal';
+import FormDeleteModal from '../components/modals/FormDeleteModal';
 import AdminTable from '../components/table/AdminTable';
+import SidebarSliding from '../components/sidebar/SidebarSliding';
+import axios from 'axios';
 
 
 function AdminSchoolDetails() {
@@ -12,6 +14,7 @@ function AdminSchoolDetails() {
   const exampleSchool = {
     id:param.id,
     name: "I am a school",
+    address: "xxx road",
     routes:[
       {
         id:100,
@@ -50,16 +53,82 @@ function AdminSchoolDetails() {
 
   const [openModal, setOpenModal] = useState(false);
 
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = (schoolName) => {
     //Replace with API call to delete school and all its associated routes/students
     //Route back to students page
-    console.log("DELETED USER");
+    console.log(schoolName);
   }
   
+  const emptySchool = {
+    id: 0,
+    name: "",
+    address: "",
+  }
+
+  const emptyStudent = {
+    student_id: "",
+    first_name: "",
+    last_name: "",
+    address: "",
+  }
+
+  const studentObject = [{
+    id: 0,
+    student_id: "",
+    first_name: "",
+    last_name: "",
+    address: "",
+    guardian: 0,
+    routes: 0,
+    school: 0,
+  }]
+
+  const emptyRoute = [{
+    id: 0,
+    name: "",
+    description: "",
+  }]
+
+  const [school, setSchool] = useState(emptySchool);  
+  const [students, setStudents] = useState(studentObject);
+  const [routes, setRoutes] = useState(emptyRoute);
+
+  const getSchool = () => {
+    axios.get(`/api/school/${param.id}`)
+        .then(res => {
+            setSchool(res.data);
+        }).catch(err => console.log(err));
+    }
+
+  const getStudent = () => {
+    axios.get(`/api/student?school=${param.id}`)
+        .then(res => {
+          console.log(res.data.results)
+            setStudents(res.data.results);
+        }).catch(err => console.log(err));
+    }
+  
+  const getRoutes = () => {
+    axios.get(`/api/route?school=${param.id}`)
+        .then(res => {
+          console.log(res.data.results)
+            setRoutes(res.data.results);
+        }).catch(err => console.log(err));
+    }
+
+  useEffect(() => {
+    getSchool();
+    getRoutes();
+    getStudent();
+  }, []);
+
+
 
   return (
     <>  
         <Header textToDisplay={"Admin Portal"}></Header>
+        <SidebarSliding/>
+        {openModal && <FormDeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}
         <div className='middle-justify'>
           <div className='admin-details'>
 
@@ -67,12 +136,17 @@ function AdminSchoolDetails() {
 
             <div className='info-fields'>
               <h2>Name: </h2>
-              <h3>{exampleSchool.name}</h3>
+              <h3>{school.name}</h3>
+            </div>
+
+            <div className='info-fields'>
+              <h2>Address: </h2>
+              <h3>{school.address}</h3>
             </div>
 
             <div className='info-fields'>
               {/* <h2>Associated students: </h2> */}
-              <AdminTable title={"Associated Students"} header={Object.keys(exampleSchool.students[0])} data={exampleSchool.students}/>
+              <AdminTable title={"Associated Students"} header={Object.keys(emptyStudent)} data={students}/>
               {/* {
                   exampleSchool.students.map((s,i)=>{
                     return <Link to={`/admin/student/${s.id}`} id={i}><button className='button'>{s.name}</button></Link>
@@ -82,7 +156,7 @@ function AdminSchoolDetails() {
 
             <div className='info-fields'>
               {/* <h2>Associated Routes: </h2> */}
-              <AdminTable title={"Associated Routes"} header={Object.keys(exampleSchool.routes[0])} data={exampleSchool.routes}/>
+              <AdminTable title={"Associated Routes"} header={Object.keys(emptyRoute[0])} data={routes}/>
               {/* {
                   exampleSchool.routes.map((s,i)=>{
                     return <Link to={`/admin/route/${s.id}`} id={i}><button className='button'>{s.id}</button></Link>
@@ -90,17 +164,21 @@ function AdminSchoolDetails() {
                 } */}
             </div>
           <div className='edit-delete-buttons'>
-            <Link to={`/admin/edit/school/${exampleSchool.id}`}><button>Edit School</button></Link>
+            <Link to={`/admin/edit/school/${school.id}`}><button>Edit School</button></Link>
             <button onClick={() => {
               setOpenModal(true);
             }}>Delete School</button>
+
+            <Link to={`/admin/route/plan/${school.id}`}>
+              <button>Route Planner</button>
+            </Link>
+
           </div>
-          <Link to="/admin/schools">
+          {/* <Link to="/admin/schools">
             <button className='button'> To Schools</button>
-          </Link>
+          </Link> */}
           <button onClick={() => navigate(-1)} className='button'>Go Back</button>
           </div>
-          {openModal && <DeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}
         </div>
     </>
   );

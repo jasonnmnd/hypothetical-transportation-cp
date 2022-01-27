@@ -1,45 +1,15 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import SidebarSliding from '../components/sidebar/SidebarSliding';
 import Header from '../../header/Header';
 import AdminTable from '../components/table/AdminTable';
 import "../adminPage.css";
+import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 function AdminUsersPage() {
 
   //Mock Users Data (API Call later for real data)
   const title = "Parent Users"
-  const header = ["name", "email", "id"]
-  const data = [
-    {
-      name: "TEST",
-      email: "mom1@gmail.com",
-      id: 132
-    },
-
-    {
-      name: "mom2",
-      email: "mom2@gmail.com",
-      id: 1
-    },
-
-    {
-      name: "mom3",
-      email: "mom3@gmail.com",
-      id: 2
-    },
-
-    {
-      name: "mom4",
-      email: "mom4@gmail.com",
-      id: 3
-    },
-
-    {
-      name: "mom5",
-      email: "mom5@gmail.com",
-      id: 23
-    }
-  ]
 
   const handlePrevClick = () => {
     //API Call here to get new data to display for next page
@@ -51,21 +21,63 @@ function AdminUsersPage() {
     console.log("Next Clicked");
   }
 
+  const emptyUser = [{
+    id: 0,
+    full_name: "",
+    email: "",
+    address: "",
+  }]
+
+  const [users, setUsers] = useState(emptyUser);
+
+  const getUsers = () => {
+    axios.get('/api/user/')
+        .then(res => {
+            console.log(res.data.results)
+            setUsers(res.data.results);
+        }).catch(err => console.log(err));
+    }
+
+  useEffect(() => {
+    getUsers();
+  }, []);
+
+
+  const searchUser = (i1,i2) => {
+    axios.get(`/api/user?${i1}Includes='${i2}'`)
+        .then(res => {
+          console.log(`/api/user?${i1}Includes='${i2}'`)
+          setUsers(res.data);
+        }).catch(err => console.log(err));
+  }
+  
+
   const search = (value)=>{
     //somehow get backend to update data (with usestate?)
+    searchUser(value.by, value.value)
   }
 
   return (
     <div className='admin-page'>
         <SidebarSliding/>
         <Header textToDisplay={"Admin Portal"}></Header>
-        <div className='table-and-buttons'>
-            <AdminTable title={title} header={header} data={data} search={search}/>
-            <div className="prev-next-buttons">
-                <button onClick={handlePrevClick}>Prev</button>
-                <button onClick={handleNextClick}>Next</button> 
-            </div>
+        <div className='middle-content'>
+            <div className='add-new-users-buttons'>
+                  <Link to="/admin/new/admin_user">
+                    <button className='button'> Add New Admin</button>
+                  </Link>
+                  <Link to="/admin/new/parent_user">
+                    <button className='button'> Add New Parent</button>
+                  </Link>
+              </div>
+          <div className='table-and-buttons'>
+              <AdminTable title={title} header={Object.keys(emptyUser[0])} data={users} search={search}/>
+              <div className="prev-next-buttons">
+                  <button onClick={handlePrevClick}>Prev</button>
+                  <button onClick={handleNextClick}>Next</button> 
+              </div>
           </div>
+        </div>
     </div>
   )
 }
