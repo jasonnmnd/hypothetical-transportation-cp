@@ -56,7 +56,11 @@ function AdminSchoolDetails() {
   const handleConfirmDelete = (schoolName) => {
     //Replace with API call to delete school and all its associated routes/students
     //Route back to students page
-    console.log(schoolName);
+    axios.delete(`/api/school/${param.id}`)
+        .then(res => {
+          console.log("DELETED Route");
+          navigate(`/admin/schools/`)
+        }).catch(err => console.log(err));
   }
   
   const emptySchool = {
