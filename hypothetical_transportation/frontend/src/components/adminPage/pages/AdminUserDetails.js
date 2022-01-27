@@ -59,12 +59,27 @@ function AdminUserDetails() {
     is_staff:false,
   }
 
-  const emptyStudents = [{
+  const emptyStudent = {
+    student_id: "",
+    first_name: "",
+    last_name: "",
+    address: "",
+  }
+
+  const studentObject = [{
+    id: 0,
+    student_id: "",
+    first_name: "",
+    last_name: "",
+    address: "",
+    guardian: 0,
+    routes: 0,
+    school: 0,
   }]
 
   const [user, setUser] = useState(emptyUser);
   const [colum, setColumn] = useState("");
-  const [students, setStudents] = useState(emptyStudents);
+  const [students, setStudents] = useState(studentObject);
 
   const getUser = () => {
     axios.get(`/api/user/${param.id}`)
@@ -75,9 +90,9 @@ function AdminUserDetails() {
     }
   
   const getStudents = () => {
-    axios.get(`/api/student?user=${param.id}`)
+    axios.get(`/api/student?guardian=${param.id}`)
         .then(res => {
-          setStudents(res.data);
+          setStudents(res.data.results);
         }).catch(err => console.log(err));
     }
 
@@ -117,15 +132,13 @@ function AdminUserDetails() {
                     <h3>{user.is_staff ? "true":"false"}</h3>
                 </div>
                 {/* Table for Students Here */}
-                <div className='info-fields'>
-                    {/* <h2>Students: </h2> */}
-                    <AdminTable title={"Students"} header={Object.keys(exampleUser.students[0])} data={exampleUser.students}/>
-                    {/* {
-                      exampleUser.students.map((s,i)=>{
-                        return <Link to={`/admin/student/${s.id}`} id={i}><button className='button'>{s.name}</button></Link>
-                      })
-                    } */}
-                </div>
+                {
+                  user.is_staff? <div></div>:
+                  <div className='info-fields'>
+                      <AdminTable title={"Students"} header={Object.keys(emptyStudent)} data={students}/>
+
+                  </div>
+                }     
 
                 <div className='edit-delete-buttons'>
                   <Link to={`/admin/edit/${colum}/${user.id}`}><button>Edit User</button></Link>

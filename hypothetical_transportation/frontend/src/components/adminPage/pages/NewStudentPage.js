@@ -58,8 +58,8 @@ function NewStudentPage() {
     const getUsers = () => {
       axios.get('/api/user/')
         .then(res => {
-          console.log(res.data.results)
-          setUsers(res.data.results);
+          console.log(res.data.results.filter(s=>!s.is_staff))
+          setUsers(res.data.results.filter(s=>!s.is_staff));
         }).catch(err => console.log(err));
     }
 
