@@ -23,8 +23,7 @@ function AdminUsersPage() {
 
   const emptyUser = [{
     id: 0,
-    first_name: "",
-    last_name: "",
+    full_name: "",
     email: "",
     address: "",
   }]
@@ -34,7 +33,8 @@ function AdminUsersPage() {
   const getUsers = () => {
     axios.get('/api/user/')
         .then(res => {
-            setUsers(res.data);
+            console.log(res.data.results)
+            setUsers(res.data.results);
         }).catch(err => console.log(err));
     }
 
