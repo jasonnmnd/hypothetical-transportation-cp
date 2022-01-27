@@ -42,3 +42,5 @@ venv3.7/
 /output/
 /cache/
 boilerplate.zip
+
+/venv/
