@@ -121,8 +121,8 @@ class StudentViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         # modify to return all if admin
-        return self.request.user.students.all().distinct()
-        # return Student.objects.all().distinct()
+        # return self.request.user.students.all().distinct()
+        return Student.objects.all().distinct()
 
     def perform_create(self, serializer):
         serializer.save()
