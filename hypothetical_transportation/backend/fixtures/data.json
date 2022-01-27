@@ -1,0 +1,122 @@
+[
+  {
+    "model": "auth.group",
+    "fields": {
+      "name": "Administrator",
+      "permissions": []
+    }
+  },
+  {
+    "model": "auth.group",
+    "fields": {
+      "name": "Guardian",
+      "permissions": []
+    }
+  },
+  {
+    "model": "accounts.User",
+    "fields": {
+      "email": "michael@gmail.com",
+      "full_name": "Michael",
+      "address": "Neighborhood 12358W",
+      "password": "defaultpassword",
+      "groups": [
+        2
+      ]
+    }
+  },
+  {
+    "model": "accounts.User",
+    "fields": {
+      "email": "judgegen@gmail.com",
+      "full_name": "Judge Gen",
+      "address": "Neutral Zone",
+      "password": "defaultpassword",
+      "groups": [
+        1
+      ]
+    }
+  },
+  {
+    "model": "backend.school",
+    "fields": {
+      "name": "St. John's University",
+      "address": "Sydney, Australia, Earth"
+    }
+  },
+  {
+    "model": "backend.school",
+    "fields": {
+      "name": "Duke University",
+      "address": "Durham, NC"
+    }
+  },
+  {
+    "model": "backend.Route",
+    "fields": {
+      "name": "The Trans Eternal Railway",
+      "description": "Connects Neighborhood 12358W to other locations in the afterlife.",
+      "school": 1
+    }
+  },
+  {
+    "model": "backend.Route",
+    "fields": {
+      "name": "The Door to Earth",
+      "description": "The Door to Earth",
+      "school": 1
+    }
+  },
+  {
+    "model": "backend.Student",
+    "fields": {
+      "first_name": "Eleanor",
+      "last_name": "Shellstrop",
+      "address": "Neighborhood 12358W",
+      "active": true,
+      "school": 1,
+      "student_id": 1,
+      "routes": 1,
+      "guardian": 1
+    }
+  },
+  {
+    "model": "backend.Student",
+    "fields": {
+      "first_name": "Chidi",
+      "last_name": "Anagonye",
+      "address": "Neighborhood 12358W",
+      "active": true,
+      "school": 1,
+      "student_id": 2,
+      "routes": 1,
+      "guardian": 1
+    }
+  },
+  {
+    "model": "backend.Student",
+    "fields": {
+      "first_name": "Jason",
+      "last_name": "Mendoza",
+      "address": "Neighborhood 12358W",
+      "active": true,
+      "school": 1,
+      "student_id": 3,
+      "routes": 1,
+      "guardian": 1
+    }
+  },
+  {
+    "model": "backend.Student",
+    "fields": {
+      "first_name": "Tahani",
+      "last_name": "Al-Jamil",
+      "address": "Neighborhood 12358W",
+      "active": true,
+      "school": 1,
+      "student_id": 4,
+      "routes": null,
+      "guardian": 1
+    }
+  }
+]
