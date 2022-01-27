@@ -68,7 +68,7 @@ function AdminStudentsPage() {
     axios.get(`/api/student/`)
         .then(res => {
           console.log(res.data.results)
-            setStudents(res.data.results);
+          setStudents(res.data.results);
         }).catch(err => console.log(err));
     }
   

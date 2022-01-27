@@ -12,34 +12,6 @@ import AssistedLocationModal from '../components/modals/AssistedLocationModal';
 function AdminUserDetails() {
   const navigate = useNavigate();
   const param = useParams();
-  const exampleUser = {
-    id:param.id,
-    name: "First Last",
-    email: "firstlast@gmail.com",
-    students:[
-        {
-          id:444,
-          name:"Al",
-          studentid: "123",
-          school: "A high school",
-          route: "#1",
-        },
-        {
-          id:555,
-          name:"Hugo",
-          studentid:"456",
-          school: "B high school",
-          route: "#2",
-        },
-        {
-          id:666,
-          name:"James",
-          studentid:"567",
-          school: "C high school",
-          route: "none",
-        }
-      ]
-  }
 
   const [openModal, setOpenModal] = useState(false);
 

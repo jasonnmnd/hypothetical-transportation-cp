@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from '../../header/Header';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import "../adminPage.css";
 import DeleteModal from '../components/modals/DeleteModal';
 import SidebarSliding from '../components/sidebar/SidebarSliding';
+import axios from 'axios';
 
 function AdminStudentDetails() {
   const navigate = useNavigate();
@@ -28,13 +29,57 @@ function AdminStudentDetails() {
     }
   }
 
+  const studentObject = {
+    id: 0,
+    student_id: "",
+    first_name: "",
+    last_name: "",
+    address: "",
+    guardian: 0,
+    routes: 0,
+    school: 0,
+  }
+
+  const [student, setStudent] = useState(studentObject);
+  const [parentName,setParentName] = useState("");
+  const [schoolName,setSchoolName] = useState("");
+  const [routeName,setRouteName] = useState("");
+
+  const getInfo = () => {
+    axios.get(`/api/student/${param.id}`)
+      .then(res => {
+        setStudent(res.data);
+        axios.get(`/api/user/${res.data.guardian}`)
+          .then(res => {
+            setParentName(res.data.full_name);
+        }).catch(err => console.log(err));
+        axios.get(`/api/school/${res.data.school}`)
+          .then(res => {
+            setSchoolName(res.data.name);
+        }).catch(err => console.log(err));
+        axios.get(`/api/route/${res.data.routes}`)
+          .then(res => {
+            setRouteName(res.data.name);
+        }).catch(err => console.log(err));
+    }).catch(err => console.log(err));
+  }
+
+
   const [openModal, setOpenModal] = useState(false);
 
   const handleConfirmDelete = () => {
     //Replace with API call to delete student
     //Route back to students page
-    console.log("DELETED STUDENT");
+    axios.delete(`/api/student/${param.id}`).then(res => {
+      console.log("DELETED STUDENT");
+      navigate(`/admin/students/`)
+
+    }).catch(err => console.log(err));
   }
+
+  useEffect(() => {
+    getInfo();
+  }, []);
 
   return (
     <> 
@@ -46,27 +91,23 @@ function AdminStudentDetails() {
                   <h1>Student Details</h1>
                   <div className='info-fields'>
                       <h2>Name: </h2>
-                      <h3>{exampleStudent.name}</h3>
+                      <h3>{student.first_name + " " +student.last_name}</h3>
                   </div>
                   <div className='info-fields'>
                       <h2>StudentID: </h2>
-                      <h3>{exampleStudent.student_id}</h3>
+                      <h3>{student.student_id}</h3>
                   </div>
                   <div className='info-fields'>
                       <h2>School: </h2>
-                      <Link to={`/admin/school/${exampleStudent.school.id}`}><button className='button'><h3>{exampleStudent.school.name}</h3></button></Link>
+                      <Link to={`/admin/school/${student.school}`}><button className='button'><h3>{schoolName}</h3></button></Link>
                   </div>
                   <div className='info-fields'>
                       <h2>Route: </h2>
-                      <Link to={`/admin/route/${exampleStudent.route.id}`}><button className='button'><h3>{exampleStudent.route.name}</h3></button></Link>
+                      <Link to={`/admin/route/${student.routes}`}><button className='button'><h3>{routeName}</h3></button></Link>
                   </div>
                   <div className='info-fields'>
-                      <h2>Parent Name: </h2>
-                      <Link to={`/admin/user/${exampleStudent.parent.id}`}><button className='button'><h3>{exampleStudent.parent.name}</h3></button></Link>
-                  </div>
-                  <div className='info-fields'>
-                      <h2>Parent Email: </h2>
-                      <h3>{exampleStudent.parent.email}</h3>
+                      <h2>Parent: </h2>
+                      <Link to={`/admin/user/${student.guardian}`}><button className='button'><h3>{parentName}</h3></button></Link>
                   </div>
 
                   {/* Table for Students Here */}
