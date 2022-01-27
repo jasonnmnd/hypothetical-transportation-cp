@@ -20,7 +20,7 @@ function AdminRoutesPage() {
   const getRoutes = () => {
     axios.get(`/api/route/`)
         .then(res => {
-          setRoutes(res.data);
+          setRoutes(res.data.results);
         }).catch(err => console.log(err));
   }
 
@@ -59,11 +59,11 @@ function AdminRoutesPage() {
         <SidebarSliding/>
         <Header textToDisplay={"Admin Portal"}></Header>
         <div className='middle-content'>
-          <div className='center-buttons'>
-            <Link to="/admin/new/route">
+          {/* <div className='center-buttons'>
+            <Link to={`/admin/new/route`}>
                 <button className='button'>Add New Route</button>
               </Link>
-          </div>
+          </div> */}
           <div className='table-and-buttons'>
             <AdminTable title={title} header={Object.keys(emptyRoute[0])} data={routes} search={search}></AdminTable>
             <div className="prev-next-buttons">

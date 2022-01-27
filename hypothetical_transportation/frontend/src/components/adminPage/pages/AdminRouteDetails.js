@@ -16,7 +16,12 @@ function AdminRouteDetails() {
   const handleConfirmDelete = () => {
     //Replace with API call to delete school and all its associated routes/students
     //Route back to students page
-    console.log("DELETED USER");
+    axios.delete(`/api/route/${param.id}`).then(res => {
+      console.log("DELETED Route");
+      navigate(`/admin/routes/`)
+
+    }).catch(err => console.log(err));
+
   }
   
   const navigate = useNavigate();
@@ -60,19 +65,55 @@ function AdminRouteDetails() {
     id: 0,
     name: "",
     description: "",
+    school: "",
   }
 
+  const emptyStudent = {
+    student_id: "",
+    first_name: "",
+    last_name: "",
+    address: "",
+  }
+
+  const studentObject = [{
+    id: 0,
+    student_id: "",
+    first_name: "",
+    last_name: "",
+    address: "",
+    guardian: 0,
+    routes: 0,
+    school: 0,
+  }]
+
   const [route, setRoute] = useState(emptyRoute);
-  
+  const [students, setStudents] = useState(studentObject);
+  const [school, setSchoolName] = useState("");
+
   const getRoutes = () => {
     axios.get(`/api/route/${param.id}`)
-        .then(res => {
-            setRoute(res.data);
+    .then(res => {
+      setRoute(res.data);
+      axios.get(`/api/school/${res.data.school}`)
+          .then(res => {
+            setSchoolName(res.data.name);
         }).catch(err => console.log(err));
-    }
+    }).catch(err => console.log(err));
+  }
+  
+  
+  const getStudent = () => {
+  axios.get(`/api/student?routes=${param.id}`)
+    .then(res => {
+      console.log(res.data.results)
+      setStudents(res.data.results);
+    }).catch(err => console.log(err));
+  }
+  
 
   useEffect(() => {
     getRoutes();
+    getStudent();
   }, []);
 
 
@@ -98,10 +139,10 @@ function AdminRouteDetails() {
 
             <div className='info-fields'>
               <h2>School: </h2>
-              <Link to={`/admin/school/${exampleRoute.school.id}`}><button className='button'><h3>{exampleRoute.school.name}</h3></button></Link>
+              <Link to={`/admin/school/${route.school}`}><button className='button'><h3>{school}</h3></button></Link>
             </div>
 
-            <AdminTable title={"Associated Students"} header={Object.keys(exampleRoute.students[0])} data={exampleRoute.students}/>
+            <AdminTable title={"Associated Students"} header={Object.keys(emptyStudent)} data={students}/>
 
             <div className='edit-delete-buttons'>
               <Link to={`/admin/edit/route/${exampleRoute.id}`}><button>Edit Route</button></Link>

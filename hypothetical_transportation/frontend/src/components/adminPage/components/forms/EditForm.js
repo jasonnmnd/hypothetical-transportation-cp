@@ -16,6 +16,9 @@ function EditForm({column, fields, obj, setobj, action}) {
         if(column.includes("admin")){
             obj.is_staff=true;
         }
+        if(column.includes("route")){
+            obj.school=column.split("_")[0];
+        }
         e.preventDefault();
         // console.log(obj);
         //route to a post to save the data

@@ -14,7 +14,6 @@ function AdminNewPage() {
     //param.column refers to "user", "school", etc
     const emptyFields = {
         user: {
-          id: 0,
           full_name: "",
           email: "",
           address: "",
@@ -22,19 +21,18 @@ function AdminNewPage() {
           is_staff: param.column.includes("parent")?false:true,
         },
         route: {
-          id: 0,
+          school:0,
           name: "",
           description: "",
         },
         school: {
-          id: 0,
           name: "",
           address: "",
         }
     }
     const col = param.column.includes("_") ?param.column.split("_")[1]:param.column
     const [obj, setObj] = useState(emptyFields[col])
-    const fields=Object.keys(emptyFields[col]).filter((i)=>param.column.includes("admin")?i!=="id"&&i!=="address"&&i!=="is_staff":i!=="id"&&i!=="is_staff");
+    const fields=Object.keys(emptyFields[col]).filter((i)=>param.column.includes("admin")?i!=="school"&&i!=="address"&&i!=="is_staff":i!=="school"&&i!=="is_staff");
   
     return ( 
       <>
