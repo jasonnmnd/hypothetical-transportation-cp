@@ -5,20 +5,18 @@ import PropTypes from 'prop-types';
 
 /* DOESNT WORK RIGHT NOW BECAUSE OF REACT ROUTER DOM V6*/
 
-const PrivateRoute = ({ component: Component, auth, ...rest }) => (
-  <Route
-    {...rest}
-    render={(props) => {
-      if (auth.isLoading) {
-        return <h2>Loading...</h2>;
-      } else if (!auth.isAuthenticated) {
-        return <Navigate to="/" />;
-      } else {
-        return <Component {...props} />;
-      }
-    }}
-  />
-);
+
+function PrivateRoute(props) {
+  if (props.auth.isLoading) {
+    return <h2>Loading...</h2>;
+  } else if (!props.auth.isAuthenticated) {
+    return <Navigate to="/" />;
+  } else {
+    return props.children;
+  }
+ 
+}
+
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
