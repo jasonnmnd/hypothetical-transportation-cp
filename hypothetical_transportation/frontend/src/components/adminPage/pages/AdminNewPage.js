@@ -15,10 +15,10 @@ function AdminNewPage() {
     const emptyFields = {
         user: {
           id: 0,
-          first_name: "",
-          last_name: "",
+          full_name: "",
           email: "",
           address: "",
+          password: "",
           admin: false,
         },
         route: {
