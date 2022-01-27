@@ -8,7 +8,8 @@ import SidebarSliding from '../components/sidebar/SidebarSliding';
 import axios from 'axios';
 
 
-function NewStudentPage() {
+function ManStudentPage({action}) {
+    const param = useParams()
     const navigate = useNavigate();
     const emptyStudent={
       id: 0,
@@ -55,6 +56,14 @@ function NewStudentPage() {
           setSchoolList(res.data.results);
         }).catch(err => console.log(err));
     }
+
+    const getStudent = () => {
+      axios.get(`/api/student/${param.id}`)
+        .then(res => {
+          setObj(res.data);
+        }).catch(err => console.log(err));
+    }
+
     const getUsers = () => {
       axios.get('/api/user/')
         .then(res => {
@@ -65,22 +74,23 @@ function NewStudentPage() {
 
   const getRoutes = (i) => {
     axios.get(`/api/route?school=${i}`)
-        .then(res => {
-          setRoutes(res.data.results);
-        }).catch(err => console.log(err));
-    }
+      .then(res => {
+        setRoutes(res.data.results);
+      }).catch(err => console.log(err));
+  }
 
-    const submit = (e) => {
-      console.log(obj)
-      e.preventDefault()
-      if(obj.guardian===""){
-        setError("Guardian cannot be null")
-      }
-      else if(obj.school===""){
-        setError("School cannot be null")
-      }
-      else{
-        setError("")
+  const submit = (e) => {
+    console.log(obj)
+    e.preventDefault()
+    if(obj.guardian===""){
+      setError("Guardian cannot be null")
+    }
+    else if(obj.school===""){
+      setError("School cannot be null")
+    }
+    else{
+      setError("")
+      if(action==="new"){
         axios
             .post(`/api/student/`,obj)
             .then(res =>{
@@ -88,6 +98,15 @@ function NewStudentPage() {
 
             }).catch(err => console.log(err));
       }
+      else{
+        axios
+            .put(`/api/student/${param.id}`,obj)
+            .then(res =>{
+                navigate(`/admin/students/`)
+
+            }).catch(err => console.log(err));
+      }
+    }
   }
 
   const changeSchool = (e)=>{
@@ -101,6 +120,10 @@ function NewStudentPage() {
     useEffect(() => {
       getSchools();
       getUsers();
+      if(action==="edit"){
+        getStudent();
+        getRoutes(obj.school);
+      }
     }, []);
 
     return ( 
@@ -221,4 +244,4 @@ function NewStudentPage() {
         );
 }
 
-export default NewStudentPage;
+export default ManStudentPage;

@@ -117,7 +117,7 @@ function AdminStudentDetails() {
                   {/* Table for Students Here */}
 
                   <div className='edit-delete-buttons'>
-                        <Link to={`/admin/edit/student/${exampleStudent.id}`}><button>Edit Student</button></Link>
+                        <Link to={`/admin/editstudent/${exampleStudent.id}`}><button>Edit Student</button></Link>
                         <button onClick={() => {
                           setOpenModal(true);
                         }}>Delete Student</button>
