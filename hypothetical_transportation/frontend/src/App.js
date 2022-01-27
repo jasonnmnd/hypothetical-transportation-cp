@@ -23,6 +23,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { login } from "./actions/auth";
 import AdminNewPage from "./components/adminPage/pages/AdminNewPage";
+import NewStudentPage from "./components/adminPage/pages/NewStudentPage";
 
 function App( {store, login} ) {
   //Login details, move to database for security
@@ -183,7 +184,9 @@ function App( {store, login} ) {
           <Route exact path="/admin/school/:id" element={<AdminSchoolDetails />}/>
           <Route exact path="/admin/route/:id" element={<AdminRouteDetails />}/>
           <Route exact path="/admin/route/plan/:id" element={<AdminRoutePlanner />}/>
-          <Route exact path="admin/new/:column" element={<AdminNewPage />}></Route>
+          <Route exact path="/admin/newstudent" element={<NewStudentPage />}></Route>
+          <Route exact path="/admin/new/:column" element={<AdminNewPage />}></Route>
+
         </Routes>
       </BrowserRouter>
     </div>
