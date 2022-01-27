@@ -33,7 +33,6 @@ function AdminSchoolsPage() {
   // }, []);
 
   const emptySchools = [{
-    id: 0,
     name: "",
     address: "",
   }]

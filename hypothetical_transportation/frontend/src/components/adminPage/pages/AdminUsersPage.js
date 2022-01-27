@@ -22,10 +22,10 @@ function AdminUsersPage() {
   }
 
   const emptyUser = [{
-    id: 0,
     full_name: "",
     email: "",
     address: "",
+    is_staff: "",
   }]
 
   const [users, setUsers] = useState(emptyUser);

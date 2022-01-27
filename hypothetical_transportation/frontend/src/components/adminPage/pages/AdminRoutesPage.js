@@ -10,7 +10,6 @@ function AdminRoutesPage() {
   const title = "Routes"
 
   const emptyRoute = [{
-    id: 0,
     name: "",
     description: "",
   }]
