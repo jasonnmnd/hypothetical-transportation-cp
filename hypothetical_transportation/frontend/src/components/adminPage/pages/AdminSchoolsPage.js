@@ -53,9 +53,9 @@ function AdminSchoolsPage() {
 
 
   const searchSchool = (i1,i2) => {
-    axios.get(`/api/school?${i1}Includes='${i2}'`)
+    axios.get(`/api/school?search=${i2}&search_fields=${i1}`)
         .then(res => {
-          console.log(`/api/school?${i1}Includes='${i2}'`)
+          console.log(`/api/school?search=${i2}&search_fields=${i1}`)
           setSchools(res.data.results);
         }).catch(err => console.log(err));
   }

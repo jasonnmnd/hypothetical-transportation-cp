@@ -78,9 +78,10 @@ function AdminStudentsPage() {
   }, []);
 
   const searchStudent = (i1,i2) => {
-    axios.get(`/api/student?${i1}Includes='${i2}'`)
+    axios.get(`/api/student?search=${i2}&search_fields=${i1}`)
         .then(res => {
-          console.log(`/api/student?${i1}Includes='${i2}'`)
+          console.log(`/api/student?search=${i2}&search_fields=${i1}`)
+          console.log(res.data.results)
           setStudents(res.data.results);
         }).catch(err => console.log(err));
   }
