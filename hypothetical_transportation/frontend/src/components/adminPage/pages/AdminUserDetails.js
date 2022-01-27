@@ -56,7 +56,7 @@ function AdminUserDetails() {
     last_name: "",
     email: "",
     address: "",
-    admin:false,
+    is_staff:false,
   }
 
   const emptyStudents = [{
@@ -70,7 +70,7 @@ function AdminUserDetails() {
     axios.get(`/api/user/${param.id}`)
         .then(res => {
           setUser(res.data);
-          res.data.admin?setColumn("admin_user"):setColumn("parent_user")
+          res.data.is_staff?setColumn("admin_user"):setColumn("parent_user")
         }).catch(err => console.log(err));
     }
   
@@ -114,7 +114,7 @@ function AdminUserDetails() {
                 </div>
                 <div className='info-fields'>
                     <h2>Admin: </h2>
-                    <h3>{user.admin ? "true":"false"}</h3>
+                    <h3>{user.is_staff ? "true":"false"}</h3>
                 </div>
                 {/* Table for Students Here */}
                 <div className='info-fields'>

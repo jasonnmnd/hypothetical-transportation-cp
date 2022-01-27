@@ -14,7 +14,7 @@ function EditForm({column, fields, obj, setobj, action}) {
         // console.log(column);
         // console.log(column.includes("admin"))
         if(column.includes("admin")){
-            obj.admin=true;
+            obj.is_staff=true;
         }
         e.preventDefault();
         // console.log(obj);
@@ -28,7 +28,8 @@ function EditForm({column, fields, obj, setobj, action}) {
 
                 }).catch(err => console.log(err));
         }else if(action==="new"){
-            // console.log("new")
+            console.log("new")
+            console.log(obj)
             axios
                 .post(`/api/${col}/`,obj)
                 .then(res =>{

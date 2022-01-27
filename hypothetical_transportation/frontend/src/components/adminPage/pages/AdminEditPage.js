@@ -11,16 +11,36 @@ import axios from 'axios';
 function AdminEditPage() {
   const navigate = useNavigate();
   const param = useParams();
+  const emptyFields = {
+    user: {
+      full_name: "",
+      email: "",
+      address: "",
+    },
+    route: {
+      name: "",
+      description: "",
+    },
+    school: {
+      name: "",
+      address: "",
+    }
+}
   const col = param.column.includes("_") ?param.column.split("_")[1]:param.column
   //query the database for param.column (student/user/school/route) and id equals param.id
-  const [obj, setobj] = useState(null);
+  const [obj, setobj] = useState(emptyFields[col]);
   const getOldData = () => {
+    console.log(col);
     axios.get(`/api/${col}/${param.id}/`)
         .then(res => {
+            console.log(res.data)
             setobj(res.data);
+            console.log(obj)
+            console.log(fields)
         }).catch(err => console.log(err));
     }
-  const fields=obj!==null? Object.keys(obj).filter((i)=>param.column.includes("parent")?i!=="id"&&i!=="admin":i!=="id"&&i!=="admin"&&i!=="address"):[];
+
+  const fields=Object.keys(emptyFields[col]).filter((i)=>param.column.includes("parent")?i!=="":i!=="address");
   
   useEffect(() => {
     getOldData();
