@@ -150,6 +150,7 @@ function App( {store, login} ) {
 
   const Logout = () => {
     setUser(emptyUser);
+    setError("");
     return <Navigate to="/"></Navigate>
   };
 
