@@ -98,6 +98,10 @@ function AdminStudentDetails() {
                       <h3>{student.student_id}</h3>
                   </div>
                   <div className='info-fields'>
+                      <h2>Address: </h2>
+                      <h3>{student.address}</h3>
+                  </div>
+                  <div className='info-fields'>
                       <h2>School: </h2>
                       <Link to={`/admin/school/${student.school}`}><button className='button'><h3>{schoolName}</h3></button></Link>
                   </div>
