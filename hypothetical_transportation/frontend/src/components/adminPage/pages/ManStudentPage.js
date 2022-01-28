@@ -78,10 +78,15 @@ function ManStudentPage(props) {
     }
 
   const getRoutes = (i) => {
+    if(i!=="" && i!==null && i!==undefined && i!==0){
     axios.get(`/api/route?school=${i}`)
       .then(res => {
         setRoutes(res.data.results);
       }).catch(err => console.log(err));
+    }
+    else{
+      setRoutes(emptyRoutes)
+    }
   }
 
   const submit = () => {
@@ -224,9 +229,9 @@ const handleConfirmAddress = () => {
                         Route:
                         <select value={obj.routes} onChange={(e) => setObj({ ...obj, ["routes"]: e.target.value })}>
                           <option value={""} >{"-----"}</option>
-                          {routes.map((u,i)=>{
+                          {routes!==null && routes!==undefined?routes.map((u,i)=>{
                               return <option value={u.id} key={i}>{u.name}</option>
-                          })}
+                          }):null}
                         </select>
                       </label>
                   </div>
