@@ -21,10 +21,14 @@ import PrivateRoute from "./components/common/PrivateRoute";
 import { loadUser } from "./actions/auth";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import Alerts from "./components/alerts/Alerts";
 
 import AdminNewPage from "./components/adminPage/pages/AdminNewPage";
 import ManStudentPage from "./components/adminPage/pages/ManStudentPage";
 //import GeneralTable from "./components/common/generalTable";
+
+
+
 
 function App( props ) {
   //Handle main login accross the whole app
@@ -32,6 +36,7 @@ function App( props ) {
   return (
     <div className="App">
       <BrowserRouter>
+        <Alerts/>
         <Routes>
             <Route exact path="/" element={<LoginForm />}></Route>
             <Route path="/parent/*" element={<PrivateRoute><ParentPage /></PrivateRoute>}></Route>

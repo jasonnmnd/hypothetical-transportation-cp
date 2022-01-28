@@ -1,8 +1,11 @@
 import axios from 'axios';
-import { createMessage, returnErrors } from './messages';
+
 import { tokenConfig } from './auth';
 
-import { GET_STUDENTS, DELETE_STUDENT, ADD_STUDENT } from './types';
+import { createMessage, returnErrors } from './messages';
+
+import { GET_STUDENTS, DELETE_STUDENT, ADD_STUDENT, GET_ERRORS, CREATE_MESSAGE } from './types';
+
 
 // GET STUDENTS
 export const getStudents = () => (dispatch, getState) => {
@@ -44,4 +47,20 @@ export const addStudent = (student) => (dispatch) => {
     .catch((err) => console.log(err));
 };
 
+// export const testingError = () => (dispatch) => {
+//   const fakeError = {
+//     msg: {
+//       name: "Fake name not valid",
+//     },
+//     status: "Fake Error Status"
+//   };
+//   const fakeMessage = {
+//     passwordNotMatch: "This is a fake message!"
+//   }
+//   //dispatch(createMessage(fakeMessage))
+//   dispatch({
+//     type: CREATE_MESSAGE,
+//     payload: fakeMessage,
+//   })
+// }
 
