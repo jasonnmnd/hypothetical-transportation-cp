@@ -29,25 +29,22 @@ function AdminUserDetails() {
 
   const emptyUser = {
     id: 0,
-    first_name: "",
-    last_name: "",
+    full_name: "",
     email: "",
     address: "",
-    is_staff:false,
+    groups:[],
   }
 
   const emptyStudent = {
     student_id: "",
-    first_name: "",
-    last_name: "",
+    full_name:"",
     address: "",
   }
 
   const studentObject = [{
     id: 0,
     student_id: "",
-    first_name: "",
-    last_name: "",
+    full_name:"",
     address: "",
     guardian: 0,
     routes: 0,
@@ -59,16 +56,17 @@ function AdminUserDetails() {
   const [students, setStudents] = useState(studentObject);
 
   const getUser = () => {
-    axios.get(`/api/user/${param.id}`)
+    axios.get(`/api/user/${param.id}/`)
         .then(res => {
           setUser(res.data);
-          res.data.is_staff?setColumn("admin_user"):setColumn("parent_user")
+          res.data.groups.includes(1)?setColumn("admin_user"):setColumn("parent_user")
         }).catch(err => console.log(err));
     }
   
   const getStudents = () => {
-    axios.get(`/api/student?guardian=${param.id}`)
+    axios.get(`/api/student/?guardian=${param.id}`)
         .then(res => {
+          console.log(res.data.results)
           setStudents(res.data.results);
         }).catch(err => console.log(err));
     }
@@ -100,18 +98,18 @@ function AdminUserDetails() {
                     <h2>Email: </h2>
                     <h3>{user.email}</h3>
                 </div>
-                {user.is_staff===false?<div className='info-fields'>
+                {user.groups.includes(2)?<div className='info-fields'>
                     <h2>Address: </h2>
                     <h3>{user.address}</h3>
                 </div>:<div></div>
                 }
                 <div className='info-fields'>
                     <h2>Admin: </h2>
-                    <h3>{user.is_staff ? "true":"false"}</h3>
+                    <h3>{user.groups.includes(1) ? "true":"false"}</h3>
                 </div>
                 {/* Table for Students Here */}
                 {
-                  user.is_staff? <div></div>:
+                  user.groups.includes(1)? <div></div>:
                   <div className='info-fields'>
                       <AdminTable title={"Students"} header={Object.keys(emptyStudent)} data={students}/>
 

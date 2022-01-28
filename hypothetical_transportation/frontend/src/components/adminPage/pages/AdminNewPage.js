@@ -21,7 +21,7 @@ function AdminNewPage() {
           email: "",
           address: "",
           password: "",
-          is_staff: param.column.includes("parent")?false:true,
+          groups: param.column.includes("parent")?[2]:[1],
         },
         route: {
           school:0,
@@ -35,7 +35,7 @@ function AdminNewPage() {
     }
     const col = param.column.includes("_") ?param.column.split("_")[1]:param.column
     const [obj, setObj] = useState(emptyFields[col])
-    const fields=Object.keys(emptyFields[col]).filter((i)=>param.column.includes("admin")?i!=="school"&&i!=="address"&&i!=="is_staff":i!=="school"&&i!=="is_staff");
+    const fields=Object.keys(emptyFields[col]).filter((i)=>param.column.includes("admin")?i!=="school"&&i!=="address"&&i!=="groups":i!=="school"&&i!=="groups");
   
     const [openModal, setOpenModal] = useState(false);
     const fakeAddress = "101 Wannamaker Dr, Durham NC 27708"

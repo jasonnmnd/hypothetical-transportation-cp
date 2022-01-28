@@ -23,6 +23,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
 import AdminNewPage from "./components/adminPage/pages/AdminNewPage";
+import ManStudentPage from "./components/adminPage/pages/ManStudentPage";
 //import GeneralTable from "./components/common/generalTable";
 
 function App( props ) {
@@ -108,6 +109,8 @@ function App( props ) {
             <Route exact path="/admin/school/:id" element={<PrivateRoute><AdminSchoolDetails /></PrivateRoute>}/>
             <Route exact path="/admin/route/:id" element={<PrivateRoute><AdminRouteDetails /></PrivateRoute>}/>
             <Route exact path="/admin/route/plan/:id" element={<PrivateRoute><AdminRoutePlanner /></PrivateRoute>}/>
+            <Route exact path="/admin/newstudent/" element={<PrivateRoute><ManStudentPage action={"new"} /></PrivateRoute>}/>
+            <Route exact path="/admin/editstudent/:id" element={<PrivateRoute><ManStudentPage action={"edit"}/></PrivateRoute>}/>
             <Route exact path="admin/new/:column" element={<PrivateRoute><AdminNewPage /></PrivateRoute>}></Route>
         </Routes>
       </BrowserRouter>

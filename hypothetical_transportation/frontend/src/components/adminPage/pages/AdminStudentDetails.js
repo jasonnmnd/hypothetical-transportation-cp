@@ -48,21 +48,28 @@ function AdminStudentDetails() {
   const [routeName,setRouteName] = useState("");
 
   const getInfo = () => {
-    axios.get(`/api/student/${param.id}`)
+    axios.get(`/api/student/${param.id}/`)
       .then(res => {
+        console.log(`/api/student/${param.id}/`)
+        console.log(res.data)
         setStudent(res.data);
-        axios.get(`/api/user/${res.data.guardian}`)
+        axios.get(`/api/user/${res.data.guardian}/`)
           .then(res => {
             setParentName(res.data.full_name);
         }).catch(err => console.log(err));
-        axios.get(`/api/school/${res.data.school}`)
+        axios.get(`/api/school/${res.data.school}/`)
           .then(res => {
             setSchoolName(res.data.name);
         }).catch(err => console.log(err));
-        axios.get(`/api/route/${res.data.routes}`)
-          .then(res => {
-            setRouteName(res.data.name);
-        }).catch(err => console.log(err));
+        if (res.data.routes!==undefined && res.data.routes!==null){
+          axios.get(`/api/route/${res.data.routes}/`)
+            .then(res => {
+              setRouteName(res.data.name);
+          }).catch(err => console.log(err));
+        }
+        else{
+          setRouteName("NONE")
+        }
     }).catch(err => console.log(err));
   }
 
@@ -93,7 +100,7 @@ function AdminStudentDetails() {
                   <h1>Student Details</h1>
                   <div className='info-fields'>
                       <h2>Name: </h2>
-                      <h3>{student.first_name + " " +student.last_name}</h3>
+                      <h3>{student.full_name}</h3>
                   </div>
                   <div className='info-fields'>
                       <h2>StudentID: </h2>

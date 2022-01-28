@@ -73,16 +73,14 @@ function AdminSchoolDetails() {
 
   const emptyStudent = {
     student_id: "",
-    first_name: "",
-    last_name: "",
+    full_name:"",
     address: "",
   }
 
   const studentObject = [{
     id: 0,
     student_id: "",
-    first_name: "",
-    last_name: "",
+    full_name:"",
     address: "",
     guardian: 0,
     routes: 0,
