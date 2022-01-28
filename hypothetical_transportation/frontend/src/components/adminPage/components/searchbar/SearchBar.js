@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import "../../adminPage.css"
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 //input: a list of buttons - filter by options
 //search: takes in 2 inputs? the filter option, and the inputted text
-function SearchBar({buttons, search}){
-    const [values, setValue] = useState({by:buttons[0], value:""})
+function SearchBar(props){
+    const [values, setValue] = useState({by: props.buttons[0], value:""})
     
     const searchHandler = (e)=>{
         e.preventDefault();
-        search(values);
+        props.search(values);
         console.log(values)
     }
     return(
@@ -18,7 +20,7 @@ function SearchBar({buttons, search}){
                     <label>
                     Filter By:
                     <select value={values.by} onChange={(e) => setValue({ ...values, by: e.target.value })}>
-                        {buttons.filter(k=>k!=="routes"&&k!=="school"&&k!=="groups").map((b,i)=>{
+                        {props.buttons.filter(k=>k!=="routes"&&k!=="school"&&k!=="groups").map((b,i)=>{
                             return <option value={b} key={i}>{b}</option>
                         })}
                     </select>
@@ -42,4 +44,17 @@ function SearchBar({buttons, search}){
         </form>
     );
 }
-export default SearchBar;
+
+
+SearchBar.propTypes = {
+    buttons: PropTypes.arrayOf(PropTypes.string),
+    search: PropTypes.func
+  }
+  
+  const mapStateToProps = (state) => ({
+    isAuthenticated: state.auth.isAuthenticated,
+    user: state.auth.user
+  
+  });
+  
+  export default connect(mapStateToProps)(SearchBar)
