@@ -3,8 +3,10 @@ import "../parentPage.css";
 import mockData from "../mock-data.json" //Mock data that we are eventually expecting from the backend
 import ParentRow from './ParentRow';
 import { useNavigate } from 'react-router-dom'
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
-function ParentTable() {
+function ParentTable(props) {
     const nav = useNavigate();
     //useState to set students
     const [students, setStudents] = useState(mockData);
@@ -45,4 +47,13 @@ function ParentTable() {
     )
 }
 
-export default ParentTable
+
+ParentTable.propTypes = {
+    
+}
+
+const mapStateToProps = (state) => ({
+
+});
+
+export default connect(mapStateToProps)(ParentTable)
