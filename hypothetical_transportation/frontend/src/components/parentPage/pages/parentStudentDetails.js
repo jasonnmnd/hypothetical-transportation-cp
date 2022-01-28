@@ -2,6 +2,9 @@ import React from "react";
 import "../parentPage.css";
 import Header from "../../header/Header";
 import { Link, useParams } from 'react-router-dom';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+
 
 function ParentStudentDetails(){
     const param= useParams();
@@ -45,4 +48,13 @@ function ParentStudentDetails(){
     </>
     );
 }
-export default ParentStudentDetails;
+
+ParentStudentDetails.propTypes = {
+
+}
+
+const mapStateToProps = (state) => ({
+
+});
+
+export default connect(mapStateToProps)(ParentStudentDetails)
