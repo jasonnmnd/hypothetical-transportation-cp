@@ -61,8 +61,9 @@ function AdminUserDetails() {
     }
   
   const getStudents = () => {
-    axios.get(`/api/student?guardian=${param.id}`)
+    axios.get(`/api/student/?guardian=${param.id}`)
         .then(res => {
+          console.log(res.data.results)
           setStudents(res.data.results);
         }).catch(err => console.log(err));
     }
