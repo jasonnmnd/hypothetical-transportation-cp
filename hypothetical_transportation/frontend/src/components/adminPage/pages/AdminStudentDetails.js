@@ -44,6 +44,7 @@ function AdminStudentDetails() {
   const [parentName,setParentName] = useState("");
   const [schoolName,setSchoolName] = useState("");
   const [routeName,setRouteName] = useState("");
+  const [route,setRouteExist] = useState(false);
 
   const getInfo = () => {
     axios.get(`/api/student/${param.id}/`)
@@ -63,6 +64,7 @@ function AdminStudentDetails() {
           axios.get(`/api/route/${res.data.routes}/`)
             .then(res => {
               setRouteName(res.data.name);
+              setRouteExist(true)
           }).catch(err => console.log(err));
         }
         else{
@@ -114,7 +116,10 @@ function AdminStudentDetails() {
                   </div>
                   <div className='info-fields'>
                       <h2>Route: </h2>
-                      <Link to={`/admin/route/${student.routes}`}><button className='button'><h3>{routeName}</h3></button></Link>
+                      {route?
+                        <Link to={`/admin/route/${student.routes}`}><button className='button'><h3>{routeName}</h3></button></Link>:
+                        <h3>No Route for this student</h3>
+                      }
                   </div>
                   <div className='info-fields'>
                       <h2>Parent: </h2>
