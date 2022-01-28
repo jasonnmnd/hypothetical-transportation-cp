@@ -13,15 +13,13 @@ function EditForm({column, fields, obj, setobj, action}) {
     const submit = (e) => {
         // console.log(column);
         // console.log(column.includes("admin"))
-        if(column.includes("admin")){
-            obj.is_staff=true;
-        }
         if(column.includes("route")){
             obj.school=column.split("_")[0];
         }
         e.preventDefault();
         // console.log(obj);
         //route to a post to save the data
+        
         if(action==="edit"){
             axios
                 .put(`/api/${col}/${obj.id}/`,obj)
@@ -33,12 +31,21 @@ function EditForm({column, fields, obj, setobj, action}) {
         }else if(action==="new"){
             console.log("new")
             console.log(obj)
-            axios
-                .post(`/api/${col}/`,obj)
-                .then(res =>{
-                    navigate(`/admin/${col}s/`)
+            if(col==="user"){
+                axios
+                    .post(`/api/auth/register`,obj)
+                    .then(res =>{
+                        navigate(`/admin/${col}s/`)
 
-                }).catch(err => console.log(err));
+                    }).catch(err => console.log(err));
+            }else{            
+                axios
+                    .post(`/api/${col}/`,obj)
+                    .then(res =>{
+                        navigate(`/admin/${col}s/`)
+
+                    }).catch(err => console.log(err));
+            }
         }
     }
     
