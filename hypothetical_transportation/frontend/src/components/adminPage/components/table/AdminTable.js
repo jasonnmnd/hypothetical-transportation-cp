@@ -57,7 +57,7 @@ function AdminTable(props) {
                         <Fragment key={i}>
                             <AdminRow header={props.header} data={d} actionName = {props.actionName?props.actionName:"View"} action={props.action? props.action:handleViewClick}></AdminRow>
                         </Fragment>
-                    )):<div>Dont Query This</div>}
+                    )):<div>There is no data to display</div>}
                 </tbody>
             </table>
         </div>
@@ -73,7 +73,8 @@ AdminTable.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
-
+    isAuthenticated: state.auth.isAuthenticated,
+    user: state.auth.user
 });
 
 export default connect(mapStateToProps)(AdminTable)

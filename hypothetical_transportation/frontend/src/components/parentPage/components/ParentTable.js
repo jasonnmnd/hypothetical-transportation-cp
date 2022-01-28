@@ -8,8 +8,10 @@ import PropTypes from 'prop-types';
 
 function ParentTable(props) {
     const nav = useNavigate();
-    //useState to set students
-    const [students, setStudents] = useState(mockData);
+
+    //useState to set data for students
+    const [rowData, setData] = useState(null);
+
     //record which student we want to view
     const [viewStudent, setViewStudent] = useState(null);
 
@@ -25,22 +27,22 @@ function ParentTable(props) {
 
     return (
         <div className="parentTable-container">
+            <h1>{props.title}</h1>
             <table className='center'>
                 <thead>
                     <tr>
-                        <th>Student Name</th>
-                        <th>Student ID</th>
-                        <th>School</th>
-                        <th>Bus Route</th>
-                        <th>Action</th>
+                        {props.header.map((h,i)=>{
+                            return <th key={i}>{h}</th>
+                        })}
+                        <th>actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {students.map((student,i) => (
+                    {props.data!==null && props.data!==undefined?props.data.map((d,i) => (
                         <Fragment key={i}>
-                            <ParentRow student={student} handleViewClick={handleViewClick}/>
+                            <ParentRow header={props.header} data={d} actionName = {props.actionName?props.actionName:"View"} action={props.action? props.action:handleViewClick}></ParentRow>
                         </Fragment>
-                        ))}
+                    )):<div>There is no kids in the system for you</div>}
                 </tbody>
             </table>
         </div>
@@ -49,11 +51,16 @@ function ParentTable(props) {
 
 
 ParentTable.propTypes = {
-    
+    title: PropTypes.string,
+    header: PropTypes.arrayOf(PropTypes.string),
+    search: PropTypes.func,
+    actionName: PropTypes.string,
+    action: PropTypes.func
 }
 
 const mapStateToProps = (state) => ({
-
+    isAuthenticated: state.auth.isAuthenticated,
+    user: state.auth.user
 });
 
 export default connect(mapStateToProps)(ParentTable)
