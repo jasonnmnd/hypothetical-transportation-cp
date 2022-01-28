@@ -16,7 +16,7 @@ function ParentPage( props ) {
           <div>
             <div className="welcome">
               <h2>
-                Welcome,<span>{props.user.name}</span>
+                Welcome,<span>{props.user.full_name}</span>
               </h2>
               <div className="button-spacing">
                 <button onClick={props.logout}>Logout</button>

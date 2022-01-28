@@ -19,7 +19,7 @@ function AdminPage( props ) {
         
           <div className="main-content">
             <div className="welcome">
-              <h2>Welcome,<span>{props.user.username}</span></h2>
+              <h2>Welcome,<span>{props.user.full_name}</span></h2>
               <h3><p>Select an option from the sidebar for administrative abilities</p></h3>
               <h3><p>You can edit parental users, students, schools, and routes</p></h3>
               <div className="home-buttons">
