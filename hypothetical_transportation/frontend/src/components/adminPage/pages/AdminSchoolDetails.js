@@ -173,11 +173,6 @@ function AdminSchoolDetails(props) {
               setOpenModal(true);
             }}>Delete School</button>
 
-
-            <Link to={`/admin/new/${school.id}_route`}>
-              <button>New Route for this School</button>
-            </Link>
-
             <Link to={`/admin/route/plan/${school.id}`}>
               <button>Route Planner</button>
             </Link>

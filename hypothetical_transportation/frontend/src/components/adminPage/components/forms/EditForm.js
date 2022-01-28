@@ -53,7 +53,7 @@ function EditForm(props) {
     const confirmation = (e)=>{
 
         e.preventDefault();
-        if(column.includes("parent")){
+        if(props.column.includes("parent")){
             setOpenModal(true)
         }
         else{
@@ -83,7 +83,7 @@ function EditForm(props) {
                                     id={field}
                                     value={props.obj[field]}
                                     onChange={(e)=>{
-                                        setprops.obj({...props.obj, [field]: e.target.value})
+                                        props.setobj({...props.obj, [field]: e.target.value})
                                     }}
                                 />
                             </div>)
@@ -101,6 +101,7 @@ function EditForm(props) {
 EditForm.propTypes = {
     column: PropTypes.string,
     fields: PropTypes.arrayOf(PropTypes.string),
+    obj: PropTypes.string,
     setobj: PropTypes.func,
     action: PropTypes.func
 }
