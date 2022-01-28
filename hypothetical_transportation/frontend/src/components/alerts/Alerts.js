@@ -21,8 +21,9 @@ function Alerts(props) {
         // do componentDidUpdate logic
         if (error !== prevErrorRef.current) {
             if (error.msg.name) alert.error(error.msg.name);
-            // if (error.msg.name) alert.error(`Name: ${error.msg.name.join()}`);
-            // if (error.msg.email) alert.error(`Email: ${error.msg.email.join()}`);
+            if (error.msg.non_field_errors) alert.error(`${error.msg.non_field_errors.join()}`);
+            if (error.msg.password) alert.error(`Password: ${error.msg.password.join()}`);
+            if (error.msg.email) alert.error(`Password: ${error.msg.email.join()}`);
             // if (error.msg.message) alert.error(`Message: ${error.msg.message.join()}`);
             // if (error.msg.non_field_errors) alert.error(error.msg.non_field_errors.join());
             // if (error.msg.username) alert.error(error.msg.username.join());

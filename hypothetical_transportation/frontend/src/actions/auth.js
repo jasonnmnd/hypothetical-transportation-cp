@@ -1,5 +1,5 @@
 import axios from 'axios';
-//import { returnErrors } from './messages';
+import { returnErrors } from './messages';
 import {
     USER_LOADED,
     USER_LOADING,
@@ -23,8 +23,8 @@ export const loadUser = () => (dispatch, getState) => {
             payload: res.data
         });
     }).catch(err => {
-        //dispatch(returnErrors(err.response.data));
-        console.log(err.response.data);
+        dispatch(returnErrors(err.response.data, err.response.status));
+        
         dispatch({
             type: AUTH_ERROR
         })
@@ -50,8 +50,7 @@ export const login = (email, password) => (dispatch) => {
                payload: res.data
            });
        }).catch(err => {
-           //dispatch(returnErrors(err.response.data));
-           console.log(err.response.data);
+           dispatch(returnErrors(err.response.data, err.response.status));
            dispatch({
                type: LOGIN_FAIL
            })
@@ -97,7 +96,7 @@ export const logout = () => (dispatch, getState) => {
       })
       .catch((err) => {
         console.log(err)
-        //dispatch(returnErrors(err.response.data, err.response.status));
+        dispatch(returnErrors(err.response.data, err.response.status));
       });
   };
   
