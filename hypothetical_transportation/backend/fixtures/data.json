@@ -52,6 +52,27 @@
     }
   },
   {
+    "model": "backend.school",
+    "fields": {
+      "name": "Brown University",
+      "address": "Providence, Rhode Island"
+    }
+  },
+  {
+    "model": "backend.school",
+    "fields": {
+      "name": "Stanford University",
+      "address": "Palo Alto, California"
+    }
+  },
+  {
+    "model": "backend.school",
+    "fields": {
+      "name": "MIT",
+      "address": "Cambridge, Massachusetts"
+    }
+  },
+  {
     "model": "backend.Route",
     "fields": {
       "name": "The Trans Eternal Railway",
