@@ -100,7 +100,7 @@ class SchoolViewSet(viewsets.ModelViewSet):
     ]
     filter_backends = [DjangoFilterBackend, DynamicSearchFilter, filters.OrderingFilter]
     filterset_fields = get_filter_dict(School)
-    ordering_fields = ['name']
+    ordering_fields = ['name', 'students']
 
     # search_fields = [self.request.querystring]
 
