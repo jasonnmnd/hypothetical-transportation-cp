@@ -6,6 +6,8 @@ import DeleteModal from '../components/modals/DeleteModal';
 import AdminTable from '../components/table/AdminTable';
 import SidebarSliding from '../components/sidebar/SidebarSliding';
 import axios from 'axios';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 
 function AdminRouteDetails() {
@@ -160,4 +162,13 @@ function AdminRouteDetails() {
   );
 }
 
-export default AdminRouteDetails;
+AdminRouteDetails.propTypes = {
+    
+}
+
+const mapStateToProps = (state) => ({
+
+});
+
+export default connect(mapStateToProps)(AdminRouteDetails)
+

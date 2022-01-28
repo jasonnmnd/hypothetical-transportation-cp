@@ -5,6 +5,8 @@ import "../adminPage.css";
 import DeleteModal from '../components/modals/DeleteModal';
 import SidebarSliding from '../components/sidebar/SidebarSliding';
 import axios from 'axios';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 function AdminStudentDetails() {
   const navigate = useNavigate();
@@ -139,4 +141,12 @@ function AdminStudentDetails() {
   );
 }
 
-export default AdminStudentDetails;
+AdminStudentDetails.propTypes = {
+    
+}
+
+const mapStateToProps = (state) => ({
+
+});
+
+export default connect(mapStateToProps)(AdminStudentDetails)

@@ -6,6 +6,8 @@ import "../adminPage.css";
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import SidebarSliding from '../components/sidebar/SidebarSliding';
 import axios from 'axios';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 
 function AdminEditPage() {
@@ -62,4 +64,13 @@ function AdminEditPage() {
     );
 }
 
-export default AdminEditPage;
+AdminEditPage.propTypes = {
+    
+}
+
+const mapStateToProps = (state) => ({
+
+});
+
+export default connect(mapStateToProps)(AdminEditPage)
+

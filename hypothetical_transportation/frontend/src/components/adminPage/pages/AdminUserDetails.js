@@ -7,6 +7,9 @@ import AdminTable from '../components/table/AdminTable';
 import SidebarSliding from '../components/sidebar/SidebarSliding';
 import axios from 'axios';
 import AssistedLocationModal from '../components/modals/AssistedLocationModal';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+
 
 
 function AdminUserDetails() {
@@ -129,4 +132,12 @@ function AdminUserDetails() {
   );
 }
 
-export default AdminUserDetails;
+AdminUserDetails.propTypes = {
+    
+}
+
+const mapStateToProps = (state) => ({
+
+});
+
+export default connect(mapStateToProps)(AdminUserDetails)

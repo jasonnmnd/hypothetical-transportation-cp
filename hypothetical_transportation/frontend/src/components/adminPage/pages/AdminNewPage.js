@@ -7,6 +7,8 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import SidebarSliding from '../components/sidebar/SidebarSliding';
 import axios from 'axios';
 import AssistedLocationModal from '../components/modals/AssistedLocationModal';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 
 function AdminNewPage() {
@@ -60,4 +62,12 @@ function AdminNewPage() {
         );
 }
 
-export default AdminNewPage;
+AdminNewPage.propTypes = {
+    
+}
+
+const mapStateToProps = (state) => ({
+
+});
+
+export default connect(mapStateToProps)(AdminNewPage)

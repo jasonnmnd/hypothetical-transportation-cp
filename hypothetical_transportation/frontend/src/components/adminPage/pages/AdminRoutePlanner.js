@@ -4,6 +4,8 @@ import SidebarSliding from '../components/sidebar/SidebarSliding';
 import { Link } from 'react-router-dom';
 import MapContainer from '../../maps/MapContainer';
 import AdminTable from '../components/table/AdminTable';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 function AdminRoutePlanner() {
 
@@ -88,4 +90,12 @@ function AdminRoutePlanner() {
     );
 }
 
-export default AdminRoutePlanner;
+AdminRoutePlanner.propTypes = {
+    
+}
+
+const mapStateToProps = (state) => ({
+
+});
+
+export default connect(mapStateToProps)(AdminRoutePlanner)

@@ -6,6 +6,8 @@ import "../adminPage.css";
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import SidebarSliding from '../components/sidebar/SidebarSliding';
 import axios from 'axios';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 
 function ManStudentPage({action}) {
@@ -229,4 +231,12 @@ function ManStudentPage({action}) {
         );
 }
 
-export default ManStudentPage;
+ManStudentPage.propTypes = {
+    
+}
+
+const mapStateToProps = (state) => ({
+
+});
+
+export default connect(mapStateToProps)(ManStudentPage)
