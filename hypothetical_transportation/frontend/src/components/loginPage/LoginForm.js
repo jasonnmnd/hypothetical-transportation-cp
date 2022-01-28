@@ -57,7 +57,9 @@ function LoginForm( props ) {
               </div>
 
               <div className="divider15px" />
-              <button onClick={submitHandler}>Login as Parent</button>
+              <div className="login-buttons">
+                <button onClick={submitHandler}>Login</button>
+              </div>
               <div className="divider15px" />
             </div>
           </form>
