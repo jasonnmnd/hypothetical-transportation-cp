@@ -25,7 +25,7 @@ function AdminUsersPage() {
     full_name: "",
     email: "",
     address: "",
-    is_staff: "",
+    groups: [],
   }]
 
   const [users, setUsers] = useState(emptyUser);
@@ -34,6 +34,7 @@ function AdminUsersPage() {
     axios.get('/api/user/')
         .then(res => {
             console.log(res.data.results)
+            console.log(res.data.results[0].groups)
             setUsers(res.data.results);
         }).catch(err => console.log(err));
     }

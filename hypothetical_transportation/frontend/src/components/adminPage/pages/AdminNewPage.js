@@ -19,7 +19,7 @@ function AdminNewPage() {
           email: "",
           address: "",
           password: "",
-          is_staff: param.column.includes("parent")?false:true,
+          group: param.column.includes("parent")?[2]:[1],
         },
         route: {
           school:0,
