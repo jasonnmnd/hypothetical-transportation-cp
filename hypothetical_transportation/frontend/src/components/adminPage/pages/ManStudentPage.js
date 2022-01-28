@@ -87,7 +87,7 @@ function ManStudentPage(props) {
   const submit = () => {
     console.log(obj)
     setError("")
-    if(action==="new"){
+    if(props.action==="new"){
       axios
           .post(`/api/student/`,obj)
           .then(res =>{
@@ -250,7 +250,7 @@ const handleConfirmAddress = () => {
 }
 
 ManStudentPage.propTypes = {
-    action: PropTypes.func
+    action: PropTypes.string
 }
 
 const mapStateToProps = (state) => ({

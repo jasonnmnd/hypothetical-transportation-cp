@@ -1,8 +1,8 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React from "react";
 import "./App.css";
 import ParentPage from "./components/parentPage/ParentPage";
 import AdminPage from "./components/adminPage/AdminPage";
-import { Routes, Route, Navigate, BrowserRouter} from "react-router-dom";
+import { Routes, Route, BrowserRouter} from "react-router-dom";
 import LoginForm from "./components/loginPage/LoginForm.js"
 import AdminUsersPage from "./components/adminPage/pages/AdminUsersPage";
 import AdminStudentsPage from "./components/adminPage/pages/AdminStudentsPage";
