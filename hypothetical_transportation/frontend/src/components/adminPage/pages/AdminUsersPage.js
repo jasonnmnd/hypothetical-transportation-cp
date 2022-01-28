@@ -45,9 +45,9 @@ function AdminUsersPage() {
 
 
   const searchUser = (i1,i2) => {
-    axios.get(`/api/user?search=${i2}&search_fields=${i1}`)
+    axios.get(`/api/user/?search=${i2}&search_fields=${i1}`)
         .then(res => {
-          console.log(`/api/user?search=${i2}&search_fields=${i1}`)
+          console.log(`/api/user/?search=${i2}&search_fields=${i1}`)
           setUsers(res.data.results);
         }).catch(err => console.log(err));
   }
