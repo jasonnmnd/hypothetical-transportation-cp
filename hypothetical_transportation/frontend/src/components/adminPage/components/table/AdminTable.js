@@ -2,7 +2,7 @@ import React, { Fragment, useState } from 'react';
 import AdminRow from "./AdminRow";
 import "../../adminPage.css";
 import { useNavigate } from 'react-router-dom';
-import Searchbar from "../searchbar/SearchBar"
+import Searchbar from "../searchbar/SBar"
 
 //input1: title - text
 //input2: header - list
