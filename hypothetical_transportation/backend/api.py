@@ -9,6 +9,7 @@ from rest_framework.views import APIView
 from .models import School, Route, Student
 from .serializers import UserSerializer, StudentSerializer, RouteSerializer, SchoolSerializer
 from .search import DynamicSearchFilter
+from .customfilters import StudentCountShortCircuitFilter
 
 
 def get_filter_dict(model):
@@ -80,9 +81,9 @@ class RouteViewSet(viewsets.ModelViewSet):
         # IsAdminOrReadOnlyParent
         permissions.AllowAny
     ]
-    filter_backends = [DjangoFilterBackend, DynamicSearchFilter, filters.OrderingFilter]
+    filter_backends = [DjangoFilterBackend, DynamicSearchFilter, StudentCountShortCircuitFilter]
     filterset_fields = get_filter_dict(Route)
-    ordering_fields = ['school__name', 'name']
+    ordering_fields = ['school__name', 'name', 'students']
 
     def get_queryset(self):
         return Route.objects.all().distinct()
@@ -100,7 +101,7 @@ class SchoolViewSet(viewsets.ModelViewSet):
     ]
     filter_backends = [DjangoFilterBackend, DynamicSearchFilter, filters.OrderingFilter]
     filterset_fields = get_filter_dict(School)
-    ordering_fields = ['name', 'students']
+    ordering_fields = ['name']
 
     # search_fields = [self.request.querystring]
 
