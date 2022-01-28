@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
+import AssistedLocationModal from "../modals/AssistedLocationModal";
 
 //not sure if it's going to work
 //right now, for some reason when clicking on save, it redirects to /?id=input&name=input
@@ -9,16 +10,14 @@ import { useNavigate } from "react-router-dom";
 //input3: a typed object matching the fields
 function EditForm({column, fields, obj, setobj, action}) {
     const navigate = useNavigate();
+    const [openModal, setOpenModal] = useState(false);
     const col = column.includes("_") ?column.split("_")[1]:column
-    const submit = (e) => {
-        // console.log(column);
-        // console.log(column.includes("admin"))
+    const submit = () => {
+
+        // e.preventDefault();
         if(column.includes("route")){
             obj.school=column.split("_")[0];
         }
-        e.preventDefault();
-        // console.log(obj);
-        //route to a post to save the data
         
         if(action==="edit"){
             axios
@@ -31,7 +30,7 @@ function EditForm({column, fields, obj, setobj, action}) {
         }else if(action==="new"){
             console.log("new")
             console.log(obj)
-            if(col==="user"){
+            if(col.includes("user")){
                 axios
                     .post(`/api/auth/register`,obj)
                     .then(res =>{
@@ -48,9 +47,26 @@ function EditForm({column, fields, obj, setobj, action}) {
             }
         }
     }
+
+    const confirmation = (e)=>{
+
+        e.preventDefault();
+        if(column.includes("parent")){
+            setOpenModal(true)
+        }
+        else{
+            submit()
+        }
+    }
+
+    const handleConfirmAddress = () => {
+        console.log("Address confirmed")
+        submit()
+      }
     
     return (
         <div>
+            {openModal && <AssistedLocationModal closeModal={setOpenModal} handleConfirmAddress={handleConfirmAddress} address={obj.address}></AssistedLocationModal>}
             <form>
                 <div className="form-inner">
                     <h2>{action+" "+column}</h2>
@@ -73,7 +89,7 @@ function EditForm({column, fields, obj, setobj, action}) {
                     }
                     <div className="divider15px" />
                     
-                    <button onClick={submit}>Save</button>
+                    <button onClick={confirmation}>Save</button>
                 </div>
             </form>
         </div>
