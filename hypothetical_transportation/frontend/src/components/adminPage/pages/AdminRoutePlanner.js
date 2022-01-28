@@ -238,7 +238,7 @@ function AdminRoutePlanner(props) {
 
                 <div className="form-group">
                   <label htmlFor={"Description"}>Description</label>
-                  <input
+                  <textarea
                       className="input"
                       type={"Description"}
                       name={"Description"}
