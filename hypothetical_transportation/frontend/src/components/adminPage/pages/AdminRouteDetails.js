@@ -91,10 +91,10 @@ function AdminRouteDetails() {
   const [school, setSchoolName] = useState("");
 
   const getRoutes = () => {
-    axios.get(`/api/route/${param.id}`)
+    axios.get(`/api/route/${param.id}/`)
     .then(res => {
       setRoute(res.data);
-      axios.get(`/api/school/${res.data.school}`)
+      axios.get(`/api/school/${res.data.school}/`)
           .then(res => {
             setSchoolName(res.data.name);
         }).catch(err => console.log(err));
@@ -103,7 +103,7 @@ function AdminRouteDetails() {
   
   
   const getStudent = () => {
-  axios.get(`/api/student?routes=${param.id}`)
+  axios.get(`/api/student/?routes=${param.id}`)
     .then(res => {
       console.log(res.data.results)
       setStudents(res.data.results);
