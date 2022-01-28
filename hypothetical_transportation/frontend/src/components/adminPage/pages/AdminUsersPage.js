@@ -5,6 +5,8 @@ import AdminTable from '../components/table/AdminTable';
 import "../adminPage.css";
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 function AdminUsersPage() {
 
@@ -81,4 +83,13 @@ function AdminUsersPage() {
     </div>
   )
 }
-export default AdminUsersPage;
+
+AdminUsersPage.propTypes = {
+    
+}
+
+const mapStateToProps = (state) => ({
+
+});
+
+export default connect(mapStateToProps)(AdminUsersPage)

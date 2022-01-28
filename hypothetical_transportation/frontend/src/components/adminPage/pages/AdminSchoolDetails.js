@@ -6,6 +6,8 @@ import FormDeleteModal from '../components/modals/FormDeleteModal';
 import AdminTable from '../components/table/AdminTable';
 import SidebarSliding from '../components/sidebar/SidebarSliding';
 import axios from 'axios';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 
 function AdminSchoolDetails() {
@@ -193,4 +195,12 @@ function AdminSchoolDetails() {
   );
 }
 
-export default AdminSchoolDetails;
+AdminSchoolDetails.propTypes = {
+    
+}
+
+const mapStateToProps = (state) => ({
+
+});
+
+export default connect(mapStateToProps)(AdminSchoolDetails)

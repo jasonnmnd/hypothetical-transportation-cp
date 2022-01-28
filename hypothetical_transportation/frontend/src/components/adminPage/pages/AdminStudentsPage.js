@@ -4,6 +4,8 @@ import Header from '../../header/Header';
 import AdminTable from "../components/table/AdminTable";
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 function AdminStudentsPage() {
 
@@ -126,4 +128,12 @@ function AdminStudentsPage() {
     
   )
 }
-export default AdminStudentsPage;
+AdminStudentsPage.propTypes = {
+    
+}
+
+const mapStateToProps = (state) => ({
+
+});
+
+export default connect(mapStateToProps)(AdminStudentsPage)
