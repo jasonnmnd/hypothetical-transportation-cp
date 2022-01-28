@@ -61,10 +61,6 @@ function ParentPage(props) {
             <br></br>
 
             <div className="page-description">
-              {/* <h2>
-                  Your Students
-              </h2> */}
-              {/* <AdminTable title={"Your Students"} header={Object.keys(emptyStudent)} data={students}></AdminTable> */}
               <ParentTable title={"Your Students"} header={Object.keys(emptyStudent)} data={students}></ParentTable>
             </div>
             {/* <ParentTable /> */}

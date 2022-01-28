@@ -19,6 +19,7 @@ function ParentTable(props) {
     const handleViewClick = (student) => {
         // event.preventDefault();
         setViewStudent(student.id);
+        console.log(student.school);
         console.log(student.id);
         nav(`/parent/student/${student.school}/${student.id}`);
         //return <Navigate to={`/parent/viewstudent/${student.id}`}></Navigate>

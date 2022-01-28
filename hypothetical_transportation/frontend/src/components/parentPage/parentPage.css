@@ -3,28 +3,29 @@
 }
 
 .parent-page h2 {
-  background-color: #FFF;
+  background-color: #fff;
 }
 
 .parentTable-container {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding: 1rem;
-  }
-  
-table {
-    border-collapse: collapse;
-    width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 1rem;
 }
 
-.center{
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.center {
   margin-left: auto;
   margin-right: auto;
   text-align: center;
 }
 
-th, td {
+th,
+td {
   border: 1px solid #ffffff;
   text-align: left;
   padding: 8px;
@@ -47,50 +48,48 @@ td {
   background-size: 200%;
   background-position: 0%;
   transition: 0.4s;
-  color: #FFF;
+  color: #fff;
   font-weight: 700;
   cursor: pointer;
 }
 
 .parentTable-container button:hover {
   background-color: #ffdd99;
-} 
-
+}
 
 .welcome {
-    width: 100%;
-    /* max-width: 480px; */
-    background-color: #FFF;
-    margin-top: 200px;
-    text-align: center;
-    
-    /* padding: 15px 30px; */
+  width: 100%;
+  /* max-width: 480px; */
+  background-color: #fff;
+  margin-top: 200px;
+  text-align: center;
+
+  /* padding: 15px 30px; */
 }
 
 .welcome h2 {
-    color: #888;
-    font-size: 28px;
-    font-weight: 500;
-    margin-bottom: 30px;
+  color: #888;
+  font-size: 28px;
+  font-weight: 500;
+  margin-bottom: 30px;
 }
 
 .welcome h2 span {
-    color: #FE4880;
-    font-weight: 700;
+  color: #fe4880;
+  font-weight: 700;
 }
 
-
 button {
-    display: inline-block;
-    padding: 10px 15px;
-    border-radius: 8px;
-    background-color: #ffae07;
-    background-size: 200%;
-    background-position: 0%;
-    transition: 0.4s;
-    color: #000;
-    font-weight: 700;
-    cursor: pointer;
+  display: inline-block;
+  padding: 10px 15px;
+  border-radius: 8px;
+  background-color: #ffae07;
+  background-size: 200%;
+  background-position: 0%;
+  transition: 0.4s;
+  color: #000;
+  font-weight: 700;
+  cursor: pointer;
 }
 
 .welcome button {
@@ -101,19 +100,19 @@ button {
   background-size: 200%;
   background-position: 0%;
   transition: 0.4s;
-  color: #FFF;
+  color: #fff;
   font-weight: 700;
   cursor: pointer;
 }
 
 .welcome button:hover {
   background-color: #ffdd99;
-} 
+}
 
 .page-description h2 {
-    text-align: center;
-    font-size: 35x;
-    color: #000;
+  text-align: center;
+  font-size: 35x;
+  color: #000;
 }
 
 .button-spacing {
@@ -131,9 +130,10 @@ button {
 .parent-details {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  padding-top: 200px;
-  align-items: baseline;
+  justify-content: top;
+  align-items: center;
+  gap: 20px;
+  padding-top: 150px;
 }
 
 .info-fields {
@@ -141,7 +141,7 @@ button {
   flex-direction: row;
   justify-content: space-between;
   align-items: baseline;
-} 
+}
 
 .info-fields h2 {
   font-size: 30px;
