@@ -6,7 +6,7 @@ import image from "../../../public/schoolbusBackground.jpg";
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { login } from "../../actions/auth";
-
+import isAdmin from "../../utils/user";
 
 function LoginForm( props ) {
   const [details, setDetails] = useState({ email: "", password: "" });
@@ -17,7 +17,7 @@ function LoginForm( props ) {
   };
 
   if (props.isAuthenticated) {
-    if(props.user.groups[0] == 1){
+    if(isAdmin(props.user)){
       return <Navigate to="/admin" />;
     }
     return <Navigate to="/parent" />;
