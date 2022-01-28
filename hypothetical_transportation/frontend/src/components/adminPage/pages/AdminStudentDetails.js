@@ -46,6 +46,7 @@ function AdminStudentDetails(props) {
   const [parentName,setParentName] = useState("");
   const [schoolName,setSchoolName] = useState("");
   const [routeName,setRouteName] = useState("");
+  const [route,setRouteExist] = useState(false);
 
   const getInfo = () => {
     axios.get(`/api/student/${param.id}/`)
@@ -65,6 +66,7 @@ function AdminStudentDetails(props) {
           axios.get(`/api/route/${res.data.routes}/`)
             .then(res => {
               setRouteName(res.data.name);
+              setRouteExist(true)
           }).catch(err => console.log(err));
         }
         else{
@@ -94,7 +96,7 @@ function AdminStudentDetails(props) {
     <> 
       <Header textToDisplay={"Admin Portal"}></Header>
       <SidebarSliding/>
-        {openModal && <DeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}
+      <div className='confirm_location'>{openModal && <DeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}</div>
         <div className='middle-justify'>
           <div className='admin-details'>
                   <h1>Student Details</h1>
@@ -116,7 +118,10 @@ function AdminStudentDetails(props) {
                   </div>
                   <div className='info-fields'>
                       <h2>Route: </h2>
-                      <Link to={`/admin/route/${student.routes}`}><button className='button'><h3>{routeName}</h3></button></Link>
+                      {route?
+                        <Link to={`/admin/route/${student.routes}`}><button className='button'><h3>{routeName}</h3></button></Link>:
+                        <h3>No Route for this student</h3>
+                      }
                   </div>
                   <div className='info-fields'>
                       <h2>Parent: </h2>

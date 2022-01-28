@@ -132,7 +132,7 @@ function AdminSchoolDetails(props) {
     <>  
         <Header textToDisplay={"Admin Portal"}></Header>
         <SidebarSliding/>
-        {openModal && <FormDeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}
+        <div className='confirm_location'>{openModal && <FormDeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}</div>
         <div className='middle-justify'>
           <div className='admin-details'>
 

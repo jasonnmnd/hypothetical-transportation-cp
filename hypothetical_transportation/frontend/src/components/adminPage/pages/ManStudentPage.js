@@ -8,11 +8,15 @@ import SidebarSliding from '../components/sidebar/SidebarSliding';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import AssistedLocationModal from '../components/modals/AssistedLocationModal';
 
 
 function ManStudentPage(props) {
     const param = useParams()
     const navigate = useNavigate();
+
+    const [openModal, setOpenModal] = useState(false);
+
     const emptyStudent={
       id: 0,
       student_id: "",
@@ -59,7 +63,7 @@ function ManStudentPage(props) {
     }
 
     const getStudent = () => {
-      axios.get(`/api/student/${param.id}`)
+      axios.get(`/api/student/${param.id}/`)
         .then(res => {
           setObj(res.data);
         }).catch(err => console.log(err));
@@ -80,33 +84,24 @@ function ManStudentPage(props) {
       }).catch(err => console.log(err));
   }
 
-  const submit = (e) => {
+  const submit = () => {
     console.log(obj)
-    e.preventDefault()
-    if(obj.guardian===""){
-      setError("Guardian cannot be null")
-    }
-    else if(obj.school===""){
-      setError("School cannot be null")
+    setError("")
+    if(action==="new"){
+      axios
+          .post(`/api/student/`,obj)
+          .then(res =>{
+              navigate(`/admin/students/`)
+
+          }).catch(err => console.log(err));
     }
     else{
-      setError("")
-      if(props.action==="new"){
-        axios
-            .post(`/api/student/`,obj)
-            .then(res =>{
-                navigate(`/admin/students/`)
+      axios
+          .put(`/api/student/${param.id}/`,obj)
+          .then(res =>{
+              navigate(`/admin/students/`)
 
-            }).catch(err => console.log(err));
-      }
-      else{
-        axios
-            .put(`/api/student/${param.id}`,obj)
-            .then(res =>{
-                navigate(`/admin/students/`)
-
-            }).catch(err => console.log(err));
-      }
+          }).catch(err => console.log(err));
     }
   }
 
@@ -127,10 +122,33 @@ function ManStudentPage(props) {
       }
     }, []);
 
+
+  const confirmation = (e)=>{
+  e.preventDefault();
+  if(obj.guardian===""){
+    setError("Guardian cannot be null")
+  }
+  else if(obj.school===""){
+    setError("School cannot be null")
+  }
+  else{
+    setOpenModal(true)
+  }
+}
+
+const handleConfirmAddress = () => {
+
+   
+      console.log("Address confirmed")
+      submit()
+}
+
+
     return ( 
       <>
         <Header textToDisplay={"Admin Portal"}></Header>
         <SidebarSliding/>
+        <div className='confirm_location'>{openModal && <AssistedLocationModal closeModal={setOpenModal} handleConfirmAddress={handleConfirmAddress} address={obj.address}></AssistedLocationModal>}</div>
         <div className='admin-edit-page'>
         <form>
                 <div className="form-inner">
@@ -221,7 +239,7 @@ function ManStudentPage(props) {
                     
                     <div className="divider15px" />
                     
-                    <button onClick={submit}>Save</button>
+                    <button onClick={confirmation}>Save</button>
                 </div>
             </form>
             {/* <Link to={`/admin/${param.column}s`}><button>To {param.column}</button></Link> */}

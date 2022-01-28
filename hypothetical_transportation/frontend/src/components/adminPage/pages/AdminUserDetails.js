@@ -85,8 +85,7 @@ function AdminUserDetails(props) {
     <>  
         <Header textToDisplay={"Admin Portal"}></Header>
         <SidebarSliding/>
-        {openModal && <DeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}
-        {/* {openModal && <AssistedLocationModal closeModal={setOpenModal} handleConfirmAddress={handleConfirmAddress}/>} */}
+        <div className='confirm_location'>{openModal && <DeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}</div>
         <div className='middle-justify'>
             <div className='admin-details'>
                 <h1>User Details</h1>
