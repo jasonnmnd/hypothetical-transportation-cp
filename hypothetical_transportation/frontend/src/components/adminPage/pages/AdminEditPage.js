@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 
-function AdminEditPage() {
+function AdminEditPage(props) {
   const navigate = useNavigate();
   const param = useParams();
   const emptyFields = {
@@ -69,7 +69,7 @@ AdminEditPage.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
-
+  user: state.auth.user
 });
 
 export default connect(mapStateToProps)(AdminEditPage)

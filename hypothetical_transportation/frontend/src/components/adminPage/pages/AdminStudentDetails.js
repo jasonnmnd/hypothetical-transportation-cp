@@ -8,7 +8,7 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-function AdminStudentDetails() {
+function AdminStudentDetails(props) {
   const navigate = useNavigate();
   const param = useParams();
 
@@ -146,7 +146,7 @@ AdminStudentDetails.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
-
+  user: state.auth.user
 });
 
 export default connect(mapStateToProps)(AdminStudentDetails)

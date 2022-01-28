@@ -1,7 +1,10 @@
 import React, {useState} from 'react';
 import "./modal.css";
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
-function FormDeleteModal({closeModal, handleConfirmDelete}) {
+
+function FormDeleteModal(props) {
 
     const [schoolName, setSchoolName] = useState("");
 
@@ -10,7 +13,7 @@ function FormDeleteModal({closeModal, handleConfirmDelete}) {
             <div className='modalContainer'>
                 <div className='titleCloseBtn'>
                         <button onClick={
-                            () => closeModal(false)
+                            () => props.closeModal(false)
                         }> X </button>
                 </div>
                 <div className='title>'>
@@ -28,12 +31,12 @@ function FormDeleteModal({closeModal, handleConfirmDelete}) {
                 </div>
                 <div className='footer'>
                     <button onClick={
-                        () => closeModal(false)
+                        () => props.closeModal(false)
                     } id="cancelBtn">Cancel</button>
                     <button onClick={
                         () => {
-                            handleConfirmDelete(schoolName);
-                            closeModal(false);
+                            props.handleConfirmDelete(schoolName);
+                            props.closeModal(false);
                         }
                     } id="confirmBtn">Continue</button>
                 </div>
@@ -42,4 +45,13 @@ function FormDeleteModal({closeModal, handleConfirmDelete}) {
       );
 }
 
-export default FormDeleteModal;
+FormDeleteModal.propTypes = {
+    closeModal: PropTypes.func,
+    handleConfirmDelete: PropTypes.func,
+}
+
+const mapStateToProps = (state) => ({
+  user: state.auth.user
+});
+
+export default connect(mapStateToProps)(FormDeleteModal)

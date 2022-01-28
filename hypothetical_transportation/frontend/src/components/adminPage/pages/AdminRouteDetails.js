@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 
-function AdminRouteDetails() {
+function AdminRouteDetails(props) {
 
 
   const [openModal, setOpenModal] = useState(false);
@@ -167,7 +167,7 @@ AdminRouteDetails.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
-
+  user: state.auth.user
 });
 
 export default connect(mapStateToProps)(AdminRouteDetails)

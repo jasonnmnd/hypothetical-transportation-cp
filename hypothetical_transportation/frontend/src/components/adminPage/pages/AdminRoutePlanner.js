@@ -7,7 +7,7 @@ import AdminTable from '../components/table/AdminTable';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-function AdminRoutePlanner() {
+function AdminRoutePlanner(props) {
 
   const addToRoute =  ()=>{
     console.log("add to route")
@@ -95,7 +95,7 @@ AdminRoutePlanner.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
-
+  user: state.auth.user
 });
 
 export default connect(mapStateToProps)(AdminRoutePlanner)

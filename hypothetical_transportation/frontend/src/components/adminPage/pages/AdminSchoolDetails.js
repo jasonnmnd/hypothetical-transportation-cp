@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 
-function AdminSchoolDetails() {
+function AdminSchoolDetails(props) {
   const navigate = useNavigate();
   const param = useParams();
   const exampleSchool = {
@@ -198,7 +198,7 @@ AdminSchoolDetails.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
-
+  user: state.auth.user
 });
 
 export default connect(mapStateToProps)(AdminSchoolDetails)

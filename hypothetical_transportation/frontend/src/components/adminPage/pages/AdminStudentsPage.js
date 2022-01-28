@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-function AdminStudentsPage() {
+function AdminStudentsPage(props) {
 
   //Mock Student Data (API Call Later for Real Data)
   const title = "Students"
@@ -132,7 +132,7 @@ AdminStudentsPage.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
-
+  user: state.auth.user
 });
 
 export default connect(mapStateToProps)(AdminStudentsPage)

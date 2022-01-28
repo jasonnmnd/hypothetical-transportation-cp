@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import AdminSchoolDetails from './AdminSchoolDetails';
 // import { getSchools } from '../../../actions/schools';
 
-function AdminSchoolsPage() {
+function AdminSchoolsPage(props) {
 
   //Mock Users Data (API Call later for real data)
   const title = "Schools"
@@ -100,7 +100,7 @@ AdminSchoolsPage.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
-
+  user: state.auth.user
 });
 
 export default connect(mapStateToProps)(AdminSchoolsPage)
