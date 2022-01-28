@@ -5,11 +5,10 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import AssistedLocationModal from "../modals/AssistedLocationModal";
 
-//not sure if it's going to work
-//right now, for some reason when clicking on save, it redirects to /?id=input&name=input
 //input1: title of form
 //input2: list of fields?
 //input3: a typed object matching the fields
+//input4: string action determining new or edit
 function EditForm(props) {
     const navigate = useNavigate();
     const [openModal, setOpenModal] = useState(false);
@@ -21,7 +20,7 @@ function EditForm(props) {
             props.obj.school=props.column.split("_")[0];
         }
         
-        if(action==="edit"){
+        if(props.action==="edit"){
             axios
                 .put(`/api/${col}/${props.obj.id}/`,props.obj)
                 .then(res =>{
@@ -101,9 +100,9 @@ function EditForm(props) {
 EditForm.propTypes = {
     column: PropTypes.string,
     fields: PropTypes.arrayOf(PropTypes.string),
-    obj: PropTypes.string,
+    obj: PropTypes.object,
     setobj: PropTypes.func,
-    action: PropTypes.func
+    action: PropTypes.string
 }
 
 const mapStateToProps = (state) => ({
