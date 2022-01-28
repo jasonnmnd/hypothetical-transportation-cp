@@ -1,7 +1,9 @@
 import React, {useState} from 'react';
 import { GoogleMap, LoadScript, Marker, InfoWindow } from '@react-google-maps/api';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
-function MapContainer() {
+function MapContainer(props) {
     const mapStyles = {        
         height: "50vh",
         width: "50%"};
@@ -91,4 +93,12 @@ function MapContainer() {
  );
 }
 
-export default MapContainer;
+MapContainer.propTypes = {
+    
+}
+
+const mapStateToProps = (state) => ({
+  user: state.auth.user
+});
+
+export default connect(mapStateToProps)(MapContainer)
