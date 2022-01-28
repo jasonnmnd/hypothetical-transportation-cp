@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import AssistedLocationModal from "../modals/AssistedLocationModal";
 
 //not sure if it's going to work
 //right now, for some reason when clicking on save, it redirects to /?id=input&name=input
@@ -11,20 +12,16 @@ import PropTypes from 'prop-types';
 //input3: a typed object matching the fields
 function EditForm(props) {
     const navigate = useNavigate();
-    const col = props.column.includes("_") ?props.column.split("_")[1]:props.column
-    const submit = (e) => {
-        // console.log(props.column);
-        // console.log(props.column.includes("admin"))
-        if(props.column.includes("admin")){
-            props.obj.is_staff=true;
-        }
+    const [openModal, setOpenModal] = useState(false);
+    const col = props.column.includes("_") ? props.column.split("_")[1]:props.column
+    const submit = () => {
+
+        // e.preventDefault();
         if(props.column.includes("route")){
             props.obj.school=props.column.split("_")[0];
         }
-        e.preventDefault();
-        // console.log(props.obj);
-        //route to a post to save the data
-        if(props.action==="edit"){
+        
+        if(action==="edit"){
             axios
                 .put(`/api/${col}/${props.obj.id}/`,props.obj)
                 .then(res =>{
@@ -35,17 +32,43 @@ function EditForm(props) {
         }else if(props.action==="new"){
             console.log("new")
             console.log(props.obj)
-            axios
-                .post(`/api/${col}/`,props.obj)
-                .then(res =>{
-                    navigate(`/admin/${col}s/`)
+            if(col.includes("user")){
+                axios
+                    .post(`/api/auth/register`,props.obj)
+                    .then(res =>{
+                        navigate(`/admin/${col}s/`)
 
-                }).catch(err => console.log(err));
+                    }).catch(err => console.log(err));
+            }else{            
+                axios
+                    .post(`/api/${col}/`,props.obj)
+                    .then(res =>{
+                        navigate(`/admin/${col}s/`)
+
+                    }).catch(err => console.log(err));
+            }
         }
     }
+
+    const confirmation = (e)=>{
+
+        e.preventDefault();
+        if(column.includes("parent")){
+            setOpenModal(true)
+        }
+        else{
+            submit()
+        }
+    }
+
+    const handleConfirmAddress = () => {
+        console.log("Address confirmed")
+        submit()
+      }
     
     return (
         <div>
+            {openModal && <AssistedLocationModal closeModal={setOpenModal} handleConfirmAddress={handleConfirmAddress} address={obj.address}></AssistedLocationModal>}
             <form>
                 <div className="form-inner">
                     <h2>{props.action+" "+props.column}</h2>
@@ -68,7 +91,7 @@ function EditForm(props) {
                     }
                     <div className="divider15px" />
                     
-                    <button onClick={submit}>Save</button>
+                    <button onClick={confirmation}>Save</button>
                 </div>
             </form>
         </div>

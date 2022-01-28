@@ -24,9 +24,9 @@ function AdminRoutesPage() {
   }
 
   const searchRoute = (i1,i2) => {
-    axios.get(`/api/route?search=${i2}&search_fields=${i1}`)
+    axios.get(`/api/route/?search=${i2}&search_fields=${i1}`)
         .then(res => {
-          console.log(`/api/route?search=${i2}&search_fields=${i1}`)
+          console.log(`/api/route/?search=${i2}&search_fields=${i1}`)
           setRoutes(res.data.results);
         }).catch(err => console.log(err));
   }

@@ -14,8 +14,7 @@ function ManStudentPage({action}) {
     const emptyStudent={
       id: 0,
       student_id: "",
-      first_name: "",
-      last_name: "",
+      full_name: "",
       address: "",
       guardian: "",
       routes: "",
@@ -136,29 +135,15 @@ function ManStudentPage({action}) {
                     <h2>{"New Student"}</h2>
 
                     <div className="form-group">
-                      <label htmlFor={"First Name"}>First Name</label>
+                      <label htmlFor={"Full Name"}>Name</label>
                       <input
                           className="input"
-                          type={"First Name"}
-                          name={"First Name"}
-                          id={"First Name"}
-                          value={obj.first_name}
+                          type={"Full Name"}
+                          name={"Full Name"}
+                          id={"Full Name"}
+                          value={obj.full_name}
                           onChange={(e)=>{
-                              setObj({...obj, ["first_name"]: e.target.value})
-                          }}
-                      />
-                  </div>
-
-                  <div className="form-group">
-                      <label htmlFor={"Last Name"}>Last Name</label>
-                      <input
-                          className="input"
-                          type={"Last Name"}
-                          name={"Last Name"}
-                          id={"Last Name"}
-                          value={obj.last_name}
-                          onChange={(e)=>{
-                              setObj({...obj, ["last_name"]: e.target.value})
+                              setObj({...obj, ["full_name"]: e.target.value})
                           }}
                       />
                   </div>

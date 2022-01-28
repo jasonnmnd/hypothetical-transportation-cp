@@ -47,8 +47,7 @@ function AdminStudentsPage() {
   const studentObject = [{
     id: 0,
     student_id: "",
-    first_name: "",
-    last_name: "",
+    full_name:"",
     address: "",
     guardian: 0,
     routes: 0,
@@ -57,9 +56,9 @@ function AdminStudentsPage() {
 
   const emptyStudent = {
     student_id: "",
-    first_name: "",
-    last_name: "",
+    full_name:"",
     school: "",
+    routes: "",
   }
 
   const [students, setStudents] = useState(studentObject);
@@ -78,7 +77,7 @@ function AdminStudentsPage() {
   }, []);
 
   const searchStudent = (i1,i2) => {
-    axios.get(`/api/student?search=${i2}&search_fields=${i1}`)
+    axios.get(`/api/student/?search=${i2}&search_fields=${i1}`)
         .then(res => {
           console.log(`/api/student?search=${i2}&search_fields=${i1}`)
           console.log(res.data.results)

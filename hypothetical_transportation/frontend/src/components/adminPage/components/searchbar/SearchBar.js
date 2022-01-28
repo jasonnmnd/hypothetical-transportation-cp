@@ -18,7 +18,7 @@ function SearchBar({buttons, search}){
                     <label>
                     Filter By:
                     <select value={values.by} onChange={(e) => setValue({ ...values, by: e.target.value })}>
-                        {buttons.map((b,i)=>{
+                        {buttons.filter(k=>k!=="routes"&&k!=="school"&&k!=="groups").map((b,i)=>{
                             return <option value={b} key={i}>{b}</option>
                         })}
                     </select>

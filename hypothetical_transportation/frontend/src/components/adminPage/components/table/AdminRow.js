@@ -3,9 +3,9 @@ import "../../adminPage.css";
 
 const AdminRow = ( {header, data, actionName, action}) => {
     return (
-        <tr className={data["route"] == "" ? "tr-red" : "tr-gray"} >
+        <tr className={data["routes"] === null ? "tr-red" : "tr-gray"} >
             {header.map((h,i)=>{
-                return <td key={i}>{data[h].toString().length > 25 ? data[h].toString().slice(0,25)+"...":data[h].toString()}</td>
+                return <td key={i}>{data[h]!==null&&data[h]!==undefined ? data[h].toString().length > 25 ? data[h].toString().slice(0,25)+"...":data[h].toString():"None"}</td>
             })}
             <td>
                 <button onClick={() => action(data)}>{actionName}</button>

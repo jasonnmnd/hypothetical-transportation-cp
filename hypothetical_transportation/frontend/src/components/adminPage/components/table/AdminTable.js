@@ -50,11 +50,11 @@ function AdminTable({title, header, data, search, actionName, action}) {
                     </tr>
                 </thead>
                 <tbody>
-                    {data!==null?data.map((d,i) => (
+                    {data!==null && data!==undefined?data.map((d,i) => (
                         <Fragment key={i}>
                             <AdminRow header={header} data={d} actionName = {actionName?actionName:"View"} action={action? action:handleViewClick}></AdminRow>
                         </Fragment>
-                    )):<div></div>}
+                    )):<div>Dont Query This</div>}
                 </tbody>
             </table>
         </div>

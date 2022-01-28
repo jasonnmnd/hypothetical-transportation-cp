@@ -25,7 +25,7 @@ function AdminUsersPage() {
     full_name: "",
     email: "",
     address: "",
-    is_staff: "",
+    groups: [],
   }]
 
   const [users, setUsers] = useState(emptyUser);
@@ -34,6 +34,7 @@ function AdminUsersPage() {
     axios.get('/api/user/')
         .then(res => {
             console.log(res.data.results)
+            console.log(res.data.results[0].groups)
             setUsers(res.data.results);
         }).catch(err => console.log(err));
     }
@@ -44,9 +45,9 @@ function AdminUsersPage() {
 
 
   const searchUser = (i1,i2) => {
-    axios.get(`/api/user?search=${i2}&search_fields=${i1}`)
+    axios.get(`/api/user/?search=${i2}&search_fields=${i1}`)
         .then(res => {
-          console.log(`/api/user?search=${i2}&search_fields=${i1}`)
+          console.log(`/api/user/?search=${i2}&search_fields=${i1}`)
           setUsers(res.data.results);
         }).catch(err => console.log(err));
   }
