@@ -66,7 +66,7 @@ function EditForm({column, fields, obj, setobj, action}) {
     
     return (
         <div>
-            {openModal && <AssistedLocationModal closeModal={setOpenModal} handleConfirmAddress={handleConfirmAddress} address={obj.address}></AssistedLocationModal>}
+            <div className='confirm_location'>{openModal && <AssistedLocationModal closeModal={setOpenModal} handleConfirmAddress={handleConfirmAddress} address={obj.address}></AssistedLocationModal>}</div>
             <form>
                 <div className="form-inner">
                     <h2>{action+" "+column}</h2>

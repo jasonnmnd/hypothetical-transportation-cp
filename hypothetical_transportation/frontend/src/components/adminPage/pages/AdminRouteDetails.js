@@ -123,7 +123,7 @@ function AdminRouteDetails() {
     <>  
         <Header textToDisplay={"Admin Portal"}></Header>
         <SidebarSliding/>
-        {openModal && <DeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}
+        <div className='confirm_location'>{openModal && <DeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}</div>
         <div className='middle-justify'>
           <div className='admin-details'>
             <h1>Route Details</h1>

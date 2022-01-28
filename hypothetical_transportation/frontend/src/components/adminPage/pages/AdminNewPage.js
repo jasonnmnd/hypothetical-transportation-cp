@@ -34,13 +34,6 @@ function AdminNewPage() {
     const col = param.column.includes("_") ?param.column.split("_")[1]:param.column
     const [obj, setObj] = useState(emptyFields[col])
     const fields=Object.keys(emptyFields[col]).filter((i)=>param.column.includes("admin")?i!=="school"&&i!=="address"&&i!=="groups":i!=="school"&&i!=="groups");
-  
-    const [openModal, setOpenModal] = useState(false);
-    const fakeAddress = "101 Wannamaker Dr, Durham NC 27708"
-
-    const handleConfirmAddress = () => {
-      console.log("Address confirmed")
-    }
 
     return ( 
       <>
@@ -50,10 +43,6 @@ function AdminNewPage() {
             
             <EditForm column={param.column} fields={fields} obj={obj} setobj={setObj} action={"new"}></EditForm>
             
-            {openModal && <AssistedLocationModal closeModal={setOpenModal} handleConfirmAddress={handleConfirmAddress} address={fakeAddress}></AssistedLocationModal>}
-            {/* <Link to={`/admin/${param.column}s`}><button>To {param.column}</button></Link> */}
-            
-            <button onClick={() => setOpenModal(true)}>TEST MAP MODAL BUTTON</button>
             <button onClick={() => navigate(-1)} className='button'>Go Back</button>
         </div>
       </>

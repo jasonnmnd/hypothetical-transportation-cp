@@ -32,7 +32,7 @@ function AssistedLocationModal( {closeModal, handleConfirmAddress, address} ) {
     const [userLocation, setUserLocation] = useState(center);
 
     const mapStyles = {        
-        height: "75vh",
+        height: "100vh",
         width: "75%"};
 
     useEffect(() => {
