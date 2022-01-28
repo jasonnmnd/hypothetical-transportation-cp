@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-function AdminUsersPage() {
+function AdminUsersPage(props) {
 
   //Mock Users Data (API Call later for real data)
   const title = "Parent Users"
@@ -90,7 +90,7 @@ AdminUsersPage.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
-
+  user: state.auth.user
 });
 
 export default connect(mapStateToProps)(AdminUsersPage)

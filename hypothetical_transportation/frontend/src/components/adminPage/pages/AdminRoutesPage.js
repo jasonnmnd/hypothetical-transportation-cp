@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-function AdminRoutesPage() {
+function AdminRoutesPage(props) {
 
   const title = "Routes"
 
@@ -81,7 +81,7 @@ AdminRoutesPage.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
-
+  user: state.auth.user
 });
 
 export default connect(mapStateToProps)(AdminRoutesPage)

@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 
-function AdminNewPage() {
+function AdminNewPage(props) {
     const navigate = useNavigate();
     const param = useParams();
     //param.column refers to "user", "school", etc
@@ -67,7 +67,7 @@ AdminNewPage.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
-
+  user: state.auth.user
 });
 
 export default connect(mapStateToProps)(AdminNewPage)

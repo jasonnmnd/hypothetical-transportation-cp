@@ -12,7 +12,7 @@ import PropTypes from 'prop-types';
 
 
 
-function AdminUserDetails() {
+function AdminUserDetails(props) {
   const navigate = useNavigate();
   const param = useParams();
 
@@ -137,7 +137,7 @@ AdminUserDetails.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
-
+  user: state.auth.user
 });
 
 export default connect(mapStateToProps)(AdminUserDetails)

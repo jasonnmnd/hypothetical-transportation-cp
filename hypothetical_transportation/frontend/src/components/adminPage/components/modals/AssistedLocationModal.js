@@ -2,8 +2,11 @@ import React, { useEffect, useState } from 'react';
 import "./modal.css";
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import Geocode from "react-geocode";
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
-function AssistedLocationModal( {closeModal, handleConfirmAddress, address} ) {
+
+function AssistedLocationModal(props) {
 
     //Geocode for location decoding
     //https://www.npmjs.com/package/react-geocode
@@ -14,7 +17,7 @@ function AssistedLocationModal( {closeModal, handleConfirmAddress, address} ) {
     Geocode.enableDebug();
     
     const getCoordsFromAddress = () => {
-        Geocode.fromAddress(address).then(
+        Geocode.fromAddress(props.address).then(
             (response) => {
                 const { lat, lng } = response.results[0].geometry.location;
                 console.log(lat, lng);
@@ -44,7 +47,7 @@ function AssistedLocationModal( {closeModal, handleConfirmAddress, address} ) {
         <div className='modalContainer'>
             <div className='titleCloseBtn'>
                     <button onClick={
-                        () => closeModal(false)
+                        () => props.closeModal(false)
                     }> X </button>
             </div>
             <div className='title>'></div>
@@ -63,12 +66,12 @@ function AssistedLocationModal( {closeModal, handleConfirmAddress, address} ) {
 
             <div className='footer'></div>
                 <button onClick={
-                    () => closeModal(false)
+                    () => props.closeModal(false)
                 } id="cancelBtn">Cancel</button>
                 <button onClick={
                     () => {
-                        handleConfirmAddress();
-                        closeModal(false);
+                        props.handleConfirmAddress();
+                        props.closeModal(false);
                     }
                 } id="confirmBtn">Confirm Address</button>
         </div>
@@ -76,4 +79,14 @@ function AssistedLocationModal( {closeModal, handleConfirmAddress, address} ) {
   );
 }
 
-export default AssistedLocationModal;
+AssistedLocationModal.propTypes = {
+    closeModal: PropTypes.func,
+    handleConfirmAddress: PropTypes.func,
+    address: PropTypes.string
+}
+
+const mapStateToProps = (state) => ({
+  user: state.auth.user
+});
+
+export default connect(mapStateToProps)(AssistedLocationModal)

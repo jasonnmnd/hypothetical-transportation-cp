@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 
-function ManStudentPage({action}) {
+function ManStudentPage(props) {
     const param = useParams()
     const navigate = useNavigate();
     const emptyStudent={
@@ -91,7 +91,7 @@ function ManStudentPage({action}) {
     }
     else{
       setError("")
-      if(action==="new"){
+      if(props.action==="new"){
         axios
             .post(`/api/student/`,obj)
             .then(res =>{
@@ -121,7 +121,7 @@ function ManStudentPage({action}) {
     useEffect(() => {
       getSchools();
       getUsers();
-      if(action==="edit"){
+      if(props.action==="edit"){
         getStudent();
         getRoutes(obj.school);
       }
@@ -232,11 +232,11 @@ function ManStudentPage({action}) {
 }
 
 ManStudentPage.propTypes = {
-    
+    action: PropTypes.func
 }
 
 const mapStateToProps = (state) => ({
-
+  user: state.auth.user
 });
 
 export default connect(mapStateToProps)(ManStudentPage)
