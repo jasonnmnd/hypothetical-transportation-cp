@@ -28,40 +28,6 @@ function AdminRouteDetails(props) {
   
   const navigate = useNavigate();
   const param = useParams();
-  const exampleRoute = {
-    id:param.id,
-    name: "Routie",
-    school: {
-      id:"1",
-      name: "school",
-    },
-    description: "xxxxxxxx",
-    students:[
-      {
-        id: "123",
-        name:"Al",
-        studentid:"444",
-        school: "A high school",
-        route: "#1",
-      },
-      {
-        id:"456",
-        name:"Hugo",
-        studentid:"234",
-        school: "B high school",
-        route: "#2",
-      },
-      {
-        id:"567",
-        name:"James",
-        studentid:"555",
-        school: "C high school",
-        route: "none",
-      }
-    ]
-  }
-
-
 
   const emptyRoute = {
     id: 0,
@@ -145,7 +111,7 @@ function AdminRouteDetails(props) {
             <AdminTable title={"Associated Students"} header={Object.keys(emptyStudent)} data={students}/>
 
             <div className='edit-delete-buttons'>
-              <Link to={`/admin/edit/route/${exampleRoute.id}`}><button>Edit Route</button></Link>
+              <Link to={`/admin/route/edit/${route.school}/${route.id}`}><button>Edit Route</button></Link>
               <button onClick={() => {
                 setOpenModal(true);
               }}>Delete Route</button>
