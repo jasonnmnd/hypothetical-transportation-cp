@@ -59,34 +59,6 @@ function App( props ) {
 
   //Handle main login accross the whole app
 
-
-  const emptyUser = {
-    name:"",
-    email:"",
-    password:"",
-    admin:false,
-    address: "",
-    students:[],
-  }
-
-  const [user, setUser] = useState(emptyUser);
-
-  const [resetMessage, setMessage] = useState("");
-
-  const propTypes = {
-    login: PropTypes.func.isRequired,
-    isAuthenticated: PropTypes.bool,
-  };
-
-  const Logout = () => {
-    setUser(emptyUser);
-    return <Navigate to="/"></Navigate>
-  };
-
-  const reset = (inputs)=>{
-    //somehow make backend do the things
-    //change message according to backend output -> if old pw doesnt match, if new pw != confirm, if everything is right & succeed
-  }
   
 
   return (
@@ -95,10 +67,10 @@ function App( props ) {
         <Routes>
             <Route exact path="/" element={<LoginForm />}></Route>
             <Route path="/parent/*" element={<PrivateRoute><ParentPage /></PrivateRoute>}></Route>
-            <Route exact path="/account" element={<PrivateRoute><AccountPage user={user}/></PrivateRoute>}></Route>
-            <Route exact path="/account/password" element={<PrivateRoute><ResetPasswordPage user={user} save={reset} message={resetMessage}/></PrivateRoute>}></Route>
+            <Route exact path="/account" element={<PrivateRoute><AccountPage/></PrivateRoute>}></Route>
+            <Route exact path="/account/password" element={<PrivateRoute><ResetPasswordPage/></PrivateRoute>}></Route>
             <Route exact path="/parent/student/:school/:id" element={<PrivateRoute><ParentStudentDetails ></ParentStudentDetails></PrivateRoute>}/>
-            <Route path="/admin/*" element={<PrivateRoute><AdminPage user={user} Logout={Logout}/></PrivateRoute>}></Route>
+            <Route path="/admin/*" element={<PrivateRoute><AdminPage/></PrivateRoute>}></Route>
             <Route exact path="/admin/users" element={<PrivateRoute><AdminUsersPage /></PrivateRoute>}></Route>
             <Route exact path="/admin/students" element={<PrivateRoute><AdminStudentsPage /></PrivateRoute>}></Route>
             <Route exact path="/admin/edit/:column/:id" element={<PrivateRoute><AdminEditPage /></PrivateRoute>}></Route>

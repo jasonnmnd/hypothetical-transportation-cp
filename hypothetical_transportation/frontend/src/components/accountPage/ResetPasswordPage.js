@@ -3,17 +3,28 @@ import { useState } from "react";
 import { Link } from 'react-router-dom';
 import SidebarSliding from "../adminPage/components/sidebar/SidebarSliding";
 import Header from "../header/Header";
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
-function ResetPasswordPage({user, save, message}){
+function ResetPasswordPage(props){
     const [values, setValue] = useState({ old: "", new: "", confirm:"" });
+    
+    const saveNewPassword = () => {
+
+    }
+
     const resetHandler = (e) => {
         e.preventDefault();
         console.log(values)
-        save(values);
+        saveNewPassword(values);
       };
+
+      const message = "";
+
+
     return(
         <div className={"parent-page"}>
-            <Header textToDisplay={user.admin? "Admin Portal": "Parent Portal"}></Header>
+            <Header textToDisplay={props.user.admin? "Admin Portal": "Parent Portal"}></Header>
             <SidebarSliding/>
             <div className="welcome">
                 <form className={"center"}>
@@ -65,4 +76,20 @@ function ResetPasswordPage({user, save, message}){
         </div>
     );
 }
-export default ResetPasswordPage;
+
+ResetPasswordPage.propTypes = {
+    user: PropTypes.shape({
+        id: PropTypes.number,
+        email: PropTypes.email,
+        full_name: PropTypes.string,
+        address: PropTypes.string,
+        groups: PropTypes.arrayOf(PropTypes.number)
+
+    })
+}
+
+const mapStateToProps = (state) => ({
+    user: state.auth.user,
+});
+
+export default connect(mapStateToProps)(ResetPasswordPage)
