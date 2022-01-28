@@ -111,7 +111,7 @@ function AdminStudentsPage(props) {
         <Header textToDisplay={"Admin Portal"}></Header>
         <div className='middle-content'>
           <div className='center-buttons'>
-            <Link to="/admin/newstudent/">
+            <Link to="/admin/new_student/">
               <button className='button'>Add New Student</button>
             </Link>          
           </div>

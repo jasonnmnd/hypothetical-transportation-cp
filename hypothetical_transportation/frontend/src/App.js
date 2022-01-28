@@ -48,9 +48,10 @@ function App( props ) {
             <Route exact path="/admin/student/:id" element={<PrivateRoute><AdminStudentDetails /></PrivateRoute>}/>
             <Route exact path="/admin/school/:id" element={<PrivateRoute><AdminSchoolDetails /></PrivateRoute>}/>
             <Route exact path="/admin/route/:id" element={<PrivateRoute><AdminRouteDetails /></PrivateRoute>}/>
-            <Route exact path="/admin/route/plan/:id" element={<PrivateRoute><AdminRoutePlanner /></PrivateRoute>}/>
-            <Route exact path="/admin/newstudent/" element={<PrivateRoute><ManStudentPage action={"new"} /></PrivateRoute>}/>
-            <Route exact path="/admin/editstudent/:id" element={<PrivateRoute><ManStudentPage action={"edit"}/></PrivateRoute>}/>
+            <Route exact path="/admin/route/plan/:school_id" element={<PrivateRoute><AdminRoutePlanner action={"new"}/></PrivateRoute>}/>
+            <Route exact path="/admin/route/edit/:school_id/:route_id" element={<PrivateRoute><AdminRoutePlanner action={"edit"}/></PrivateRoute>}/>
+            <Route exact path="/admin/new_student/" element={<PrivateRoute><ManStudentPage action={"new"} /></PrivateRoute>}/>
+            <Route exact path="/admin/edit_student/:id" element={<PrivateRoute><ManStudentPage action={"edit"}/></PrivateRoute>}/>
             <Route exact path="admin/new/:column" element={<PrivateRoute><AdminNewPage /></PrivateRoute>}></Route>
         </Routes>
       </BrowserRouter>

@@ -25,7 +25,7 @@ function AdminRoutePlanner(props) {
   const emptyRoute = {
     name: "",
     description: "",
-    school: param.id,
+    school: param.school_id,
   }
 
   const studentObject = [{
@@ -44,14 +44,14 @@ function AdminRoutePlanner(props) {
   const [students, setStudents] = useState(studentObject);
 
   const getSchool = () => {
-    axios.get(`/api/school/${param.id}`)
+    axios.get(`/api/school/${param.school_id}/`)
         .then(res => {
             setSchool(res.data);
         }).catch(err => console.log(err));
     }
 
   const getStudent = () => {
-    axios.get(`/api/student?school=${param.id}`)
+    axios.get(`/api/student/?school=${param.school_id}`)
         .then(res => {
           console.log(res.data.results)
           setStudents(res.data.results);
@@ -75,39 +75,6 @@ function AdminRoutePlanner(props) {
     console.log("remove from this route")
   }
 
-  const exampleRoute = {
-    // id: param.id,
-    name: "Route #1",
-    school: {
-      id:"1",
-      name: "school",
-    },
-    description: "This is a route for a school. A Route can only be associated with 1 school",
-    students:[
-      {
-        id: "123",
-        name:"Al",
-        studentid:"444",
-        school: "A high school",
-        route: "#1",
-      },
-      {
-        id:"456",
-        name:"Hugo",
-        studentid:"234",
-        school: "B high school",
-        route: "",
-      },
-      {
-        id:"567",
-        name:"James",
-        studentid:"555",
-        school: "C high school",
-        route: "",
-      }
-    ]
-  }
-
   const submit = (e)=>{
     e.preventDefault();
     axios
@@ -127,7 +94,7 @@ function AdminRoutePlanner(props) {
                   }).catch(err => console.log(err));
               }).catch(err => console.log(err));
         })}
-        navigate(`/admin/school/${school.id}`);
+        navigate(`/admin/routes`);
       }).catch(err => console.log(err));
     
 }
@@ -215,7 +182,7 @@ function AdminRoutePlanner(props) {
 }
 
 AdminRoutePlanner.propTypes = {
-    
+    action: PropTypes.string
 }
 
 const mapStateToProps = (state) => ({
