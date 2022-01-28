@@ -93,7 +93,7 @@ function App( props ) {
       <BrowserRouter>
         <Routes>
             <Route exact path="/" element={<LoginForm />}></Route>
-            <Route path="/parent/*" element={<PrivateRoute><ParentPage user={user} Logout={Logout}/></PrivateRoute>}></Route>
+            <Route path="/parent/*" element={<PrivateRoute><ParentPage /></PrivateRoute>}></Route>
             <Route exact path="/account" element={<PrivateRoute><AccountPage user={user}/></PrivateRoute>}></Route>
             <Route exact path="/account/password" element={<PrivateRoute><ResetPasswordPage user={user} save={reset} message={resetMessage}/></PrivateRoute>}></Route>
             <Route exact path="/parent/student/:school/:id" element={<PrivateRoute><ParentStudentDetails ></ParentStudentDetails></PrivateRoute>}/>

@@ -6,6 +6,7 @@ import "./parentPage.css";
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { logout } from "../../actions/auth";
 
 function ParentPage( props ) {
     return (
@@ -18,7 +19,7 @@ function ParentPage( props ) {
                 Welcome,<span>{props.user.name}</span>
               </h2>
               <div className="button-spacing">
-                <button onClick={props.Logout}>Logout</button>
+                <button onClick={props.logout}>Logout</button>
                 <Link to={"/account"}>
                     <button>Account</button>
                 </Link>
@@ -46,7 +47,8 @@ ParentPage.propTypes = {
       id: PropTypes.number,
       username: PropTypes.string,
       email: PropTypes.email
-    })
+    }),
+    logout: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => ({
@@ -55,4 +57,4 @@ const mapStateToProps = (state) => ({
 
 });
 
-export default connect(mapStateToProps)(ParentPage)
+export default connect(mapStateToProps, {logout} )(ParentPage)

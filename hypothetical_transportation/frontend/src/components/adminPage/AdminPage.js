@@ -5,6 +5,7 @@ import { Navigate, Link } from "react-router-dom";
 import SidebarSliding from "./components/sidebar/SidebarSliding";
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { logout } from "../../actions/auth";
 
 //This page will be used for the admin page to declutter App.js
 function AdminPage( props ) {
@@ -22,7 +23,7 @@ function AdminPage( props ) {
               <h3><p>Select an option from the sidebar for administrative abilities</p></h3>
               <h3><p>You can edit parental users, students, schools, and routes</p></h3>
               <div className="home-buttons">
-                <button onClick={props.Logout}>Logout</button>
+                <button onClick={props.logout}>Logout</button>
                 <Link to={"/account"}>
                   <button>Account</button> 
                 </Link>
@@ -39,7 +40,8 @@ AdminPage.propTypes = {
     id: PropTypes.number,
     username: PropTypes.string,
     email: PropTypes.email
-  })
+  }),
+  logout: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => ({
@@ -48,4 +50,4 @@ const mapStateToProps = (state) => ({
 
 });
 
-export default connect(mapStateToProps)(AdminPage)
+export default connect(mapStateToProps, { logout })(AdminPage)
