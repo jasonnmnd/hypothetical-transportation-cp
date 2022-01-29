@@ -4,7 +4,7 @@ import { tokenConfig } from './auth';
 
 import { createMessage, returnErrors } from './messages';
 
-import { GET_USERS, GET_ERRORS, CREATE_MESSAGE } from './types';
+import { ADD_STUDENT, GET_ERRORS, CREATE_MESSAGE, GET_STUDENTS, DELETE_STUDENT, POPULATE_TABLE } from './types';
 
 
 // GET STUDENTS
@@ -13,9 +13,13 @@ export const getStudents = () => (dispatch, getState) => {
     .get('/api/student/', tokenConfig(getState))
     .then((res) => {
       dispatch({
-        type: GET_USERS,
+        type: GET_STUDENTS,
         payload: res.data,
       });
+      dispatch({
+        type: POPULATE_TABLE,
+        payload: res.data
+      })
     })
     .catch((err) => dispatch(returnErrors(err.response.data, err.response.status)));
 };
@@ -26,7 +30,7 @@ export const deleteStudents = (id) => (dispatch, getState) => {
     .delete(`/api/Students/${id}`, tokenConfig(getState))
     .then(res => {
       dispatch({
-        type: DELETE_USER,
+        type: DELETE_STUDENT,
         payload: id
       });
     })
@@ -46,20 +50,17 @@ export const addStudent = (student) => (dispatch, getState) => {
     .catch((err) => dispatch(returnErrors(err.response.data, err.response.status)));
 };
 
-// export const testingError = () => (dispatch) => {
-//   const fakeError = {
-//     msg: {
-//       name: "Fake name not valid",
-//     },
-//     status: "Fake Error Status"
-//   };
-//   const fakeMessage = {
-//     passwordNotMatch: "This is a fake message!"
-//   }
-//   //dispatch(createMessage(fakeMessage))
-//   dispatch({
-//     type: CREATE_MESSAGE,
-//     payload: fakeMessage,
-//   })
-// }
+export const searchStudents = (i1, i2) => (dispatch, getState) => {
+  axios.get(`/api/student/?search=${i2}&search_fields=${i1}`, tokenConfig(getState))
+      .then(res => {
+        dispatch({
+          type: GET_STUDENTS,
+          payload: res.data,
+        });
+        dispatch({
+          type: POPULATE_TABLE,
+          payload: res.data
+        })
+      }).catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
+};
 

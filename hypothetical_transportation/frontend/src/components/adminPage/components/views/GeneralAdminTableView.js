@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import GeneralAdminTable from '../table/GeneralAdminTable';
 import SearchBar from '../searchbar/SearchBar';
-
+import GeneralTable from '../../../common/GeneralTable';
 
 const userColumns = [
     "full_name",
@@ -13,8 +13,35 @@ const userColumns = [
     "groups",
 ]
 
+const studentColumns = [
+    "student_id",
+    "full_name",
+    "school",
+]
+
 
 function GeneralAdminTableView( props ) {
+
+    const nav = useNavigate();
+
+    const handleViewClick = (d) => {
+        //route to /props.title?somethingid=id => props.title determins routing to student, route, school, user
+        if (props.tableType == 'user') {
+            nav(`/admin/user/${d.id}`);
+        } 
+
+        else if (props.tableType ==  'student'){
+            nav(`/admin/student/${d.id}`);
+        }
+
+        else if (props.tableType ==  'school') {
+            nav(`/admin/school/${d.id}`);
+        }
+
+        else if (props.tableType == 'route') {
+            nav(`/admin/route/${d.id}`);
+        }
+    };
 
     const handlePrevClick = () => {
         //API Call here to get new data to display for next page
@@ -30,6 +57,8 @@ function GeneralAdminTableView( props ) {
         switch (props.tableType) {
             case "user":
                 return userColumns;
+            case "student":
+                return studentColumns;
             default:
                 return [];
         }
@@ -39,7 +68,9 @@ function GeneralAdminTableView( props ) {
         <div className='table-and-buttons'>
             <h1>{props.title}</h1>
             <SearchBar buttons={getColumns()} search={props.search}></SearchBar>
-            <GeneralAdminTable tableType="user"/>
+            <div className='AdminTable-container'>
+                <GeneralTable actionName = {props.actionName?props.actionName:"View"} action={props.action? props.action:handleViewClick}/>
+            </div>
             <div className="prev-next-buttons">
                 <button onClick={handlePrevClick}>Prev</button>
                 <button onClick={handleNextClick}>Next</button> 
@@ -50,10 +81,11 @@ function GeneralAdminTableView( props ) {
 }
 
 GeneralAdminTableView.propTypes = {
-    title: PropTypes.string,
-    tableType: PropTypes.string,
-    search: PropTypes.func
-
+    title: PropTypes.string.isRequired,
+    tableType: PropTypes.string.isRequired,
+    search: PropTypes.func.isRequired,
+    actionName: PropTypes.string,
+    action: PropTypes.func,
 }
 
 const mapStateToProps = (state) => ({
