@@ -4,7 +4,7 @@ import { tokenConfig } from './auth';
 
 import { createMessage, returnErrors } from './messages';
 
-import { GET_USERS, ADD_USER, DELETE_USER } from './types';
+import { GET_USERS, ADD_USER, DELETE_USER, POPULATE_TABLE } from './types';
 
 
 export const getUsers = () => (dispatch, getState) => {
@@ -12,7 +12,7 @@ export const getUsers = () => (dispatch, getState) => {
     .get('/api/user/', tokenConfig(getState))
     .then((res) => {
       dispatch({
-        type: GET_USERS,
+        type: POPULATE_TABLE,
         payload: res.data,
       });
     })
@@ -45,7 +45,7 @@ export const searchUsers = (i1, i2) => (dispatch, getState) => {
     axios.get(`/api/user/?search=${i2}&search_fields=${i1}`, tokenConfig(getState))
         .then(res => {
             dispatch({
-                type: GET_USERS,
+                type: POPULATE_TABLE,
                 payload: res.data,
               });
         }).catch(err => dispatch(returnErrors(err.response.data, err.response.status)));

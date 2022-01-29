@@ -109,7 +109,7 @@ GeneralTable.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
-    rows: state.users.users.results
+    rows: state.table.values.results
 });
 
 export default connect(mapStateToProps)(GeneralTable)

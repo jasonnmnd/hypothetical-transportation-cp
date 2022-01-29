@@ -5,6 +5,7 @@ import schools from './schools';
 import errors from './errors';
 import messages from './messages';
 import users from './users';
+import table from './table';
 
 export default combineReducers({
   students,
@@ -12,5 +13,6 @@ export default combineReducers({
   auth,
   errors,
   messages,
-  users
+  users,
+  table
 });
