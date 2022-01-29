@@ -72,7 +72,7 @@ function AdminRoutePlanner(props) {
   }
 
   const getStudentRelatedToRoute = ()=>{
-    axios.get(`/api/student/?route=${param.route_id}`)
+    axios.get(`/api/student/?routes=${param.route_id}`)
         .then(res => {
           console.log(res.data.results)
           setRouteStudents(res.data.results);
@@ -202,21 +202,23 @@ function AdminRoutePlanner(props) {
               {/* </Link> */}
             </div>
             <h2>Map of School and Students</h2>
-            <MapContainer studentData={students} schoolData={school}/>
-
+            {props.acion==="edit"?
+              <MapContainer studentData={students} schoolData={school}/>:
+              <MapContainer studentData={students} schoolData={school} routeStudentData={route_student}/>
+              }
             {/* <h2> Students inside this Routes </h2>
             <AdminTable title={"Students"} header={Object.keys(emptyStudent)} data={students.filter(i=>i.route!=="")} actionName={"Remove From This Route"} action={removeFromRoute}/> */}
 
             {props.action==="edit"?
               <div>
-                <AdminTable title={`Students currently in ${route.name}`} header={Object.keys(emptyStudent)} data={route_student.filter(i=>i.routes===route.id&&!toberemoved.includes(i))} actionName={"Remove from Route"} action={removeFromRoute}/>
+                <AdminTable title={`Students currently in ${route.name} (Marked as Green pin on map)`} header={Object.keys(emptyStudent)} data={route_student.filter(i=>i.routes===route.id&&!toberemoved.includes(i))} actionName={"Remove from Route"} action={removeFromRoute}/>
                 <AdminTable title={`Students To Be Remove from Route`} header={Object.keys(emptyStudent)} data={toberemoved} actionName={"Remove from Selected"} action={removeFromREMOVE}/>
               </div>:
               <div></div>
             }
 
             <AdminTable title={"Students To Be Added into Route"} header={Object.keys(emptyStudent)} data={tobeadded} actionName={"Remove from Selected"} action={removeFromADD}/>
-            <AdminTable title={`Students at ${school.name} With No Routes`} header={Object.keys(emptyStudent)} data={students.filter(i=>i.routes===null&&!tobeadded.includes(i))} actionName={"Add to Route"} action={addToRoute}/>
+            <AdminTable title={`Students at ${school.name} With No Routes (Marked as Red pin on map)`} header={Object.keys(emptyStudent)} data={students.filter(i=>i.routes===null&&!tobeadded.includes(i))} actionName={"Add to Route"} action={addToRoute}/>
 
             <form>
               <div className="form-inner">

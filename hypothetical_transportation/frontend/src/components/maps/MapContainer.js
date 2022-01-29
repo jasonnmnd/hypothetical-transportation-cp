@@ -3,6 +3,8 @@ import { GoogleMap, LoadScript, Marker, InfoWindow } from '@react-google-maps/ap
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Geocode from "react-geocode";
+import PinImage from "./pin3.png";
+import PinImage2 from "./pin2.png";
 
 function MapContainer(props) {
     const mapStyles = {        
@@ -16,6 +18,9 @@ function MapContainer(props) {
     Geocode.setRegion("us");
     Geocode.setLocationType("ROOFTOP");
     Geocode.enableDebug();
+    const iconBase =
+    "https://developers.google.com/maps/documentation/javascript/examples/full/images/";
+
 
     //Center at school
     const defaultCenter = {
@@ -25,6 +30,8 @@ function MapContainer(props) {
     const [schoolAdd, setSchoolAdd] = useState({});
     let studentAddress = [];
     const [studentAdd, setStudentAdd] = useState([]);
+    let routeAddress = [];
+    const [routeAdd, setRouteAdd] = useState([]);
 
     const getSchoolCoord = (school) => {
       Geocode.fromAddress(school.address).then(
@@ -62,12 +69,38 @@ function MapContainer(props) {
       });
     }
 
+    const getRouteStudentCoord = (stu) => {
+      Geocode.fromAddress(stu.address).then(
+          (response) => {
+              const { lat, lng } = response.results[0].geometry.location;
+              routeAddress = routeAddress.concat({
+                info_text: stu.full_name,
+                location: {
+                  lat:lat, 
+                  lng:lng
+                }
+              })
+              setRouteAdd(routeAddress)
+          },
+          (error) => {
+              console.log(error);
+      });
+    }
+
+
     useEffect(() => {
+      console.log(props.studentData)
+      console.log(props.routeStudentData)
       getSchoolCoord(props.schoolData);
       props.studentData.map(stu=>{
         getStudentCoord(stu)
       })
-    }, [props.schoolData, props.studentData]);
+      if(props.routeStudentData!==null && props.routeStudentData!==undefined){
+        props.routeStudentData.map(stu=>{
+          getRouteStudentCoord(stu)
+        })
+      }
+    }, [props]);
 
   const [selected, setSelected] = useState({});
 
@@ -85,10 +118,15 @@ function MapContainer(props) {
          zoom={13}
          center={schoolAdd.location}>
 
-         <Marker key={schoolAdd.name} position={schoolAdd.location} onClick={() => onSelect(schoolAdd)}></Marker>
+         <Marker key={schoolAdd.info_text} position={schoolAdd.location} onClick={() => onSelect(schoolAdd)} options={{icon:`${PinImage}`}}></Marker>
          {
            studentAdd.map((stu,i)=>{
-            return (<Marker key={stu.full_name} position={stu.location} onClick={() => onSelect(stu)}></Marker>)
+            return (<Marker key={stu.info_text} position={stu.location} onClick={() => onSelect(stu)}></Marker>)
+            })
+         }
+         {
+           routeAdd.map((stu,i)=>{
+            return (<Marker key={stu.info_text} position={stu.location} onClick={() => onSelect(stu)} options={{icon:`${PinImage2}`}}></Marker>)
             })
          }
 
@@ -112,6 +150,7 @@ function MapContainer(props) {
 
 MapContainer.propTypes = {
     studentData: PropTypes.array,
+    routeStudentData: PropTypes.array,
     schoolData: PropTypes.object
 }
 
