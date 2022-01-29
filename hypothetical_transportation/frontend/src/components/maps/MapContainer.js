@@ -22,27 +22,39 @@ function MapContainer(props) {
       lat: 36.0016944, lng: -78.9480547
     }
 
-    const [schoolAdd, setSchoolAdd] = useState(defaultCenter);
+    const [schoolAdd, setSchoolAdd] = useState({});
     let studentAddress = [];
     const [studentAdd, setStudentAdd] = useState([]);
 
-    const getSchoolCoord = (addressString) => {
-      Geocode.fromAddress(addressString).then(
+    const getSchoolCoord = (school) => {
+      Geocode.fromAddress(school.address).then(
           (response) => {
               // console.log(response.results[0].geometry.location);
               const { lat, lng } = response.results[0].geometry.location;
-              setSchoolAdd({lat:lat, lng:lng})
+              setSchoolAdd({
+                info_text: school.name,
+                location: {
+                  lat:lat, 
+                  lng:lng
+                }
+              })
           },
           (error) => {
               console.log(error);
       });
     }
 
-    const getStudentCoord = (addressString) => {
-      Geocode.fromAddress(addressString).then(
+    const getStudentCoord = (stu) => {
+      Geocode.fromAddress(stu.address).then(
           (response) => {
               const { lat, lng } = response.results[0].geometry.location;
-              studentAddress = studentAddress.concat({lat:lat, lng:lng})
+              studentAddress = studentAddress.concat({
+                info_text: stu.full_name,
+                location: {
+                  lat:lat, 
+                  lng:lng
+                }
+              })
               setStudentAdd(studentAddress)
           },
           (error) => {
@@ -51,52 +63,11 @@ function MapContainer(props) {
     }
 
     useEffect(() => {
-      getSchoolCoord(props.schoolData.address);
+      getSchoolCoord(props.schoolData);
       props.studentData.map(stu=>{
-        getStudentCoord(stu.address)
+        getStudentCoord(stu)
       })
     }, [props.schoolData, props.studentData]);
-
-    const [userLocation, setUserLocation] = useState(defaultCenter);
-
-    //Different Student Routes
-    // const locations = [
-    //   {
-    //     name: "Bryan Center",
-    //     location: { 
-    //       lat: 36.0010592,
-    //       lng: -78.943267
-    //     },
-    //   },
-    //   {
-    //     name: "Wilson Gym",
-    //     location: { 
-    //       lat: 35.9979684,
-    //       lng: -78.9429693
-    //     },
-    //   },
-    //   {
-    //     name: "Wilkinson Building",
-    //     location: { 
-    //       lat: 36.0034684,
-    //       lng: -78.9403573
-    //     },
-    //   },
-    //   {
-    //     name: "Harris Teeter",
-    //     location: { 
-    //       lat: 36.0097832,
-    //       lng: -78.9265046
-    //     },
-    //   },
-    //   {
-    //     name: "Dram & Draught",
-    //     location: { 
-    //       lat: 35.8898579,
-    //       lng: -78.91806
-    //     },
-    //   }
-    // ];
 
   const [selected, setSelected] = useState({});
 
@@ -106,53 +77,30 @@ function MapContainer(props) {
     // console.log(props.schoolData);
   }
 
-  const testCoords = (item) => {
-    Geocode.fromAddress(item.address).then(
-        (response) => {
-            const { lat, lng } = response.results[0].geometry.location;
-            console.log({lat, lng});
-            return <Marker key={item.full_name} position={lat, lng}></Marker>
-        },
-        (error) => {
-            console.log(error);
-    });
-  }
-
   return (
     <LoadScript
       googleMapsApiKey='AIzaSyA6nIh9bWUWFOD_y7hEZ7UQh_KmPn5Sq58'>
        <GoogleMap
          mapContainerStyle={mapStyles}
          zoom={13}
-         center={defaultCenter}>
+         center={schoolAdd.location}>
 
-         {/* {
-          props.studentData.map(item => {
-            return (
-            // <Marker key={item.name} position={item.location} onClick={() => onSelect(item)}/>
-            // <Marker key={item.full_name} position={getCoordsFromAddress(item.address)}/>
-            //testCoords(item)
-            )
-          })
-         } */}
-         <Marker key={props.schoolData.name} position={schoolAdd} onClick={() => onSelect(props.schoolData)}></Marker>
+         <Marker key={schoolAdd.name} position={schoolAdd.location} onClick={() => onSelect(schoolAdd)}></Marker>
          {
-           
            studentAdd.map((stu,i)=>{
-              
-            return (<Marker key={i} position={stu}></Marker>)
+            return (<Marker key={stu.full_name} position={stu.location} onClick={() => onSelect(stu)}></Marker>)
             })
          }
 
          {
-           selected.address && 
+           selected.location && 
            (
              <InfoWindow
-             position={defaultCenter}
+             position={selected.location}
              clickable={true}
              onCloseClick={()=>setSelected({})}
              >
-               <p>{selected.name}</p>
+               <p>{selected.info_text}</p>
              </InfoWindow>
            )
          }
