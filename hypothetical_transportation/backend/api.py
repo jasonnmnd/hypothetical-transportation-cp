@@ -10,7 +10,7 @@ from .models import School, Route, Student
 from .serializers import UserSerializer, StudentSerializer, RouteSerializer, SchoolSerializer
 from .search import DynamicSearchFilter
 from .customfilters import StudentCountShortCircuitFilter
-from .permissions import is_admin
+from .permissions import is_admin, IsAdminOrReadOnly
 
 
 def get_filter_dict(model):
@@ -61,7 +61,8 @@ class MapsAPI(APIView):
 class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     permission_classes = [
-        permissions.IsAuthenticated
+        # permissions.IsAuthenticated
+        IsAdminOrReadOnly
     ]
     filter_backends = [DjangoFilterBackend, DynamicSearchFilter, filters.OrderingFilter]
     filterset_fields = get_filter_dict(get_user_model())
@@ -82,7 +83,8 @@ class UserViewSet(viewsets.ModelViewSet):
 class RouteViewSet(viewsets.ModelViewSet):
     serializer_class = RouteSerializer
     permission_classes = [
-        permissions.IsAuthenticated
+        IsAdminOrReadOnly
+        # permissions.IsAuthenticated
     ]
     filter_backends = [DjangoFilterBackend, DynamicSearchFilter, StudentCountShortCircuitFilter]
     filterset_fields = get_filter_dict(Route)
@@ -107,7 +109,8 @@ class RouteViewSet(viewsets.ModelViewSet):
 class SchoolViewSet(viewsets.ModelViewSet):
     serializer_class = SchoolSerializer
     permission_classes = [
-        permissions.IsAuthenticated
+        # permissions.IsAuthenticated
+        IsAdminOrReadOnly
     ]
     filter_backends = [DjangoFilterBackend, DynamicSearchFilter, filters.OrderingFilter]
     filterset_fields = get_filter_dict(School)
@@ -134,13 +137,15 @@ class StudentViewSet(viewsets.ModelViewSet):
     serializer_class = StudentSerializer
     permission_classes = [
         # permissions.IsAuthenticated
-        permissions.AllowAny
+        # permissions.AllowAny
+        IsAdminOrReadOnly
     ]
     filter_backends = [DjangoFilterBackend, DynamicSearchFilter, filters.OrderingFilter]
     filterset_fields = get_filter_dict(Student)
     ordering_fields = ['school__name', 'student_id', 'full_name']
 
     def get_queryset(self):
+        # return Student.objects.all().distinct()
         if is_admin(self.request.user):
             return Student.objects.all().distinct()
         else:

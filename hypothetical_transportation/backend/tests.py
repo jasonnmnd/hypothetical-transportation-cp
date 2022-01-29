@@ -177,3 +177,43 @@ class PermissionViews(TestCase):
         response = self.client.get('/api/user/', HTTP_AUTHORIZATION=f'Token {self.user2_token}')
         self.assertEqual(len(response.data['results']), 1)
 
+    def test_guardians_cannot_write_student(self):
+        response = self.client.post('/api/student/',
+                                    json.dumps(
+                                        {
+                                            'full_name': 'first last',
+                                            'address': '',
+                                            'active': True,
+                                            'school': 3,
+                                            'student_id': 2,
+                                            'routes': None,
+                                            'guardian': 2
+                                        }),
+                                    content_type='application/json')
+        self.assertEqual(response.status_code, 401)
+
+    def test_guardians_cannot_write_route(self):
+        response = self.client.post('/api/route/',
+                                    json.dumps(
+                                        {
+                                            'name': 'route X',
+                                            'description': '',
+                                            'school': 4,
+                                        }),
+                                    content_type='application/json')
+        self.assertEqual(response.status_code, 401)
+
+    def test_guardians_cannot_write_school(self):
+        response = self.client.post('/api/school/',
+                                    json.dumps(
+                                        {
+                                            'name': 'new school',
+                                            'address': '',
+                                        }),
+                                    content_type='application/json')
+        self.assertEqual(response.status_code, 401)
+
+    def test_guardian_can_still_read_students(self):
+        student_id = self.normal_user1.students.values('id')[0]['id']
+        response = self.client.get(f'/api/student/{student_id}/', HTTP_AUTHORIZATION=f'Token {self.user1_token}')
+        self.assertEqual(response.status_code, 200)
