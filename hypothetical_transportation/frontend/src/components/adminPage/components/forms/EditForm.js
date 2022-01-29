@@ -25,7 +25,24 @@ function EditForm(props) {
                 .put(`/api/${col}/${props.obj.id}/`,props.obj)
                 .then(res =>{
                     // console.log(props.obj)
-                    navigate(`/admin/${col}/${props.obj.id}/`)
+                    if(props.column.includes("parent")){
+                        axios.get(`/api/student/?guardian=${props.obj.id}`)
+                            .then(res => {
+                            if(res.data.results.length > 0){
+                                res.data.results.map((stu)=>{
+                                    stu.address=props.obj.address
+                                    axios
+                                        .put(`/api/student/${stu.id}/`,stu)
+                                        .then(res =>{
+                                        }).catch(err => console.log(err));
+                                })
+                            }
+                            navigate(`/admin/${col}/${props.obj.id}/`)
+                            }).catch(err => console.log(err));
+                    }
+                    else{
+                        navigate(`/admin/${col}/${props.obj.id}/`)
+                    }
 
                 }).catch(err => console.log(err));
         }else if(props.action==="new"){

@@ -46,7 +46,6 @@ function ManStudentPage(props) {
       address: "",
     }]
   
-  
 
 
     const [obj, setObj] = useState(emptyStudent)
@@ -54,6 +53,7 @@ function ManStudentPage(props) {
     const [routes, setRoutes] = useState(emptyRoutes)
     const [users, setUsers] = useState(emptyUsers);
     const [error, setError] = useState("");
+    const [address, setAdd] = useState("");
 
     const getSchools = () => {
       axios.get('/api/school/')
@@ -79,7 +79,7 @@ function ManStudentPage(props) {
 
   const getRoutes = (i) => {
     if(i!=="" && i!==null && i!==undefined && i!==0){
-    axios.get(`/api/route?school=${i}`)
+    axios.get(`/api/route/?school=${i}`)
       .then(res => {
         setRoutes(res.data.results);
       }).catch(err => console.log(err));
@@ -89,6 +89,15 @@ function ManStudentPage(props) {
     }
   }
 
+  const setAddress = (e)=>{
+    setObj({ ...obj, ["guardian"]: e.target.value});
+    axios.get(`/api/user/${e.target.value}/`)
+      .then(res => {
+        setObj({ ...obj, ["guardian"]: e.target.value, ["address"]: res.data.address});
+      }).catch(err => console.log(err));
+  }
+
+
   const submit = () => {
     console.log(obj)
     setError("")
@@ -97,7 +106,6 @@ function ManStudentPage(props) {
           .post(`/api/student/`,obj)
           .then(res =>{
               navigate(`/admin/students/`)
-
           }).catch(err => console.log(err));
     }
     else{
@@ -105,7 +113,6 @@ function ManStudentPage(props) {
           .put(`/api/student/${param.id}/`,obj)
           .then(res =>{
               navigate(`/admin/students/`)
-
           }).catch(err => console.log(err));
     }
   }
@@ -113,39 +120,37 @@ function ManStudentPage(props) {
   const changeSchool = (e)=>{
     setObj({...obj, ["school"]:e.target.value, ["routes"]:""})
     getRoutes(e.target.value)
-    console.log(obj)
     console.log(routes)
   }
 
 
-    useEffect(() => {
-      getSchools();
-      getUsers();
-      if(props.action==="edit"){
-        getStudent();
-        getRoutes(obj.school);
-      }
-    }, []);
+  useEffect(() => {
+    getSchools();
+    getUsers();
+    if(props.action==="edit"){
+      getStudent();
+      getRoutes(obj.school);
+    }
+  }, []);
 
 
   const confirmation = (e)=>{
-  e.preventDefault();
-  if(obj.guardian===""){
-    setError("Guardian cannot be null")
-  }
-  else if(obj.school===""){
-    setError("School cannot be null")
-  }
-  else{
-    setOpenModal(true)
-  }
+    e.preventDefault();
+    if(obj.guardian===""){
+      setError("Guardian cannot be null")
+    }
+    else if(obj.school===""){
+      setError("School cannot be null")
+    }
+    else{
+      submit()
+      // setOpenModal(true)
+    }
 }
 
 const handleConfirmAddress = () => {
-
-   
-      console.log("Address confirmed")
-      submit()
+  console.log("Address confirmed")
+  submit()
 }
 
 
@@ -153,7 +158,7 @@ const handleConfirmAddress = () => {
       <>
         <Header textToDisplay={"Admin Portal"}></Header>
         <SidebarSliding/>
-        <div className='confirm_location'>{openModal && <AssistedLocationModal closeModal={setOpenModal} handleConfirmAddress={handleConfirmAddress} address={obj.address}></AssistedLocationModal>}</div>
+        {/* <div className='confirm_location'>{openModal && <AssistedLocationModal closeModal={setOpenModal} handleConfirmAddress={handleConfirmAddress} address={obj.address}></AssistedLocationModal>}</div> */}
         <div className='admin-edit-page'>
         <form>
                 <div className="form-inner">
@@ -185,25 +190,10 @@ const handleConfirmAddress = () => {
                       />
                   </div>
 
-
-                  <div className="form-group">
-                      <label htmlFor={"Address"}>Address</label>
-                      <input
-                          className="input"
-                          type={"Address"}
-                          name={"Address"}
-                          id={"Address"}
-                          value={obj.address}
-                          onChange={(e)=>{
-                              setObj({...obj, ["address"]: e.target.value})
-                          }}
-                      />
-                  </div>
-
                   <div className="form-group">
                       <label>
                         Parent:
-                        <select value={obj.guardian} onChange={(e) => setObj({ ...obj, ["guardian"]: e.target.value })}>
+                        <select value={obj.guardian} onChange={setAddress}>
                           <option value={""} >{"-----"}</option>
                           {users.map((u,i)=>{
                               return <option value={u.id} key={i}>{u.email}</option>
