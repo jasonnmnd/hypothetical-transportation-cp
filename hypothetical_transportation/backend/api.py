@@ -74,7 +74,7 @@ class UserViewSet(viewsets.ModelViewSet):
         else:
             return get_user_model().objects.filter(id=self.request.user.id).distinct()
 
-    @action(detail=False)
+    @action(detail=False, permission_classes=[permissions.AllowAny])
     def fields(self, request):
         content = parse_repr(repr(UserSerializer()))
         return Response(content)
@@ -97,10 +97,9 @@ class RouteViewSet(viewsets.ModelViewSet):
         else:
             students_queryset = self.request.user.students
             return Route.objects.filter(id__in=students_queryset.values('routes_id')).distinct()
-            #return Route.objects.all().distinct()
+            # return Route.objects.all().distinct()
 
-
-    @action(detail=False)
+    @action(detail=False, permission_classes=[permissions.AllowAny])
     def fields(self, request):
         content = parse_repr(repr(RouteSerializer()))
         return Response(content)
@@ -126,8 +125,7 @@ class SchoolViewSet(viewsets.ModelViewSet):
             students_queryset = self.request.user.students
             return School.objects.filter(id__in=students_queryset.values('school_id')).distinct()
 
-
-    @action(detail=False)
+    @action(detail=False, permission_classes=[permissions.AllowAny])
     def fields(self, request):
         content = parse_repr(repr(SchoolSerializer()))
         return Response(content)
@@ -154,7 +152,7 @@ class StudentViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save()
 
-    @action(detail=False)
+    @action(detail=False, permission_classes=[permissions.AllowAny])
     def fields(self, request):
         content = parse_repr(repr(StudentSerializer()))
         return Response(content)
