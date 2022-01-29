@@ -1,7 +1,9 @@
 import { GET_SCHOOLS, ADD_SCHOOL, DELETE_SCHOOL } from '../actions/types.js';
 
 const initialState = {
-    schools: [],
+    schools: {
+        results:[],
+    }
 };
 
 

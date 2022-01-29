@@ -1,7 +1,9 @@
  import { GET_STUDENTS, DELETE_STUDENT, ADD_STUDENT} from '../actions/types.js';
 
  const initialState = {
-   students: [],
+   students: {
+     results: [],
+   }
  };
 
  export default function (state = initialState, action) {

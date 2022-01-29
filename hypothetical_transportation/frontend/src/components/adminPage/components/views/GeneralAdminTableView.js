@@ -2,7 +2,6 @@ import React, { Fragment, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import GeneralAdminTable from '../table/GeneralAdminTable';
 import SearchBar from '../searchbar/SearchBar';
 import GeneralTable from '../../../common/GeneralTable';
 
@@ -17,6 +16,12 @@ const studentColumns = [
     "student_id",
     "full_name",
     "school",
+]
+
+
+const schoolColumns = [
+    "name",
+    "address",
 ]
 
 
@@ -59,6 +64,8 @@ function GeneralAdminTableView( props ) {
                 return userColumns;
             case "student":
                 return studentColumns;
+            case "school":
+                return schoolColumns
             default:
                 return [];
         }

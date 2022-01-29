@@ -10,7 +10,6 @@ import PropTypes from 'prop-types';
 import { getUsers, searchUsers } from '../../../actions/users';
 import SearchBar from '../components/searchbar/SearchBar';
 import GeneralTable from '../../common/GeneralTable';
-import GeneralAdminTable from '../components/table/GeneralAdminTable';
 import GeneralAdminTableView from '../components/views/GeneralAdminTableView';
 
 function GeneralAdminUsersPage(props) {
