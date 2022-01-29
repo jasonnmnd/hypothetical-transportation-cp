@@ -31,14 +31,7 @@ function ManStudentPage(props) {
       name: "",
       address: "",
     }]
-
-    const emptyRoutes = [{
-      id: 0,
-      name: "",
-      description: "",
-    }]
-
-
+    
     const emptyUsers = [{
       id: 0,
       full_name: "",
@@ -50,10 +43,9 @@ function ManStudentPage(props) {
 
     const [obj, setObj] = useState(emptyStudent)
     const [schoollist, setSchoolList] = useState(emptySchoolList)
-    const [routes, setRoutes] = useState(emptyRoutes)
+    const [routes, setRoutes] = useState(null)
     const [users, setUsers] = useState(emptyUsers);
     const [error, setError] = useState("");
-    const [address, setAdd] = useState("");
 
     const getSchools = () => {
       axios.get('/api/school/')
@@ -66,6 +58,7 @@ function ManStudentPage(props) {
       axios.get(`/api/student/${param.id}/`)
         .then(res => {
           setObj(res.data);
+          getRoutes(res.data.school);
         }).catch(err => console.log(err));
     }
 
@@ -85,7 +78,7 @@ function ManStudentPage(props) {
       }).catch(err => console.log(err));
     }
     else{
-      setRoutes(emptyRoutes)
+      setRoutes(null)
     }
   }
 
@@ -127,9 +120,9 @@ function ManStudentPage(props) {
   useEffect(() => {
     getSchools();
     getUsers();
+    setRoutes(null)
     if(props.action==="edit"){
       getStudent();
-      getRoutes(obj.school);
     }
   }, []);
 
@@ -195,9 +188,9 @@ const handleConfirmAddress = () => {
                         Parent:
                         <select value={obj.guardian} onChange={setAddress}>
                           <option value={""} >{"-----"}</option>
-                          {users.map((u,i)=>{
+                          {users!==null && users!==undefined && users.length!==0?users.map((u,i)=>{
                               return <option value={u.id} key={i}>{u.email}</option>
-                          })}
+                          }):null}
                         </select>
                       </label>
                   </div>
@@ -207,9 +200,9 @@ const handleConfirmAddress = () => {
                         School:
                         <select value={obj.school} onChange={changeSchool}>
                         <option value={""} >{"-----"}</option>
-                        {schoollist.map((u,i)=>{
+                        {schoollist!==null && schoollist!==undefined && schoollist.length!==0?schoollist.map((u,i)=>{
                             return <option value={u.id} key={i}>{u.name}</option>
-                        })}
+                        }):null}
                         </select>
                       </label>
                   </div>
@@ -219,7 +212,7 @@ const handleConfirmAddress = () => {
                         Route:
                         <select value={obj.routes} onChange={(e) => setObj({ ...obj, ["routes"]: e.target.value })}>
                           <option value={""} >{"-----"}</option>
-                          {routes!==null && routes!==undefined?routes.map((u,i)=>{
+                          {routes!==null && routes!==undefined && routes.length!==0?routes.map((u,i)=>{
                               return <option value={u.id} key={i}>{u.name}</option>
                           }):null}
                         </select>
