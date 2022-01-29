@@ -67,14 +67,8 @@ function EditForm(props) {
     }
 
     const confirmation = (e)=>{
-
         e.preventDefault();
-        if(props.column.includes("parent")){
-            setOpenModal(true)
-        }
-        else{
-            submit()
-        }
+        setOpenModal(true)
     }
 
     const handleConfirmAddress = () => {
