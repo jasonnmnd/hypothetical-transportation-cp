@@ -6,7 +6,6 @@ import { Provider } from 'react-redux';
 import store from './store';
 import { login } from "./actions/auth"
 
-
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
