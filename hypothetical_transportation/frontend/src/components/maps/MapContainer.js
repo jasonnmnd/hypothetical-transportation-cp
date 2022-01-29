@@ -2,12 +2,35 @@ import React, {useState} from 'react';
 import { GoogleMap, LoadScript, Marker, InfoWindow } from '@react-google-maps/api';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import Geocode from "react-geocode";
 
 function MapContainer(props) {
     const mapStyles = {        
         height: "50vh",
         width: "50%"};
-        
+    
+    //Geocode for location decoding
+    //https://www.npmjs.com/package/react-geocode
+    Geocode.setApiKey("AIzaSyA6nIh9bWUWFOD_y7hEZ7UQh_KmPn5Sq58");
+    Geocode.setLanguage("en");
+    Geocode.setRegion("us");
+    Geocode.setLocationType("ROOFTOP");
+    Geocode.enableDebug();
+
+    const getCoordsFromAddress = (addressString) => {
+      Geocode.fromAddress(props.address).then(
+          (response) => {
+              const { lat, lng } = response.results[0].geometry.location;
+              console.log(lat, lng);
+              return {lat, lng}
+          },
+          (error) => {
+              console.log(error);
+      });
+    }
+
+    const [userLocation, setUserLocation] = useState(defaultCenter);
+
     //Center at school
     const defaultCenter = {
       lat: 36.0016944, lng: -78.9480547
@@ -56,6 +79,13 @@ function MapContainer(props) {
 
   const onSelect = loc => {
     setSelected(loc)
+    // console.log(props.studentData);
+    // console.log(props.schoolData);
+  }
+
+  const testClick = () => {
+    console.log(props.studentData);
+    console.log(props.schoolData);
   }
 
   return (
@@ -69,11 +99,12 @@ function MapContainer(props) {
          {
           locations.map(item => {
             return (
-            <Marker key={item.name} position={item.location} onClick={() => onSelect(item)}/>
+            // <Marker key={item.name} position={item.location} onClick={() => onSelect(item)}/>
+            <Marker key={item.name} position={item.location} onClick={() => testClick()}/>
             )
           })
          }
-         <Marker key={"Duke"} position={defaultCenter} onClick={() => onSelect(this)}></Marker>
+         <Marker key={props.schoolData.name} position={defaultCenter} onClick={() => onSelect(this)}></Marker>
 
          {
            selected.location && 
@@ -94,7 +125,12 @@ function MapContainer(props) {
 }
 
 MapContainer.propTypes = {
-    
+    studentData: PropTypes.arrayOf(PropTypes.string),
+    // schoolData: PropTypes.shape({
+    //   name: PropTypes.string,
+    //   address: PropTypes.string
+    // }),
+    schoolData: PropTypes.arrayOf(PropTypes.string)
 }
 
 const mapStateToProps = (state) => ({
