@@ -17,24 +17,47 @@ function MapContainer(props) {
     Geocode.setLocationType("ROOFTOP");
     Geocode.enableDebug();
 
-    const getCoordsFromAddress = (addressString) => {
+    //Center at school
+    const defaultCenter = {
+      lat: 36.0016944, lng: -78.9480547
+    }
+
+    const [schoolAdd, setSchoolAdd] = useState(defaultCenter);
+    let studentAddress = [];
+    const [studentAdd, setStudentAdd] = useState([]);
+
+    const getSchoolCoord = (addressString) => {
       Geocode.fromAddress(addressString).then(
           (response) => {
+              // console.log(response.results[0].geometry.location);
               const { lat, lng } = response.results[0].geometry.location;
-              console.log({lat, lng});
-              return {lat, lng}
+              setSchoolAdd({lat:lat, lng:lng})
           },
           (error) => {
               console.log(error);
       });
     }
 
-    const [userLocation, setUserLocation] = useState(defaultCenter);
-
-    //Center at school
-    const defaultCenter = {
-      lat: 36.0016944, lng: -78.9480547
+    const getStudentCoord = (addressString) => {
+      Geocode.fromAddress(addressString).then(
+          (response) => {
+              const { lat, lng } = response.results[0].geometry.location;
+              studentAddress = studentAddress.concat({lat:lat, lng:lng})
+              setStudentAdd(studentAddress)
+          },
+          (error) => {
+              console.log(error);
+      });
     }
+
+    useEffect(() => {
+      getSchoolCoord(props.schoolData.address);
+      props.studentData.map(stu=>{
+        getStudentCoord(stu.address)
+      })
+    }, [props.schoolData, props.studentData]);
+
+    const [userLocation, setUserLocation] = useState(defaultCenter);
 
     //Different Student Routes
     // const locations = [
@@ -112,7 +135,14 @@ function MapContainer(props) {
             )
           })
          } */}
-         <Marker key={props.schoolData.name} position={getCoordsFromAddress(props.schoolData.address)} onClick={() => onSelect(props.schoolData)}></Marker>
+         <Marker key={props.schoolData.name} position={schoolAdd} onClick={() => onSelect(props.schoolData)}></Marker>
+         {
+           
+           studentAdd.map((stu,i)=>{
+              
+            return (<Marker key={i} position={stu}></Marker>)
+            })
+         }
 
          {
            selected.address && 
