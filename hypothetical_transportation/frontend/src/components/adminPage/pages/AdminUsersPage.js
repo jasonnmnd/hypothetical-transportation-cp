@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {Fragment, useEffect, useState} from 'react';
 import SidebarSliding from '../components/sidebar/SidebarSliding';
 import Header from '../../header/Header';
 import AdminTable from '../components/table/AdminTable';
@@ -7,6 +7,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { getUsers, searchUsers } from '../../../actions/users';
 
 function AdminUsersPage(props) {
 
@@ -30,34 +31,36 @@ function AdminUsersPage(props) {
     groups: [],
   }]
 
-  const [users, setUsers] = useState(emptyUser);
+  //const [users, setUsers] = useState(emptyUser);
 
-  const getUsers = () => {
-    axios.get('/api/user/')
-        .then(res => {
-            console.log(res.data.results)
-            console.log(res.data.results[0].groups)
-            setUsers(res.data.results);
-        }).catch(err => console.log(err));
-    }
+  // const getUsers = () => {
+  //   axios.get('/api/user/')
+  //       .then(res => {
+  //           console.log(res.data.results)
+  //           console.log(res.data.results[0].groups)
+  //           setUsers(res.data.results);
+  //       }).catch(err => console.log(err));
+  //   }
+
+
 
   useEffect(() => {
-    getUsers();
+    props.getUsers();
   }, []);
 
 
-  const searchUser = (i1,i2) => {
-    axios.get(`/api/user/?search=${i2}&search_fields=${i1}`)
-        .then(res => {
-          console.log(`/api/user/?search=${i2}&search_fields=${i1}`)
-          setUsers(res.data.results);
-        }).catch(err => console.log(err));
-  }
+  // const searchUser = (i1,i2) => {
+  //   axios.get(`/api/user/?search=${i2}&search_fields=${i1}`)
+  //       .then(res => {
+  //         console.log(`/api/user/?search=${i2}&search_fields=${i1}`)
+  //         setUsers(res.data.results);
+  //       }).catch(err => console.log(err));
+  // }
   
 
   const search = (value)=>{
     //somehow get backend to update data (with usestate?)
-    searchUser(value.by, value.value)
+    props.searchUsers(value.by, value.value)
   }
 
   return (
@@ -74,7 +77,7 @@ function AdminUsersPage(props) {
                   </Link>
               </div>
           <div className='table-and-buttons'>
-              <AdminTable title={title} header={Object.keys(emptyUser[0])} data={users} search={search}/>
+              <AdminTable title={title} header={Object.keys(emptyUser[0])} data={props.users} search={search}/>
               <div className="prev-next-buttons">
                   <button onClick={handlePrevClick}>Prev</button>
                   <button onClick={handleNextClick}>Next</button> 
@@ -86,11 +89,13 @@ function AdminUsersPage(props) {
 }
 
 AdminUsersPage.propTypes = {
-    
+    getUsers: PropTypes.func.isRequired,
+    searchUsers: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => ({
-  user: state.auth.user
+  user: state.auth.user,
+  users: state.users.users.results
 });
 
-export default connect(mapStateToProps)(AdminUsersPage)
+export default connect(mapStateToProps, {getUsers, searchUsers} )(AdminUsersPage)

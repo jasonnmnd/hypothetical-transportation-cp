@@ -4,47 +4,46 @@ import { tokenConfig } from './auth';
 
 import { createMessage, returnErrors } from './messages';
 
-import { GET_STUDENTS, DELETE_STUDENT, ADD_STUDENT, GET_ERRORS, CREATE_MESSAGE } from './types';
+import { GET_USERS, GET_ERRORS, CREATE_MESSAGE } from './types';
 
 
 // GET STUDENTS
 export const getStudents = () => (dispatch, getState) => {
   axios
-    //.get('/api/student/', tokenConfig(getState))
-    .get('/api/student/')
+    .get('/api/student/', tokenConfig(getState))
     .then((res) => {
       dispatch({
-        type: GET_STUDENTS,
+        type: GET_USERS,
         payload: res.data,
       });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => dispatch(returnErrors(err.response.data, err.response.status)));
 };
 
 // DELETE STUDENTS
-export const deleteStudents = (id) => (dispatch) => {
+export const deleteStudents = (id) => (dispatch, getState) => {
   axios
-    .delete(`/api/Students/${id}`)
+    .delete(`/api/Students/${id}`, tokenConfig(getState))
     .then(res => {
       dispatch({
-        type: DELETE_STUDENT,
+        type: DELETE_USER,
         payload: id
       });
     })
-    .catch(err => console.log(err));
+    .catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
 }
 
 // ADD STUDENT
-export const addStudent = (student) => (dispatch) => {
+export const addStudent = (student) => (dispatch, getState) => {
   axios
-    .post('/api/Students/', student)
+    .post('/api/Students/', student, tokenConfig(getState))
     .then((res) => {
       dispatch({
         type: ADD_STUDENT,
         payload: res.data,
       });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => dispatch(returnErrors(err.response.data, err.response.status)));
 };
 
 // export const testingError = () => (dispatch) => {

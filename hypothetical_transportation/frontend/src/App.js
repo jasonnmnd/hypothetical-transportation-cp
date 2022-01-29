@@ -22,12 +22,33 @@ import { loadUser } from "./actions/auth";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import Alerts from "./components/alerts/Alerts";
+import GeneralTable from "./components/common/GeneralTable";
+import GeneralAdminUsersPage from "./components/adminPage/newPages/GeneralAdminUsersPage";
 
 import AdminNewPage from "./components/adminPage/pages/AdminNewPage";
 import ManStudentPage from "./components/adminPage/pages/ManStudentPage";
 //import GeneralTable from "./components/common/generalTable";
 
-
+const testingTableProps = [
+  {
+    username: "fred",
+    email: "aCat@animal.com",
+    school: "hunting school",
+    routeDesc: "this is the route of fred"
+  },
+  {
+    username: "allie",
+    email: "alsoaCat@animal.com",
+    school: "tracking school",
+    routeDesc: "this is the route of allie"
+  },
+  {
+    username: "max",
+    email: "adog@animal.com",
+    school: "fetching school",
+    routeDesc: "max stole this route"
+  }
+]
 
 
 function App( props ) {
@@ -38,26 +59,27 @@ function App( props ) {
       <BrowserRouter>
         <Alerts/>
         <Routes>
-            <Route exact path="/" element={<LoginForm />}></Route>
-            <Route path="/parent/*" element={<PrivateRoute><ParentPage /></PrivateRoute>}></Route>
-            <Route exact path="/account" element={<PrivateRoute><AccountPage/></PrivateRoute>}></Route>
-            <Route exact path="/account/password" element={<PrivateRoute><ResetPasswordPage/></PrivateRoute>}></Route>
-            <Route exact path="/parent/student/:school/:id" element={<PrivateRoute><ParentStudentDetails ></ParentStudentDetails></PrivateRoute>}/>
-            <Route path="/admin/*" element={<PrivateRoute><AdminPage/></PrivateRoute>}></Route>
-            <Route exact path="/admin/users" element={<PrivateRoute><AdminUsersPage /></PrivateRoute>}></Route>
-            <Route exact path="/admin/students" element={<PrivateRoute><AdminStudentsPage /></PrivateRoute>}></Route>
-            <Route exact path="/admin/edit/:column/:id" element={<PrivateRoute><AdminEditPage /></PrivateRoute>}></Route>
-            <Route exact path="/admin/schools" element={<PrivateRoute><AdminSchoolsPage /></PrivateRoute>}></Route>
-            <Route exact path="/admin/routes" element={<PrivateRoute><AdminRoutesPage /></PrivateRoute>}></Route>
-            <Route exact path="/admin/user/:id" element={<PrivateRoute><AdminUserDetails /></PrivateRoute>}/>
-            <Route exact path="/admin/student/:id" element={<PrivateRoute><AdminStudentDetails /></PrivateRoute>}/>
-            <Route exact path="/admin/school/:id" element={<PrivateRoute><AdminSchoolDetails /></PrivateRoute>}/>
-            <Route exact path="/admin/route/:id" element={<PrivateRoute><AdminRouteDetails /></PrivateRoute>}/>
-            <Route exact path="/admin/route/plan/:school_id" element={<PrivateRoute><AdminRoutePlanner action={"new"}/></PrivateRoute>}/>
-            <Route exact path="/admin/route/edit/:school_id/:route_id" element={<PrivateRoute><AdminRoutePlanner action={"edit"}/></PrivateRoute>}/>
-            <Route exact path="/admin/new_student/" element={<PrivateRoute><ManStudentPage action={"new"} /></PrivateRoute>}/>
-            <Route exact path="/admin/edit_student/:id" element={<PrivateRoute><ManStudentPage action={"edit"}/></PrivateRoute>}/>
-            <Route exact path="admin/new/:column" element={<PrivateRoute><AdminNewPage /></PrivateRoute>}></Route>
+          <Route exact path="/testingTable" element={<GeneralTable rows={testingTableProps}/>}></Route>
+          <Route exact path="/" element={<LoginForm />}></Route>
+          <Route path="/parent/*" element={<PrivateRoute><ParentPage /></PrivateRoute>}></Route>
+          <Route exact path="/account" element={<PrivateRoute><AccountPage/></PrivateRoute>}></Route>
+          <Route exact path="/account/password" element={<PrivateRoute><ResetPasswordPage/></PrivateRoute>}></Route>
+          <Route exact path="/parent/student/:school/:id" element={<PrivateRoute><ParentStudentDetails ></ParentStudentDetails></PrivateRoute>}/>
+          <Route path="/admin/*" element={<PrivateRoute><AdminPage/></PrivateRoute>}></Route>
+          <Route exact path="/admin/users" element={<PrivateRoute><GeneralAdminUsersPage /></PrivateRoute>}></Route>
+          <Route exact path="/admin/students" element={<PrivateRoute><AdminStudentsPage /></PrivateRoute>}></Route>
+          <Route exact path="/admin/edit/:column/:id" element={<PrivateRoute><AdminEditPage /></PrivateRoute>}></Route>
+          <Route exact path="/admin/schools" element={<PrivateRoute><AdminSchoolsPage /></PrivateRoute>}></Route>
+          <Route exact path="/admin/routes" element={<PrivateRoute><AdminRoutesPage /></PrivateRoute>}></Route>
+          <Route exact path="/admin/user/:id" element={<PrivateRoute><AdminUserDetails /></PrivateRoute>}/>
+          <Route exact path="/admin/student/:id" element={<PrivateRoute><AdminStudentDetails /></PrivateRoute>}/>
+          <Route exact path="/admin/school/:id" element={<PrivateRoute><AdminSchoolDetails /></PrivateRoute>}/>
+          <Route exact path="/admin/route/:id" element={<PrivateRoute><AdminRouteDetails /></PrivateRoute>}/>
+          <Route exact path="/admin/route/plan/:school_id" element={<PrivateRoute><AdminRoutePlanner action={"new"}/></PrivateRoute>}/>
+          <Route exact path="/admin/route/edit/:school_id/:route_id" element={<PrivateRoute><AdminRoutePlanner action={"edit"}/></PrivateRoute>}/>
+          <Route exact path="/admin/new_student/" element={<PrivateRoute><ManStudentPage action={"new"} /></PrivateRoute>}/>
+          <Route exact path="/admin/edit_student/:id" element={<PrivateRoute><ManStudentPage action={"edit"}/></PrivateRoute>}/>
+          <Route exact path="admin/new/:column" element={<PrivateRoute><AdminNewPage /></PrivateRoute>}></Route>
         </Routes>
       </BrowserRouter>
     </div>
