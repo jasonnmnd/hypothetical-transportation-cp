@@ -202,7 +202,7 @@ function AdminRoutePlanner(props) {
               {/* </Link> */}
             </div>
             <h2>Map of School and Students</h2>
-            <MapContainer studentData={school} schoolData={students}/>
+            <MapContainer studentData={students} schoolData={school}/>
 
             {/* <h2> Students inside this Routes </h2>
             <AdminTable title={"Students"} header={Object.keys(emptyStudent)} data={students.filter(i=>i.route!=="")} actionName={"Remove From This Route"} action={removeFromRoute}/> */}

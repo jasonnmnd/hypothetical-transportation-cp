@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { GoogleMap, LoadScript, Marker, InfoWindow } from '@react-google-maps/api';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -18,10 +18,10 @@ function MapContainer(props) {
     Geocode.enableDebug();
 
     const getCoordsFromAddress = (addressString) => {
-      Geocode.fromAddress(props.address).then(
+      Geocode.fromAddress(addressString).then(
           (response) => {
               const { lat, lng } = response.results[0].geometry.location;
-              console.log(lat, lng);
+              console.log({lat, lng});
               return {lat, lng}
           },
           (error) => {
@@ -37,43 +37,43 @@ function MapContainer(props) {
     }
 
     //Different Student Routes
-    const locations = [
-      {
-        name: "Bryan Center",
-        location: { 
-          lat: 36.0010592,
-          lng: -78.943267
-        },
-      },
-      {
-        name: "Wilson Gym",
-        location: { 
-          lat: 35.9979684,
-          lng: -78.9429693
-        },
-      },
-      {
-        name: "Wilkinson Building",
-        location: { 
-          lat: 36.0034684,
-          lng: -78.9403573
-        },
-      },
-      {
-        name: "Harris Teeter",
-        location: { 
-          lat: 36.0097832,
-          lng: -78.9265046
-        },
-      },
-      {
-        name: "Dram & Draught",
-        location: { 
-          lat: 35.8898579,
-          lng: -78.91806
-        },
-      }
-    ];
+    // const locations = [
+    //   {
+    //     name: "Bryan Center",
+    //     location: { 
+    //       lat: 36.0010592,
+    //       lng: -78.943267
+    //     },
+    //   },
+    //   {
+    //     name: "Wilson Gym",
+    //     location: { 
+    //       lat: 35.9979684,
+    //       lng: -78.9429693
+    //     },
+    //   },
+    //   {
+    //     name: "Wilkinson Building",
+    //     location: { 
+    //       lat: 36.0034684,
+    //       lng: -78.9403573
+    //     },
+    //   },
+    //   {
+    //     name: "Harris Teeter",
+    //     location: { 
+    //       lat: 36.0097832,
+    //       lng: -78.9265046
+    //     },
+    //   },
+    //   {
+    //     name: "Dram & Draught",
+    //     location: { 
+    //       lat: 35.8898579,
+    //       lng: -78.91806
+    //     },
+    //   }
+    // ];
 
   const [selected, setSelected] = useState({});
 
@@ -83,9 +83,16 @@ function MapContainer(props) {
     // console.log(props.schoolData);
   }
 
-  const testClick = () => {
-    console.log(props.studentData);
-    console.log(props.schoolData);
+  const testCoords = (item) => {
+    Geocode.fromAddress(item.address).then(
+        (response) => {
+            const { lat, lng } = response.results[0].geometry.location;
+            console.log({lat, lng});
+            return <Marker key={item.full_name} position={lat, lng}></Marker>
+        },
+        (error) => {
+            console.log(error);
+    });
   }
 
   return (
@@ -96,21 +103,22 @@ function MapContainer(props) {
          zoom={13}
          center={defaultCenter}>
 
-         {
-          locations.map(item => {
+         {/* {
+          props.studentData.map(item => {
             return (
             // <Marker key={item.name} position={item.location} onClick={() => onSelect(item)}/>
-            <Marker key={item.name} position={item.location} onClick={() => testClick()}/>
+            // <Marker key={item.full_name} position={getCoordsFromAddress(item.address)}/>
+            //testCoords(item)
             )
           })
-         }
-         <Marker key={props.schoolData.name} position={defaultCenter} onClick={() => onSelect(this)}></Marker>
+         } */}
+         <Marker key={props.schoolData.name} position={getCoordsFromAddress(props.schoolData.address)} onClick={() => onSelect(props.schoolData)}></Marker>
 
          {
-           selected.location && 
+           selected.address && 
            (
              <InfoWindow
-             position={selected.location}
+             position={defaultCenter}
              clickable={true}
              onCloseClick={()=>setSelected({})}
              >
@@ -125,12 +133,8 @@ function MapContainer(props) {
 }
 
 MapContainer.propTypes = {
-    studentData: PropTypes.arrayOf(PropTypes.string),
-    // schoolData: PropTypes.shape({
-    //   name: PropTypes.string,
-    //   address: PropTypes.string
-    // }),
-    schoolData: PropTypes.arrayOf(PropTypes.string)
+    studentData: PropTypes.array,
+    schoolData: PropTypes.object
 }
 
 const mapStateToProps = (state) => ({
