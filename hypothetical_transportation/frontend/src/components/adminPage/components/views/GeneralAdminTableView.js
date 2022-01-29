@@ -24,6 +24,11 @@ const schoolColumns = [
     "address",
 ]
 
+const routeColumns = [
+    "name",
+    "description",
+]
+
 
 function GeneralAdminTableView( props ) {
 
@@ -65,18 +70,22 @@ function GeneralAdminTableView( props ) {
             case "student":
                 return studentColumns;
             case "school":
-                return schoolColumns
+                return schoolColumns;
+            case "route":
+                return routeColumns;
             default:
                 return [];
         }
     }
+
+    
 
     return (
         <div className='table-and-buttons'>
             <h1>{props.title}</h1>
             <SearchBar buttons={getColumns()} search={props.search}></SearchBar>
             <div className='AdminTable-container'>
-                <GeneralTable actionName = {props.actionName?props.actionName:"View"} action={props.action? props.action:handleViewClick}/>
+                <GeneralTable columnNames={getColumns()} actionName={props.actionName?props.actionName:"View"} action={props.action? props.action:handleViewClick}/>
             </div>
             <div className="prev-next-buttons">
                 <button onClick={handlePrevClick}>Prev</button>

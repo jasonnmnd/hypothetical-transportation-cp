@@ -6,7 +6,6 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import AdminSchoolDetails from './AdminSchoolDetails';
 import { getSchools, searchSchools } from '../../../actions/schools';
 import GeneralAdminTableView from '../components/views/GeneralAdminTableView';
 
@@ -24,7 +23,7 @@ function GeneralAdminSchoolsPage(props) {
 
   const search = (value)=>{
     //somehow get backend to update data (with usestate?)
-    props.searchSchool(value.by, value.value)
+    props.searchSchools(value.by, value.value)
   }
 
   return (

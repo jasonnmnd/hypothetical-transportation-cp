@@ -21,3 +21,7 @@ export const ADD_USER = "ADD_USER"
 export const SEARCH_USER = "SEARCH_USER"
 
 export const POPULATE_TABLE = "POPULATE_TABLE";
+
+export const GET_ROUTES = "GET_ROUTES"
+export const DELETE_ROUTE = "DELETE_ROUTE"
+export const ADD_ROUTE = "ADD_ROUTE"

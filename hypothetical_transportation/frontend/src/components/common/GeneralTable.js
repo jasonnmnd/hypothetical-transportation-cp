@@ -1,6 +1,7 @@
 import React, { Fragment, useState } from "react";
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import "../adminPage/adminPage.css";
 
 function GeneralTable( props ) {
   
@@ -8,26 +9,25 @@ function GeneralTable( props ) {
   const [columnNames, setColumnNames] = useState([]);
   const columnsToHide = ["_id"];
 
-  const mapDynamicColumns = () => {
-    Object.keys(props.rows[0]).forEach((col) => {
-      if (!columnNames.includes(col)) {
-        setColumnNames([...columnNames, col]);
-      }
-    });
-  };
+  // const mapDynamicColumns = () => {
+  //   Object.keys(props.rows[0]).forEach((col) => {
+  //     if (!columnNames.includes(col)) {
+  //       setColumnNames([...columnNames, col]);
+  //     }
+  //   });
+  // };
 
   const addTableRow = (rowData) => {
     let row = [];
-    columnNames.forEach((col) => {
+    props.columnNames.forEach((col) => {
       if (!columnsToHide.includes(col)) {
         row.push(
           rowData[col]
         );
       }
     });
-
     return (
-        <tr className={row["routes"] === null ? "tr-red" : "tr-gray"} >
+        <tr className={rowData["routes"] === null ? "tr-red" : "tr-gray"} >
             {
                 Object.keys(row).map((key, index) => {
                     return (
@@ -45,7 +45,7 @@ function GeneralTable( props ) {
   };
 
   const mapTableColumns = () => {
-    return columnNames.map((col) => {
+    return props.columnNames.map((col) => {
         if (!columnsToHide.includes(col)) {
             const overridedColumnName = overrideColumnName(col);
             return (
@@ -71,7 +71,7 @@ function GeneralTable( props ) {
     if(results.length == 0){
         return null;
     }
-    mapDynamicColumns();
+    // mapDynamicColumns();
     return (
       <table>
         <thead>
@@ -105,7 +105,8 @@ function GeneralTable( props ) {
 GeneralTable.propTypes = {
     rows: PropTypes.arrayOf(PropTypes.obj),
     actionName: PropTypes.string,
-    action: PropTypes.func
+    action: PropTypes.func,
+    columnNames: PropTypes.arrayOf(PropTypes.string)
 }
 
 const mapStateToProps = (state) => ({

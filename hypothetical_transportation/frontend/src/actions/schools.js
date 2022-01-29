@@ -1,8 +1,10 @@
 import axios from "axios";
-import { GET_SCHOOLS } from "./types"; 
+import { GET_SCHOOLS, POPULATE_TABLE } from "./types"; 
+import { tokenConfig } from './auth';
 
+import { createMessage, returnErrors } from './messages';
 //GET SCHOOLS
-export const getSchools = () => {
+export const getSchools = () => (dispatch, getState) => {
 
     axios
     .get('/api/school/', tokenConfig(getState))
@@ -21,7 +23,6 @@ export const getSchools = () => {
 }
 
 export const searchSchools = (i1, i2) => (dispatch, getState) => {
-
     axios.get(`/api/school/?search=${i2}&search_fields=${i1}`, tokenConfig(getState))
         .then(res => {
           dispatch({
