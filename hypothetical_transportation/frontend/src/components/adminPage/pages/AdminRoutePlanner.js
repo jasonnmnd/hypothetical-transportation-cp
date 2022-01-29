@@ -5,7 +5,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import MapContainer from '../../maps/MapContainer';
 import AdminTable from '../components/table/AdminTable';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+import PropTypes, { string } from 'prop-types';
 import axios from 'axios';
 
 function AdminRoutePlanner(props) {
@@ -196,29 +196,29 @@ function AdminRoutePlanner(props) {
             </div> */}
 
             <div className='info-fields'>
-              <h2>School: </h2>
+              <h2>School (Blue Pin): </h2>
               {/* <Link to={`/admin/school/${exampleRoute.school.id}`}> */}
                 <Link to={`/admin/school/${school.id}`}><button className='button'><h3>{school.name}</h3></button></Link>
               {/* </Link> */}
             </div>
             <h2>Map of School and Students</h2>
             {props.acion==="edit"?
-              <MapContainer studentData={students} schoolData={school}/>:
-              <MapContainer studentData={students} schoolData={school} routeStudentData={route_student}/>
+              <MapContainer studentData={students.filter(stu=>stu.routes===null)} schoolData={school}/>:
+              <MapContainer studentData={students.filter(stu=>stu.routes===null)} schoolData={school} routeStudentData={route_student}/>
               }
             {/* <h2> Students inside this Routes </h2>
             <AdminTable title={"Students"} header={Object.keys(emptyStudent)} data={students.filter(i=>i.route!=="")} actionName={"Remove From This Route"} action={removeFromRoute}/> */}
 
             {props.action==="edit"?
               <div>
-                <AdminTable title={`Students currently in ${route.name} (Marked as Green pin on map)`} header={Object.keys(emptyStudent)} data={route_student.filter(i=>i.routes===route.id&&!toberemoved.includes(i))} actionName={"Remove from Route"} action={removeFromRoute}/>
+                <AdminTable title={`Students currently in ${route.name} (Green pin)`} header={Object.keys(emptyStudent)} data={route_student.filter(i=>i.routes===route.id&&!toberemoved.includes(i))} actionName={"Remove from Route"} action={removeFromRoute}/>
                 <AdminTable title={`Students To Be Remove from Route`} header={Object.keys(emptyStudent)} data={toberemoved} actionName={"Remove from Selected"} action={removeFromREMOVE}/>
               </div>:
               <div></div>
             }
 
             <AdminTable title={"Students To Be Added into Route"} header={Object.keys(emptyStudent)} data={tobeadded} actionName={"Remove from Selected"} action={removeFromADD}/>
-            <AdminTable title={`Students at ${school.name} With No Routes (Marked as Red pin on map)`} header={Object.keys(emptyStudent)} data={students.filter(i=>i.routes===null&&!tobeadded.includes(i))} actionName={"Add to Route"} action={addToRoute}/>
+            <AdminTable title={`Students at ${school.name} With No Routes (Red pin)`} header={Object.keys(emptyStudent)} data={students.filter(i=>i.routes===null&&!tobeadded.includes(i))} actionName={"Add to Route"} action={addToRoute}/>
 
             <form>
               <div className="form-inner">

@@ -3,8 +3,8 @@ import { GoogleMap, LoadScript, Marker, InfoWindow } from '@react-google-maps/ap
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Geocode from "react-geocode";
-import PinImage from "./pin3.png";
-import PinImage2 from "./pin2.png";
+import PinImage from "./pin.png";
+import PinImage2 from "./pin1.png";
 
 function MapContainer(props) {
     const mapStyles = {        
