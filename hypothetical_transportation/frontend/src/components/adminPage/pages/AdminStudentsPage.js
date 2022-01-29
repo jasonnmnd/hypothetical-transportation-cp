@@ -11,41 +11,6 @@ function AdminStudentsPage(props) {
 
   //Mock Student Data (API Call Later for Real Data)
   const title = "Students"
-  const data = [
-    {
-      id:111,
-      name: "Anna",
-      studentid: 12,
-      school: "School 1",
-      route: "",
-    },
-
-    {
-      id:222,
-      name: "Emma",
-      studentid: 1223,
-      school: "School 2",
-      route:4,
-    },
-
-    {
-      id:332,
-      name: "Mark",
-      studentid: 1213214,
-      school: "School 3",
-      route:3,
-    },
-
-    {
-      id:4441,
-      name: "Bob",
-      studentid: 23423,
-      school: "School 4",
-      route:4,
-    }
-
-  ]
-
   const studentObject = [{
     id: 0,
     student_id: "",
@@ -60,7 +25,6 @@ function AdminStudentsPage(props) {
     student_id: "",
     full_name:"",
     school: "",
-    routes: "",
   }
 
   const [students, setStudents] = useState(studentObject);
@@ -111,7 +75,7 @@ function AdminStudentsPage(props) {
         <Header textToDisplay={"Admin Portal"}></Header>
         <div className='middle-content'>
           <div className='center-buttons'>
-            <Link to="/admin/newstudent/">
+            <Link to="/admin/new_student/">
               <button className='button'>Add New Student</button>
             </Link>          
           </div>

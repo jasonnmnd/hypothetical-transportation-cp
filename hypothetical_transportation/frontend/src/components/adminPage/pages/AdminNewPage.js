@@ -23,11 +23,6 @@ function AdminNewPage(props) {
           password: "",
           groups: param.column.includes("parent")?[2]:[1],
         },
-        route: {
-          school:0,
-          name: "",
-          description: "",
-        },
         school: {
           name: "",
           address: "",

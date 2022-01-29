@@ -78,6 +78,14 @@ form input {
   padding: 10px 15px;
 }
 
+form textarea {
+  background-color: #d3d3d3;
+  border-radius: 8px;
+  transition: 0.4s;
+  width: 40vw;
+  padding: 10px 15px;
+}
+
 .login .form-inner .form-group input {
   display: block;
   width: 100%;

@@ -5,11 +5,10 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import AssistedLocationModal from "../modals/AssistedLocationModal";
 
-//not sure if it's going to work
-//right now, for some reason when clicking on save, it redirects to /?id=input&name=input
 //input1: title of form
 //input2: list of fields?
 //input3: a typed object matching the fields
+//input4: string action determining new or edit
 function EditForm(props) {
     const navigate = useNavigate();
     const [openModal, setOpenModal] = useState(false);
@@ -21,12 +20,29 @@ function EditForm(props) {
             props.obj.school=props.column.split("_")[0];
         }
         
-        if(action==="edit"){
+        if(props.action==="edit"){
             axios
                 .put(`/api/${col}/${props.obj.id}/`,props.obj)
                 .then(res =>{
                     // console.log(props.obj)
-                    navigate(`/admin/${col}/${props.obj.id}/`)
+                    if(props.column.includes("parent")){
+                        axios.get(`/api/student/?guardian=${props.obj.id}`)
+                            .then(res => {
+                            if(res.data.results.length > 0){
+                                res.data.results.map((stu)=>{
+                                    stu.address=props.obj.address
+                                    axios
+                                        .put(`/api/student/${stu.id}/`,stu)
+                                        .then(res =>{
+                                        }).catch(err => console.log(err));
+                                })
+                            }
+                            navigate(`/admin/${col}/${props.obj.id}/`)
+                            }).catch(err => console.log(err));
+                    }
+                    else{
+                        navigate(`/admin/${col}/${props.obj.id}/`)
+                    }
 
                 }).catch(err => console.log(err));
         }else if(props.action==="new"){
@@ -51,14 +67,8 @@ function EditForm(props) {
     }
 
     const confirmation = (e)=>{
-
         e.preventDefault();
-        if(props.column.includes("parent")){
-            setOpenModal(true)
-        }
-        else{
-            submit()
-        }
+        setOpenModal(true)
     }
 
     const handleConfirmAddress = () => {
@@ -68,7 +78,7 @@ function EditForm(props) {
     
     return (
         <div>
-            <div className='confirm_location'>{openModal && <AssistedLocationModal closeModal={setOpenModal} handleConfirmAddress={handleConfirmAddress} address={obj.address}></AssistedLocationModal>}</div>
+            <div className='confirm_location'>{openModal && <AssistedLocationModal closeModal={setOpenModal} handleConfirmAddress={handleConfirmAddress} address={props.obj.address}></AssistedLocationModal>}</div>
             <form>
                 <div className="form-inner">
                     <h2>{props.action+" "+props.column}</h2>
@@ -101,9 +111,9 @@ function EditForm(props) {
 EditForm.propTypes = {
     column: PropTypes.string,
     fields: PropTypes.arrayOf(PropTypes.string),
-    obj: PropTypes.string,
+    obj: PropTypes.object,
     setobj: PropTypes.func,
-    action: PropTypes.func
+    action: PropTypes.string
 }
 
 const mapStateToProps = (state) => ({
