@@ -10,7 +10,11 @@ function ResetPasswordPage(props){
     const [values, setValue] = useState({ old: "", new: "", confirm:"" });
     
     const saveNewPassword = () => {
-
+        if (values.new === values.confirm) {
+            console.log("Passwords match");
+        } else {
+            console.log("Passwords do not match");
+        }
     }
 
     const resetHandler = (e) => {
@@ -66,12 +70,15 @@ function ResetPasswordPage(props){
 
                         <div className="divider15px" />
                         <button onClick={resetHandler}>Confirm</button>
+
+                        <div className="divider15px" />
+                        <Link to={"/account"}>
+                            <button>Back</button>
+                        </Link>
+
                         {<div className="message">{message}</div>}
                     </div>
                 </form>
-                <Link to={"/account"}>
-                    <button>Back</button>
-                </Link>
             </div>
         </div>
     );
@@ -80,7 +87,7 @@ function ResetPasswordPage(props){
 ResetPasswordPage.propTypes = {
     user: PropTypes.shape({
         id: PropTypes.number,
-        email: PropTypes.email,
+        email: PropTypes.string,
         full_name: PropTypes.string,
         address: PropTypes.string,
         groups: PropTypes.arrayOf(PropTypes.number)

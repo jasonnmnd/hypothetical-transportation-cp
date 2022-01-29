@@ -38,7 +38,7 @@ AdminPage.propTypes = {
   isAuthenticated: PropTypes.bool,
   user: PropTypes.shape({
     id: PropTypes.number,
-    email: PropTypes.email,
+    email: PropTypes.string,
     full_name: PropTypes.string,
     address: PropTypes.string,
     groups: PropTypes.arrayOf(PropTypes.number)
