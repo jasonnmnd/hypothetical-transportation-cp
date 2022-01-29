@@ -28,7 +28,7 @@ function ResetPasswordPage(props){
 
     return(
         <div className={"parent-page"}>
-            <Header textToDisplay={props.user.admin? "Admin Portal": "Parent Portal"}></Header>
+            <Header textToDisplay={props.user.groups[0]==1 ? "Admin Portal": "Parent Portal"}></Header>
             <SidebarSliding/>
             <div className="welcome">
                 <form className={"center"}>
@@ -72,9 +72,11 @@ function ResetPasswordPage(props){
                         <button onClick={resetHandler}>Confirm</button>
 
                         <div className="divider15px" />
-                        <Link to={"/account"}>
+                        {props.user.groups[0]==1 ? <Link to={"/account"}>
                             <button>Back</button>
-                        </Link>
+                        </Link> : <Link to={"/account"}>
+                            <button>Back</button>
+                        </Link>}
 
                         {<div className="message">{message}</div>}
                     </div>

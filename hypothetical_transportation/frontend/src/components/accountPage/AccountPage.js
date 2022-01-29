@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import SidebarSliding from "../adminPage/components/sidebar/SidebarSliding";
 import Header from "../header/Header";
 import { connect } from 'react-redux';
@@ -21,9 +21,9 @@ function AccountPage(props){
                         <Link to={"/account/password"}>
                             <button>Change Password</button>
                         </Link>
-                        {props.user.admin? <Link to={"/admin"}>
+                        {props.user.groups[0]==1 ? <Link to={"/admin"}>
                             <button>Back</button>
-                        </Link>:<Link to={"/parent"}>
+                        </Link> : <Link to={"/parent"}>
                             <button>Back</button>
                         </Link>}
                     </div>
