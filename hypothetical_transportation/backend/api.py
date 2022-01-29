@@ -10,6 +10,7 @@ from .models import School, Route, Student
 from .serializers import UserSerializer, StudentSerializer, RouteSerializer, SchoolSerializer
 from .search import DynamicSearchFilter
 from .customfilters import StudentCountShortCircuitFilter
+from .permissions import is_admin
 
 
 def get_filter_dict(model):
@@ -67,7 +68,10 @@ class UserViewSet(viewsets.ModelViewSet):
     ordering_fields = ['email', 'full_name']
 
     def get_queryset(self):
-        return get_user_model().objects.all().distinct()
+        if is_admin(self.request.user):
+            return get_user_model().objects.all().distinct()
+        else:
+            return get_user_model().objects.filter(id=self.request.user.id).distinct()
 
     @action(detail=False)
     def fields(self, request):
@@ -86,7 +90,14 @@ class RouteViewSet(viewsets.ModelViewSet):
     ordering_fields = ['school__name', 'name', 'students']
 
     def get_queryset(self):
-        return Route.objects.all().distinct()
+        # Only return routes associated with children of current user
+        if is_admin(self.request.user):
+            return Route.objects.all().distinct()
+        else:
+            students_queryset = self.request.user.students
+            return Route.objects.filter(id__in=students_queryset.values('id')).distinct()
+            #return Route.objects.all().distinct()
+
 
     @action(detail=False)
     def fields(self, request):
@@ -106,7 +117,13 @@ class SchoolViewSet(viewsets.ModelViewSet):
     # search_fields = [self.request.querystring]
 
     def get_queryset(self):
-        return School.objects.all().distinct()
+        if is_admin(self.request.user):
+            return School.objects.all().distinct()
+        else:
+            # Only return schools associated with children of current user
+            students_queryset = self.request.user.students
+            return School.objects.filter(id__in=students_queryset.values('id')).distinct()
+
 
     @action(detail=False)
     def fields(self, request):
@@ -124,9 +141,10 @@ class StudentViewSet(viewsets.ModelViewSet):
     ordering_fields = ['school__name', 'student_id', 'full_name']
 
     def get_queryset(self):
-        # modify to return all if admin
-        # return self.request.user.students.all().distinct()
-        return Student.objects.all().distinct()
+        if is_admin(self.request.user):
+            return Student.objects.all().distinct()
+        else:
+            return self.request.user.students.all().distinct()
 
     def perform_create(self, serializer):
         serializer.save()
