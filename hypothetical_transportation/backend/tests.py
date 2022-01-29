@@ -91,6 +91,7 @@ class PermissionViews(TestCase):
                                               {'email': 'admin@example.com', 'password': 'wordpass'}),
                                           content_type='application/json')
         self.admin_token = login_response.data['token']
+        self.admin_user = admin_user
 
         # SET UP USER 1
         normal_user1 = get_user_model().objects.create_user(email='user1@example.com', password='wordpass',
@@ -101,6 +102,7 @@ class PermissionViews(TestCase):
                                               {'email': 'user1@example.com', 'password': 'wordpass'}),
                                           content_type='application/json')
         self.user1_token = login_response.data['token']
+        self.normal_user1 = normal_user1
 
         # SET UP USER 2
         normal_user2 = get_user_model().objects.create_user(email='user2@example.com', password='wordpass',
@@ -108,7 +110,7 @@ class PermissionViews(TestCase):
         normal_user2.groups.add(guardian_group)
         login_response = self.client.post('/api/auth/login',
                                           json.dumps(
-                                              {'email': 'user1@example.com', 'password': 'wordpass'}),
+                                              {'email': 'user2@example.com', 'password': 'wordpass'}),
                                           content_type='application/json')
         self.user2_token = login_response.data['token']
 
@@ -132,7 +134,6 @@ class PermissionViews(TestCase):
         # User 2 Children
         student4 = Student.objects.create(full_name='first last', address='', active=True,
                                           school=school4, routes=route4, guardian=normal_user2, student_id=1)
-
         self.factory = RequestFactory()
         self.client = Client()
 
@@ -151,4 +152,28 @@ class PermissionViews(TestCase):
     def test_admin_sees_all_users(self):
         response = self.client.get('/api/user/', HTTP_AUTHORIZATION=f'Token {self.admin_token}')
         self.assertEqual(len(response.data['results']), 3)
+
+    def test_user_only_sees_own_students(self):
+        response = self.client.get('/api/student/', HTTP_AUTHORIZATION=f'Token {self.user1_token}')
+        self.assertEqual(len(response.data['results']), 3)
+        response = self.client.get('/api/student/', HTTP_AUTHORIZATION=f'Token {self.user2_token}')
+        self.assertEqual(len(response.data['results']), 1)
+
+    def test_user_only_sees_own_students_routes(self):
+        response = self.client.get('/api/route/', HTTP_AUTHORIZATION=f'Token {self.user1_token}')
+        self.assertEqual(len(response.data['results']), 3)
+        response = self.client.get('/api/route/', HTTP_AUTHORIZATION=f'Token {self.user2_token}')
+        self.assertEqual(len(response.data['results']), 1)
+
+    def test_user_only_sees_own_students_schools(self):
+        response = self.client.get('/api/school/', HTTP_AUTHORIZATION=f'Token {self.user1_token}')
+        self.assertEqual(len(response.data['results']), 3)
+        response = self.client.get('/api/school/', HTTP_AUTHORIZATION=f'Token {self.user2_token}')
+        self.assertEqual(len(response.data['results']), 1)
+
+    def test_guardian_only_sees_self(self):
+        response = self.client.get('/api/user/', HTTP_AUTHORIZATION=f'Token {self.user1_token}')
+        self.assertEqual(len(response.data['results']), 1)
+        response = self.client.get('/api/user/', HTTP_AUTHORIZATION=f'Token {self.user2_token}')
+        self.assertEqual(len(response.data['results']), 1)
 

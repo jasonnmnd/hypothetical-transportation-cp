@@ -94,7 +94,7 @@ class RouteViewSet(viewsets.ModelViewSet):
             return Route.objects.all().distinct()
         else:
             students_queryset = self.request.user.students
-            return Route.objects.filter(id__in=students_queryset.values('id')).distinct()
+            return Route.objects.filter(id__in=students_queryset.values('routes_id')).distinct()
             #return Route.objects.all().distinct()
 
 
@@ -121,7 +121,7 @@ class SchoolViewSet(viewsets.ModelViewSet):
         else:
             # Only return schools associated with children of current user
             students_queryset = self.request.user.students
-            return School.objects.filter(id__in=students_queryset.values('id')).distinct()
+            return School.objects.filter(id__in=students_queryset.values('school_id')).distinct()
 
 
     @action(detail=False)
@@ -133,7 +133,8 @@ class SchoolViewSet(viewsets.ModelViewSet):
 class StudentViewSet(viewsets.ModelViewSet):
     serializer_class = StudentSerializer
     permission_classes = [
-        permissions.IsAuthenticated
+        # permissions.IsAuthenticated
+        permissions.AllowAny
     ]
     filter_backends = [DjangoFilterBackend, DynamicSearchFilter, filters.OrderingFilter]
     filterset_fields = get_filter_dict(Student)
