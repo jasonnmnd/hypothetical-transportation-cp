@@ -1,14 +1,47 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import ParentTable from "./components/ParentTable";
 import Header from "../header/Header";
-import { Routes, Route, Navigate } from "react-router-dom";
 import "./parentPage.css";
+import axios from "axios";
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { logout } from "../../actions/auth";
+import AdminTable from "../adminPage/components/table/AdminTable";
 
-function ParentPage( props ) {
+function ParentPage(props) {
+
+  const emptyStudent = {
+    student_id: "",
+    full_name:"",
+    school: 0,
+    routes: 0
+  }
+
+  const studentObject = [{
+    id: 0,
+    student_id: "",
+    full_name:"",
+    address: "",
+    guardian: 0,
+    routes: 0,
+    school: 0,
+  }]
+
+  const [students, setStudents] = useState(studentObject);
+    
+  const getStudents = () => {
+    axios.get(`/api/student/?guardian=${props.user.id}`)
+        .then(res => {
+          console.log(res.data.results)
+          setStudents(res.data.results);
+        }).catch(err => console.log(err));
+    }
+
+  useEffect(() => {
+      getStudents();
+    }, []);
+
     return (
       
         <div className="parent-page">
@@ -28,12 +61,12 @@ function ParentPage( props ) {
             <br></br>
 
             <div className="page-description">
-              <h2>
-                  Your Students
-              </h2>
+              <ParentTable title={"Your Students"} header={Object.keys(emptyStudent)} data={students}></ParentTable>
             </div>
-            
-            <ParentTable />
+            {/* <ParentTable /> */}
+
+
+
           </div>
           
         </div>

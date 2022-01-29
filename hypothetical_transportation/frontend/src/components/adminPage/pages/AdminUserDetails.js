@@ -38,7 +38,8 @@ function AdminUserDetails(props) {
   const emptyStudent = {
     student_id: "",
     full_name:"",
-    address: "",
+    routes:"",
+    school:"",
   }
 
   const studentObject = [{

@@ -5,20 +5,21 @@ import PropTypes from 'prop-types';
 
 const ParentRow = ( props ) => {
     return (
-        <tr>
-            <td>{props.student.name}</td>
-            <td>{props.student.id}</td>
-            <td>{props.student.school}</td>
-            <td>{props.student.route}</td>
+        <tr className={props.data["routes"] === null ? "tr-red" : "tr-gray"} >
+            {props.header.map((h,i)=>{
+                return <td key={i}>{props.data[h]!==null&&props.data[h]!==undefined ? props.data[h].toString().length > 25 ? props.data[h].toString().slice(0,25)+"...":props.data[h].toString():"None"}</td>
+            })}
             <td>
-                <button type="button" onClick={() => props.handleViewClick(props.student)}>View</button>
+                <button onClick={() => props.action(props.data)}>{props.actionName}</button>
             </td>
         </tr>
     );
 };
 
 ParentRow.propTypes = {
-    handleViewClick: PropTypes.func
+    header: PropTypes.arrayOf(PropTypes.string),
+    actionName: PropTypes.string,
+    action: PropTypes.func
 }
 
 const mapStateToProps = (state) => ({

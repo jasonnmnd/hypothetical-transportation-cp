@@ -31,14 +31,7 @@ function ManStudentPage(props) {
       name: "",
       address: "",
     }]
-
-    const emptyRoutes = [{
-      id: 0,
-      name: "",
-      description: "",
-    }]
-
-
+    
     const emptyUsers = [{
       id: 0,
       full_name: "",
@@ -46,12 +39,11 @@ function ManStudentPage(props) {
       address: "",
     }]
   
-  
 
 
     const [obj, setObj] = useState(emptyStudent)
     const [schoollist, setSchoolList] = useState(emptySchoolList)
-    const [routes, setRoutes] = useState(emptyRoutes)
+    const [routes, setRoutes] = useState(null)
     const [users, setUsers] = useState(emptyUsers);
     const [error, setError] = useState("");
 
@@ -66,23 +58,38 @@ function ManStudentPage(props) {
       axios.get(`/api/student/${param.id}/`)
         .then(res => {
           setObj(res.data);
+          getRoutes(res.data.school);
         }).catch(err => console.log(err));
     }
 
     const getUsers = () => {
       axios.get('/api/user/')
         .then(res => {
-          console.log(res.data.results.filter(s=>!s.is_staff))
-          setUsers(res.data.results.filter(s=>!s.is_staff));
+          console.log(res.data.results.filter(s=>!s.groups.includes(1)))
+          setUsers(res.data.results.filter(s=>!s.groups.includes(1)));
         }).catch(err => console.log(err));
     }
 
   const getRoutes = (i) => {
-    axios.get(`/api/route?school=${i}`)
+    if(i!=="" && i!==null && i!==undefined && i!==0){
+    axios.get(`/api/route/?school=${i}`)
       .then(res => {
         setRoutes(res.data.results);
       }).catch(err => console.log(err));
+    }
+    else{
+      setRoutes(null)
+    }
   }
+
+  const setAddress = (e)=>{
+    setObj({ ...obj, ["guardian"]: e.target.value});
+    axios.get(`/api/user/${e.target.value}/`)
+      .then(res => {
+        setObj({ ...obj, ["guardian"]: e.target.value, ["address"]: res.data.address});
+      }).catch(err => console.log(err));
+  }
+
 
   const submit = () => {
     console.log(obj)
@@ -92,7 +99,6 @@ function ManStudentPage(props) {
           .post(`/api/student/`,obj)
           .then(res =>{
               navigate(`/admin/students/`)
-
           }).catch(err => console.log(err));
     }
     else{
@@ -100,7 +106,6 @@ function ManStudentPage(props) {
           .put(`/api/student/${param.id}/`,obj)
           .then(res =>{
               navigate(`/admin/students/`)
-
           }).catch(err => console.log(err));
     }
   }
@@ -108,39 +113,37 @@ function ManStudentPage(props) {
   const changeSchool = (e)=>{
     setObj({...obj, ["school"]:e.target.value, ["routes"]:""})
     getRoutes(e.target.value)
-    console.log(obj)
     console.log(routes)
   }
 
 
-    useEffect(() => {
-      getSchools();
-      getUsers();
-      if(props.action==="edit"){
-        getStudent();
-        getRoutes(obj.school);
-      }
-    }, []);
+  useEffect(() => {
+    getSchools();
+    getUsers();
+    setRoutes(null)
+    if(props.action==="edit"){
+      getStudent();
+    }
+  }, []);
 
 
   const confirmation = (e)=>{
-  e.preventDefault();
-  if(obj.guardian===""){
-    setError("Guardian cannot be null")
-  }
-  else if(obj.school===""){
-    setError("School cannot be null")
-  }
-  else{
-    setOpenModal(true)
-  }
+    e.preventDefault();
+    if(obj.guardian===""){
+      setError("Guardian cannot be null")
+    }
+    else if(obj.school===""){
+      setError("School cannot be null")
+    }
+    else{
+      submit()
+      // setOpenModal(true)
+    }
 }
 
 const handleConfirmAddress = () => {
-
-   
-      console.log("Address confirmed")
-      submit()
+  console.log("Address confirmed")
+  submit()
 }
 
 
@@ -148,7 +151,7 @@ const handleConfirmAddress = () => {
       <>
         <Header textToDisplay={"Admin Portal"}></Header>
         <SidebarSliding/>
-        <div className='confirm_location'>{openModal && <AssistedLocationModal closeModal={setOpenModal} handleConfirmAddress={handleConfirmAddress} address={obj.address}></AssistedLocationModal>}</div>
+        {/* <div className='confirm_location'>{openModal && <AssistedLocationModal closeModal={setOpenModal} handleConfirmAddress={handleConfirmAddress} address={obj.address}></AssistedLocationModal>}</div> */}
         <div className='admin-edit-page'>
         <form>
                 <div className="form-inner">
@@ -180,29 +183,14 @@ const handleConfirmAddress = () => {
                       />
                   </div>
 
-
-                  <div className="form-group">
-                      <label htmlFor={"Address"}>Address</label>
-                      <input
-                          className="input"
-                          type={"Address"}
-                          name={"Address"}
-                          id={"Address"}
-                          value={obj.address}
-                          onChange={(e)=>{
-                              setObj({...obj, ["address"]: e.target.value})
-                          }}
-                      />
-                  </div>
-
                   <div className="form-group">
                       <label>
                         Parent:
-                        <select value={obj.guardian} onChange={(e) => setObj({ ...obj, ["guardian"]: e.target.value })}>
+                        <select value={obj.guardian} onChange={setAddress}>
                           <option value={""} >{"-----"}</option>
-                          {users.map((u,i)=>{
+                          {users!==null && users!==undefined && users.length!==0?users.map((u,i)=>{
                               return <option value={u.id} key={i}>{u.email}</option>
-                          })}
+                          }):null}
                         </select>
                       </label>
                   </div>
@@ -212,9 +200,9 @@ const handleConfirmAddress = () => {
                         School:
                         <select value={obj.school} onChange={changeSchool}>
                         <option value={""} >{"-----"}</option>
-                        {schoollist.map((u,i)=>{
+                        {schoollist!==null && schoollist!==undefined && schoollist.length!==0?schoollist.map((u,i)=>{
                             return <option value={u.id} key={i}>{u.name}</option>
-                        })}
+                        }):null}
                         </select>
                       </label>
                   </div>
@@ -224,9 +212,9 @@ const handleConfirmAddress = () => {
                         Route:
                         <select value={obj.routes} onChange={(e) => setObj({ ...obj, ["routes"]: e.target.value })}>
                           <option value={""} >{"-----"}</option>
-                          {routes.map((u,i)=>{
+                          {routes!==null && routes!==undefined && routes.length!==0?routes.map((u,i)=>{
                               return <option value={u.id} key={i}>{u.name}</option>
-                          })}
+                          }):null}
                         </select>
                       </label>
                   </div>
