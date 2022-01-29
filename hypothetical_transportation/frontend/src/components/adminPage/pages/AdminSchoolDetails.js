@@ -176,7 +176,7 @@ function AdminSchoolDetails(props) {
             }}>Delete School</button>
 
             <Link to={`/admin/route/plan/${school.id}`}>
-              <button>Route Planner</button>
+              <button>Create New Route for This School</button>
             </Link>
 
           </div>
