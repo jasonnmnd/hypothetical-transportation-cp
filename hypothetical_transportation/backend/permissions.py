@@ -2,7 +2,7 @@ from rest_framework import permissions
 
 
 def is_admin(user):
-    return user.groups.filter(name='Administrators').exists()
+    return user.groups.filter(name='Administrator').exists()
 
 
 def is_write_action(action):

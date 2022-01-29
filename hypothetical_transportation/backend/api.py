@@ -61,7 +61,7 @@ class MapsAPI(APIView):
 class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     permission_classes = [
-        permissions.AllowAny
+        permissions.IsAuthenticated
     ]
     filter_backends = [DjangoFilterBackend, DynamicSearchFilter, filters.OrderingFilter]
     filterset_fields = get_filter_dict(get_user_model())
@@ -82,8 +82,7 @@ class UserViewSet(viewsets.ModelViewSet):
 class RouteViewSet(viewsets.ModelViewSet):
     serializer_class = RouteSerializer
     permission_classes = [
-        # IsAdminOrReadOnlyParent
-        permissions.AllowAny
+        permissions.IsAuthenticated
     ]
     filter_backends = [DjangoFilterBackend, DynamicSearchFilter, StudentCountShortCircuitFilter]
     filterset_fields = get_filter_dict(Route)
@@ -108,7 +107,7 @@ class RouteViewSet(viewsets.ModelViewSet):
 class SchoolViewSet(viewsets.ModelViewSet):
     serializer_class = SchoolSerializer
     permission_classes = [
-        permissions.AllowAny
+        permissions.IsAuthenticated
     ]
     filter_backends = [DjangoFilterBackend, DynamicSearchFilter, filters.OrderingFilter]
     filterset_fields = get_filter_dict(School)
@@ -134,7 +133,7 @@ class SchoolViewSet(viewsets.ModelViewSet):
 class StudentViewSet(viewsets.ModelViewSet):
     serializer_class = StudentSerializer
     permission_classes = [
-        permissions.AllowAny
+        permissions.IsAuthenticated
     ]
     filter_backends = [DjangoFilterBackend, DynamicSearchFilter, filters.OrderingFilter]
     filterset_fields = get_filter_dict(Student)
