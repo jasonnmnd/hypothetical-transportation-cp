@@ -52,11 +52,32 @@
     }
   },
   {
+    "model": "backend.school",
+    "fields": {
+      "name": "Brown University",
+      "address": "Providence, Rhode Island"
+    }
+  },
+  {
+    "model": "backend.school",
+    "fields": {
+      "name": "Stanford University",
+      "address": "Palo Alto, California"
+    }
+  },
+  {
+    "model": "backend.school",
+    "fields": {
+      "name": "MIT",
+      "address": "Cambridge, Massachusetts"
+    }
+  },
+  {
     "model": "backend.Route",
     "fields": {
       "name": "The Trans Eternal Railway",
       "description": "Connects Neighborhood 12358W to other locations in the afterlife.",
-      "school": 1
+      "school": 2
     }
   },
   {
@@ -64,7 +85,7 @@
     "fields": {
       "name": "The Door to Earth",
       "description": "The Door to Earth",
-      "school": 1
+      "school": 3
     }
   },
   {
@@ -111,6 +132,30 @@
       "active": true,
       "school": 1,
       "student_id": 4,
+      "routes": null,
+      "guardian": 1
+    }
+  },
+  {
+    "model": "backend.Student",
+    "fields": {
+      "full_name": "Trevor",
+      "address": "The Bad Place",
+      "active": true,
+      "school": 3,
+      "student_id": 1,
+      "routes": null,
+      "guardian": 1
+    }
+  },
+  {
+    "model": "backend.Student",
+    "fields": {
+      "full_name": "Vicky",
+      "address": "The Bad Place",
+      "active": true,
+      "school": 3,
+      "student_id": 2,
       "routes": null,
       "guardian": 1
     }
