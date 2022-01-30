@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../../adminPage.css"
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -6,20 +6,31 @@ import PropTypes from 'prop-types';
 //input: a list of buttons - filter by options
 //search: takes in 2 inputs? the filter option, and the inputted text
 function SearchBar(props){
-    const [values, setValue] = useState({by: props.buttons[0], value:""})
+    const [values, setValue] = useState({filter_by: "", value:"", sort_by: ""})
     
     const searchHandler = (e)=>{
         e.preventDefault();
+        console.log(values);
         props.search(values);
-        console.log(values)
     }
+
     return(
         <form className="search">
             <div className="search-inner">
                 <div className="search-group">
+                    {props.sortBy!==undefined && props.sortBy!==null ?<label>
+                    Sort By:
+                    <select value={values.sort_by} onChange={(e) => setValue({ ...values, sort_by: e.target.value })}>
+                        <option value={""} key={"empty"}></option>
+                        {props.sortBy.map((b,i)=>{
+                            return <option value={b} key={i}>{b}</option>
+                        })}
+                    </select>
+                    </label>:null}
                     <label>
                     Filter By:
-                    <select value={values.by} onChange={(e) => setValue({ ...values, by: e.target.value })}>
+                    <select value={values.filter_by} onChange={(e) => setValue({ ...values, filter_by: e.target.value })}>
+                        <option value={""} key={"empty"}></option>
                         {props.buttons.filter(k=>k!=="routes"&&k!=="school"&&k!=="groups").map((b,i)=>{
                             return <option value={b} key={i}>{b}</option>
                         })}
@@ -48,6 +59,7 @@ function SearchBar(props){
 
 SearchBar.propTypes = {
     buttons: PropTypes.arrayOf(PropTypes.string),
+    sortBy: PropTypes.arrayOf(PropTypes.string),
     search: PropTypes.func
   }
   

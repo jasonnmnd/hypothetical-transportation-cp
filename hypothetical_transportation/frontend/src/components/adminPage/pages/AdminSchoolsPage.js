@@ -52,10 +52,23 @@ function AdminSchoolsPage(props) {
   }, []);
 
 
-  const searchSchool = (i1,i2) => {
-    axios.get(`/api/school/?search=${i2}&search_fields=${i1}`, config)
+  const searchSchool = (i1,i2,i3) => {
+    let url=`/api/school/`
+    if(i1==="" || i2==="" || i1===undefined || i2===undefined){
+      if(i3!==""&& i3!==undefined){
+        url=`/api/school/?ordering=${i3}`
+      }
+    }
+    else{
+      if(i3!=="" && i3!==undefined){
+        url=`/api/school/?search=${i2}&search_fields=${i1}&ordering=${i3}`
+      }
+      else{
+        url=`/api/school/?search=${i2}&search_fields=${i1}`
+      }
+    }
+    axios.get(url, config)
         .then(res => {
-          console.log(`/api/school/?search=${i2}&search_fields=${i1}`)
           setSchools(res.data.results);
         }).catch(err => console.log(err));
   }
@@ -63,7 +76,7 @@ function AdminSchoolsPage(props) {
 
   const search = (value)=>{
     //somehow get backend to update data (with usestate?)
-    searchSchool(value.by, value.value)
+    searchSchool(value.filter_by, value.value, value.sort_by)
   }
 
   return (
@@ -78,7 +91,7 @@ function AdminSchoolsPage(props) {
           </div>
           <div className='table-and-buttons'>
             {/* <AdminTable title={title} header={header} data={data} search={search}/> */}
-            <AdminTable title={title} header={Object.keys(emptySchools[0])} data={schools} search={search}/>
+            <AdminTable title={title} header={Object.keys(emptySchools[0])} data={schools} search={search} sortBy={["name"]}/>
               <div className="prev-next-buttons">
                 <button onClick={handlePrevClick}>Prev</button>
                 <button onClick={handleNextClick}>Next</button> 
