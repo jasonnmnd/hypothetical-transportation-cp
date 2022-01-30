@@ -1,21 +1,31 @@
 import React from "react";
 import { useState } from "react";
-import { Link } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import SidebarSliding from "../adminPage/components/sidebar/SidebarSliding";
 import Header from "../header/Header";
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import isAdmin from "../../utils/user";
 import config from "../../utils/config";
+import axios from "axios";
 
 function ResetPasswordPage(props){
+    const navigate = useNavigate();
     const [values, setValue] = useState({ old: "", new: "", confirm:"" });
     
     const saveNewPassword = () => {
         if (values.new === values.confirm) {
-            console.log("Passwords match");
+            
+            const payload = {
+                old_password: values.old,
+                new_password: values.new
+            }
+
+            axios.put(`/api/auth/change-password`, payload, config(props.token))
+            .then(res => {navigate(`/`)})
+            .catch(err => console.log(err))
         } else {
-            console.log("Passwords do not match");
+            alert("Passwords do not match. Try again.")
         }
     }
 
