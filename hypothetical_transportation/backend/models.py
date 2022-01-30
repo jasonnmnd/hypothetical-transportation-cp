@@ -31,7 +31,7 @@ class Student(models.Model):
     )
     routes = models.ForeignKey(
         Route, related_name='students',
-        on_delete=models.CASCADE, null=True
+        on_delete=models.SET_NULL, null=True
     )
     guardian = models.ForeignKey(
         settings.AUTH_USER_MODEL, related_name='students',
