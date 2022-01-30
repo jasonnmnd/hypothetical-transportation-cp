@@ -7,6 +7,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import config from '../../../utils/config';
 
 function AdminUsersPage(props) {
 
@@ -33,7 +34,7 @@ function AdminUsersPage(props) {
   const [users, setUsers] = useState(emptyUser);
 
   const getUsers = () => {
-    axios.get('/api/user/')
+    axios.get('/api/user/', config(props.token))
         .then(res => {
             console.log(res.data.results)
             console.log(res.data.results[0].groups)
@@ -47,7 +48,7 @@ function AdminUsersPage(props) {
 
 
   const searchUser = (i1,i2) => {
-    axios.get(`/api/user/?search=${i2}&search_fields=${i1}`)
+    axios.get(`/api/user/?search=${i2}&search_fields=${i1}`, config(props.token))
         .then(res => {
           console.log(`/api/user/?search=${i2}&search_fields=${i1}`)
           setUsers(res.data.results);
@@ -90,7 +91,8 @@ AdminUsersPage.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
-  user: state.auth.user
+  user: state.auth.user,
+  token: state.auth.token
 });
 
 export default connect(mapStateToProps)(AdminUsersPage)
