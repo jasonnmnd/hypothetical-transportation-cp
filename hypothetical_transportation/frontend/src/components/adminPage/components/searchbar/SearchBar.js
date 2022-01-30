@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 
 //input: a list of buttons - filter by options
 //search: takes in 2 inputs? the filter option, and the inputted text
+
 function SearchBar(props){
     const [values, setValue] = useState({by: props.buttons[0], value:""})
     

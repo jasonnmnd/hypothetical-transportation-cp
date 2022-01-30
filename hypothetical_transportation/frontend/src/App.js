@@ -19,7 +19,6 @@ import AdminRoutePlanner from "./components/adminPage/pages/AdminRoutePlanner";
 import PrivateRoute from "./components/common/PrivateRoute";
 import { loadUser } from "./actions/auth";
 import { connect } from "react-redux";
-import PropTypes from "prop-types";
 import Alerts from "./components/alerts/Alerts";
 import GeneralTable from "./components/common/GeneralTable";
 import GeneralAdminUsersPage from "./components/adminPage/newPages/GeneralAdminUsersPage";

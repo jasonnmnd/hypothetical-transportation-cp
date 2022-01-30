@@ -5,17 +5,7 @@ import "../adminPage/adminPage.css";
 
 function GeneralTable( props ) {
   
-
-  const [columnNames, setColumnNames] = useState([]);
   const columnsToHide = ["_id"];
-
-  // const mapDynamicColumns = () => {
-  //   Object.keys(props.rows[0]).forEach((col) => {
-  //     if (!columnNames.includes(col)) {
-  //       setColumnNames([...columnNames, col]);
-  //     }
-  //   });
-  // };
 
   const addTableRow = (rowData) => {
     let row = [];
@@ -38,7 +28,7 @@ function GeneralTable( props ) {
                 })
             }
             <td>
-                <button onClick={() => props.action(rowData)}>{props.actionName}</button>
+                <button className="button" onClick={() => props.action(rowData)}>{props.actionName}</button>
             </td>
         </tr>
     )
@@ -73,7 +63,7 @@ function GeneralTable( props ) {
     }
     // mapDynamicColumns();
     return (
-      <table>
+      <table className='center'>
         <thead>
           <tr>
               {mapTableColumns()}
@@ -103,7 +93,7 @@ function GeneralTable( props ) {
 }
 
 GeneralTable.propTypes = {
-    rows: PropTypes.arrayOf(PropTypes.obj),
+    rows: PropTypes.array,
     actionName: PropTypes.string,
     action: PropTypes.func,
     columnNames: PropTypes.arrayOf(PropTypes.string)
