@@ -30,6 +30,13 @@ class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
         fields = '__all__'
+        validators = [
+            serializers.UniqueTogetherValidator(
+                queryset=model.objects.all(),
+                fields=('school', 'student_id'),
+                message='Serializer says no too'
+            )
+        ]
 
     def validate(self, data):
         """
@@ -37,6 +44,9 @@ class StudentSerializer(serializers.ModelSerializer):
         :param data:
         :return:
         """
+        if self.partial:
+            # Handles patch to avoid breaking things
+            return data
         if not data['school'] or not data['routes']:
             # No consistency to enforce
             return data

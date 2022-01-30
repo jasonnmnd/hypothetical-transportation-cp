@@ -149,8 +149,8 @@ class StudentViewSet(viewsets.ModelViewSet):
         else:
             return self.request.user.students.all().distinct()
 
-    def perform_create(self, serializer):
-        serializer.save()
+    # def perform_create(self, serializer):
+    #     serializer.save()
 
     @action(detail=False, permission_classes=[permissions.AllowAny])
     def fields(self, request):
