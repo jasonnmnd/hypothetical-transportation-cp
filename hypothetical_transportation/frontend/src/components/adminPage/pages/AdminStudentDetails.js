@@ -11,26 +11,6 @@ import PropTypes from 'prop-types';
 function AdminStudentDetails(props) {
   const navigate = useNavigate();
   const param = useParams();
-
-  const exampleStudent = {
-    name: "First Last",
-    id: param.id,
-    student_id: 444,
-    school: {//change this to school id for easier query?
-      id: 123,
-      name: "Random school"
-    },
-    route: {//change this to route id for easier query? because we need to access route through details page too
-      id:100,
-      name: "route 1"
-    } ,
-    parent: {//change this to parent id for easier query? then ask backend to pass parent name and email information?
-      id:30,
-      name:"Example Parent",
-      email: "parent@parent.com"
-    }
-  }
-
   const studentObject = {
     id: 0,
     student_id: "",
@@ -41,7 +21,6 @@ function AdminStudentDetails(props) {
     routes: 0,
     school: 0,
   }
-
   const [student, setStudent] = useState(studentObject);
   const [parentName,setParentName] = useState("");
   const [schoolName,setSchoolName] = useState("");
@@ -51,8 +30,6 @@ function AdminStudentDetails(props) {
   const getInfo = () => {
     axios.get(`/api/student/${param.id}/`)
       .then(res => {
-        console.log(`/api/student/${param.id}/`)
-        console.log(res.data)
         setStudent(res.data);
         axios.get(`/api/user/${res.data.guardian}/`)
           .then(res => {
@@ -131,7 +108,7 @@ function AdminStudentDetails(props) {
                   {/* Table for Students Here */}
 
                   <div className='edit-delete-buttons'>
-                        <Link to={`/admin/edit_student/${exampleStudent.id}`}><button>Edit Student</button></Link>
+                        <Link to={`/admin/edit_student/${student.id}`}><button>Edit Student</button></Link>
                         <button onClick={() => {
                           setOpenModal(true);
                         }}>Delete Student</button>

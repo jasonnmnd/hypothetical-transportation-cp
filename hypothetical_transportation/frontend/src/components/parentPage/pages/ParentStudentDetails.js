@@ -21,13 +21,29 @@ function ParentStudentDetails(){
       }
 
     const [student, setStudent] = useState(studentObject);
+    const [schoolName,setSchoolName] = useState("");
+    const [routeName,setRouteName] = useState("");
+    const [route,setRouteExist] = useState(false);
 
     const getStudentInfo = () => {
         axios.get(`/api/student/${param.id}/`)
         .then(res => {
-            console.log(res.data);
             setStudent(res.data);
-        }).catch(err => console.log(err));
+            axios.get(`/api/school/${res.data.school}/`)
+            .then(res => {
+                setSchoolName(res.data.name);
+            }).catch(err => console.log(err));
+            if (res.data.routes!==undefined && res.data.routes!==null){
+            axios.get(`/api/route/${res.data.routes}/`)
+                .then(res => {
+                setRouteName(res.data.name);
+                setRouteExist(true)
+            }).catch(err => console.log(err));
+            }
+            else{
+            setRouteName("NONE")
+            }
+    }).catch(err => console.log(err));
     }
 
     useEffect(() => {
@@ -50,11 +66,11 @@ function ParentStudentDetails(){
                         </div>
                         <div className='info-fields'>
                             <h2>School:</h2>
-                            <h3>{student.school}</h3>
+                            <h3>{schoolName}</h3>
                         </div>
                         <div className='info-fields'>
                             <h2>Route:</h2>
-                            <h3>{student.routes}</h3>
+                            <h3>{route===true?routeName:"NONE"}</h3>
                         </div>
 
                         <div className='edit-delete-buttons'>
