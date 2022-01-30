@@ -5,17 +5,7 @@ import "../adminPage/adminPage.css";
 
 function GeneralTable( props ) {
   
-
-  const [columnNames, setColumnNames] = useState([]);
   const columnsToHide = ["_id"];
-
-  // const mapDynamicColumns = () => {
-  //   Object.keys(props.rows[0]).forEach((col) => {
-  //     if (!columnNames.includes(col)) {
-  //       setColumnNames([...columnNames, col]);
-  //     }
-  //   });
-  // };
 
   const addTableRow = (rowData) => {
     let row = [];
@@ -73,7 +63,7 @@ function GeneralTable( props ) {
     }
     // mapDynamicColumns();
     return (
-      <table>
+      <table className='center'>
         <thead>
           <tr>
               {mapTableColumns()}
