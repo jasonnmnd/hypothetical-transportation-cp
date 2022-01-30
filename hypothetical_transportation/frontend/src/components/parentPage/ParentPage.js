@@ -48,7 +48,7 @@ function ParentPage(props) {
       
         <div className="parent-page">
           <Header textToDisplay={"Parent Portal"}></Header>
-          {isAdmin(props.user)?        <SidebarSliding/>:null}
+          {isAdmin(props.user)? <SidebarSliding/>:null}
           <div>
             <div className="welcome">
               <h2>
