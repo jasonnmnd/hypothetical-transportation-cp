@@ -9,6 +9,7 @@ import axios from 'axios';
 import AssistedLocationModal from '../components/modals/AssistedLocationModal';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import config from '../../../utils/config';
 
 
 
@@ -19,7 +20,7 @@ function AdminUserDetails(props) {
   const [openModal, setOpenModal] = useState(false);
 
   const handleConfirmDelete = () => {
-    axios.delete(`/api/user/${param.id}/`)
+    axios.delete(`/api/user/${param.id}/`, config(props.token))
         .then(res => {
           console.log("DELETED User");
           navigate(`/admin/users/`)
@@ -57,7 +58,7 @@ function AdminUserDetails(props) {
   const [students, setStudents] = useState(studentObject);
 
   const getUser = () => {
-    axios.get(`/api/user/${param.id}/`)
+    axios.get(`/api/user/${param.id}/`, config(props.token))
         .then(res => {
           setUser(res.data);
           res.data.groups.includes(1)?setColumn("admin_user"):setColumn("parent_user")
@@ -65,7 +66,7 @@ function AdminUserDetails(props) {
     }
   
   const getStudents = () => {
-    axios.get(`/api/student/?guardian=${param.id}`)
+    axios.get(`/api/student/?guardian=${param.id}`, config(props.token))
         .then(res => {
           console.log(res.data.results)
           setStudents(res.data.results);
@@ -137,7 +138,8 @@ AdminUserDetails.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
-  user: state.auth.user
+  user: state.auth.user,
+  token: state.auth.token
 });
 
 export default connect(mapStateToProps)(AdminUserDetails)

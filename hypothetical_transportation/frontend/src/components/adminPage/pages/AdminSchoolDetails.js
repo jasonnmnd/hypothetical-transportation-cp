@@ -8,6 +8,7 @@ import SidebarSliding from '../components/sidebar/SidebarSliding';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import config from '../../../utils/config';
 
 
 function AdminSchoolDetails(props) {
@@ -58,7 +59,7 @@ function AdminSchoolDetails(props) {
   const handleConfirmDelete = (schoolName) => {
     //Replace with API call to delete school and all its associated routes/students
     //Route back to students page
-    axios.delete(`/api/school/${param.id}/`)
+    axios.delete(`/api/school/${param.id}/`, config(props.token))
         .then(res => {
           console.log("DELETED Route");
           navigate(`/admin/schools/`)
@@ -98,7 +99,7 @@ function AdminSchoolDetails(props) {
   const [routes, setRoutes] = useState(emptyRoute);
 
   const getSchool = () => {
-    axios.get(`/api/school/${param.id}/`)
+    axios.get(`/api/school/${param.id}/`, config(props.token))
         .then(res => {
           console.log("hello")
           console.log(res.data)
@@ -107,7 +108,7 @@ function AdminSchoolDetails(props) {
     }
 
   const getStudent = () => {
-    axios.get(`/api/student/?school=${param.id}`)
+    axios.get(`/api/student/?school=${param.id}`, config(props.token))
         .then(res => {
           console.log(res.data.results)
             setStudents(res.data.results);
@@ -115,7 +116,7 @@ function AdminSchoolDetails(props) {
     }
   
   const getRoutes = () => {
-    axios.get(`/api/route/?school=${param.id}`)
+    axios.get(`/api/route/?school=${param.id}`, config(props.token))
         .then(res => {
           console.log(res.data.results)
             setRoutes(res.data.results);
@@ -195,7 +196,8 @@ AdminSchoolDetails.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
-  user: state.auth.user
+  user: state.auth.user,
+  token: state.auth.token
 });
 
 export default connect(mapStateToProps)(AdminSchoolDetails)

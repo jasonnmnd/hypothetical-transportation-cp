@@ -7,6 +7,7 @@ import SidebarSliding from '../components/sidebar/SidebarSliding';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import config from '../../../utils/config';
 
 function AdminStudentDetails(props) {
   const navigate = useNavigate();
@@ -28,19 +29,19 @@ function AdminStudentDetails(props) {
   const [route,setRouteExist] = useState(false);
 
   const getInfo = () => {
-    axios.get(`/api/student/${param.id}/`)
+    axios.get(`/api/student/${param.id}/`, config(props.token))
       .then(res => {
         setStudent(res.data);
-        axios.get(`/api/user/${res.data.guardian}/`)
+        axios.get(`/api/user/${res.data.guardian}/`, config(props.token))
           .then(res => {
             setParentName(res.data.full_name);
         }).catch(err => console.log(err));
-        axios.get(`/api/school/${res.data.school}/`)
+        axios.get(`/api/school/${res.data.school}/`, config(props.token))
           .then(res => {
             setSchoolName(res.data.name);
         }).catch(err => console.log(err));
         if (res.data.routes!==undefined && res.data.routes!==null){
-          axios.get(`/api/route/${res.data.routes}/`)
+          axios.get(`/api/route/${res.data.routes}/`, config(props.token))
             .then(res => {
               setRouteName(res.data.name);
               setRouteExist(true)
@@ -58,7 +59,7 @@ function AdminStudentDetails(props) {
   const handleConfirmDelete = () => {
     //Replace with API call to delete student
     //Route back to students page
-    axios.delete(`/api/student/${param.id}/`).then(res => {
+    axios.delete(`/api/student/${param.id}/`, config(props.token)).then(res => {
       console.log("DELETED STUDENT");
       navigate(`/admin/students/`)
 
@@ -128,7 +129,8 @@ AdminStudentDetails.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
-  user: state.auth.user
+  user: state.auth.user,
+  token: state.auth.token
 });
 
 export default connect(mapStateToProps)(AdminStudentDetails)
