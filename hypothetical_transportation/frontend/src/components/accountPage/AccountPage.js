@@ -10,7 +10,7 @@ function AccountPage(props){
     
     return(
         <div>
-            <Header textToDisplay={isAdmin(props.user) ? "Admin Portal": "Parent Portal"}></Header>
+            <Header textToDisplay={isAdmin(props.user) ? "Admin Portal": "Parent Portal"} shouldShowOptions={true}></Header>
             {isAdmin(props.user)?        <SidebarSliding/>:null}
             <div className="welcome">
                 <h1>Account Details</h1>

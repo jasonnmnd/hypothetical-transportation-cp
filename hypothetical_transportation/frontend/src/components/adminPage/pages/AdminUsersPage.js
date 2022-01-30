@@ -64,7 +64,7 @@ function AdminUsersPage(props) {
   return (
     <div className='admin-page'>
         <SidebarSliding/>
-        <Header textToDisplay={"Admin Portal"}></Header>
+        <Header textToDisplay={"Admin Portal"} shouldShowOptions={true}></Header>
         <div className='middle-content'>
             <div className='add-new-users-buttons'>
                   <Link to="/admin/new/admin_user">

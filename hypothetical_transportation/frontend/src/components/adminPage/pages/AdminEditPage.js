@@ -55,7 +55,7 @@ function AdminEditPage(props) {
 
   return (
     <>
-      <Header textToDisplay={"Admin Portal"}></Header>
+      <Header textToDisplay={"Admin Portal"} shouldShowOptions={true}></Header>
       <SidebarSliding/>
       <div className='admin-edit-page'>  
         <EditForm column={param.column} fields={fields} obj={obj} setobj={setobj} action={"edit"}></EditForm>

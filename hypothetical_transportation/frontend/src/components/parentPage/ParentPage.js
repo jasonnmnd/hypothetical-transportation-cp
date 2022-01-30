@@ -48,7 +48,7 @@ function ParentPage(props) {
     return (
       
         <div className="parent-page">
-          <Header textToDisplay={"Parent Portal"}></Header>
+          <Header textToDisplay={"Parent Portal"} shouldShowOptions={true}></Header>
           {isAdmin(props.user)? <SidebarSliding/>:null}
           <div>
             <div className="welcome">
@@ -56,7 +56,6 @@ function ParentPage(props) {
                 Welcome,<span>{props.user.full_name}</span>
               </h2>
               <div className="button-spacing">
-                <button onClick={props.logout}>Logout</button>
                 <Link to={"/account"}>
                     <button>Account</button>
                 </Link>

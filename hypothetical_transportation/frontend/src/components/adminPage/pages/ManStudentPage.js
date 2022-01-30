@@ -148,7 +148,7 @@ const handleConfirmAddress = () => {
 
     return ( 
       <>
-        <Header textToDisplay={"Admin Portal"}></Header>
+        <Header textToDisplay={"Admin Portal"} shouldShowOptions={true}></Header>
         <SidebarSliding/>
         {/* <div className='confirm_location'>{openModal && <AssistedLocationModal closeModal={setOpenModal} handleConfirmAddress={handleConfirmAddress} address={obj.address}></AssistedLocationModal>}</div> */}
         <div className='admin-edit-page'>

@@ -40,7 +40,7 @@ function ResetPasswordPage(props){
 
     return(
         <div className={"parent-page"}>
-            <Header textToDisplay={isAdmin(props.user) ? "Admin Portal": "Parent Portal"}></Header>
+            <Header textToDisplay={isAdmin(props.user) ? "Admin Portal": "Parent Portal"} shouldShowOptions={true}></Header>
             {isAdmin(props.user)?        <SidebarSliding/>:null}
             <div className="welcome">
                 <form className={"center"}>

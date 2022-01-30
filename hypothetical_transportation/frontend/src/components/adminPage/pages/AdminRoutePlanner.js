@@ -180,7 +180,7 @@ function AdminRoutePlanner(props) {
   return (
     
     <>
-        <Header textToDisplay={"Admin Portal"}></Header>
+        <Header textToDisplay={"Admin Portal"} shouldShowOptions={true}></Header>
         <SidebarSliding/>
         <div className='middle-justify'>
           <div className='admin-details'>

@@ -13,7 +13,7 @@ function AdminPage( props ) {
         <div className="admin-page">
           {/* <Sidebar buttons={sidebardata}></Sidebar> */}
           <SidebarSliding/>
-          <Header textToDisplay={"Admin Portal"}></Header>
+          <Header textToDisplay={"Admin Portal"} shouldShowOptions={true}></Header>
           
           {/* <EditForm title="Title Here" fields={fields} obj={obj} setobj={setobj}></EditForm> */}
         
@@ -23,7 +23,6 @@ function AdminPage( props ) {
               <h3><p>Select an option from the sidebar for administrative abilities</p></h3>
               <h3><p>You can edit parental users, students, schools, and routes</p></h3>
               <div className="home-buttons">
-                <button onClick={props.logout}>Logout</button>
                 <Link to={"/account"}>
                   <button>Account</button> 
                 </Link>

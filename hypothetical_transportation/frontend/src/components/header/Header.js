@@ -3,8 +3,9 @@ import Logo from '../assets/headerLogo.png';
 import './header.css';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { logout } from "../../actions/auth";
 
-function Header( props ){
+function Header(props){
 
     return(
         <div className = "header">
@@ -13,18 +14,23 @@ function Header( props ){
                 
             </div>
 
-            {/* <div className="divider400px"/> */}
-
             <div className="header-text">
                 <h1>{props.textToDisplay}</h1>
             </div>
+            
+            {props.shouldShowOptions &&
+            <div className="header-button">
+                <button onClick={props.logout}>Logout</button>
+            </div>
+            }
         </div>
             
     )
 }
 
 Header.propTypes = {
-    textToDisplay: PropTypes.string
+    textToDisplay: PropTypes.string,
+    shouldShowOptions: PropTypes.bool
 }
 
 const mapStateToProps = (state) => ({
@@ -33,4 +39,4 @@ const mapStateToProps = (state) => ({
 });
 
 
-export default connect(mapStateToProps)(Header);
+export default connect(mapStateToProps, { logout })(Header);

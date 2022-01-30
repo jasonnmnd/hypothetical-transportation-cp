@@ -52,7 +52,7 @@ function ParentStudentDetails(props){
 
     return(
         <>
-        <Header textToDisplay={"Parent Portal"}></Header>
+        <Header textToDisplay={"Parent Portal"} shouldShowOptions={true}></Header>
             <div className='middle-justify'>
                 <div className='parent-details'>
                         <h1>Your Student's Details</h1>
