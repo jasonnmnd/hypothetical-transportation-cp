@@ -31,7 +31,7 @@ function SearchBar(props){
                     Filter By:
                     <select value={values.filter_by} onChange={(e) => setValue({ ...values, filter_by: e.target.value })}>
                         <option value={""} key={"empty"}></option>
-                        {props.buttons.filter(k=>k!=="routes"&&k!=="school"&&k!=="groups").map((b,i)=>{
+                        {props.buttons.filter(k=>k!=="routes"&&k!=="school"&&k!=="groups"&&k!=="num_student").map((b,i)=>{
                             return <option value={b} key={i}>{b}</option>
                         })}
                     </select>
