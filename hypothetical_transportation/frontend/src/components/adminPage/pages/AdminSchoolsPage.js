@@ -67,7 +67,7 @@ function AdminSchoolsPage(props) {
         url=`/api/school/?search=${i2}&search_fields=${i1}`
       }
     }
-    axios.get(url, config)
+    axios.get(url, config(props.token))
         .then(res => {
           setSchools(res.data.results);
         }).catch(err => console.log(err));
