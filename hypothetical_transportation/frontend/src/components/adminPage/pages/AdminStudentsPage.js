@@ -94,7 +94,7 @@ function AdminStudentsPage(props) {
             </Link>          
           </div>
           <div className='table-and-buttons'>
-            <AdminTable title={title} header={Object.keys(emptyStudent)} data={students} search={search} sortBy={["full_name","student_id","school"]}/>
+            <AdminTable title={title} header={Object.keys(emptyStudent)} data={students} search={search} sortBy={["full_name","student_id","school__name"]}/>
             <div className="prev-next-buttons">
                 <button onClick={handlePrevClick}>Prev</button>
                 <button onClick={handleNextClick}>Next</button> 
