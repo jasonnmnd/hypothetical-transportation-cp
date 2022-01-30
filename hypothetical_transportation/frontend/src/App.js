@@ -8,7 +8,6 @@ import AdminStudentsPage from "./components/adminPage/pages/AdminStudentsPage";
 import AdminRoutesPage from "./components/adminPage/pages/AdminRoutesPage";
 import AdminSchoolsPage from "./components/adminPage/pages/AdminSchoolsPage";
 import AccountPage from "./components/accountPage/AccountPage";
-import ResetPasswordPage from "./components/accountPage/ResetPasswordPage";
 import AdminEditPage from "./components/adminPage/pages/AdminEditPage";
 import AdminUserDetails from "./components/adminPage/pages/AdminUserDetails";
 import AdminStudentDetails from "./components/adminPage/pages/AdminStudentDetails";
@@ -26,6 +25,7 @@ import GeneralAdminStudentsPage from "./components/adminPage/newPages/GeneralAdm
 import GeneralAdminSchoolsPage from "./components/adminPage/newPages/GeneralAdminSchoolsPage";
 import GeneralAdminRoutesPage from "./components/adminPage/newPages/GeneralAdminRoutesPage";
 import GeneralAdminUserDetails from "./components/adminPage/newPages/GeneralAdminUserDetails";
+import GeneralAdminStudentDetails from "./components/adminPage/newPages/GeneralAdminStudentDetails";
 import AdminNewPage from "./components/adminPage/pages/AdminNewPage";
 import ManStudentPage from "./components/adminPage/pages/ManStudentPage";
 import GeneralResetPasswordPage from "./components/accountPage/GeneralResetPasswordPage";
@@ -65,9 +65,7 @@ function App( props ) {
           <Route exact path="/" element={<LoginForm />}></Route>
           <Route path="/parent/*" element={<PrivateRoute><ParentPage /></PrivateRoute>}></Route>
           <Route exact path="/account" element={<PrivateRoute><AccountPage/></PrivateRoute>}></Route>
-          {/* <Route exact path="/account/password" element={<PrivateRoute><ResetPasswordPage/></PrivateRoute>}></Route> */}
           <Route exact path="/account/password" element={<PrivateRoute><GeneralResetPasswordPage/></PrivateRoute>}></Route>
-
           <Route exact path="/parent/student/:school/:id" element={<PrivateRoute><GeneralParentStudentDetails ></GeneralParentStudentDetails></PrivateRoute>}/>
           <Route path="/admin/*" element={<PrivateRoute><AdminPage/></PrivateRoute>}></Route>
           <Route exact path="/admin/users" element={<PrivateRoute><GeneralAdminUsersPage /></PrivateRoute>}></Route>
@@ -76,7 +74,7 @@ function App( props ) {
           <Route exact path="/admin/schools" element={<PrivateRoute><GeneralAdminSchoolsPage /></PrivateRoute>}></Route>
           <Route exact path="/admin/routes" element={<PrivateRoute><GeneralAdminRoutesPage /></PrivateRoute>}></Route>
           <Route exact path="/admin/user/:id" element={<PrivateRoute><GeneralAdminUserDetails /></PrivateRoute>}/>
-          <Route exact path="/admin/student/:id" element={<PrivateRoute><AdminStudentDetails /></PrivateRoute>}/>
+          <Route exact path="/admin/student/:id" element={<PrivateRoute><GeneralAdminStudentDetails /></PrivateRoute>}/>
           <Route exact path="/admin/school/:id" element={<PrivateRoute><AdminSchoolDetails /></PrivateRoute>}/>
           <Route exact path="/admin/route/:id" element={<PrivateRoute><AdminRouteDetails /></PrivateRoute>}/>
           <Route exact path="/admin/route/plan/:school_id" element={<PrivateRoute><AdminRoutePlanner action={"new"}/></PrivateRoute>}/>

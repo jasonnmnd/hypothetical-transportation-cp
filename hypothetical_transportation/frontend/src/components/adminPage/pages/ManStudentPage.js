@@ -95,9 +95,9 @@ function ManStudentPage(props) {
     setError("")
     if(props.action==="new"){
       axios
-          .post(`/api/student/`,obj)
+          .post(`/api/student/`,obj, config(props.token))
           .then(res =>{
-              navigate(`/admin/students/`, config(props.token))
+              navigate(`/admin/students/`)
           }).catch(err => console.log(err));
     }
     else{

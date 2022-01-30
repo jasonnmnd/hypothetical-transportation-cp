@@ -4,7 +4,7 @@ import { tokenConfig } from './auth';
 
 import { createMessage, returnErrors } from './messages';
 
-import { ADD_STUDENT, GET_ERRORS, CREATE_MESSAGE, GET_STUDENTS, DELETE_STUDENT, POPULATE_TABLE } from './types';
+import { ADD_STUDENT, GET_STUDENT, CREATE_MESSAGE, GET_STUDENTS, DELETE_STUDENT, POPULATE_TABLE } from './types';
 
 
 // GET STUDENTS
@@ -25,16 +25,20 @@ export const getStudents = () => (dispatch, getState) => {
 };
 
 // DELETE STUDENTS
-export const deleteStudents = (id) => (dispatch, getState) => {
+export const deleteStudent = (id) => (dispatch, getState) => {
   axios
-    .delete(`/api/Students/${id}`, tokenConfig(getState))
+    .delete(`/api/student/${id}/`, tokenConfig(getState))
     .then(res => {
       dispatch({
         type: DELETE_STUDENT,
         payload: id
       });
+      dispatch({
+        type: DELETE_ITEM,
+        payload: id
+      });
     })
-    .catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
+    .catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
 }
 
 // ADD STUDENT
@@ -72,6 +76,52 @@ export const getStudentsByGuardian = (guardianID) => (dispatch, getState) => {
           type: POPULATE_TABLE,
           payload: res.data,
         });
-      }).catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
+      }).catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
 };
+
+export const getStudentInfo = (studentID) => (dispatch, getState) => {
+  axios.get(`/api/student/${studentID}/`, tokenConfig(getState))
+    .then(res => {
+      let thisStudent = res.data;
+      console.log(thisStudent);
+
+      axios.get(`/api/user/${thisStudent.guardian}/`, tokenConfig(getState))
+        .then(res => {
+          thisStudent.guardianName = res.data.full_name;
+          
+          axios.get(`/api/school/${thisStudent.school}/`, tokenConfig(getState))
+            .then(res => {
+              thisStudent.schoolName = res.data.name;
+
+              if (thisStudent.routes!==undefined && thisStudent.routes!==null){
+                axios.get(`/api/route/${thisStudent.routes}/`, tokenConfig(getState))
+                  .then(res => {
+                    thisStudent.routeName = res.data.name;
+                    dispatch({
+                      type: GET_STUDENT,
+                      payload: thisStudent,
+                    });
+                }).catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
+              }
+              else{
+                thisStudent.routeName = "NONE";
+                dispatch({
+                  type: GET_STUDENT,
+                  payload: thisStudent,
+                });
+              }
+
+
+          }).catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
+      
+      
+      
+      
+        }).catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
+      
+      
+
+      
+  }).catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
+}
 
