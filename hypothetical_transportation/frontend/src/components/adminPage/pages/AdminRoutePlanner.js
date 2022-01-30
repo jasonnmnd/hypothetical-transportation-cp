@@ -7,6 +7,7 @@ import AdminTable from '../components/table/AdminTable';
 import { connect } from 'react-redux';
 import PropTypes, { string } from 'prop-types';
 import axios from 'axios';
+import config from '../../../utils/config';
 
 function AdminRoutePlanner(props) {
   const param = useParams();
@@ -49,14 +50,14 @@ function AdminRoutePlanner(props) {
 
 
   const getSchool = () => {
-    axios.get(`/api/school/${param.school_id}/`)
+    axios.get(`/api/school/${param.school_id}/`, config(props.token))
         .then(res => {
             setSchool(res.data);
         }).catch(err => console.log(err));
     }
 
   const getStudent = () => {
-    axios.get(`/api/student/?school=${param.school_id}`)
+    axios.get(`/api/student/?school=${param.school_id}`, config(props.token))
         .then(res => {
           console.log(res.data.results)
           setStudents(res.data.results);
@@ -64,7 +65,7 @@ function AdminRoutePlanner(props) {
   }
 
   const getRoute = ()=>{
-    axios.get(`/api/route/${param.route_id}/`)
+    axios.get(`/api/route/${param.route_id}/`, config(props.token))
     .then(res => {
       setRoute(res.data);
       setObj(res.data);
@@ -72,7 +73,7 @@ function AdminRoutePlanner(props) {
   }
 
   const getStudentRelatedToRoute = ()=>{
-    axios.get(`/api/student/?routes=${param.route_id}`)
+    axios.get(`/api/student/?routes=${param.route_id}`, config(props.token))
         .then(res => {
           console.log(res.data.results)
           setRouteStudents(res.data.results);
@@ -122,11 +123,11 @@ function AdminRoutePlanner(props) {
           if(tobeadded.length>0){
             tobeadded.map((stu)=>{
               axios
-                .get(`/api/student/${stu.id}/`)
+                .get(`/api/student/${stu.id}/`, config(props.token))
                 .then(res => {
                   res.data.routes=routeID
                   axios
-                    .put(`/api/student/${stu.id}/`,res.data)
+                    .put(`/api/student/${stu.id}/`,res.data, config(props.token))
                     .then(res =>{
                         console.log(res.data.id)
                     }).catch(err => console.log(err));
@@ -137,17 +138,17 @@ function AdminRoutePlanner(props) {
     }
     else{
       axios
-      .put(`/api/route/${route.id}/`,obj)
+      .put(`/api/route/${route.id}/`,obj, config(props.token))
       .then(res =>{
         const routeID = res.data.id
         if(tobeadded.length>0){
           tobeadded.map((stu)=>{
             axios
-              .get(`/api/student/${stu.id}/`)
+              .get(`/api/student/${stu.id}/`, config(props.token))
               .then(res => {
                 res.data.routes=routeID
                 axios
-                  .put(`/api/student/${stu.id}/`,res.data)
+                  .put(`/api/student/${stu.id}/`,res.data, config(props.token))
                   .then(res =>{
                       console.log(res.data.id)
                   }).catch(err => console.log(err));
@@ -156,11 +157,11 @@ function AdminRoutePlanner(props) {
         if(toberemoved.length>0){
           toberemoved.map((stu)=>{
             axios
-              .get(`/api/student/${stu.id}/`)
+              .get(`/api/student/${stu.id}/`, config(props.token))
               .then(res => {
                 res.data.routes=null
                 axios
-                  .put(`/api/student/${stu.id}/`,res.data)
+                  .put(`/api/student/${stu.id}/`,res.data, config(props.token))
                   .then(res =>{
                       console.log(res.data.id)
                   }).catch(err => console.log(err));
@@ -269,7 +270,8 @@ AdminRoutePlanner.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
-  user: state.auth.user
+  user: state.auth.user,
+  token: state.auth.token
 });
 
 export default connect(mapStateToProps)(AdminRoutePlanner)

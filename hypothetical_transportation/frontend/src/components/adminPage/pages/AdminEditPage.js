@@ -8,6 +8,7 @@ import SidebarSliding from '../components/sidebar/SidebarSliding';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import config from '../../../utils/config';
 
 
 function AdminEditPage(props) {
@@ -33,7 +34,7 @@ function AdminEditPage(props) {
   const [obj, setobj] = useState(emptyFields[col]);
   const getOldData = () => {
     console.log(col);
-    axios.get(`/api/${col}/${param.id}/`)
+    axios.get(`/api/${col}/${param.id}/`, config(props.token))
         .then(res => {
             console.log(res.data)
             setobj(res.data);
@@ -70,7 +71,8 @@ AdminEditPage.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
-  user: state.auth.user
+  user: state.auth.user,
+  token: state.auth.token
 });
 
 export default connect(mapStateToProps)(AdminEditPage)
