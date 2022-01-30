@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import AdminSchoolDetails from './AdminSchoolDetails';
-// import { getSchools } from '../../../actions/schools';
+import config from '../../../utils/config';
 
 function AdminSchoolsPage(props) {
 
@@ -40,12 +40,8 @@ function AdminSchoolsPage(props) {
 
   const [schools, setSchools] = useState(emptySchools);
 
-  const config = {
-    headers: { Authorization: `Token ${props.token}` }
-  }
-
   const getSchools = () => {
-    axios.get('/api/school/', config)
+    axios.get('/api/school/', config(props.token))
         .then(res => {
             setSchools(res.data.results);
         }).catch(err => console.log(err));
@@ -57,7 +53,7 @@ function AdminSchoolsPage(props) {
 
 
   const searchSchool = (i1,i2) => {
-    axios.get(`/api/school/?search=${i2}&search_fields=${i1}`)
+    axios.get(`/api/school/?search=${i2}&search_fields=${i1}`, config)
         .then(res => {
           console.log(`/api/school/?search=${i2}&search_fields=${i1}`)
           setSchools(res.data.results);
