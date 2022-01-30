@@ -17,8 +17,6 @@ function ParentPage(props) {
   const emptyStudent = {
     student_id: "",
     full_name:"",
-    school: 0,
-    routes: 0
   }
 
   const studentObject = [{
