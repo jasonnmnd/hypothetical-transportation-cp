@@ -8,7 +8,9 @@ import {
     LOGIN_FAIL,
     LOGOUT_SUCCESS,
     REGISTER_FAIL,
-    REGISTER_SUCCESS
+    REGISTER_SUCCESS,
+    RESET_PASSWORD_SUCCESS,
+    RESET_PASSWORD_FAIL
 } from './types';
 
 //CHECK TOKEN & LOAD USER
@@ -99,23 +101,51 @@ export const logout = () => (dispatch, getState) => {
         dispatch(returnErrors(err.response.data, err.response.status));
       });
   };
+
+// RESET USER PASSWORD
+export const resetPassword = (old_password, new_password) => (dispatch, getState) => {
+
+    //Request body
+    const body = JSON.stringify({old_password, new_password});
+
+    axios.put(`/api/auth/change-password`, body, tokenConfig(getState))
+            .then((res) => {
+              dispatch({
+                type: RESET_PASSWORD_SUCCESS,
+
+              });
+            })
+            .catch((err) => {
+              dispatch(returnErrors(err.response.data, err.response.status));
+              dispatch({
+                type: RESET_PASSWORD_FAIL,
+
+              });
+            });
+}
+
+export const resetResetPassword = () => (dispatch, getState) => {
+  dispatch({
+    type: RESET_PASSWORD_FAIL
+  })
+}
   
-  // Setup config with token - helper function
-  export const tokenConfig = (getState) => {
-    // Get token from state
-    const token = getState().auth.token;
-  
-    // Headers
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
-  
-    // If token, add to headers config
-    if (token) {
-      config.headers['Authorization'] = `Token ${token}`;
-    }
-  
-    return config;
+// Setup config with token - helper function
+export const tokenConfig = (getState) => {
+  // Get token from state
+  const token = getState().auth.token;
+
+  // Headers
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+    },
   };
+
+  // If token, add to headers config
+  if (token) {
+    config.headers['Authorization'] = `Token ${token}`;
+  }
+
+  return config;
+};

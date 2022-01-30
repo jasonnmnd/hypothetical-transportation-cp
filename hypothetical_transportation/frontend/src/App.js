@@ -8,13 +8,12 @@ import AdminStudentsPage from "./components/adminPage/pages/AdminStudentsPage";
 import AdminRoutesPage from "./components/adminPage/pages/AdminRoutesPage";
 import AdminSchoolsPage from "./components/adminPage/pages/AdminSchoolsPage";
 import AccountPage from "./components/accountPage/AccountPage";
-import ResetPasswordPage from "./components/accountPage/ResetPasswordPage";
 import AdminEditPage from "./components/adminPage/pages/AdminEditPage";
 import AdminUserDetails from "./components/adminPage/pages/AdminUserDetails";
 import AdminStudentDetails from "./components/adminPage/pages/AdminStudentDetails";
 import AdminSchoolDetails from "./components/adminPage/pages/AdminSchoolDetails";
 import AdminRouteDetails from "./components/adminPage/pages/AdminRouteDetails";
-import ParentStudentDetails from "./components/parentPage/pages/ParentStudentDetails";
+import GeneralParentStudentDetails from "./components/parentPage/pages/GeneralParentStudentDetails";
 import AdminRoutePlanner from "./components/adminPage/pages/AdminRoutePlanner";
 import PrivateRoute from "./components/common/PrivateRoute";
 import { loadUser } from "./actions/auth";
@@ -31,6 +30,7 @@ import GeneralAdminSchoolDetails from "./components/adminPage/newPages/GeneralAd
 
 import AdminNewPage from "./components/adminPage/pages/AdminNewPage";
 import ManStudentPage from "./components/adminPage/pages/ManStudentPage";
+import GeneralResetPasswordPage from "./components/accountPage/GeneralResetPasswordPage";
 //import GeneralTable from "./components/common/generalTable";
 
 const testingTableProps = [
@@ -67,8 +67,8 @@ function App( props ) {
           <Route exact path="/" element={<LoginForm />}></Route>
           <Route path="/parent/*" element={<PrivateRoute><ParentPage /></PrivateRoute>}></Route>
           <Route exact path="/account" element={<PrivateRoute><AccountPage/></PrivateRoute>}></Route>
-          <Route exact path="/account/password" element={<PrivateRoute><ResetPasswordPage/></PrivateRoute>}></Route>
-          <Route exact path="/parent/student/:school/:id" element={<PrivateRoute><ParentStudentDetails ></ParentStudentDetails></PrivateRoute>}/>
+          <Route exact path="/account/password" element={<PrivateRoute><GeneralResetPasswordPage/></PrivateRoute>}></Route>
+          <Route exact path="/parent/student/:school/:id" element={<PrivateRoute><GeneralParentStudentDetails ></GeneralParentStudentDetails></PrivateRoute>}/>
           <Route path="/admin/*" element={<PrivateRoute><AdminPage/></PrivateRoute>}></Route>
           <Route exact path="/admin/users" element={<PrivateRoute><GeneralAdminUsersPage /></PrivateRoute>}></Route>
           <Route exact path="/admin/students" element={<PrivateRoute><GeneralAdminStudentsPage /></PrivateRoute>}></Route>

@@ -7,7 +7,6 @@ import PropTypes from 'prop-types';
 import { logout } from "../../actions/auth";
 import isAdmin from "../../utils/user";
 import SidebarSliding from "../adminPage/components/sidebar/SidebarSliding";
-import config from "../../utils/config";
 import { getStudents, searchStudents } from '../../actions/students';
 import GeneralParentTableView from "./views/GeneralParentTableView";
 
