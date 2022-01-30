@@ -1,47 +1,28 @@
 import React, {useEffect, useState} from "react";
-import ParentTable from "./components/ParentTable";
 import Header from "../header/Header";
 import "./parentPage.css";
-import axios from "axios";
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { logout } from "../../actions/auth";
 import isAdmin from "../../utils/user";
-import AdminTable from "../adminPage/components/table/AdminTable";
 import SidebarSliding from "../adminPage/components/sidebar/SidebarSliding";
 import config from "../../utils/config";
+import { getStudents, searchStudents } from '../../actions/students';
+import GeneralParentTableView from "./views/GeneralParentTableView";
 
 function ParentPage(props) {
 
-  const emptyStudent = {
-    student_id: "",
-    full_name:"",
-  }
-
-  const studentObject = [{
-    id: 0,
-    student_id: "",
-    full_name:"",
-    address: "",
-    guardian: 0,
-    routes: 0,
-    school: 0,
-  }]
-
-  const [students, setStudents] = useState(studentObject);
-    
-  const getStudents = () => {
-    axios.get(`/api/student/?guardian=${props.user.id}`, config(props.token))
-        .then(res => {
-          console.log(res.data.results)
-          setStudents(res.data.results);
-        }).catch(err => console.log(err));
-    }
+  const title = "Students"
+  const tableType = "student"
 
   useEffect(() => {
-      getStudents();
-    }, []);
+      props.getStudents();
+  }, []);
+
+  const search = (value) => {
+    props.searchStudents(value.by, value.value)
+  }
 
     return (
       
@@ -62,11 +43,8 @@ function ParentPage(props) {
             <br></br>
 
             <div className="page-description">
-              <ParentTable title={"Your Students"} header={Object.keys(emptyStudent)} data={students}></ParentTable>
+              <GeneralParentTableView title={title} tableType={tableType} search={search} />
             </div>
-            {/* <ParentTable /> */}
-
-
 
           </div>
           
@@ -82,7 +60,8 @@ ParentPage.propTypes = {
       username: PropTypes.string,
       email: PropTypes.string
     }),
-    logout: PropTypes.func.isRequired
+    logout: PropTypes.func.isRequired,
+    getStudents: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => ({
@@ -91,4 +70,4 @@ const mapStateToProps = (state) => ({
     token: state.auth.token
 });
 
-export default connect(mapStateToProps, {logout} )(ParentPage)
+export default connect(mapStateToProps, {logout, getStudents, searchStudents} )(ParentPage)
