@@ -53,6 +53,7 @@ function ParentStudentDetails(){
     return(
         <>
         <Header textToDisplay={"Parent Portal"}></Header>
+        {isAdmin(props.user)?        <SidebarSliding/>:null}
             <div className='middle-justify'>
                 <div className='parent-details'>
                         <h1>Your Student's Details</h1>

@@ -5,6 +5,7 @@ import SidebarSliding from "../adminPage/components/sidebar/SidebarSliding";
 import Header from "../header/Header";
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import isAdmin from "../../utils/user";
 
 function ResetPasswordPage(props){
     const [values, setValue] = useState({ old: "", new: "", confirm:"" });
@@ -28,8 +29,8 @@ function ResetPasswordPage(props){
 
     return(
         <div className={"parent-page"}>
-            <Header textToDisplay={props.user.groups[0]==1 ? "Admin Portal": "Parent Portal"}></Header>
-            <SidebarSliding/>
+            <Header textToDisplay={isAdmin(props.user) ? "Admin Portal": "Parent Portal"}></Header>
+            {isAdmin(props.user)?        <SidebarSliding/>:null}
             <div className="welcome">
                 <form className={"center"}>
                     <div className="form-inner">
