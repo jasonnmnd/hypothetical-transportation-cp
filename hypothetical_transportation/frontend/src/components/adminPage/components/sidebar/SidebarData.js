@@ -38,5 +38,11 @@ export const SidebarData = [
         path: '/admin/routes',
         icon: <GiIcons.GiPathDistance />,
         cName: 'nav-text'
-    }
+    },
+    {
+        title: 'Your Parent Portal',
+        path: '/parent',
+        icon: <AiIcons.AiFillHome />,
+        cName: 'nav-text'
+    },
 ]

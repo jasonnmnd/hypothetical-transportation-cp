@@ -30,7 +30,8 @@ function AdminNewPage(props) {
     }
     const col = param.column.includes("_") ?param.column.split("_")[1]:param.column
     const [obj, setObj] = useState(emptyFields[col])
-    const fields=Object.keys(emptyFields[col]).filter((i)=>param.column.includes("admin")?i!=="school"&&i!=="address"&&i!=="groups":i!=="school"&&i!=="groups");
+    // const fields=Object.keys(emptyFields[col]).filter((i)=>param.column.includes("admin")?i!=="school"&&i!=="address"&&i!=="groups":i!=="school"&&i!=="groups");
+    const fields=Object.keys(emptyFields[col]).filter((i)=>i!=="school"&&i!=="groups");
 
     return ( 
       <>

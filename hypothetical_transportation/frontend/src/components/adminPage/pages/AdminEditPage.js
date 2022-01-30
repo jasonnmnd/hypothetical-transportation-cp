@@ -41,7 +41,8 @@ function AdminEditPage(props) {
             console.log(fields)
         }).catch(err => console.log(err));
     }
-    const fields=Object.keys(emptyFields[col]).filter((i)=>param.column.includes("admin")?i!=="id"&&i!=="address"&&i!=="is_staff":i!=="id"&&i!=="is_staff");
+    // const fields=Object.keys(emptyFields[col]).filter((i)=>param.column.includes("admin")?i!=="id"&&i!=="address"&&i!=="is_staff":i!=="id"&&i!=="is_staff");
+    const fields=Object.keys(emptyFields[col]).filter((i)=>i!=="school"&&i!=="groups");
   
   useEffect(() => {
     getOldData();

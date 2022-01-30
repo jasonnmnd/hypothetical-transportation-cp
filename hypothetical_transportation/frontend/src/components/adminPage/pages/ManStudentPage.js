@@ -65,8 +65,7 @@ function ManStudentPage(props) {
     const getUsers = () => {
       axios.get('/api/user/')
         .then(res => {
-          console.log(res.data.results.filter(s=>!s.groups.includes(1)))
-          setUsers(res.data.results.filter(s=>!s.groups.includes(1)));
+          setUsers(res.data.results);//.filter(s=>!s.groups.includes(1)));
         }).catch(err => console.log(err));
     }
 

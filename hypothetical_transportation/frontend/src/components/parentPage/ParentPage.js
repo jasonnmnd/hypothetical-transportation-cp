@@ -7,7 +7,9 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { logout } from "../../actions/auth";
+import isAdmin from "../../utils/user";
 import AdminTable from "../adminPage/components/table/AdminTable";
+import SidebarSliding from "../adminPage/components/sidebar/SidebarSliding";
 
 function ParentPage(props) {
 
@@ -46,6 +48,7 @@ function ParentPage(props) {
       
         <div className="parent-page">
           <Header textToDisplay={"Parent Portal"}></Header>
+          {isAdmin(props.user)?        <SidebarSliding/>:null}
           <div>
             <div className="welcome">
               <h2>
@@ -79,7 +82,7 @@ ParentPage.propTypes = {
     user: PropTypes.shape({
       id: PropTypes.number,
       username: PropTypes.string,
-      email: PropTypes.email
+      email: PropTypes.string
     }),
     logout: PropTypes.func.isRequired
 }
