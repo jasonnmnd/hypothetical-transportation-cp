@@ -10,6 +10,9 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('id', 'email', 'full_name', 'address', 'groups')
         # fields = ('email', 'password')
 
+    def validate(self, data):
+        return data
+
 
 class RouteSerializer(serializers.ModelSerializer):
     class Meta:

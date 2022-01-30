@@ -277,3 +277,19 @@ class PermissionViews(TestCase):
                                    HTTP_AUTHORIZATION=f'Token {self.admin_token}')
         self.assertEqual(str(response.data['non_field_errors'][0]), 'Student school is not the same as student route!')
         self.assertEqual(response.status_code, 400)
+
+        # Change other properties (Capitalization of name) is unaffected
+        # response = self.client.put('/api/student/2/',
+        #                            json.dumps(
+        #                                {
+        #                                    'full_name': 'First Last',
+        #                                    'address': 'Location 2',
+        #                                    'active': True,
+        #                                    'school': 1,
+        #                                    'student_id': 2,
+        #                                    'routes': 1,
+        #                                    'guardian': 1,
+        #                                }),
+        #                            content_type='application/json',
+        #                            HTTP_AUTHORIZATION=f'Token {self.admin_token}')
+        # print(response.data)

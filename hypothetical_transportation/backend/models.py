@@ -40,4 +40,7 @@ class Student(models.Model):
     student_id = models.IntegerField(null=True)
 
     class Meta:
-        unique_together = ('school', 'student_id')
+        constraints = [
+            models.UniqueConstraint(fields=['school', 'student_id'], name='Student ID and School are unique together')
+        ]
+        # unique_together = ('school', 'student_id')
