@@ -4,7 +4,6 @@ import ParentPage from "./components/parentPage/ParentPage";
 import AdminPage from "./components/adminPage/AdminPage";
 import { Routes, Route, BrowserRouter} from "react-router-dom";
 import LoginForm from "./components/loginPage/LoginForm.js"
-import AdminUsersPage from "./components/adminPage/pages/AdminUsersPage";
 import AdminStudentsPage from "./components/adminPage/pages/AdminStudentsPage";
 import AdminRoutesPage from "./components/adminPage/pages/AdminRoutesPage";
 import AdminSchoolsPage from "./components/adminPage/pages/AdminSchoolsPage";
@@ -20,7 +19,6 @@ import AdminRoutePlanner from "./components/adminPage/pages/AdminRoutePlanner";
 import PrivateRoute from "./components/common/PrivateRoute";
 import { loadUser } from "./actions/auth";
 import { connect } from "react-redux";
-import PropTypes from "prop-types";
 import Alerts from "./components/alerts/Alerts";
 import GeneralTable from "./components/common/GeneralTable";
 import GeneralAdminUsersPage from "./components/adminPage/newPages/GeneralAdminUsersPage";

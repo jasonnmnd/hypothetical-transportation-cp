@@ -38,7 +38,7 @@ function GeneralTable( props ) {
                 })
             }
             <td>
-                <button onClick={() => props.action(rowData)}>{props.actionName}</button>
+                <button className="button" onClick={() => props.action(rowData)}>{props.actionName}</button>
             </td>
         </tr>
     )
@@ -103,7 +103,7 @@ function GeneralTable( props ) {
 }
 
 GeneralTable.propTypes = {
-    rows: PropTypes.arrayOf(PropTypes.obj),
+    rows: PropTypes.array,
     actionName: PropTypes.string,
     action: PropTypes.func,
     columnNames: PropTypes.arrayOf(PropTypes.string)
