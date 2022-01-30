@@ -217,3 +217,53 @@ class PermissionViews(TestCase):
         student_id = self.normal_user1.students.values('id')[0]['id']
         response = self.client.get(f'/api/student/{student_id}/', HTTP_AUTHORIZATION=f'Token {self.user1_token}')
         self.assertEqual(response.status_code, 200)
+
+    def admin_create_student_route_consistency(self):
+        # Inconsistent routes forbidden
+        response = self.client.post('/api/student/',
+                                    json.dumps(
+                                        {
+                                            'full_name': 'first last',
+                                            'address': 'Location',
+                                            'active': True,
+                                            'school': 1,
+                                            'student_id': 2,
+                                            'routes': 3,
+                                            'guardian': 1,
+                                        }),
+                                    content_type='application/json',
+                                    HTTP_AUTHORIZATION=f'Token {self.admin_token}')
+        self.assertEqual(response.status_code, 400)
+
+        # Consistent routes allowed
+        response = self.client.post('/api/student/',
+                                    json.dumps(
+                                        {
+                                            'full_name': 'first last',
+                                            'address': 'Location',
+                                            'active': True,
+                                            'school': 1,
+                                            'student_id': 2,
+                                            'routes': 1,
+                                            'guardian': 1,
+                                        }),
+                                    content_type='application/json',
+                                    HTTP_AUTHORIZATION=f'Token {self.admin_token}')
+        self.assertEqual(response.status_code, 201)
+
+        # Prevent student from updating to some ridiculous route
+        response = self.client.put('/api/student/2/',
+                                   json.dumps(
+                                       {
+                                           'full_name': 'first last',
+                                           'address': 'Location 2',
+                                           'active': True,
+                                           'school': 1,
+                                           'student_id': 3,
+                                           'routes': 3,
+                                           'guardian': 1,
+                                       }),
+                                   content_type='application/json',
+                                   HTTP_AUTHORIZATION=f'Token {self.admin_token}')
+        self.assertEqual(str(response.data['non_field_errors'][0]), 'Student school is not the same as student route!')
+        self.assertEqual(response.status_code, 400)

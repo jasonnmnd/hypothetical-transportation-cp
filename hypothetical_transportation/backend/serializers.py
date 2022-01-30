@@ -27,3 +27,18 @@ class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
         fields = '__all__'
+
+    def validate(self, data):
+        """
+        Handles 1.10 of Evolution 1, Consistency Rule
+        :param data:
+        :return:
+        """
+        if not data['school'] or not data['routes']:
+            # No consistency to enforce
+            return data
+        school = data['school']
+        route = data['routes']
+        if school.pk != route.school.pk:
+            raise serializers.ValidationError("Student school is not the same as student route!")
+        return data
