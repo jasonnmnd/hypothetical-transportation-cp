@@ -41,7 +41,7 @@ function GeneralAdminUsersPage(props) {
                     <button className='button'> Add New Parent</button>
                   </Link>
               </div>
-          <GeneralAdminTableView tableType='user' search={search} title={title} />
+          <GeneralAdminTableView values={props.users} tableType='user' search={search} title={title} />
         </div>
     </div>
   )
@@ -54,7 +54,7 @@ GeneralAdminUsersPage.propTypes = {
 
 const mapStateToProps = (state) => ({
   user: state.auth.user,
-  users: state.users.users.results
+  users: state.users.users.results,
 });
 
 export default connect(mapStateToProps, {getUsers, searchUsers} )(GeneralAdminUsersPage)

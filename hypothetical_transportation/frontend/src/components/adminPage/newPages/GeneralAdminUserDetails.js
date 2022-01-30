@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import config from '../../../utils/config';
 import { getUser, deleteUser } from '../../../actions/users';
-import { getStudentsByGuardian } from '../../../actions/students';
+import { getStudentsByID } from '../../../actions/students';
 import GeneralAdminTableView from '../components/views/GeneralAdminTableView';
 import isAdmin from '../../../utils/user';
 
@@ -33,7 +33,9 @@ function AdminUserDetails(props) {
 
   useEffect(() => {
     props.getUser(param.id);
-    props.getStudentsByGuardian(param.id);
+    props.getStudentsByID({
+      guardian: param.id
+    });
 
   }, []);
 
@@ -79,7 +81,7 @@ function AdminUserDetails(props) {
                   props.user.groups.includes(1)? <div></div>:
                   <div className='info-fields'>
                       
-                      <GeneralAdminTableView tableType='student' title='Students' search={null} />
+                      <GeneralAdminTableView values={props.students} tableType='student' title='Students' search={null} />
 
                   </div>
                 }     
@@ -102,13 +104,14 @@ function AdminUserDetails(props) {
 
 AdminUserDetails.propTypes = {
     getUser: PropTypes.func.isRequired,
-    getStudentsByGuardian: PropTypes.func.isRequired
+    getStudentsByID: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => ({
   user: state.users.viewedUser,
-  token: state.auth.token
+  token: state.auth.token,
+  students: state.students.students.results
   
 });
 
-export default connect(mapStateToProps, {getUser, getStudentsByGuardian, deleteUser})(AdminUserDetails)
+export default connect(mapStateToProps, {getUser, getStudentsByID, deleteUser})(AdminUserDetails)
