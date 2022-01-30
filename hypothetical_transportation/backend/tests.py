@@ -1,6 +1,6 @@
 import json
 
-from django.test import RequestFactory, TestCase
+from django.test import RequestFactory, TestCase, TransactionTestCase
 from django.test import Client
 from .models import Student, School, Route
 from django.contrib.auth import get_user_model
@@ -76,29 +76,27 @@ class AuthenticationObjectConsistency(TestCase):
         self.assertEqual(logged_out_check_response.data['detail'].code, 'authentication_failed')
 
 
-class PermissionViews(TestCase):
-    @classmethod
-    def setUpTestData(cls):
+class PermissionViews(TransactionTestCase):
+    reset_sequences = True
+
+    def setUp(self):
         admin_group = Group.objects.create(name='Administrator')
         guardian_group = Group.objects.create(name='Guardian')
 
         # SET UP ADMINISTRATOR
         admin_user = get_user_model().objects.create_user(email='admin@example.com', password='wordpass',
-                                                          full_name='admin user', address='')
+                                                          full_name='admin user', address='loc0')
         admin_user.groups.add(admin_group)
-        cls.admin_user = admin_user
 
         # SET UP USER 1
         normal_user1 = get_user_model().objects.create_user(email='user1@example.com', password='wordpass',
-                                                            full_name='user', address='')
+                                                            full_name='user', address='loc1')
         normal_user1.groups.add(guardian_group)
-        cls.normal_user1 = normal_user1
 
         # SET UP USER 2
         normal_user2 = get_user_model().objects.create_user(email='user2@example.com', password='wordpass',
-                                                            full_name='user', address='')
+                                                            full_name='user', address='loc2')
         normal_user2.groups.add(guardian_group)
-        cls.normal_user2 = normal_user2
 
         school1 = School.objects.create(address='', name='School 1')
         school2 = School.objects.create(address='', name='School 2')
@@ -121,22 +119,19 @@ class PermissionViews(TestCase):
         student4 = Student.objects.create(full_name='first last', address='', active=True,
                                           school=school4, routes=route4, guardian=normal_user2, student_id=1)
 
-    def setUp(self):
         login_response = self.client.post('/api/auth/login',
                                           json.dumps(
                                               {'email': 'admin@example.com', 'password': 'wordpass'}),
                                           content_type='application/json')
         self.admin_token = login_response.data['token']
-        self.admin_id = login_response.data['user']['id']
-        self.admin_user = get_user_model().objects.get(id=self.admin_id)
+        self.admin_user = admin_user
 
         login_response = self.client.post('/api/auth/login',
                                           json.dumps(
                                               {'email': 'user1@example.com', 'password': 'wordpass'}),
                                           content_type='application/json')
         self.user1_token = login_response.data['token']
-        self.user1_id = login_response.data['user']['id']
-        self.normal_user1 = get_user_model().objects.get(id=self.user1_id)
+        self.normal_user1 = normal_user1
 
         login_response = self.client.post('/api/auth/login',
                                           json.dumps(
@@ -228,7 +223,7 @@ class PermissionViews(TestCase):
         response = self.client.get(f'/api/student/{student_id}/', HTTP_AUTHORIZATION=f'Token {self.user1_token}')
         self.assertEqual(response.status_code, 200)
 
-    def admin_create_student_route_consistency(self):
+    def test_admin_create_student_route_consistency(self):
         # Inconsistent routes forbidden
         response = self.client.post('/api/student/',
                                     json.dumps(
@@ -287,3 +282,24 @@ class PermissionViews(TestCase):
                                      content_type='application/json',
                                      HTTP_AUTHORIZATION=f'Token {self.admin_token}')
         self.assertEqual(response.status_code, 200)
+
+    def test_guardian_needs_address(self):
+        # SET UP ADDRESS-LESS USER 3
+        normal_user3 = get_user_model().objects.create_user(email='user3@example.com', password='wordpass',
+                                                            full_name='user', address='')
+        response = self.client.post('/api/student/',
+                                    json.dumps(
+                                        {
+                                            'full_name': 'first last',
+                                            'address': 'Location',
+                                            'active': True,
+                                            'school': 1,
+                                            'student_id': 4,
+                                            'routes': 1,
+                                            'guardian': 4,
+                                        }),
+                                    content_type='application/json',
+                                    HTTP_AUTHORIZATION=f'Token {self.admin_token}')
+
+        self.assertEqual(str(response.data['non_field_errors'][0]), 'User does not have an address configured')
+        self.assertEqual(response.status_code, 400)

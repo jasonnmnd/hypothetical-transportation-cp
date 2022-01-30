@@ -54,4 +54,8 @@ class StudentSerializer(serializers.ModelSerializer):
         route = data['routes']
         if school.pk != route.school.pk:
             raise serializers.ValidationError("Student school is not the same as student route!")
+
+        if data['guardian'] and len(data['guardian'].address) == 0:
+            raise serializers.ValidationError("User does not have an address configured")
+
         return data
