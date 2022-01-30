@@ -19,7 +19,7 @@ function AdminUserDetails(props) {
   const [openModal, setOpenModal] = useState(false);
 
   const handleConfirmDelete = () => {
-    axios.delete(`/api/user/${param.id}`)
+    axios.delete(`/api/user/${param.id}/`)
         .then(res => {
           console.log("DELETED User");
           navigate(`/admin/users/`)

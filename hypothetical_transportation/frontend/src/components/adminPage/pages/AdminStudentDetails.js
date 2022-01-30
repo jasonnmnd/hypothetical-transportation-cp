@@ -58,7 +58,7 @@ function AdminStudentDetails(props) {
   const handleConfirmDelete = () => {
     //Replace with API call to delete student
     //Route back to students page
-    axios.delete(`/api/student/${param.id}`).then(res => {
+    axios.delete(`/api/student/${param.id}/`).then(res => {
       console.log("DELETED STUDENT");
       navigate(`/admin/students/`)
 
