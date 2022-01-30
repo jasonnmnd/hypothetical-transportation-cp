@@ -7,13 +7,16 @@ import {
     LOGOUT_SUCCESS,
     REGISTER_SUCCESS,
     REGISTER_FAIL,
+    RESET_PASSWORD_FAIL,
+    RESET_PASSWORD_SUCCESS
   } from '../actions/types';
 
 const initialState = {
     token: localStorage.getItem('token'),
     isAuthenticated: null,
     isLoading: false,
-    user: null
+    user: null,
+    successfulPasswordReset: false
 }
 
 export default function(state = initialState, action) {
@@ -54,7 +57,17 @@ export default function(state = initialState, action) {
                 isLoading: false,
                 user: null
             }
-            
+        case REGISTER_SUCCESS:
+        case RESET_PASSWORD_SUCCESS:
+            return {
+                ...state,
+                successfulPasswordReset: true
+            }
+        case RESET_PASSWORD_FAIL:
+            return {
+                ...state,
+                successfulPasswordReset: false
+            }
         default:
             return state;
     }
