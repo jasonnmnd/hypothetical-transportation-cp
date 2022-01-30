@@ -102,7 +102,7 @@ function AdminRoutesPage(props) {
               </Link>
           </div> */}
           <div className='table-and-buttons'>
-            <AdminTable title={title} header={Object.keys(emptyTable[0]).filter(h=>h!=="id")} data={table} search={search} sortBy={["name","school__name","students"]}></AdminTable>
+            <AdminTable title={title} header={Object.keys(emptyTable[0]).filter(h=>h!=="id")} data={table} search={search} sortBy={["name","school__name","students","-name","-school__name","-students"]}></AdminTable>
             <div className="prev-next-buttons">
                 <button onClick={handlePrevClick}>Prev</button>
                 <button onClick={handleNextClick}>Next</button> 

@@ -23,7 +23,7 @@ function SearchBar(props){
                     <select value={values.sort_by} onChange={(e) => setValue({ ...values, sort_by: e.target.value })}>
                         <option value={""} key={"empty"}></option>
                         {props.sortBy.map((b,i)=>{
-                            return <option value={b} key={i}>{b}</option>
+                            return !b.includes("-")? <option value={b} key={i}>{(b.includes("__")? b.split("__")[0] : b )+ " Asc"}</option>:<option value={b} key={i}>{(b.includes("__")? b.split("__")[0]:b).slice(1,) + " Dsc"}</option>
                         })}
                     </select>
                     </label>:null}

@@ -91,7 +91,7 @@ function AdminSchoolsPage(props) {
           </div>
           <div className='table-and-buttons'>
             {/* <AdminTable title={title} header={header} data={data} search={search}/> */}
-            <AdminTable title={title} header={Object.keys(emptySchools[0])} data={schools} search={search} sortBy={["name"]}/>
+            <AdminTable title={title} header={Object.keys(emptySchools[0])} data={schools} search={search} sortBy={["name","-name"]}/>
               <div className="prev-next-buttons">
                 <button onClick={handlePrevClick}>Prev</button>
                 <button onClick={handleNextClick}>Next</button> 
