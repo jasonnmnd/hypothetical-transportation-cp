@@ -10,6 +10,7 @@ import { logout } from "../../actions/auth";
 import isAdmin from "../../utils/user";
 import AdminTable from "../adminPage/components/table/AdminTable";
 import SidebarSliding from "../adminPage/components/sidebar/SidebarSliding";
+import config from "../../utils/config";
 
 function ParentPage(props) {
 
@@ -33,7 +34,7 @@ function ParentPage(props) {
   const [students, setStudents] = useState(studentObject);
     
   const getStudents = () => {
-    axios.get(`/api/student/?guardian=${props.user.id}`)
+    axios.get(`/api/student/?guardian=${props.user.id}`, config(props.token))
         .then(res => {
           console.log(res.data.results)
           setStudents(res.data.results);
@@ -89,8 +90,8 @@ ParentPage.propTypes = {
 
 const mapStateToProps = (state) => ({
     isAuthenticated: state.auth.isAuthenticated,
-    user: state.auth.user
-
+    user: state.auth.user,
+    token: state.auth.token
 });
 
 export default connect(mapStateToProps, {logout} )(ParentPage)

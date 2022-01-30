@@ -5,9 +5,9 @@ import { Link, useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import axios from "axios";
+import config from "../../../utils/config";
 
-
-function ParentStudentDetails(){
+function ParentStudentDetails(props){
     const param = useParams();
 
     const studentObject = {
@@ -26,15 +26,15 @@ function ParentStudentDetails(){
     const [route,setRouteExist] = useState(false);
 
     const getStudentInfo = () => {
-        axios.get(`/api/student/${param.id}/`)
+        axios.get(`/api/student/${param.id}/`, config(props.token))
         .then(res => {
             setStudent(res.data);
-            axios.get(`/api/school/${res.data.school}/`)
+            axios.get(`/api/school/${res.data.school}/`, config(props.token))
             .then(res => {
                 setSchoolName(res.data.name);
             }).catch(err => console.log(err));
             if (res.data.routes!==undefined && res.data.routes!==null){
-            axios.get(`/api/route/${res.data.routes}/`)
+            axios.get(`/api/route/${res.data.routes}/`, config(props.token))
                 .then(res => {
                 setRouteName(res.data.name);
                 setRouteExist(true)
@@ -89,7 +89,9 @@ ParentStudentDetails.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
-
+    isAuthenticated: state.auth.isAuthenticated,
+    user: state.auth.user,
+    token: state.auth.token
 });
 
 export default connect(mapStateToProps)(ParentStudentDetails)
