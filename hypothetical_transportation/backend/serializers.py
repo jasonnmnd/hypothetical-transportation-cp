@@ -44,18 +44,18 @@ class StudentSerializer(serializers.ModelSerializer):
         :param data:
         :return:
         """
-        if self.partial:
-            # Handles patch to avoid breaking things
-            return data
-        if not data['school'] or not data['routes']:
-            # No consistency to enforce
-            return data
-        school = data['school']
-        route = data['routes']
-        if school.pk != route.school.pk:
-            raise serializers.ValidationError("Student school is not the same as student route!")
-
-        if data['guardian'] and len(data['guardian'].address) == 0:
-            raise serializers.ValidationError("User does not have an address configured")
-
+        # if self.partial:
+        #     # Handles patch to avoid breaking things
+        #     return data
+        if 'school' and 'routes' in data:
+            if not data['school'] or not data['routes']:
+                # No consistency to enforce
+                return data
+            school = data['school']
+            route = data['routes']
+            if school.pk != route.school.pk:
+                raise serializers.ValidationError("Student school is not the same as student route!")
+        if 'guardian' in data:
+            if data['guardian'] and len(data['guardian'].address) == 0:
+                raise serializers.ValidationError("User does not have an address configured")
         return data
