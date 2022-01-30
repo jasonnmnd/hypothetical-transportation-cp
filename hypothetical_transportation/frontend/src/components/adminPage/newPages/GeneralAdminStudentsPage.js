@@ -11,7 +11,6 @@ import GeneralAdminTableView from '../components/views/GeneralAdminTableView';
 
 function GeneralAdminStudentsPage(props) {
 
-  //Mock Student Data (API Call Later for Real Data)
   const title = "Students"
   const tableType = "student"
   
