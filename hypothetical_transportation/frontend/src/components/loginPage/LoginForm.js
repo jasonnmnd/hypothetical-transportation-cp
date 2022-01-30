@@ -7,7 +7,6 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { login } from "../../actions/auth";
 import isAdmin from "../../utils/user";
-import TestMap from "../maps/TestMap";
 
 function LoginForm( props ) {
   const [details, setDetails] = useState({ email: "", password: "" });
