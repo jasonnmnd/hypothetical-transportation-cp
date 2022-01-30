@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import AssistedLocationModal from "../modals/AssistedLocationModal";
+import config from "../../../../utils/config";
 
 //input1: title of form
 //input2: list of fields?
