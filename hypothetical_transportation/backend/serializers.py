@@ -1,7 +1,13 @@
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
 from rest_framework import serializers
-
 from .models import Route, School, Student
+
+
+class GroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Group
+        fields = ('name',)
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -14,16 +20,24 @@ class UserSerializer(serializers.ModelSerializer):
         return data
 
 
-class RouteSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Route
-        fields = '__all__'
+class FormatUserSerializer(UserSerializer):
+    groups = GroupSerializer(many=True)
 
 
 class SchoolSerializer(serializers.ModelSerializer):
     class Meta:
         model = School
         fields = '__all__'
+
+
+class RouteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Route
+        fields = '__all__'
+
+
+class FormatRouteSerializer(RouteSerializer):
+    school = SchoolSerializer()
 
 
 class StudentSerializer(serializers.ModelSerializer):
@@ -59,3 +73,9 @@ class StudentSerializer(serializers.ModelSerializer):
             if data['guardian'] and len(data['guardian'].address) == 0:
                 raise serializers.ValidationError("User does not have an address configured")
         return data
+
+
+class FormatStudentSerializer(StudentSerializer):
+    school = SchoolSerializer()
+    routes = RouteSerializer()
+    guardian = UserSerializer()

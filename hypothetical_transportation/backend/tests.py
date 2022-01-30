@@ -300,6 +300,5 @@ class PermissionViews(TransactionTestCase):
                                         }),
                                     content_type='application/json',
                                     HTTP_AUTHORIZATION=f'Token {self.admin_token}')
-
         self.assertEqual(str(response.data['non_field_errors'][0]), 'User does not have an address configured')
         self.assertEqual(response.status_code, 400)
