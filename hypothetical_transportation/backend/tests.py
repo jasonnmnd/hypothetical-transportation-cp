@@ -77,42 +77,28 @@ class AuthenticationObjectConsistency(TestCase):
 
 
 class PermissionViews(TestCase):
-    def setUp(self):
+    @classmethod
+    def setUpTestData(cls):
         admin_group = Group.objects.create(name='Administrator')
         guardian_group = Group.objects.create(name='Guardian')
 
         # SET UP ADMINISTRATOR
         admin_user = get_user_model().objects.create_user(email='admin@example.com', password='wordpass',
-
                                                           full_name='admin user', address='')
         admin_user.groups.add(admin_group)
-        login_response = self.client.post('/api/auth/login',
-                                          json.dumps(
-                                              {'email': 'admin@example.com', 'password': 'wordpass'}),
-                                          content_type='application/json')
-        self.admin_token = login_response.data['token']
-        self.admin_user = admin_user
+        cls.admin_user = admin_user
 
         # SET UP USER 1
         normal_user1 = get_user_model().objects.create_user(email='user1@example.com', password='wordpass',
                                                             full_name='user', address='')
         normal_user1.groups.add(guardian_group)
-        login_response = self.client.post('/api/auth/login',
-                                          json.dumps(
-                                              {'email': 'user1@example.com', 'password': 'wordpass'}),
-                                          content_type='application/json')
-        self.user1_token = login_response.data['token']
-        self.normal_user1 = normal_user1
+        cls.normal_user1 = normal_user1
 
         # SET UP USER 2
         normal_user2 = get_user_model().objects.create_user(email='user2@example.com', password='wordpass',
                                                             full_name='user', address='')
         normal_user2.groups.add(guardian_group)
-        login_response = self.client.post('/api/auth/login',
-                                          json.dumps(
-                                              {'email': 'user2@example.com', 'password': 'wordpass'}),
-                                          content_type='application/json')
-        self.user2_token = login_response.data['token']
+        cls.normal_user2 = normal_user2
 
         school1 = School.objects.create(address='', name='School 1')
         school2 = School.objects.create(address='', name='School 2')
@@ -134,6 +120,30 @@ class PermissionViews(TestCase):
         # User 2 Children
         student4 = Student.objects.create(full_name='first last', address='', active=True,
                                           school=school4, routes=route4, guardian=normal_user2, student_id=1)
+
+    def setUp(self):
+        login_response = self.client.post('/api/auth/login',
+                                          json.dumps(
+                                              {'email': 'admin@example.com', 'password': 'wordpass'}),
+                                          content_type='application/json')
+        self.admin_token = login_response.data['token']
+        self.admin_id = login_response.data['user']['id']
+        self.admin_user = get_user_model().objects.get(id=self.admin_id)
+
+        login_response = self.client.post('/api/auth/login',
+                                          json.dumps(
+                                              {'email': 'user1@example.com', 'password': 'wordpass'}),
+                                          content_type='application/json')
+        self.user1_token = login_response.data['token']
+        self.user1_id = login_response.data['user']['id']
+        self.normal_user1 = get_user_model().objects.get(id=self.user1_id)
+
+        login_response = self.client.post('/api/auth/login',
+                                          json.dumps(
+                                              {'email': 'user2@example.com', 'password': 'wordpass'}),
+                                          content_type='application/json')
+        self.user2_token = login_response.data['token']
+
         self.factory = RequestFactory()
         self.client = Client()
 
