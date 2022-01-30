@@ -40,8 +40,12 @@ function AdminSchoolsPage(props) {
 
   const [schools, setSchools] = useState(emptySchools);
 
+  const config = {
+    headers: { Authorization: `Token ${props.token}` }
+  }
+
   const getSchools = () => {
-    axios.get('/api/school/')
+    axios.get('/api/school/', config)
         .then(res => {
             setSchools(res.data.results);
         }).catch(err => console.log(err));
@@ -100,7 +104,8 @@ AdminSchoolsPage.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
-  user: state.auth.user
+  user: state.auth.user,
+  token: state.auth.token
 });
 
 export default connect(mapStateToProps)(AdminSchoolsPage)
