@@ -4,7 +4,6 @@ import ParentPage from "./components/parentPage/ParentPage";
 import AdminPage from "./components/adminPage/AdminPage";
 import { Routes, Route, BrowserRouter} from "react-router-dom";
 import LoginForm from "./components/loginPage/LoginForm.js"
-import AdminUsersPage from "./components/adminPage/pages/AdminUsersPage";
 import AdminStudentsPage from "./components/adminPage/pages/AdminStudentsPage";
 import AdminRoutesPage from "./components/adminPage/pages/AdminRoutesPage";
 import AdminSchoolsPage from "./components/adminPage/pages/AdminSchoolsPage";
@@ -27,6 +26,7 @@ import GeneralAdminUsersPage from "./components/adminPage/newPages/GeneralAdminU
 import GeneralAdminStudentsPage from "./components/adminPage/newPages/GeneralAdminStudentsPage";
 import GeneralAdminSchoolsPage from "./components/adminPage/newPages/GeneralAdminSchoolsPage";
 import GeneralAdminRoutesPage from "./components/adminPage/newPages/GeneralAdminRoutesPage";
+import GeneralAdminUserDetails from "./components/adminPage/newPages/GeneralAdminUserDetails";
 
 import AdminNewPage from "./components/adminPage/pages/AdminNewPage";
 import ManStudentPage from "./components/adminPage/pages/ManStudentPage";
@@ -74,7 +74,7 @@ function App( props ) {
           <Route exact path="/admin/edit/:column/:id" element={<PrivateRoute><AdminEditPage /></PrivateRoute>}></Route>
           <Route exact path="/admin/schools" element={<PrivateRoute><GeneralAdminSchoolsPage /></PrivateRoute>}></Route>
           <Route exact path="/admin/routes" element={<PrivateRoute><GeneralAdminRoutesPage /></PrivateRoute>}></Route>
-          <Route exact path="/admin/user/:id" element={<PrivateRoute><AdminUserDetails /></PrivateRoute>}/>
+          <Route exact path="/admin/user/:id" element={<PrivateRoute><GeneralAdminUserDetails /></PrivateRoute>}/>
           <Route exact path="/admin/student/:id" element={<PrivateRoute><AdminStudentDetails /></PrivateRoute>}/>
           <Route exact path="/admin/school/:id" element={<PrivateRoute><AdminSchoolDetails /></PrivateRoute>}/>
           <Route exact path="/admin/route/:id" element={<PrivateRoute><AdminRouteDetails /></PrivateRoute>}/>

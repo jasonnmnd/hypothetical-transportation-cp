@@ -6,9 +6,11 @@ const initialState = {
       ]
   },
   viewedUser: {
-    results: [
-
-    ]
+        id: null,
+        full_name: "",
+        email: "",
+        address: "",
+        groups: [],
   }
 };
 
@@ -22,7 +24,9 @@ export default function (state = initialState, action) {
     case DELETE_USER:
        return {
            ...state,
-           users: state.users.filter(user => user.id !== action.payload)
+           users: {
+             results: state.users.results.filter(user => user.id !== action.payload)
+            }
        }   
     case ADD_USER:
         return {

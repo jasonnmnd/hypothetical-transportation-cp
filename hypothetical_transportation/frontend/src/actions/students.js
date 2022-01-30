@@ -64,3 +64,14 @@ export const searchStudents = (i1, i2) => (dispatch, getState) => {
       }).catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
 };
 
+
+export const getStudentsByGuardian = (guardianID) => (dispatch, getState) => {
+  axios.get(`/api/student/?guardian=${guardianID}`, tokenConfig(getState))
+      .then(res => {
+        dispatch({
+          type: POPULATE_TABLE,
+          payload: res.data,
+        });
+      }).catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
+};
+

@@ -1,4 +1,4 @@
-import { POPULATE_TABLE } from '../actions/types.js';
+import { POPULATE_TABLE, DELETE_ITEM } from '../actions/types.js';
 
 const initialState = {
   values: {
@@ -14,6 +14,13 @@ export default function (state = initialState, action) {
         ...state,
         values: action.payload,
       };
+    case DELETE_ITEM:
+      return {
+        ...state,
+        values: {
+          results: state.values.results.filter(value => value.id !== action.payload)
+        } 
+      }
     default:
       return state;
   }
