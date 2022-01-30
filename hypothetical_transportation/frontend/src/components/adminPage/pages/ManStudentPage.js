@@ -9,7 +9,7 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import AssistedLocationModal from '../components/modals/AssistedLocationModal';
-
+import config from '../../../utils/config';
 
 function ManStudentPage(props) {
     const param = useParams()
@@ -48,14 +48,14 @@ function ManStudentPage(props) {
     const [error, setError] = useState("");
 
     const getSchools = () => {
-      axios.get('/api/school/')
+      axios.get('/api/school/', config(props.token))
         .then(res => {
           setSchoolList(res.data.results);
         }).catch(err => console.log(err));
     }
 
     const getStudent = () => {
-      axios.get(`/api/student/${param.id}/`)
+      axios.get(`/api/student/${param.id}/`, config(props.token))
         .then(res => {
           setObj(res.data);
           getRoutes(res.data.school);
@@ -63,16 +63,15 @@ function ManStudentPage(props) {
     }
 
     const getUsers = () => {
-      axios.get('/api/user/')
+      axios.get('/api/user/', config(props.token))
         .then(res => {
-          console.log(res.data.results.filter(s=>!s.groups.includes(1)))
-          setUsers(res.data.results.filter(s=>!s.groups.includes(1)));
+          setUsers(res.data.results);//.filter(s=>!s.groups.includes(1)));
         }).catch(err => console.log(err));
     }
 
   const getRoutes = (i) => {
     if(i!=="" && i!==null && i!==undefined && i!==0){
-    axios.get(`/api/route/?school=${i}`)
+    axios.get(`/api/route/?school=${i}`, config(props.token))
       .then(res => {
         setRoutes(res.data.results);
       }).catch(err => console.log(err));
@@ -84,7 +83,7 @@ function ManStudentPage(props) {
 
   const setAddress = (e)=>{
     setObj({ ...obj, ["guardian"]: e.target.value});
-    axios.get(`/api/user/${e.target.value}/`)
+    axios.get(`/api/user/${e.target.value}/`, config(props.token))
       .then(res => {
         setObj({ ...obj, ["guardian"]: e.target.value, ["address"]: res.data.address});
       }).catch(err => console.log(err));
@@ -98,12 +97,12 @@ function ManStudentPage(props) {
       axios
           .post(`/api/student/`,obj)
           .then(res =>{
-              navigate(`/admin/students/`)
+              navigate(`/admin/students/`, config(props.token))
           }).catch(err => console.log(err));
     }
     else{
       axios
-          .put(`/api/student/${param.id}/`,obj)
+          .put(`/api/student/${param.id}/`,obj, config(props.token))
           .then(res =>{
               navigate(`/admin/students/`)
           }).catch(err => console.log(err));
@@ -149,7 +148,7 @@ const handleConfirmAddress = () => {
 
     return ( 
       <>
-        <Header textToDisplay={"Admin Portal"}></Header>
+        <Header textToDisplay={"Admin Portal"} shouldShowOptions={true}></Header>
         <SidebarSliding/>
         {/* <div className='confirm_location'>{openModal && <AssistedLocationModal closeModal={setOpenModal} handleConfirmAddress={handleConfirmAddress} address={obj.address}></AssistedLocationModal>}</div> */}
         <div className='admin-edit-page'>
@@ -242,7 +241,8 @@ ManStudentPage.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
-  user: state.auth.user
+  user: state.auth.user,
+  token: state.auth.token
 });
 
 export default connect(mapStateToProps)(ManStudentPage)

@@ -9,6 +9,8 @@ from rest_framework.views import APIView
 from .models import School, Route, Student
 from .serializers import UserSerializer, StudentSerializer, RouteSerializer, SchoolSerializer
 from .search import DynamicSearchFilter
+from .customfilters import StudentCountShortCircuitFilter
+from .permissions import is_admin, IsAdminOrReadOnly
 
 
 def get_filter_dict(model):
@@ -59,15 +61,20 @@ class MapsAPI(APIView):
 class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     permission_classes = [
-        permissions.AllowAny
+        # permissions.IsAuthenticated
+        IsAdminOrReadOnly
     ]
-    filter_backends = [DjangoFilterBackend, DynamicSearchFilter]
+    filter_backends = [DjangoFilterBackend, DynamicSearchFilter, filters.OrderingFilter]
     filterset_fields = get_filter_dict(get_user_model())
+    ordering_fields = ['email', 'full_name']
 
     def get_queryset(self):
-        return get_user_model().objects.all().distinct()
+        if is_admin(self.request.user):
+            return get_user_model().objects.all().distinct()
+        else:
+            return get_user_model().objects.filter(id=self.request.user.id).distinct()
 
-    @action(detail=False)
+    @action(detail=False, permission_classes=[permissions.AllowAny])
     def fields(self, request):
         content = parse_repr(repr(UserSerializer()))
         return Response(content)
@@ -76,16 +83,23 @@ class UserViewSet(viewsets.ModelViewSet):
 class RouteViewSet(viewsets.ModelViewSet):
     serializer_class = RouteSerializer
     permission_classes = [
-        # IsAdminOrReadOnlyParent
-        permissions.AllowAny
+        IsAdminOrReadOnly
+        # permissions.IsAuthenticated
     ]
-    filter_backends = [DjangoFilterBackend, DynamicSearchFilter]
+    filter_backends = [DjangoFilterBackend, DynamicSearchFilter, StudentCountShortCircuitFilter]
     filterset_fields = get_filter_dict(Route)
+    ordering_fields = ['school__name', 'name', 'students']
 
     def get_queryset(self):
-        return Route.objects.all().distinct()
+        # Only return routes associated with children of current user
+        if is_admin(self.request.user):
+            return Route.objects.all().distinct()
+        else:
+            students_queryset = self.request.user.students
+            return Route.objects.filter(id__in=students_queryset.values('routes_id')).distinct()
+            # return Route.objects.all().distinct()
 
-    @action(detail=False)
+    @action(detail=False, permission_classes=[permissions.AllowAny])
     def fields(self, request):
         content = parse_repr(repr(RouteSerializer()))
         return Response(content)
@@ -94,17 +108,24 @@ class RouteViewSet(viewsets.ModelViewSet):
 class SchoolViewSet(viewsets.ModelViewSet):
     serializer_class = SchoolSerializer
     permission_classes = [
-        permissions.AllowAny
+        # permissions.IsAuthenticated
+        IsAdminOrReadOnly
     ]
-    filter_backends = [DjangoFilterBackend, DynamicSearchFilter]
+    filter_backends = [DjangoFilterBackend, DynamicSearchFilter, filters.OrderingFilter]
     filterset_fields = get_filter_dict(School)
+    ordering_fields = ['name']
 
     # search_fields = [self.request.querystring]
 
     def get_queryset(self):
-        return School.objects.all().distinct()
+        if is_admin(self.request.user):
+            return School.objects.all().distinct()
+        else:
+            # Only return schools associated with children of current user
+            students_queryset = self.request.user.students
+            return School.objects.filter(id__in=students_queryset.values('school_id')).distinct()
 
-    @action(detail=False)
+    @action(detail=False, permission_classes=[permissions.AllowAny])
     def fields(self, request):
         content = parse_repr(repr(SchoolSerializer()))
         return Response(content)
@@ -113,20 +134,25 @@ class SchoolViewSet(viewsets.ModelViewSet):
 class StudentViewSet(viewsets.ModelViewSet):
     serializer_class = StudentSerializer
     permission_classes = [
-        permissions.AllowAny
+        # permissions.IsAuthenticated
+        # permissions.AllowAny
+        IsAdminOrReadOnly
     ]
-    filter_backends = [DjangoFilterBackend, DynamicSearchFilter]
+    filter_backends = [DjangoFilterBackend, DynamicSearchFilter, filters.OrderingFilter]
     filterset_fields = get_filter_dict(Student)
+    ordering_fields = ['school__name', 'student_id', 'full_name']
 
     def get_queryset(self):
-        # modify to return all if admin
-        # return self.request.user.students.all().distinct()
-        return Student.objects.all().distinct()
+        # return Student.objects.all().distinct()
+        if is_admin(self.request.user):
+            return Student.objects.all().distinct()
+        else:
+            return self.request.user.students.all().distinct()
 
     def perform_create(self, serializer):
         serializer.save()
 
-    @action(detail=False)
+    @action(detail=False, permission_classes=[permissions.AllowAny])
     def fields(self, request):
         content = parse_repr(repr(StudentSerializer()))
         return Response(content)

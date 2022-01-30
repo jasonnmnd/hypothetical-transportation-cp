@@ -26,13 +26,13 @@ function EditForm(props) {
                 .then(res =>{
                     // console.log(props.obj)
                     if(props.column.includes("parent")){
-                        axios.get(`/api/student/?guardian=${props.obj.id}`)
+                        axios.get(`/api/student/?guardian=${props.obj.id}`, config(props.token))
                             .then(res => {
                             if(res.data.results.length > 0){
                                 res.data.results.map((stu)=>{
                                     stu.address=props.obj.address
                                     axios
-                                        .put(`/api/student/${stu.id}/`,stu)
+                                        .put(`/api/student/${stu.id}/`,stu, config(props.token))
                                         .then(res =>{
                                         }).catch(err => console.log(err));
                                 })
@@ -50,14 +50,14 @@ function EditForm(props) {
             console.log(props.obj)
             if(col.includes("user")){
                 axios
-                    .post(`/api/auth/register`,props.obj)
+                    .post(`/api/auth/register`,props.obj, config(props.token))
                     .then(res =>{
                         navigate(`/admin/${col}s/`)
 
                     }).catch(err => console.log(err));
             }else{            
                 axios
-                    .post(`/api/${col}/`,props.obj)
+                    .post(`/api/${col}/`,props.obj, config(props.token))
                     .then(res =>{
                         navigate(`/admin/${col}s/`)
 
@@ -117,7 +117,8 @@ EditForm.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
-
+    user: state.auth.user,
+    token: state.auth.token
 });
 
 export default connect(mapStateToProps)(EditForm)

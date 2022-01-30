@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import SidebarSliding from "../adminPage/components/sidebar/SidebarSliding";
 import Header from "../header/Header";
 import { connect } from 'react-redux';
@@ -10,8 +10,8 @@ function AccountPage(props){
     
     return(
         <div>
-            <Header textToDisplay={isAdmin(props.user) ? "Admin Portal": "Parent Portal"}></Header>
-            <SidebarSliding/>
+            <Header textToDisplay={isAdmin(props.user) ? "Admin Portal": "Parent Portal"} shouldShowOptions={true}></Header>
+            {isAdmin(props.user)?        <SidebarSliding/>:null}
             <div className="welcome">
                 <h1>Account Details</h1>
                 <p>Name: {props.user.full_name}</p>
@@ -21,9 +21,9 @@ function AccountPage(props){
                         <Link to={"/account/password"}>
                             <button>Change Password</button>
                         </Link>
-                        {props.user.admin? <Link to={"/admin"}>
+                        {props.user.groups[0]==1 ? <Link to={"/admin"}>
                             <button>Back</button>
-                        </Link>:<Link to={"/parent"}>
+                        </Link> : <Link to={"/parent"}>
                             <button>Back</button>
                         </Link>}
                     </div>
@@ -37,7 +37,7 @@ function AccountPage(props){
 AccountPage.propTypes = {
     user: PropTypes.shape({
         id: PropTypes.number,
-        email: PropTypes.email,
+        email: PropTypes.string,
         full_name: PropTypes.string,
         address: PropTypes.string,
         groups: PropTypes.arrayOf(PropTypes.number)
@@ -47,6 +47,7 @@ AccountPage.propTypes = {
 
 const mapStateToProps = (state) => ({
     user: state.auth.user,
+    token: state.auth.token
 });
 
 export default connect(mapStateToProps)(AccountPage)

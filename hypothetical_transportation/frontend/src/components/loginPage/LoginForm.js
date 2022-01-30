@@ -27,7 +27,7 @@ function LoginForm( props ) {
   return (
       <div className="login-form" style ={ { backgroundImage: `url(${image})` } }>
         <div>
-          <Header textToDisplay={"Hypothetical Transportation"}></Header>
+          <Header textToDisplay={"Hypothetical Transportation"} shouldShowOptions={false}></Header>
           <form className="login" >
             <div className="form-inner">
               <h2>Sign in to your account</h2>

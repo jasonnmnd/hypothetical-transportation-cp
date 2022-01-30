@@ -7,30 +7,11 @@ import SidebarSliding from '../components/sidebar/SidebarSliding';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import config from '../../../utils/config';
 
 function AdminStudentDetails(props) {
   const navigate = useNavigate();
   const param = useParams();
-
-  const exampleStudent = {
-    name: "First Last",
-    id: param.id,
-    student_id: 444,
-    school: {//change this to school id for easier query?
-      id: 123,
-      name: "Random school"
-    },
-    route: {//change this to route id for easier query? because we need to access route through details page too
-      id:100,
-      name: "route 1"
-    } ,
-    parent: {//change this to parent id for easier query? then ask backend to pass parent name and email information?
-      id:30,
-      name:"Example Parent",
-      email: "parent@parent.com"
-    }
-  }
-
   const studentObject = {
     id: 0,
     student_id: "",
@@ -41,7 +22,6 @@ function AdminStudentDetails(props) {
     routes: 0,
     school: 0,
   }
-
   const [student, setStudent] = useState(studentObject);
   const [parentName,setParentName] = useState("");
   const [schoolName,setSchoolName] = useState("");
@@ -49,21 +29,19 @@ function AdminStudentDetails(props) {
   const [route,setRouteExist] = useState(false);
 
   const getInfo = () => {
-    axios.get(`/api/student/${param.id}/`)
+    axios.get(`/api/student/${param.id}/`, config(props.token))
       .then(res => {
-        console.log(`/api/student/${param.id}/`)
-        console.log(res.data)
         setStudent(res.data);
-        axios.get(`/api/user/${res.data.guardian}/`)
+        axios.get(`/api/user/${res.data.guardian}/`, config(props.token))
           .then(res => {
             setParentName(res.data.full_name);
         }).catch(err => console.log(err));
-        axios.get(`/api/school/${res.data.school}/`)
+        axios.get(`/api/school/${res.data.school}/`, config(props.token))
           .then(res => {
             setSchoolName(res.data.name);
         }).catch(err => console.log(err));
         if (res.data.routes!==undefined && res.data.routes!==null){
-          axios.get(`/api/route/${res.data.routes}/`)
+          axios.get(`/api/route/${res.data.routes}/`, config(props.token))
             .then(res => {
               setRouteName(res.data.name);
               setRouteExist(true)
@@ -81,7 +59,7 @@ function AdminStudentDetails(props) {
   const handleConfirmDelete = () => {
     //Replace with API call to delete student
     //Route back to students page
-    axios.delete(`/api/student/${param.id}`).then(res => {
+    axios.delete(`/api/student/${param.id}/`, config(props.token)).then(res => {
       console.log("DELETED STUDENT");
       navigate(`/admin/students/`)
 
@@ -94,7 +72,7 @@ function AdminStudentDetails(props) {
 
   return (
     <> 
-      <Header textToDisplay={"Admin Portal"}></Header>
+      <Header textToDisplay={"Admin Portal"} shouldShowOptions={true}></Header>
       <SidebarSliding/>
       <div className='confirm_location'>{openModal && <DeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}</div>
         <div className='middle-justify'>
@@ -131,7 +109,7 @@ function AdminStudentDetails(props) {
                   {/* Table for Students Here */}
 
                   <div className='edit-delete-buttons'>
-                        <Link to={`/admin/edit_student/${exampleStudent.id}`}><button>Edit Student</button></Link>
+                        <Link to={`/admin/edit_student/${student.id}`}><button>Edit Student</button></Link>
                         <button onClick={() => {
                           setOpenModal(true);
                         }}>Delete Student</button>
@@ -151,7 +129,8 @@ AdminStudentDetails.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
-  user: state.auth.user
+  user: state.auth.user,
+  token: state.auth.token
 });
 
 export default connect(mapStateToProps)(AdminStudentDetails)

@@ -5,9 +5,9 @@ import { Link, useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import axios from "axios";
+import config from "../../../utils/config";
 
-
-function ParentStudentDetails(){
+function ParentStudentDetails(props){
     const param = useParams();
 
     const studentObject = {
@@ -21,13 +21,29 @@ function ParentStudentDetails(){
       }
 
     const [student, setStudent] = useState(studentObject);
+    const [schoolName,setSchoolName] = useState("");
+    const [routeName,setRouteName] = useState("");
+    const [route,setRouteExist] = useState(false);
 
     const getStudentInfo = () => {
-        axios.get(`/api/student/${param.id}/`)
+        axios.get(`/api/student/${param.id}/`, config(props.token))
         .then(res => {
-            console.log(res.data);
             setStudent(res.data);
-        }).catch(err => console.log(err));
+            axios.get(`/api/school/${res.data.school}/`, config(props.token))
+            .then(res => {
+                setSchoolName(res.data.name);
+            }).catch(err => console.log(err));
+            if (res.data.routes!==undefined && res.data.routes!==null){
+            axios.get(`/api/route/${res.data.routes}/`, config(props.token))
+                .then(res => {
+                setRouteName(res.data.name);
+                setRouteExist(true)
+            }).catch(err => console.log(err));
+            }
+            else{
+            setRouteName("NONE")
+            }
+    }).catch(err => console.log(err));
     }
 
     useEffect(() => {
@@ -36,7 +52,7 @@ function ParentStudentDetails(){
 
     return(
         <>
-        <Header textToDisplay={"Parent Portal"}></Header>
+        <Header textToDisplay={"Parent Portal"} shouldShowOptions={true}></Header>
             <div className='middle-justify'>
                 <div className='parent-details'>
                         <h1>Your Student's Details</h1>
@@ -50,11 +66,11 @@ function ParentStudentDetails(){
                         </div>
                         <div className='info-fields'>
                             <h2>School:</h2>
-                            <h3>{student.school}</h3>
+                            <h3>{schoolName}</h3>
                         </div>
                         <div className='info-fields'>
                             <h2>Route:</h2>
-                            <h3>{student.routes}</h3>
+                            <h3>{route===true?routeName:"NONE"}</h3>
                         </div>
 
                         <div className='edit-delete-buttons'>
@@ -73,7 +89,9 @@ ParentStudentDetails.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
-
+    isAuthenticated: state.auth.isAuthenticated,
+    user: state.auth.user,
+    token: state.auth.token
 });
 
 export default connect(mapStateToProps)(ParentStudentDetails)

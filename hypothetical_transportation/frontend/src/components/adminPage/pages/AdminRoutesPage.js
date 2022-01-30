@@ -6,6 +6,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import config from '../../../utils/config';
 
 function AdminRoutesPage(props) {
 
@@ -19,14 +20,14 @@ function AdminRoutesPage(props) {
   const [routes, setRoutes] = useState(emptyRoute);
   
   const getRoutes = () => {
-    axios.get(`/api/route/`)
+    axios.get(`/api/route/`, config(props.token))
         .then(res => {
           setRoutes(res.data.results);
         }).catch(err => console.log(err));
   }
 
   const searchRoute = (i1,i2) => {
-    axios.get(`/api/route/?search=${i2}&search_fields=${i1}`)
+    axios.get(`/api/route/?search=${i2}&search_fields=${i1}`, config(props.token))
         .then(res => {
           console.log(`/api/route/?search=${i2}&search_fields=${i1}`)
           setRoutes(res.data.results);
@@ -58,7 +59,7 @@ function AdminRoutesPage(props) {
   return (
     <div className='admin-page'>
         <SidebarSliding/>
-        <Header textToDisplay={"Admin Portal"}></Header>
+        <Header textToDisplay={"Admin Portal"} shouldShowOptions={true}></Header>
         <div className='middle-content'>
           {/* <div className='center-buttons'>
             <Link to={`/admin/new/route`}>
@@ -81,7 +82,8 @@ AdminRoutesPage.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
-  user: state.auth.user
+  user: state.auth.user,
+  token: state.auth.token
 });
 
 export default connect(mapStateToProps)(AdminRoutesPage)

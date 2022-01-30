@@ -43,7 +43,7 @@ function ParentTable(props) {
                         <Fragment key={i}>
                             <ParentRow header={props.header} data={d} actionName = {props.actionName?props.actionName:"View"} action={props.action? props.action:handleViewClick}></ParentRow>
                         </Fragment>
-                    )):<div>There is no kids in the system for you</div>}
+                    )):<div>There are no kids in the system for you</div>}
                 </tbody>
             </table>
         </div>

@@ -9,17 +9,20 @@ import axios from 'axios';
 import AssistedLocationModal from '../components/modals/AssistedLocationModal';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import config from '../../../utils/config';
+import { getUser } from '../../../actions/users';
 
 
 
 function AdminUserDetails(props) {
+  console.log("HIIII")
   const navigate = useNavigate();
   const param = useParams();
 
   const [openModal, setOpenModal] = useState(false);
 
   const handleConfirmDelete = () => {
-    axios.delete(`/api/user/${param.id}`)
+    axios.delete(`/api/user/${param.id}/`, config(props.token))
         .then(res => {
           console.log("DELETED User");
           navigate(`/admin/users/`)
@@ -56,16 +59,19 @@ function AdminUserDetails(props) {
   const [colum, setColumn] = useState("");
   const [students, setStudents] = useState(studentObject);
 
-  const getUser = () => {
-    axios.get(`/api/user/${param.id}/`)
-        .then(res => {
-          setUser(res.data);
-          res.data.groups.includes(1)?setColumn("admin_user"):setColumn("parent_user")
-        }).catch(err => console.log(err));
-    }
+  // const getUser = () => {
+  //   console.log("HELLO")
+  //   console.log(props.token)
+  //   console.log("HELLO1")
+  //   axios.get(`/api/user/${param.id}/`, config(props.token))
+  //       .then(res => {
+  //         setUser(res.data);
+  //         res.data.groups.includes(1)?setColumn("admin_user"):setColumn("parent_user")
+  //       }).catch(err => console.log(err));
+  //   }
   
   const getStudents = () => {
-    axios.get(`/api/student/?guardian=${param.id}`)
+    axios.get(`/api/student/?guardian=${param.id}`, config(props.token))
         .then(res => {
           console.log(res.data.results)
           setStudents(res.data.results);
@@ -73,7 +79,9 @@ function AdminUserDetails(props) {
     }
 
   useEffect(() => {
-    getUser();
+    console.log("HIIII")
+    console.log(props)
+    props.getUser();
     getStudents();
     console.log(colum)
 
@@ -84,7 +92,7 @@ function AdminUserDetails(props) {
   return (
     
     <>  
-        <Header textToDisplay={"Admin Portal"}></Header>
+        <Header textToDisplay={"Admin Portal"} shouldShowOptions={true}></Header>
         <SidebarSliding/>
         <div className='confirm_location'>{openModal && <DeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}</div>
         <div className='middle-justify'>
@@ -92,20 +100,20 @@ function AdminUserDetails(props) {
                 <h1>User Details</h1>
                 <div className='info-fields'>
                     <h2>Name: </h2>
-                    <h3>{user.full_name}</h3>
+                    <h3>{props.user.full_name}</h3>
                 </div>
                 <div className='info-fields'>
                     <h2>Email: </h2>
-                    <h3>{user.email}</h3>
+                    <h3>{props.user.email}</h3>
                 </div>
                 {user.groups.includes(2)?<div className='info-fields'>
                     <h2>Address: </h2>
-                    <h3>{user.address}</h3>
+                    <h3>{props.user.address}</h3>
                 </div>:<div></div>
                 }
                 <div className='info-fields'>
                     <h2>Admin: </h2>
-                    <h3>{user.groups.includes(1) ? "true":"false"}</h3>
+                    <h3>{props.user.groups.includes(1) ? "true":"false"}</h3>
                 </div>
                 {/* Table for Students Here */}
                 {
@@ -117,7 +125,7 @@ function AdminUserDetails(props) {
                 }     
 
                 <div className='edit-delete-buttons'>
-                  <Link to={`/admin/edit/${colum}/${user.id}`}><button>Edit User</button></Link>
+                  <Link to={`/admin/edit/${colum}/${props.user.id}`}><button>Edit User</button></Link>
                   <button onClick={() => {
                     setOpenModal(true);
                   }}>Delete User</button>
@@ -133,11 +141,13 @@ function AdminUserDetails(props) {
 }
 
 AdminUserDetails.propTypes = {
-    
+    getUser: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => ({
-  user: state.auth.user
+  user: state.users.viewedUser,
+  token: state.auth.token
+  
 });
 
-export default connect(mapStateToProps)(AdminUserDetails)
+export default connect(mapStateToProps, {getUser})(AdminUserDetails)

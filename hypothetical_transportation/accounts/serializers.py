@@ -11,6 +11,14 @@ class GroupSerializer(serializers.ModelSerializer):
         model = Group
         fields = ('name',)
 
+
+# Change Password Serializers
+class ChangePasswordSerializer(serializers.Serializer):
+    model = get_user_model()
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
+
+
 # User Serializer
 class UserSerializer(serializers.ModelSerializer):
     class Meta:

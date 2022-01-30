@@ -7,15 +7,16 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { logout } from "../../actions/auth";
+import isAdmin from "../../utils/user";
 import AdminTable from "../adminPage/components/table/AdminTable";
+import SidebarSliding from "../adminPage/components/sidebar/SidebarSliding";
+import config from "../../utils/config";
 
 function ParentPage(props) {
 
   const emptyStudent = {
     student_id: "",
     full_name:"",
-    school: 0,
-    routes: 0
   }
 
   const studentObject = [{
@@ -31,7 +32,7 @@ function ParentPage(props) {
   const [students, setStudents] = useState(studentObject);
     
   const getStudents = () => {
-    axios.get(`/api/student/?guardian=${props.user.id}`)
+    axios.get(`/api/student/?guardian=${props.user.id}`, config(props.token))
         .then(res => {
           console.log(res.data.results)
           setStudents(res.data.results);
@@ -45,14 +46,14 @@ function ParentPage(props) {
     return (
       
         <div className="parent-page">
-          <Header textToDisplay={"Parent Portal"}></Header>
+          <Header textToDisplay={"Parent Portal"} shouldShowOptions={true}></Header>
+          {isAdmin(props.user)? <SidebarSliding/>:null}
           <div>
             <div className="welcome">
               <h2>
                 Welcome,<span>{props.user.full_name}</span>
               </h2>
               <div className="button-spacing">
-                <button onClick={props.logout}>Logout</button>
                 <Link to={"/account"}>
                     <button>Account</button>
                 </Link>
@@ -79,15 +80,15 @@ ParentPage.propTypes = {
     user: PropTypes.shape({
       id: PropTypes.number,
       username: PropTypes.string,
-      email: PropTypes.email
+      email: PropTypes.string
     }),
     logout: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => ({
     isAuthenticated: state.auth.isAuthenticated,
-    user: state.auth.user
-
+    user: state.auth.user,
+    token: state.auth.token
 });
 
 export default connect(mapStateToProps, {logout} )(ParentPage)

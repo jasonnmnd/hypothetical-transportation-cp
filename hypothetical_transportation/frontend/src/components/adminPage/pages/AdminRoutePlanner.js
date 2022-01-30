@@ -5,8 +5,9 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import MapContainer from '../../maps/MapContainer';
 import AdminTable from '../components/table/AdminTable';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+import PropTypes, { string } from 'prop-types';
 import axios from 'axios';
+import config from '../../../utils/config';
 
 function AdminRoutePlanner(props) {
   const param = useParams();
@@ -49,14 +50,14 @@ function AdminRoutePlanner(props) {
 
 
   const getSchool = () => {
-    axios.get(`/api/school/${param.school_id}/`)
+    axios.get(`/api/school/${param.school_id}/`, config(props.token))
         .then(res => {
             setSchool(res.data);
         }).catch(err => console.log(err));
     }
 
   const getStudent = () => {
-    axios.get(`/api/student/?school=${param.school_id}`)
+    axios.get(`/api/student/?school=${param.school_id}`, config(props.token))
         .then(res => {
           console.log(res.data.results)
           setStudents(res.data.results);
@@ -64,7 +65,7 @@ function AdminRoutePlanner(props) {
   }
 
   const getRoute = ()=>{
-    axios.get(`/api/route/${param.route_id}/`)
+    axios.get(`/api/route/${param.route_id}/`, config(props.token))
     .then(res => {
       setRoute(res.data);
       setObj(res.data);
@@ -72,7 +73,7 @@ function AdminRoutePlanner(props) {
   }
 
   const getStudentRelatedToRoute = ()=>{
-    axios.get(`/api/student/?route=${param.route_id}`)
+    axios.get(`/api/student/?routes=${param.route_id}`, config(props.token))
         .then(res => {
           console.log(res.data.results)
           setRouteStudents(res.data.results);
@@ -122,11 +123,11 @@ function AdminRoutePlanner(props) {
           if(tobeadded.length>0){
             tobeadded.map((stu)=>{
               axios
-                .get(`/api/student/${stu.id}/`)
+                .get(`/api/student/${stu.id}/`, config(props.token))
                 .then(res => {
                   res.data.routes=routeID
                   axios
-                    .put(`/api/student/${stu.id}/`,res.data)
+                    .put(`/api/student/${stu.id}/`,res.data, config(props.token))
                     .then(res =>{
                         console.log(res.data.id)
                     }).catch(err => console.log(err));
@@ -137,17 +138,17 @@ function AdminRoutePlanner(props) {
     }
     else{
       axios
-      .put(`/api/route/${route.id}/`,obj)
+      .put(`/api/route/${route.id}/`,obj, config(props.token))
       .then(res =>{
         const routeID = res.data.id
         if(tobeadded.length>0){
           tobeadded.map((stu)=>{
             axios
-              .get(`/api/student/${stu.id}/`)
+              .get(`/api/student/${stu.id}/`, config(props.token))
               .then(res => {
                 res.data.routes=routeID
                 axios
-                  .put(`/api/student/${stu.id}/`,res.data)
+                  .put(`/api/student/${stu.id}/`,res.data, config(props.token))
                   .then(res =>{
                       console.log(res.data.id)
                   }).catch(err => console.log(err));
@@ -156,11 +157,11 @@ function AdminRoutePlanner(props) {
         if(toberemoved.length>0){
           toberemoved.map((stu)=>{
             axios
-              .get(`/api/student/${stu.id}/`)
+              .get(`/api/student/${stu.id}/`, config(props.token))
               .then(res => {
                 res.data.routes=null
                 axios
-                  .put(`/api/student/${stu.id}/`,res.data)
+                  .put(`/api/student/${stu.id}/`,res.data, config(props.token))
                   .then(res =>{
                       console.log(res.data.id)
                   }).catch(err => console.log(err));
@@ -179,7 +180,7 @@ function AdminRoutePlanner(props) {
   return (
     
     <>
-        <Header textToDisplay={"Admin Portal"}></Header>
+        <Header textToDisplay={"Admin Portal"} shouldShowOptions={true}></Header>
         <SidebarSliding/>
         <div className='middle-justify'>
           <div className='admin-details'>
@@ -196,27 +197,29 @@ function AdminRoutePlanner(props) {
             </div> */}
 
             <div className='info-fields'>
-              <h2>School: </h2>
+              <h2>School (Blue Pin): </h2>
               {/* <Link to={`/admin/school/${exampleRoute.school.id}`}> */}
                 <Link to={`/admin/school/${school.id}`}><button className='button'><h3>{school.name}</h3></button></Link>
               {/* </Link> */}
             </div>
             <h2>Map of School and Students</h2>
-            <MapContainer />
-
+            {props.acion==="edit"?
+              <MapContainer studentData={students.filter(stu=>stu.routes===null)} schoolData={school}/>:
+              <MapContainer studentData={students.filter(stu=>stu.routes===null)} schoolData={school} routeStudentData={route_student}/>
+              }
             {/* <h2> Students inside this Routes </h2>
             <AdminTable title={"Students"} header={Object.keys(emptyStudent)} data={students.filter(i=>i.route!=="")} actionName={"Remove From This Route"} action={removeFromRoute}/> */}
 
             {props.action==="edit"?
               <div>
-                <AdminTable title={`Students currently in ${route.name}`} header={Object.keys(emptyStudent)} data={route_student.filter(i=>i.routes===route.id&&!toberemoved.includes(i))} actionName={"Remove from Route"} action={removeFromRoute}/>
+                <AdminTable title={`Students currently in ${route.name} (Green pin)`} header={Object.keys(emptyStudent)} data={route_student.filter(i=>i.routes===route.id&&!toberemoved.includes(i))} actionName={"Remove from Route"} action={removeFromRoute}/>
                 <AdminTable title={`Students To Be Remove from Route`} header={Object.keys(emptyStudent)} data={toberemoved} actionName={"Remove from Selected"} action={removeFromREMOVE}/>
               </div>:
               <div></div>
             }
 
             <AdminTable title={"Students To Be Added into Route"} header={Object.keys(emptyStudent)} data={tobeadded} actionName={"Remove from Selected"} action={removeFromADD}/>
-            <AdminTable title={`Students at ${school.name} With No Routes`} header={Object.keys(emptyStudent)} data={students.filter(i=>i.routes===null&&!tobeadded.includes(i))} actionName={"Add to Route"} action={addToRoute}/>
+            <AdminTable title={`Students at ${school.name} With No Routes (Red pin)`} header={Object.keys(emptyStudent)} data={students.filter(i=>i.routes===null&&!tobeadded.includes(i))} actionName={"Add to Route"} action={addToRoute}/>
 
             <form>
               <div className="form-inner">
@@ -267,7 +270,8 @@ AdminRoutePlanner.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
-  user: state.auth.user
+  user: state.auth.user,
+  token: state.auth.token
 });
 
 export default connect(mapStateToProps)(AdminRoutePlanner)

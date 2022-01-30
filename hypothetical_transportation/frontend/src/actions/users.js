@@ -3,8 +3,9 @@ import axios from 'axios';
 import { tokenConfig } from './auth';
 
 import { createMessage, returnErrors } from './messages';
+import { getStudents } from './students';
 
-import { GET_USERS, ADD_USER, DELETE_USER, POPULATE_TABLE } from './types';
+import { GET_USERS, ADD_USER, DELETE_USER, POPULATE_TABLE, GET_USER } from './types';
 
 
 export const getUsers = () => (dispatch, getState) => {
@@ -51,4 +52,15 @@ export const searchUsers = (i1, i2) => (dispatch, getState) => {
         }).catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
 };
 
+
+export const getUser = (id) => (dispatch, getState) => {
+  axios.get(`/api/user/${id}/`, tokenConfig(getState))
+      .then(res => {
+        dispatch({
+          type: GET_USER,
+          payload: res.data
+        })
+        //res.data.groups.includes(1)?setColumn("admin_user"):setColumn("parent_user")
+      }).catch(err => console.log(err));
+  }
 

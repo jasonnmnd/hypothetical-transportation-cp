@@ -30,11 +30,12 @@ function AdminNewPage(props) {
     }
     const col = param.column.includes("_") ?param.column.split("_")[1]:param.column
     const [obj, setObj] = useState(emptyFields[col])
-    const fields=Object.keys(emptyFields[col]).filter((i)=>param.column.includes("admin")?i!=="school"&&i!=="address"&&i!=="groups":i!=="school"&&i!=="groups");
+    // const fields=Object.keys(emptyFields[col]).filter((i)=>param.column.includes("admin")?i!=="school"&&i!=="address"&&i!=="groups":i!=="school"&&i!=="groups");
+    const fields=Object.keys(emptyFields[col]).filter((i)=>i!=="school"&&i!=="groups");
 
     return ( 
       <>
-        <Header textToDisplay={"Admin Portal"}></Header>
+        <Header textToDisplay={"Admin Portal"} shouldShowOptions={true}></Header>
         <SidebarSliding/>
         <div className='admin-edit-page'>
             
@@ -51,7 +52,8 @@ AdminNewPage.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
-  user: state.auth.user
+  user: state.auth.user,
+  token: state.auth.token
 });
 
 export default connect(mapStateToProps)(AdminNewPage)
