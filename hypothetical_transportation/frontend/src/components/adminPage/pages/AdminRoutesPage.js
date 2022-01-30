@@ -17,8 +17,16 @@ function AdminRoutesPage(props) {
     description: "",
   }]
 
+  const emptyTable = [{
+    id:"",
+    name: "",
+    school: "",
+    num_student:"",
+  }]
+
   const [routes, setRoutes] = useState(emptyRoute);
-  
+  let list = []
+  const [table, setTable]=useState([]);
   const getRoutes = () => {
     axios.get(`/api/route/`, config(props.token))
         .then(res => {
@@ -51,7 +59,21 @@ function AdminRoutesPage(props) {
     getRoutes();
   }, []);
 
-
+  useEffect(()=>{
+    list=[]
+    routes.map((route)=>{
+      axios.get(`/api/school/${route.school}/`, config(props.token))
+        .then(school => {
+          axios.get(`/api/student/?routes=${route.id}`, config(props.token))
+            .then(res => {
+              list = list.concat({id: route.id,name:route.name, school:school.data.name, num_student:res.data.results.length})
+              list.sort((a, b) => routes.findIndex((r) => r.id === a.id) - routes.findIndex((r) => r.id === b.id));
+              setTable(list)
+            }).catch(err => console.log(err));
+      }).catch(err => console.log(err));
+    })
+    console.log(table)
+  },[routes]);
 
 
   const handlePrevClick = () => {
@@ -80,7 +102,7 @@ function AdminRoutesPage(props) {
               </Link>
           </div> */}
           <div className='table-and-buttons'>
-            <AdminTable title={title} header={Object.keys(emptyRoute[0])} data={routes} search={search} sortBy={["name","school__name","students"]}></AdminTable>
+            <AdminTable title={title} header={Object.keys(emptyTable[0])} data={table} search={search} sortBy={["name","school__name","students"]}></AdminTable>
             <div className="prev-next-buttons">
                 <button onClick={handlePrevClick}>Prev</button>
                 <button onClick={handleNextClick}>Next</button> 
