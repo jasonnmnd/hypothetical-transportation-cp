@@ -47,6 +47,7 @@ AccountPage.propTypes = {
 
 const mapStateToProps = (state) => ({
     user: state.auth.user,
+    token: state.auth.token
 });
 
 export default connect(mapStateToProps)(AccountPage)

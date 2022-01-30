@@ -6,6 +6,7 @@ import Header from "../header/Header";
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import isAdmin from "../../utils/user";
+import config from "../../utils/config";
 
 function ResetPasswordPage(props){
     const [values, setValue] = useState({ old: "", new: "", confirm:"" });
@@ -100,6 +101,7 @@ ResetPasswordPage.propTypes = {
 
 const mapStateToProps = (state) => ({
     user: state.auth.user,
+    token: state.auth.token
 });
 
 export default connect(mapStateToProps)(ResetPasswordPage)
