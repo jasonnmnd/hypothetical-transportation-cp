@@ -33,11 +33,11 @@ class AuthenticationObjectConsistency(TestCase):
         high_school = School.objects.create(address='7777 Some St.', name='Gravity Falls High School')
         route = Route.objects.create(name='School Route 1', description='', school=school)
 
-        mabel = Student.objects.create(full_name='Mabel Pines', address='618 Gopher Road', active=True,
+        mabel = Student.objects.create(full_name='Mabel Pines', active=True,
                                        school=school, routes=route, guardian=stan, student_id=1)
-        dipper = Student.objects.create(full_name='Dipper Pines', address='618 Gopher Road',
+        dipper = Student.objects.create(full_name='Dipper Pines',
                                         active=True, school=school, routes=route, guardian=stan, student_id=2)
-        wendy = Student.objects.create(full_name='Wendy Corduroy', address='618 Gopher Road', active=True,
+        wendy = Student.objects.create(full_name='Wendy Corduroy', active=True,
                                        school=high_school, routes=route, guardian=dan, student_id=1)
 
         self.STANS_KIDS = len(stan.students.all())
@@ -123,15 +123,15 @@ class PermissionViews(TransactionTestCase):
         route4 = Route.objects.create(name='School Route 4', description='', school=school4)
 
         # User 1 Children
-        student1 = Student.objects.create(full_name='first last', address='', active=True,
+        student1 = Student.objects.create(full_name='first last', active=True,
                                           school=school1, routes=route1, guardian=normal_user1, student_id=1)
-        student2 = Student.objects.create(full_name='first last', address='', active=True,
+        student2 = Student.objects.create(full_name='first last', active=True,
                                           school=school2, routes=route2, guardian=normal_user1, student_id=1)
 
-        student3 = Student.objects.create(full_name='first last', address='', active=True,
+        student3 = Student.objects.create(full_name='first last', active=True,
                                           school=school3, routes=route3, guardian=normal_user1, student_id=1)
         # User 2 Children
-        student4 = Student.objects.create(full_name='first last', address='', active=True,
+        student4 = Student.objects.create(full_name='first last', active=True,
                                           school=school4, routes=route4, guardian=normal_user2, student_id=1)
 
         login_response = self.client.post('/api/auth/login',
@@ -202,7 +202,6 @@ class PermissionViews(TransactionTestCase):
                                     json.dumps(
                                         {
                                             'full_name': 'first last',
-                                            'address': '',
                                             'active': True,
                                             'school': 3,
                                             'student_id': 2,
@@ -244,7 +243,6 @@ class PermissionViews(TransactionTestCase):
                                     json.dumps(
                                         {
                                             'full_name': 'first last',
-                                            'address': 'Location',
                                             'active': True,
                                             'school': 1,
                                             'student_id': 2,
@@ -260,7 +258,6 @@ class PermissionViews(TransactionTestCase):
                                     json.dumps(
                                         {
                                             'full_name': 'first last',
-                                            'address': 'Location',
                                             'active': True,
                                             'school': 1,
                                             'student_id': 2,
@@ -276,7 +273,6 @@ class PermissionViews(TransactionTestCase):
                                    json.dumps(
                                        {
                                            'full_name': 'first last',
-                                           'address': 'Location 2',
                                            'active': True,
                                            'school': 1,
                                            'student_id': 3,
@@ -306,7 +302,6 @@ class PermissionViews(TransactionTestCase):
                                     json.dumps(
                                         {
                                             'full_name': 'first last',
-                                            'address': 'Location',
                                             'active': True,
                                             'school': 1,
                                             'student_id': 4,
