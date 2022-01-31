@@ -21,7 +21,7 @@ services:
       dockerfile: Dockerfile
     # platform: linux/amd64
     # command: python hypothetical_transportation/manage.py runserver_plus
-    command: bash -c "python hypothetical_transportation/manage.py makemigrations && python hypothetical_transportation/manage.py migrate && python hypothetical_transportation/manage.py runserver_plus  0.0.0.0:8000 --cert-file /etc/letsencrypt/live/ht-dev.colab.duke.edu/fullchain.pem --key-file /etc/letsencrypt/live/ht-dev.colab.duke.edu/privkey.pem"
+    command: bash -c "python hypothetical_transportation/manage.py makemigrations && python hypothetical_transportation/manage.py migrate && python hypothetical_transportation/manage.py runserver_plus  0.0.0.0:8000 --cert-file /etc/letsencrypt/live/hypothetical_transportation.colab.duke.edu/fullchain.pem --key-file /etc/letsencrypt/live/hypothetical_transportation.colab.duke.edu/privkey.pem"
     volumes:
       - .:/code
       - ./config/certs/:/etc/certs
