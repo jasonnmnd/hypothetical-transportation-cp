@@ -65,7 +65,16 @@ export const getRoutesByID = (idObj) => (dispatch, getState) => {
           type: GET_ROUTES,
           payload: res.data,
         });
-      }).catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
+      }).catch(err => {
+        console.log(err);
+        //dispatch(returnErrors(err.response.data, err.response.status));
+        dispatch({
+          type: GET_ROUTES,
+          payload: {
+            results: []
+          }
+        })
+      });
 };
 
 
@@ -99,5 +108,4 @@ export const deleteRoute = (routeID) => (dispatch, getState) => {
       });
     })
     .catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
-
 }

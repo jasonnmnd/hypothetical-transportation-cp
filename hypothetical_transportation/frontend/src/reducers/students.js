@@ -1,4 +1,4 @@
- import { GET_STUDENTS, DELETE_STUDENT, ADD_STUDENT, GET_STUDENT} from '../actions/types.js';
+ import { GET_STUDENTS, DELETE_STUDENT, ADD_STUDENT, GET_STUDENT, UPDATE_STUDENT} from '../actions/types.js';
 
  const initialState = {
    students: {

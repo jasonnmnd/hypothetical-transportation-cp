@@ -12,7 +12,7 @@ import AssistedLocationModal from '../components/modals/AssistedLocationModal';
 import config from '../../../utils/config';
 import { getSchools } from '../../../actions/schools';
 import { getUsers, getUser } from '../../../actions/users';
-import { getStudent, addStudent } from '../../../actions/students';
+import { getStudent, addStudent, updateStudent } from '../../../actions/students';
 import { getRoutesByID } from '../../../actions/routes';
 
 function GeneralManageStudentPage(props) {
@@ -28,13 +28,12 @@ function GeneralManageStudentPage(props) {
       address: "",
       guardian: "",
       routes: "",
-      school: "",
+      school: "null",
     }
   
 
 
     const [obj, setObj] = useState(emptyStudent)
-    const [error, setError] = useState("");
 
 
 
@@ -45,23 +44,20 @@ function GeneralManageStudentPage(props) {
 
 
   const submit = () => {
-    setError("")
     if(props.action==="new"){
       console.log(obj)
       props.addStudent({...obj, ["address"]: props.selectedUser.address})
       navigate(`/admin/students/`)
     }
     else{
-      axios
-          .put(`/api/student/${param.id}/`,obj, config(props.token))
-          .then(res =>{
-              navigate(`/admin/students/`)
-          }).catch(err => console.log(err));
+      props.updateStudent({...obj, ["address"]: props.selectedUser.address}, param.id);
+      navigate(`/admin/students/`)
     }
   }
 
   const changeSchool = (e)=>{
     setObj({...obj, ["school"]:e.target.value, ["routes"]:""})
+
     props.getRoutesByID({school: e.target.value});
   }
 
@@ -74,22 +70,14 @@ function GeneralManageStudentPage(props) {
       setObj(props.student)
       props.getRoutesByID({school: props.student.school})
     }
+    else{
+      props.getRoutesByID({school: obj.school})
+    }
+    
   }, []);
 
 
-  const confirmation = (e)=>{
-    e.preventDefault();
-    if(obj.guardian===""){
-      setError("Guardian cannot be null")
-    }
-    else if(obj.school===""){
-      setError("School cannot be null")
-    }
-    else{
-      submit()
-      // setOpenModal(true)
-    }
-}
+
 
 const handleConfirmAddress = () => {
   console.log("Address confirmed")
@@ -149,7 +137,7 @@ const handleConfirmAddress = () => {
                       <label>
                         School:
                         <select value={obj.school} onChange={changeSchool}>
-                        <option value={""} >{"-----"}</option>
+                        <option value={"null"} >{"-----"}</option>
                         {props.schoollist!==null && props.schoollist!==undefined && props.schoollist.length!==0?props.schoollist.map((u,i)=>{
                             return <option value={u.id} key={i}>{u.name}</option>
                         }):null}
@@ -161,7 +149,7 @@ const handleConfirmAddress = () => {
                       <label>
                         Route:
                         <select value={obj.routes} onChange={(e) => setObj({ ...obj, ["routes"]: e.target.value })}>
-                          <option value={""} >{"-----"}</option>
+                          <option value={"null"} >{"-----"}</option>
                           {props.routes!==null && props.routes!==undefined && props.routes.length!==0?props.routes.map((u,i)=>{
                               return <option value={u.id} key={i}>{u.name}</option>
                           }):null}
@@ -169,15 +157,9 @@ const handleConfirmAddress = () => {
                       </label>
                   </div>
 
-                  
-            {
-                /* ERROR! */
-                error !== "" ? <div className="error">{error}</div> : ""
-              }
-                    
                     <div className="divider15px" />
                     
-                    <button onClick={confirmation}>Save</button>
+                    <button onClick={submit}>Save</button>
                 </div>
             </form>
             {/* <Link to={`/admin/${param.column}s`}><button>To {param.column}</button></Link> */}
@@ -194,7 +176,8 @@ GeneralManageStudentPage.propTypes = {
     getStudent: PropTypes.func.isRequired,
     getRoutesByID: PropTypes.func.isRequired,
     getUser: PropTypes.func.isRequired,
-    addStudent: PropTypes.func.isRequired
+    addStudent: PropTypes.func.isRequired,
+    updateStudent: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => ({
@@ -207,4 +190,4 @@ const mapStateToProps = (state) => ({
   selectedUser: state.users.viewedUser
 });
 
-export default connect(mapStateToProps, {getSchools, getUsers, getStudent, getRoutesByID, getUser, addStudent})(GeneralManageStudentPage)
+export default connect(mapStateToProps, {getSchools, getUsers, getStudent, getRoutesByID, getUser, addStudent, updateStudent})(GeneralManageStudentPage)

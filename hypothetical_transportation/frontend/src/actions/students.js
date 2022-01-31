@@ -4,7 +4,7 @@ import { tokenConfig } from './auth';
 
 import { createMessage, returnErrors } from './messages';
 
-import { ADD_STUDENT, GET_STUDENT, CREATE_MESSAGE, GET_STUDENTS, DELETE_STUDENT, POPULATE_TABLE, DELETE_ITEM } from './types';
+import { ADD_STUDENT, GET_STUDENT, CREATE_MESSAGE, GET_STUDENTS, DELETE_STUDENT, POPULATE_TABLE, DELETE_ITEM, UPDATE_STUDENT } from './types';
 import { getQueryStringsFormatted } from './utils';
 
 
@@ -54,6 +54,23 @@ export const addStudent = (student) => (dispatch, getState) => {
     })
     .catch((err) => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
 };
+
+export const updateStudent = (student, id) => (dispatch, getState) => {
+  axios
+          .put(`/api/student/${id}/`,student, tokenConfig(getState))
+          .then(res =>{
+            dispatch({
+              type: DELETE_STUDENT,
+              payload: parseInt(id)
+            })
+            console.log(res.data);
+            dispatch({
+              type: ADD_STUDENT,
+              payload: res.data
+            })
+              
+          }).catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
+}
 
 
 export const searchStudents = (i1, i2, i3) => (dispatch, getState) => {
@@ -154,7 +171,7 @@ export const getStudent = (studentID) => (dispatch, getState) => {
         .then(res => {
           dispatch({
             type: GET_STUDENT,
-            payload: thisStudent,
+            payload: res.data,
           });
         }).catch(err => console.log(err));
 }
