@@ -36,7 +36,9 @@
      case ADD_STUDENT:
          return {
              ...state,
-             students: [...state.students, action.payload]
+             students: {
+               results: [...state.students.results, action.payload]
+             }
          };
       case GET_STUDENT:
           return {

@@ -4,7 +4,7 @@ import { tokenConfig } from './auth';
 
 import { createMessage, returnErrors } from './messages';
 
-import { ADD_STUDENT, GET_STUDENT, CREATE_MESSAGE, GET_STUDENTS, DELETE_STUDENT, POPULATE_TABLE } from './types';
+import { ADD_STUDENT, GET_STUDENT, CREATE_MESSAGE, GET_STUDENTS, DELETE_STUDENT, POPULATE_TABLE, DELETE_ITEM } from './types';
 import { getQueryStringsFormatted } from './utils';
 
 
@@ -32,11 +32,11 @@ export const deleteStudent = (id) => (dispatch, getState) => {
     .then(res => {
       dispatch({
         type: DELETE_STUDENT,
-        payload: id
+        payload: parseInt(id)
       });
       dispatch({
         type: DELETE_ITEM,
-        payload: id
+        payload: parseInt(id)
       });
     })
     .catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
@@ -45,15 +45,16 @@ export const deleteStudent = (id) => (dispatch, getState) => {
 // ADD STUDENT
 export const addStudent = (student) => (dispatch, getState) => {
   axios
-    .post('/api/Students/', student, tokenConfig(getState))
+    .post('/api/student/', student, tokenConfig(getState))
     .then((res) => {
       dispatch({
         type: ADD_STUDENT,
         payload: res.data,
       });
     })
-    .catch((err) => dispatch(returnErrors(err.response.data, err.response.status)));
+    .catch((err) => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
 };
+
 
 export const searchStudents = (i1, i2, i3) => (dispatch, getState) => {
   let url=`/api/student/`
@@ -107,7 +108,6 @@ export const getStudentInfo = (studentID) => (dispatch, getState) => {
   axios.get(`/api/student/${studentID}/`, tokenConfig(getState))
     .then(res => {
       let thisStudent = res.data;
-      console.log(thisStudent);
 
       axios.get(`/api/user/${thisStudent.guardian}/`, tokenConfig(getState))
         .then(res => {
@@ -149,3 +149,12 @@ export const getStudentInfo = (studentID) => (dispatch, getState) => {
   }).catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
 }
 
+export const getStudent = (studentID) => (dispatch, getState) => {
+  axios.get(`/api/student/${studentID}/`, tokenConfig(getState))
+        .then(res => {
+          dispatch({
+            type: GET_STUDENT,
+            payload: thisStudent,
+          });
+        }).catch(err => console.log(err));
+}

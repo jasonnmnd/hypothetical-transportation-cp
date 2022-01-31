@@ -32,7 +32,7 @@ export const deleteSchool = (id) => (dispatch, getState) => {
       });
       dispatch({
         type: DELETE_ITEM,
-        payload: id
+        payload: parseInt(id)
       });
     })
     .catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});

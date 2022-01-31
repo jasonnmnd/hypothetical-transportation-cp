@@ -10,6 +10,10 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import AssistedLocationModal from '../components/modals/AssistedLocationModal';
 import config from '../../../utils/config';
+import { getSchools } from '../../../actions/schools';
+import { getUsers, getUser } from '../../../actions/users';
+import { getStudent, addStudent } from '../../../actions/students';
+import { getRoutesByID } from '../../../actions/routes';
 
 function GeneralManageStudentPage(props) {
     const param = useParams()
@@ -26,79 +30,26 @@ function GeneralManageStudentPage(props) {
       routes: "",
       school: "",
     }
-    const emptySchoolList = [{
-      id: 0,
-      name: "",
-      address: "",
-    }]
-    
-    const emptyUsers = [{
-      id: 0,
-      full_name: "",
-      email: "",
-      address: "",
-    }]
   
 
 
     const [obj, setObj] = useState(emptyStudent)
-    const [schoollist, setSchoolList] = useState(emptySchoolList)
-    const [routes, setRoutes] = useState(null)
-    const [users, setUsers] = useState(emptyUsers);
     const [error, setError] = useState("");
 
-    const getSchools = () => {
-      axios.get('/api/school/', config(props.token))
-        .then(res => {
-          setSchoolList(res.data.results);
-        }).catch(err => console.log(err));
-    }
 
-    const getStudent = () => {
-      axios.get(`/api/student/${param.id}/`, config(props.token))
-        .then(res => {
-          setObj(res.data);
-          getRoutes(res.data.school);
-        }).catch(err => console.log(err));
-    }
-
-    const getUsers = () => {
-      axios.get('/api/user/', config(props.token))
-        .then(res => {
-          setUsers(res.data.results);//.filter(s=>!s.groups.includes(1)));
-        }).catch(err => console.log(err));
-    }
-
-  const getRoutes = (i) => {
-    if(i!=="" && i!==null && i!==undefined && i!==0){
-    axios.get(`/api/route/?school=${i}`, config(props.token))
-      .then(res => {
-        setRoutes(res.data.results);
-      }).catch(err => console.log(err));
-    }
-    else{
-      setRoutes(null)
-    }
-  }
 
   const setAddress = (e)=>{
-    setObj({ ...obj, ["guardian"]: e.target.value});
-    axios.get(`/api/user/${e.target.value}/`, config(props.token))
-      .then(res => {
-        setObj({ ...obj, ["guardian"]: e.target.value, ["address"]: res.data.address});
-      }).catch(err => console.log(err));
+    props.getUser(e.target.value);
+    setObj({ ...obj, ["guardian"]: e.target.value, ["address"]: props.selectedUser.address});
   }
 
 
   const submit = () => {
-    console.log(obj)
     setError("")
     if(props.action==="new"){
-      axios
-          .post(`/api/student/`,obj, config(props.token))
-          .then(res =>{
-              navigate(`/admin/students/`)
-          }).catch(err => console.log(err));
+      console.log(obj)
+      props.addStudent({...obj, ["address"]: props.selectedUser.address})
+      navigate(`/admin/students/`)
     }
     else{
       axios
@@ -111,17 +62,17 @@ function GeneralManageStudentPage(props) {
 
   const changeSchool = (e)=>{
     setObj({...obj, ["school"]:e.target.value, ["routes"]:""})
-    getRoutes(e.target.value)
-    console.log(routes)
+    props.getRoutesByID({school: e.target.value});
   }
 
 
   useEffect(() => {
-    getSchools();
-    getUsers();
-    setRoutes(null)
+    props.getSchools();
+    props.getUsers();
     if(props.action==="edit"){
-      getStudent();
+      props.getStudent(param.id);
+      setObj(props.student)
+      props.getRoutesByID({school: props.student.school})
     }
   }, []);
 
@@ -187,7 +138,7 @@ const handleConfirmAddress = () => {
                         Parent:
                         <select value={obj.guardian} onChange={setAddress}>
                           <option value={""} >{"-----"}</option>
-                          {users!==null && users!==undefined && users.length!==0?users.map((u,i)=>{
+                          {props.users!==null && props.users!==undefined && props.users.length!==0?props.users.map((u,i)=>{
                               return <option value={u.id} key={i}>{u.email}</option>
                           }):null}
                         </select>
@@ -199,7 +150,7 @@ const handleConfirmAddress = () => {
                         School:
                         <select value={obj.school} onChange={changeSchool}>
                         <option value={""} >{"-----"}</option>
-                        {schoollist!==null && schoollist!==undefined && schoollist.length!==0?schoollist.map((u,i)=>{
+                        {props.schoollist!==null && props.schoollist!==undefined && props.schoollist.length!==0?props.schoollist.map((u,i)=>{
                             return <option value={u.id} key={i}>{u.name}</option>
                         }):null}
                         </select>
@@ -211,7 +162,7 @@ const handleConfirmAddress = () => {
                         Route:
                         <select value={obj.routes} onChange={(e) => setObj({ ...obj, ["routes"]: e.target.value })}>
                           <option value={""} >{"-----"}</option>
-                          {routes!==null && routes!==undefined && routes.length!==0?routes.map((u,i)=>{
+                          {props.routes!==null && props.routes!==undefined && props.routes.length!==0?props.routes.map((u,i)=>{
                               return <option value={u.id} key={i}>{u.name}</option>
                           }):null}
                         </select>
@@ -237,12 +188,23 @@ const handleConfirmAddress = () => {
 }
 
 GeneralManageStudentPage.propTypes = {
-    action: PropTypes.string
+    action: PropTypes.string,
+    getSchools: PropTypes.func.isRequired,
+    getUsers: PropTypes.func.isRequired,
+    getStudent: PropTypes.func.isRequired,
+    getRoutesByID: PropTypes.func.isRequired,
+    getUser: PropTypes.func.isRequired,
+    addStudent: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => ({
   user: state.auth.user,
-  token: state.auth.token
+  token: state.auth.token,
+  schoollist: state.schools.schools.results,
+  users: state.users.users.results,
+  student: state.students.viewedStudent,
+  routes: state.routes.routes.results,
+  selectedUser: state.users.viewedUser
 });
 
-export default connect(mapStateToProps)(GeneralManageStudentPage)
+export default connect(mapStateToProps, {getSchools, getUsers, getStudent, getRoutesByID, getUser, addStudent})(GeneralManageStudentPage)

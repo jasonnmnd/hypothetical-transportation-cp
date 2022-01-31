@@ -30,11 +30,11 @@ export const deleteUser = (id) => (dispatch, getState) => {
       console.log("SUCCESS")
         dispatch({
             type: DELETE_USER,
-            payload: id
+            payload: parseInt(id)
           });
           dispatch({
             type: DELETE_ITEM,
-            payload: id
+            payload: parseInt(id)
           })
     }).catch(err => {console.log("FAIL");console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
 }
@@ -87,6 +87,6 @@ export const getUser = (id) => (dispatch, getState) => {
           payload: res.data
         })
         //res.data.groups.includes(1)?setColumn("admin_user"):setColumn("parent_user")
-      }).catch(err => console.log(err));
+      }).catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
   }
 

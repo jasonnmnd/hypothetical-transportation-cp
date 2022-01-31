@@ -91,11 +91,11 @@ export const deleteRoute = (routeID) => (dispatch, getState) => {
     .then(res => {
       dispatch({
         type: DELETE_ROUTE,
-        payload: routeID
+        payload: parseInt(id)
       });
       dispatch({
         type: DELETE_ITEM,
-        payload: routeID
+        payload: parseInt(id)
       });
     })
     .catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
