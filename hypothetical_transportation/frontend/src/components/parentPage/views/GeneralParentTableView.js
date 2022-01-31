@@ -25,7 +25,7 @@ function GeneralParentTableView(props) {
         <div className='table-and-buttons'>
             <h1>{props.title}</h1>
             <div className='parentTable-container'>
-                <GeneralTable columnNames={getColumns()} actionName={props.actionName?props.actionName:"View"} action={props.action? props.action:handleViewClick}/>
+                <GeneralTable rows={props.values} columnNames={getColumns()} actionName={props.actionName?props.actionName:"View"} action={props.action? props.action:handleViewClick}/>
             </div>
         </div>
     )}
@@ -36,6 +36,7 @@ GeneralParentTableView.propTypes = {
     search: PropTypes.func,
     actionName: PropTypes.string,
     action: PropTypes.func,
+    values: PropTypes.arrayOf(PropTypes.object)
 }
 
 const mapStateToProps = (state) => ({
