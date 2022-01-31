@@ -1,5 +1,5 @@
 import axios from "axios";
-import { GET_ROUTES, POPULATE_TABLE } from "./types"; 
+import { DELETE_ROUTE, GET_ROUTE, GET_ROUTES, POPULATE_TABLE, DELETE_ITEM } from "./types"; 
 import { tokenConfig } from './auth';
 
 import { createMessage, returnErrors } from './messages';
@@ -54,3 +54,37 @@ export const getRoutesByID = (idObj) => (dispatch, getState) => {
         });
       }).catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
 };
+
+
+export const getRouteInfo = (routeID) => (dispatch, getState) => {
+  axios.get(`/api/route/${routeID}/`, tokenConfig(getState))
+    .then(res => {
+      let thisRoute = res.data;
+      console.log(thisRoute)
+      axios.get(`/api/school/${thisRoute.school}/`, tokenConfig(getState))
+        .then(res => {
+          thisRoute.schoolName = res.data.name;
+          dispatch({
+            type: GET_ROUTE,
+            payload: thisRoute,
+          });
+        }).catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
+  }).catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
+}
+
+export const deleteRoute = (routeID) => (dispatch, getState) => {
+  axios
+    .delete(`/api/route/${routeID}/`, tokenConfig(getState))
+    .then(res => {
+      dispatch({
+        type: DELETE_ROUTE,
+        payload: routeID
+      });
+      dispatch({
+        type: DELETE_ITEM,
+        payload: routeID
+      });
+    })
+    .catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
+
+}
