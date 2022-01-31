@@ -1,5 +1,5 @@
 import axios from "axios";
-import { GET_SCHOOLS, POPULATE_TABLE } from "./types"; 
+import { GET_SCHOOLS, POPULATE_TABLE, GET_SCHOOL, DELETE_SCHOOL, DELETE_ITEM } from "./types"; 
 import { tokenConfig } from './auth';
 
 import { createMessage, returnErrors } from './messages';
@@ -18,8 +18,24 @@ export const getSchools = () => (dispatch, getState) => {
         payload: res.data,
       });
     })
-    .catch((err) => dispatch(returnErrors(err.response.data, err.response.status)));
+    .catch((err) => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
 
+}
+
+export const deleteSchool = (id) => (dispatch, getState) => {
+  axios
+    .delete(`/api/school/${id}/`, tokenConfig(getState))
+    .then(res => {
+      dispatch({
+        type: DELETE_SCHOOL,
+        payload: parseInt(id)
+      });
+      dispatch({
+        type: DELETE_ITEM,
+        payload: id
+      });
+    })
+    .catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
 }
 
 export const searchSchools = (i1, i2) => (dispatch, getState) => {
@@ -33,6 +49,17 @@ export const searchSchools = (i1, i2) => (dispatch, getState) => {
             type: POPULATE_TABLE,
             payload: res.data
           })
-        }).catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
+        }).catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
 };
+
+export const getSchool = (id) => (dispatch, getState) => {
+  axios.get(`/api/school/${id}/`, tokenConfig(getState))
+      .then(res => {
+        dispatch({
+          type: GET_SCHOOL,
+          payload: res.data
+        })
+      }).catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
+  }
+
   

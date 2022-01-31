@@ -86,7 +86,7 @@ function GeneralAdminTableView( props ) {
             <h1>{props.title}</h1>
             {props.search ? <SearchBar buttons={getColumns()} search={props.search}></SearchBar> : null}
             <div className='AdminTable-container'>
-                <GeneralTable columnNames={getColumns()} actionName={props.actionName?props.actionName:"View"} action={props.action? props.action:handleViewClick}/>
+                <GeneralTable rows={props.values} columnNames={getColumns()} actionName={props.actionName?props.actionName:"View"} action={props.action? props.action:handleViewClick}/>
             </div>
             <div className="prev-next-buttons">
                 <button onClick={handlePrevClick}>Prev</button>
@@ -103,6 +103,7 @@ GeneralAdminTableView.propTypes = {
     search: PropTypes.func,
     actionName: PropTypes.string,
     action: PropTypes.func,
+    values: PropTypes.arrayOf(PropTypes.object)
 }
 
 const mapStateToProps = (state) => ({

@@ -117,7 +117,7 @@ function AdminRoutePlanner(props) {
     e.preventDefault();
     if(props.action==="new"){
       axios
-        .post(`/api/route/`,obj)
+        .post(`/api/route/`,obj, config(props.token))
         .then(res =>{
           const routeID = res.data.id
           if(tobeadded.length>0){

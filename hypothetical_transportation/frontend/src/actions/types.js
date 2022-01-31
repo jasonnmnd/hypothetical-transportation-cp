@@ -5,9 +5,12 @@ export const GET_STUDENT = 'GET_STUDENT'
 
 export const GET_ERRORS = 'GET_ERRORS';
 export const CREATE_MESSAGE = 'CREATE_MESSAGE';
+
 export const GET_SCHOOLS = 'GET_SCHOOLS';
 export const ADD_SCHOOL = 'ADD_SCHOOL';
 export const DELETE_SCHOOL = 'DELETE_SCHOOL';
+export const GET_SCHOOL = 'GET_SCHOOL';
+
 export const USER_LOADING = "USER_LOADING";
 export const USER_LOADED = "USER_LOADED";
 export const AUTH_ERROR = "AUTH_ERROR";
@@ -31,3 +34,4 @@ export const DELETE_ITEM = "DELETE_ITEM"
 export const GET_ROUTES = "GET_ROUTES"
 export const DELETE_ROUTE = "DELETE_ROUTE"
 export const ADD_ROUTE = "ADD_ROUTE"
+export const GET_ROUTE = "GET_ROUTE"

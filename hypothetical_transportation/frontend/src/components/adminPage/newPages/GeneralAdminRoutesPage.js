@@ -35,7 +35,7 @@ function AdminRoutesPage(props) {
                 <button className='button'>Add New Route</button>
               </Link>
           </div> */}
-          <GeneralAdminTableView search={search} tableType={tableType} title={title}/>
+          <GeneralAdminTableView values={props.routes} search={search} tableType={tableType} title={title}/>
         </div>
     </div>
   )
@@ -46,7 +46,8 @@ AdminRoutesPage.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
-  user: state.auth.user
+  user: state.auth.user,
+  routes: state.routes.routes.results
 });
 
 export default connect(mapStateToProps, {getRoutes, searchRoutes})(AdminRoutesPage)

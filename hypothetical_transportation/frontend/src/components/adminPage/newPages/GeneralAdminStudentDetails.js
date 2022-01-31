@@ -89,8 +89,6 @@ GeneralAdminStudentDetails.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
-  user: state.auth.user,
-  token: state.auth.token,
   student: state.students.viewedStudent
 });
 
