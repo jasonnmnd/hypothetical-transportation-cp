@@ -23,7 +23,7 @@ function GeneralAdminSchoolsPage(props) {
 
   const search = (value)=>{
     //somehow get backend to update data (with usestate?)
-    props.searchSchools(value.by, value.value)
+    props.searchSchools(value.filter_by, value.value, value.sort_by)
   }
 
   return (

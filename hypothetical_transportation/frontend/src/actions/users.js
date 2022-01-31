@@ -51,19 +51,35 @@ export const addUser = (user) => (dispatch, getState) => {
     }).catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
 };
 
-export const searchUsers = (i1, i2) => (dispatch, getState) => {
-    axios.get(`/api/user/?search=${i2}&search_fields=${i1}`, tokenConfig(getState))
+export const searchUsers = (i1, i2, i3) => (dispatch, getState) => {
+  let url=`/api/user/`
+  if(i1==="" || i2==="" || i1===undefined || i2===undefined){
+    if(i3!==""&& i3!==undefined){
+      url=`/api/user/?ordering=${i3}`
+    }
+  }
+  else{
+    if(i3!=="" && i3!==undefined){
+      url=`/api/user/?search=${i2}&search_fields=${i1}&ordering=${i3}`
+    }
+    else{
+      url=`/api/user/?search=${i2}&search_fields=${i1}`
+    }
+  }
+  
+  axios.get(url, tokenConfig(getState))
         .then(res => {
             dispatch({
-                type: POPULATE_TABLE,
+                type: GET_USERS,
                 payload: res.data,
               });
         }).catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
 };
 
 
+
+
 export const getUser = (id) => (dispatch, getState) => {
-  console.log("HELLO")
   axios.get(`/api/user/${id}/`, tokenConfig(getState))
       .then(res => {
         dispatch({

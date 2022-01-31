@@ -4,15 +4,8 @@ import ParentPage from "./components/parentPage/ParentPage";
 import AdminPage from "./components/adminPage/AdminPage";
 import { Routes, Route, BrowserRouter} from "react-router-dom";
 import LoginForm from "./components/loginPage/LoginForm.js"
-import AdminStudentsPage from "./components/adminPage/pages/AdminStudentsPage";
-import AdminRoutesPage from "./components/adminPage/pages/AdminRoutesPage";
-import AdminSchoolsPage from "./components/adminPage/pages/AdminSchoolsPage";
 import AccountPage from "./components/accountPage/AccountPage";
 import AdminEditPage from "./components/adminPage/pages/AdminEditPage";
-import AdminUserDetails from "./components/adminPage/pages/AdminUserDetails";
-import AdminStudentDetails from "./components/adminPage/pages/AdminStudentDetails";
-import AdminSchoolDetails from "./components/adminPage/pages/AdminSchoolDetails";
-import AdminRouteDetails from "./components/adminPage/pages/AdminRouteDetails";
 import GeneralParentStudentDetails from "./components/parentPage/pages/GeneralParentStudentDetails";
 import AdminRoutePlanner from "./components/adminPage/pages/AdminRoutePlanner";
 import PrivateRoute from "./components/common/PrivateRoute";
@@ -29,6 +22,7 @@ import GeneralAdminStudentDetails from "./components/adminPage/newPages/GeneralA
 import GeneralAdminSchoolDetails from "./components/adminPage/newPages/GeneralAdminSchoolDetails";
 import GeneralAdminRouteDetails from "./components/adminPage/newPages/GeneralAdminRouteDetails";
 import GeneralManageStudentPage from "./components/adminPage/newPages/GeneralManageStudentPage";
+import AdminSchoolsPage from "./components/adminPage/pages/AdminSchoolsPage";
 
 import AdminNewPage from "./components/adminPage/pages/AdminNewPage";
 import ManStudentPage from "./components/adminPage/pages/ManStudentPage";

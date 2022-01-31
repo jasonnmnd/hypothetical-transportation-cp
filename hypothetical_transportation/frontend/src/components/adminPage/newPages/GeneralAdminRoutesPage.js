@@ -22,7 +22,7 @@ function AdminRoutesPage(props) {
 
   const search = (value)=>{
     //somehow get backend to update data (with usestate?)
-    props.searchRoutes(value.by, value.value);
+    props.searchRoutes(value.filter_by, value.value, value.sort_by);
   }
 
   return (

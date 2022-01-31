@@ -23,7 +23,7 @@ function GeneralAdminStudentsPage(props) {
 
   const search = (value)=>{
     //somehow get backend to update data (with usestate?)
-    props.searchStudents(value.by, value.value)
+    props.searchStudents(value.filter_by, value.value, value.sort_by)
   }
 
   return (

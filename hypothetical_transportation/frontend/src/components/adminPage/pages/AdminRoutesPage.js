@@ -17,8 +17,16 @@ function AdminRoutesPage(props) {
     description: "",
   }]
 
+  const emptyTable = [{
+    id:"",
+    name: "",
+    school: "",
+    num_student:"",
+  }]
+
   const [routes, setRoutes] = useState(emptyRoute);
-  
+  let list = []
+  const [table, setTable]=useState([]);
   const getRoutes = () => {
     axios.get(`/api/route/`, config(props.token))
         .then(res => {
@@ -26,10 +34,23 @@ function AdminRoutesPage(props) {
         }).catch(err => console.log(err));
   }
 
-  const searchRoute = (i1,i2) => {
-    axios.get(`/api/route/?search=${i2}&search_fields=${i1}`, config(props.token))
+  const searchRoute = (i1,i2,i3) => {
+    let url=`/api/route/`
+    if(i1==="" || i2==="" || i1===undefined || i2===undefined){
+      if(i3!==""&& i3!==undefined){
+        url=`/api/route/?ordering=${i3}`
+      }
+    }
+    else{
+      if(i3!=="" && i3!==undefined){
+        url=`/api/route/?search=${i2}&search_fields=${i1}&ordering=${i3}`
+      }
+      else{
+        url=`/api/route/?search=${i2}&search_fields=${i1}`
+      }
+    }
+    axios.get(url, config(props.token))
         .then(res => {
-          console.log(`/api/route/?search=${i2}&search_fields=${i1}`)
           setRoutes(res.data.results);
         }).catch(err => console.log(err));
   }
@@ -38,7 +59,21 @@ function AdminRoutesPage(props) {
     getRoutes();
   }, []);
 
-
+  useEffect(()=>{
+    list=[]
+    routes.map((route)=>{
+      axios.get(`/api/school/${route.school}/`, config(props.token))
+        .then(school => {
+          axios.get(`/api/student/?routes=${route.id}`, config(props.token))
+            .then(res => {
+              list = list.concat({id: route.id,name:route.name, school:school.data.name, num_student:res.data.results.length})
+              list.sort((a, b) => routes.findIndex((r) => r.id === a.id) - routes.findIndex((r) => r.id === b.id));
+              setTable(list)
+            }).catch(err => console.log(err));
+      }).catch(err => console.log(err));
+    })
+    console.log(table)
+  },[routes]);
 
 
   const handlePrevClick = () => {
@@ -53,7 +88,7 @@ function AdminRoutesPage(props) {
 
   const search = (value)=>{
     //somehow get backend to update data (with usestate?)
-    searchRoute(value.by, value.value);
+    searchRoute(value.filter_by, value.value, value.sort_by);
   }
 
   return (
@@ -67,7 +102,7 @@ function AdminRoutesPage(props) {
               </Link>
           </div> */}
           <div className='table-and-buttons'>
-            <AdminTable title={title} header={Object.keys(emptyRoute[0])} data={routes} search={search}></AdminTable>
+            <AdminTable title={title} header={Object.keys(emptyTable[0]).filter(h=>h!=="id")} data={table} search={search} sortBy={["name","school__name","students","-name","-school__name","-students"]}></AdminTable>
             <div className="prev-next-buttons">
                 <button onClick={handlePrevClick}>Prev</button>
                 <button onClick={handleNextClick}>Next</button> 

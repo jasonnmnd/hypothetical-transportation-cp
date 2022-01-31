@@ -23,7 +23,7 @@ function EditForm(props) {
         
         if(props.action==="edit"){
             axios
-                .put(`/api/${col}/${props.obj.id}/`,props.obj)
+                .put(`/api/${col}/${props.obj.id}/`,props.obj,config(props.token))
                 .then(res =>{
                     // console.log(props.obj)
                     if(props.column.includes("parent")){

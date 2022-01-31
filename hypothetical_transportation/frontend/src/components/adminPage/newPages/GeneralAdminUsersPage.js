@@ -25,7 +25,8 @@ function GeneralAdminUsersPage(props) {
   
 
   const search = (value)=>{
-    props.searchUsers(value.by, value.value)
+    //searchUser(value.filter_by, value.value, value.sort_by)
+    props.searchUsers(value.filter_by, value.value, value.sort_by)
   }
 
   return (

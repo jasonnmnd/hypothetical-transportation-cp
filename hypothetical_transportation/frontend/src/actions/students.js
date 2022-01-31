@@ -55,8 +55,24 @@ export const addStudent = (student) => (dispatch, getState) => {
     .catch((err) => dispatch(returnErrors(err.response.data, err.response.status)));
 };
 
-export const searchStudents = (i1, i2) => (dispatch, getState) => {
-  axios.get(`/api/student/?search=${i2}&search_fields=${i1}`, tokenConfig(getState))
+export const searchStudents = (i1, i2, i3) => (dispatch, getState) => {
+  let url=`/api/student/`
+    if(i1==="" || i2==="" || i1===undefined || i2===undefined){
+      if(i3!==""&& i3!==undefined){
+        url=`/api/student/?ordering=${i3}`
+      }
+    }
+    else{
+      if(i3!=="" && i3!==undefined){
+        url=`/api/student/?search=${i2}&search_fields=${i1}&ordering=${i3}`
+      }
+      else{
+        url=`/api/student/?search=${i2}&search_fields=${i1}`
+      }
+    }
+  
+  
+  axios.get(url, tokenConfig(getState))
       .then(res => {
         dispatch({
           type: GET_STUDENTS,

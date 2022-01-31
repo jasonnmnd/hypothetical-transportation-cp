@@ -38,8 +38,23 @@ export const deleteSchool = (id) => (dispatch, getState) => {
     .catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
 }
 
-export const searchSchools = (i1, i2) => (dispatch, getState) => {
-    axios.get(`/api/school/?search=${i2}&search_fields=${i1}`, tokenConfig(getState))
+export const searchSchools = (i1, i2, i3) => (dispatch, getState) => {
+  let url=`/api/school/`
+    if(i1==="" || i2==="" || i1===undefined || i2===undefined){
+      if(i3!==""&& i3!==undefined){
+        url=`/api/school/?ordering=${i3}`
+      }
+    }
+    else{
+      if(i3!=="" && i3!==undefined){
+        url=`/api/school/?search=${i2}&search_fields=${i1}&ordering=${i3}`
+      }
+      else{
+        url=`/api/school/?search=${i2}&search_fields=${i1}`
+      }
+    }
+
+    axios.get(url, tokenConfig(getState))
         .then(res => {
           dispatch({
             type: GET_SCHOOLS,

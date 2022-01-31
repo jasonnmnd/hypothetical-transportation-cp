@@ -42,7 +42,7 @@ function AdminTable(props) {
     return (
         <div className='adminTable-container'>
             <h1>{props.title}</h1>
-            {props.search? <Searchbar buttons={props.header} search={props.search}></Searchbar> : ""}
+            {props.search? <Searchbar buttons={props.header} search={props.search} sortBy={props.sortBy}></Searchbar> : ""}
             <table className='center'>
                 <thead>
                     <tr>
@@ -67,6 +67,7 @@ function AdminTable(props) {
 AdminTable.propTypes = {
     title: PropTypes.string,
     header: PropTypes.arrayOf(PropTypes.string),
+    sortBy: PropTypes.arrayOf(PropTypes.string),
     search: PropTypes.func,
     actionName: PropTypes.string,
     action: PropTypes.func

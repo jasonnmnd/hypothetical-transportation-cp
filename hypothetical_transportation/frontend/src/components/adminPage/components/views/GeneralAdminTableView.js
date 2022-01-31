@@ -29,6 +29,36 @@ const routeColumns = [
     "description",
 ]
 
+const userSortBy = [
+    "full_name",
+    "email",
+    "-full_name",
+    "-email"
+]
+
+const studentSortBy = [
+    "full_name",
+    "student_id",
+    "school__name",
+    "-full_name",
+    "-student_id",
+    "-school__name"
+]
+
+const schoolSortBy = [
+    "name",
+    "-name"
+]
+
+const routeSortBy = [
+    "name",
+    "school__name",
+    "students",
+    "-name",
+    "-school__name",
+    "-students"
+]
+
 
 function GeneralAdminTableView( props ) {
 
@@ -79,12 +109,27 @@ function GeneralAdminTableView( props ) {
         }
     }
 
+    const getSortOptions = () => {
+        switch (props.tableType) {
+            case "user":
+                return userSortBy;
+            case "student":
+                return studentSortBy;
+            case "school":
+                return schoolSortBy;
+            case "route":
+                return routeSortBy;
+            default:
+                return [];
+        }
+    }
+
     
 
     return (
         <div className='table-and-buttons'>
             <h1>{props.title}</h1>
-            {props.search ? <SearchBar buttons={getColumns()} search={props.search}></SearchBar> : null}
+            {props.search ? <SearchBar buttons={getColumns()} sortBy={getSortOptions()} search={props.search}></SearchBar> : null}
             <div className='AdminTable-container'>
                 <GeneralTable rows={props.values} columnNames={getColumns()} actionName={props.actionName?props.actionName:"View"} action={props.action? props.action:handleViewClick}/>
             </div>
