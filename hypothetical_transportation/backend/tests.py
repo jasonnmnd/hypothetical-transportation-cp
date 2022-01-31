@@ -10,6 +10,21 @@ from django.contrib.auth.models import Group
 # Create your tests here.
 class AuthenticationObjectConsistency(TestCase):
     def setUp(self):
+        admin_group = Group.objects.create(name='Administrator')
+        guardian_group = Group.objects.create(name='Guardian')
+
+        # SET UP ADMINISTRATOR
+        admin_user = get_user_model().objects.create_user(email='admin@example.com', password='wordpass',
+                                                          full_name='admin user', address='loc0')
+        admin_user.groups.add(admin_group)
+
+        login_response = self.client.post('/api/auth/login',
+                                          json.dumps(
+                                              {'email': 'admin@example.com', 'password': 'wordpass'}),
+                                          content_type='application/json')
+        self.admin_token = login_response.data['token']
+        self.admin_user = admin_user
+
         stan = get_user_model().objects.create_user(email='stanpines@mysteryshack.com', password='mysteryshack',
                                                     full_name='Stanley Pines', address='618 Gopher Road')
         dan = get_user_model().objects.create_user(email='manlydan@gmail.com', password='wordpass',
@@ -43,7 +58,7 @@ class AuthenticationObjectConsistency(TestCase):
                               'address': 'Mostly an alternative dimension',
                               'groups': [],
                               }),
-                         content_type='application/json')
+                         content_type='application/json', HTTP_AUTHORIZATION=f'Token {self.admin_token}')
         num_users = len(get_user_model().objects.all())
         self.assertEqual(num_users, self.INIT_NUM_USERS + 1)
 

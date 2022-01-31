@@ -8,7 +8,7 @@ from rest_framework.views import APIView
 
 from .models import School, Route, Student
 from .serializers import UserSerializer, StudentSerializer, RouteSerializer, SchoolSerializer, FormatStudentSerializer, \
-    FormatRouteSerializer, FormatUserSerializer
+    FormatRouteSerializer, FormatUserSerializer, EditUserSerializer
 from .search import DynamicSearchFilter
 from .customfilters import StudentCountShortCircuitFilter
 from .permissions import is_admin, IsAdminOrReadOnly
@@ -69,8 +69,8 @@ class UserViewSet(viewsets.ModelViewSet):
     ordering_fields = ['email', 'full_name']
 
     def get_serializer_class(self):
-        # if self.action == 'list' or self.action == 'retrieve':
-        #     return FormatUserSerializer
+        if self.action == 'partial_update' or self.action == 'update':
+            return EditUserSerializer
         return UserSerializer
 
     def get_queryset(self):
