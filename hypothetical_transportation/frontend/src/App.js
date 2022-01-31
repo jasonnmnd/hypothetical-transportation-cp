@@ -23,6 +23,7 @@ import GeneralAdminSchoolDetails from "./components/adminPage/newPages/GeneralAd
 import GeneralAdminRouteDetails from "./components/adminPage/newPages/GeneralAdminRouteDetails";
 import GeneralManageStudentPage from "./components/adminPage/newPages/GeneralManageStudentPage";
 import AdminSchoolsPage from "./components/adminPage/pages/AdminSchoolsPage";
+import AdminRoutesPage from "./components/adminPage/pages/AdminRoutesPage";
 
 import AdminNewPage from "./components/adminPage/pages/AdminNewPage";
 import ManStudentPage from "./components/adminPage/pages/ManStudentPage";
