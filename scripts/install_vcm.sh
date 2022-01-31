@@ -30,4 +30,4 @@ echo ''
 sudo snap install --classic certbot
 
 echo 'setup cert for the host'
-sudo certbot certonly --standalone --email dmm107@duke.edu --agree-tos --no-eff-email -d whateverdomain.changeme1,whateverdomain.changeme2
+sudo certbot certonly --standalone --email dmm107@duke.edu --agree-tos --no-eff-email -d hypothetical-transportation.colab.duke.edu,ht.colab.duke.edu

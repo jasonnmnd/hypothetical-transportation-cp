@@ -9,22 +9,13 @@ services:
       - POSTGRES_DB=admin
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=admin
-  # requirements:
-  #   image: python:3.7-alpine
-  #   volumes:
-  #     - .:/code
-  #   working_dir: /code
-  #   command: pip install -r requirements.txt
   web:
     build: 
       context: .
       dockerfile: Dockerfile
-    # platform: linux/amd64
-    # command: python hypothetical_transportation/manage.py runserver_plus
     command: bash -c "python hypothetical_transportation/manage.py makemigrations && python hypothetical_transportation/manage.py migrate && python hypothetical_transportation/manage.py runserver_plus  0.0.0.0:8000 --cert-file /etc/letsencrypt/live/ht-dev.colab.duke.edu/fullchain.pem --key-file /etc/letsencrypt/live/ht-dev.colab.duke.edu/privkey.pem"
     volumes:
       - .:/code
-      - ./config/certs/:/etc/certs
       - /etc/letsencrypt/:/etc/letsencrypt/
     ports:
       - "8000:8000"
