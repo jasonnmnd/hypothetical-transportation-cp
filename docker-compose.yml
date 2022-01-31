@@ -20,10 +20,13 @@ services:
       context: .
       dockerfile: Dockerfile
     # platform: linux/amd64
-    
-    command: python hypothetical_transportation/manage.py runserver 0.0.0.0:8000
+    # command: python hypothetical_transportation/manage.py runserver_plus
+    command: bash -c "python hypothetical_transportation/manage.py makemigrations && python hypothetical_transportation/manage.py migrate && python hypothetical_transportation/manage.py runserver_plus  0.0.0.0:8000 --cert-file /etc/certs/cert.crt --key-file /etc/certs/cert.key"
+
+    # command: python hypothetical_transportation/manage.py runserver_plus 0.0.0.0:8000 --cert-file cert.crt
     volumes:
       - .:/code
+      - ./config/certs/:/etc/certs
     ports:
       - "8000:8000"
     environment:
