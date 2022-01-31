@@ -55,19 +55,21 @@ function AdminUserDetails() {
     last_name: "",
     email: "",
     address: "",
-    admin:true,
+    admin:false,
   }
 
   const emptyStudents = [{
   }]
 
   const [user, setUser] = useState(emptyUser);
+  const [colum, setColumn] = useState("");
   const [students, setStudents] = useState(emptyStudents);
 
   const getUser = () => {
     axios.get(`/api/user/${param.id}`)
         .then(res => {
           setUser(res.data);
+          res.data.admin?setColumn("admin_user"):setColumn("parent_user")
         }).catch(err => console.log(err));
     }
   
@@ -81,6 +83,8 @@ function AdminUserDetails() {
   useEffect(() => {
     getUser();
     getStudents();
+    console.log(colum)
+
   }, []);
 
 
@@ -90,6 +94,7 @@ function AdminUserDetails() {
     <>  
         <Header textToDisplay={"Admin Portal"}></Header>
         <SidebarSliding/>
+        {openModal && <DeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}
         <div className='middle-justify'>
             <div className='admin-details'>
                 <h1>User Details</h1>
@@ -105,6 +110,10 @@ function AdminUserDetails() {
                     <h2>Address: </h2>
                     <h3>{user.address}</h3>
                 </div>
+                <div className='info-fields'>
+                    <h2>Admin: </h2>
+                    <h3>{user.admin ? "true":"false"}</h3>
+                </div>
                 {/* Table for Students Here */}
                 <div className='info-fields'>
                     {/* <h2>Students: </h2> */}
@@ -117,7 +126,7 @@ function AdminUserDetails() {
                 </div>
 
                 <div className='edit-delete-buttons'>
-                  <Link to={`/admin/edit/user/${user.id}`}><button>Edit User</button></Link>
+                  <Link to={`/admin/edit/${colum}/${user.id}`}><button>Edit User</button></Link>
                   <button onClick={() => {
                     setOpenModal(true);
                   }}>Delete User</button>
@@ -127,7 +136,6 @@ function AdminUserDetails() {
                   </Link> */}
                   <button onClick={() => navigate(-1)} className='button'>Go Back</button>
             </div>
-            {openModal && <DeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}
         </div>
     </>
   );

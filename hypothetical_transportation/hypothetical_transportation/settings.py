@@ -23,11 +23,32 @@ SECRET_KEY = 'django-insecure-dz)xt+ggvmpya26p(yn$y-0gcq1&$tnrj+i_n5*1u0_ek+j3lg
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+LOGGING = {
+
+    'version': 1,
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'werkzeug': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
 
 ALLOWED_HOSTS = [
         '0.0.0.0',
         'hypothetical-transportation.colab.duke.edu',
+        'ht.colab.duke.edu',
         'ht-dev.colab.duke.edu',
+        'ht-test.colab.duke.edu',
+        'ht-frontend.colab.duke.edu',
+        'ht-backend.colab.duke.edu',
 ]
 
 # Application definition
@@ -46,6 +67,7 @@ INSTALLED_APPS = [
     'backend',
     'knox',
     'accounts',
+    'django_extensions',
 ]
 
 REST_FRAMEWORK = {
