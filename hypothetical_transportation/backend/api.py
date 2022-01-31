@@ -71,6 +71,8 @@ class UserViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action == 'partial_update' or self.action == 'update':
             return EditUserSerializer
+        if self.action == 'list' or self.action == 'retrieve':
+            return FormatUserSerializer
         return UserSerializer
 
     def get_queryset(self):
@@ -95,8 +97,8 @@ class RouteViewSet(viewsets.ModelViewSet):
     ordering_fields = ['school__name', 'name', 'students']
 
     def get_serializer_class(self):
-        # if self.action == 'list' or self.action == 'retrieve':
-        #     return FormatRouteSerializer
+        if self.action == 'list' or self.action == 'retrieve':
+            return FormatRouteSerializer
         return RouteSerializer
 
     def get_queryset(self):
@@ -151,8 +153,8 @@ class StudentViewSet(viewsets.ModelViewSet):
     ordering_fields = ['school__name', 'student_id', 'full_name']
 
     def get_serializer_class(self):
-        # if self.action == 'list' or self.action == 'retrieve':
-        #     return FormatStudentSerializer
+        if self.action == 'list' or self.action == 'retrieve':
+            return FormatStudentSerializer
         return StudentSerializer
 
     def get_queryset(self):
