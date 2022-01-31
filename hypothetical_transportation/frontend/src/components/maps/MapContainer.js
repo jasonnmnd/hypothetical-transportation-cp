@@ -100,8 +100,8 @@ function MapContainer(props) {
           getRouteStudentCoord(stu)
         })
       }
-      console.log(routeAdd)
-      console.log(studentAdd)
+      // console.log(routeAdd)
+      // console.log(studentAdd)
     }, [props]);
 
   const [selected, setSelected] = useState({});
