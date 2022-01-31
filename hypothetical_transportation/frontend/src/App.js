@@ -28,6 +28,7 @@ import GeneralAdminUserDetails from "./components/adminPage/newPages/GeneralAdmi
 import GeneralAdminStudentDetails from "./components/adminPage/newPages/GeneralAdminStudentDetails";
 import GeneralAdminSchoolDetails from "./components/adminPage/newPages/GeneralAdminSchoolDetails";
 import GeneralAdminRouteDetails from "./components/adminPage/newPages/GeneralAdminRouteDetails";
+import GeneralManageStudentPage from "./components/adminPage/newPages/GeneralManageStudentPage";
 
 import AdminNewPage from "./components/adminPage/pages/AdminNewPage";
 import ManStudentPage from "./components/adminPage/pages/ManStudentPage";
@@ -82,8 +83,8 @@ function App( props ) {
           <Route exact path="/admin/route/:id" element={<PrivateRoute><GeneralAdminRouteDetails /></PrivateRoute>}/>
           <Route exact path="/admin/route/plan/:school_id" element={<PrivateRoute><AdminRoutePlanner action={"new"}/></PrivateRoute>}/>
           <Route exact path="/admin/route/edit/:school_id/:route_id" element={<PrivateRoute><AdminRoutePlanner action={"edit"}/></PrivateRoute>}/>
-          <Route exact path="/admin/new_student/" element={<PrivateRoute><ManStudentPage action={"new"} /></PrivateRoute>}/>
-          <Route exact path="/admin/edit_student/:id" element={<PrivateRoute><ManStudentPage action={"edit"}/></PrivateRoute>}/>
+          <Route exact path="/admin/new_student/" element={<PrivateRoute><GeneralManageStudentPage action={"new"} /></PrivateRoute>}/>
+          <Route exact path="/admin/edit_student/:id" element={<PrivateRoute><GeneralManageStudentPage action={"edit"}/></PrivateRoute>}/>
           <Route exact path="admin/new/:column" element={<PrivateRoute><AdminNewPage /></PrivateRoute>}></Route>
         </Routes>
       </BrowserRouter>
