@@ -4,6 +4,32 @@ Senior design course project!
 
 ## Getting Started
 
+### Deployment
+
+Using github actions, a developmental server is automatically deployed upon pushes to the branch `dev`, and a production server is automatically deployed upon pushes to `main`.
+
+The hosts for these servers are as listed:
+#### PRODUCTION
+`https://hypothetical-transportation.colab.duke.edu:8000`
+
+#### DEV
+`https://ht-dev.colab.duke.edu:8000`
+
+#### TEST ENV (must be deployed manually)
+`https://ht-test.colab.duke.edu:8000`
+
+### Creating a new server
+#### Reserve a VCM/obtain a host
+
+```
+echo '...ssh into your host...'
+echo '...get the repo on there in some way (aka make a ssh key and clone repo)...'
+cd scripts
+echo '...validate that the domains are correct in install_vcm for the creation of certs'
+cat install_vcm.sh
+./install_vcm.sh
+```
+
 ### Running the frontend
 
 Compiles frontend content to be served. Package manager will hang and `Ctrl-C` can be used.
@@ -11,6 +37,11 @@ Compiles frontend content to be served. Package manager will hang and `Ctrl-C` c
 ```
 npm install
 npm run dev
+```
+
+To compile for production, run: 
+```
+npm run build
 ```
 
 ### Running the Stack
