@@ -4,10 +4,8 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import "../adminPage.css";
 import DeleteModal from '../components/modals/DeleteModal';
 import SidebarSliding from '../components/sidebar/SidebarSliding';
-import axios from 'axios';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import config from '../../../utils/config';
 import { getStudentInfo, deleteStudent } from '../../../actions/students';
 
 function GeneralAdminStudentDetails(props) {
@@ -15,9 +13,6 @@ function GeneralAdminStudentDetails(props) {
   const param = useParams();
 
   const student = props.student
-
-
-
   const [openModal, setOpenModal] = useState(false);
 
   const handleConfirmDelete = () => {
