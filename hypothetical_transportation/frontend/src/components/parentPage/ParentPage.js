@@ -42,7 +42,7 @@ function ParentPage(props) {
             <br></br>
 
             <div className="page-description">
-              <GeneralParentTableView title={title} tableType={tableType} search={search} />
+              <GeneralParentTableView values={props.students} title={title} tableType={tableType} search={search} />
             </div>
 
           </div>
@@ -66,7 +66,8 @@ ParentPage.propTypes = {
 const mapStateToProps = (state) => ({
     isAuthenticated: state.auth.isAuthenticated,
     user: state.auth.user,
-    token: state.auth.token
+    token: state.auth.token,
+    students: state.students.students.results
 });
 
 export default connect(mapStateToProps, {logout, getStudents, searchStudents} )(ParentPage)
