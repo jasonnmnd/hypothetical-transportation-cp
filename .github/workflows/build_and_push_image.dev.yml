@@ -23,4 +23,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: dmm107/web:dev
+          tags: dmm107/ece-458:dev
