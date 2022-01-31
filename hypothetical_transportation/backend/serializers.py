@@ -48,7 +48,7 @@ class StudentSerializer(serializers.ModelSerializer):
             serializers.UniqueTogetherValidator(
                 queryset=model.objects.all(),
                 fields=('school', 'student_id'),
-                message='Serializer says no too'
+                message='Student ID must be unique for a given school'
             )
         ]
 
