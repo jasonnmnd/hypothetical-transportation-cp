@@ -44,8 +44,11 @@ LOGGING = {
 ALLOWED_HOSTS = [
         '0.0.0.0',
         'hypothetical-transportation.colab.duke.edu',
+        'ht.colab.duke.edu',
         'ht-dev.colab.duke.edu',
         'ht-test.colab.duke.edu',
+        'ht-frontend.colab.duke.edu',
+        'ht-backend.colab.duke.edu',
 ]
 
 # Application definition
