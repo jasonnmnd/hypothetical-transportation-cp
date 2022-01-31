@@ -124,7 +124,7 @@ export const resetPassword = (old_password, new_password) => (dispatch, getState
             });
 }
 
-export const resetResetPassword = () => (dispatch, getState) => {
+export const resetResetPassword = () => (dispatch) => {
   dispatch({
     type: RESET_PASSWORD_FAIL
   })
