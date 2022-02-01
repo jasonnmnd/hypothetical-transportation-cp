@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import SearchBar from '../searchbar/SearchBar';
 import GeneralTable from '../../../common/GeneralTable';
 
+
 const userColumns = [
     {
         colTitle: "Full Name",
@@ -135,6 +136,8 @@ function GeneralAdminTableView( props ) {
 
     const nav = useNavigate();
 
+    const [currentPage, setPage] = useState(0)
+
     const handleViewClick = (d) => {
         //route to /props.title?somethingid=id => props.title determins routing to student, route, school, user
         console.log(d)
@@ -222,6 +225,7 @@ function GeneralAdminTableView( props ) {
             </div>
             <div className="prev-next-buttons">
                 <button onClick={handlePrevClick}>Prev</button>
+                {props.currentPage+1}
                 <button onClick={handleNextClick}>Next</button> 
             </div>
         </div>

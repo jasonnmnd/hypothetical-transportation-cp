@@ -8,18 +8,19 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { getStudents, searchStudents } from '../../../actions/students';
 import GeneralAdminTableView from '../components/views/GeneralAdminTableView';
+import PaginationButtons from '../../common/PaginationButtons';
 
 function GeneralAdminStudentsPage(props) {
 
   const title = "Students"
   const tableType = "student"
   
+  const [currentPage, setPage] = useState(0)
 
   useEffect(() => {
-    props.getStudents();
-  }, []);
+    props.getStudents(currentPage);
+  }, [currentPage]);
 
-  
 
   const search = (value)=>{
     //somehow get backend to update data (with usestate?)
@@ -37,6 +38,7 @@ function GeneralAdminStudentsPage(props) {
             </Link>          
           </div>
           <GeneralAdminTableView values={props.students} title={title} tableType={tableType} search={search} />
+          <PaginationButtons currentPage={currentPage} setCurrentPage={setPage}/>
         </div>
     </div>
     
