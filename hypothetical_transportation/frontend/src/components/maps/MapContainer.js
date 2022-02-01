@@ -52,7 +52,7 @@ function MapContainer(props) {
     }
 
     const getStudentCoord = (stu) => {
-      Geocode.fromAddress(stu.address).then(
+      Geocode.fromAddress(stu.guardian.address).then(
           (response) => {
               const { lat, lng } = response.results[0].geometry.location;
               studentAddress = studentAddress.concat({
@@ -70,7 +70,7 @@ function MapContainer(props) {
     }
 
     const getRouteStudentCoord = (stu) => {
-      Geocode.fromAddress(stu.address).then(
+      Geocode.fromAddress(stu.guardian.address).then(
           (response) => {
               const { lat, lng } = response.results[0].geometry.location;
               routeAddress = routeAddress.concat({
@@ -89,12 +89,14 @@ function MapContainer(props) {
 
 
     useEffect(() => {
-      console.log(props.studentData)
-      console.log(props.routeStudentData)
+      // console.log(props.studentData)
+      console.log(props)
       getSchoolCoord(props.schoolData);
-      props.studentData.map(stu=>{
-        getStudentCoord(stu)
-      })
+      if(props.studentData!==null && props.studentData!==undefined){
+        props.studentData.map(stu=>{
+          getStudentCoord(stu)
+        })
+      }
       if(props.routeStudentData!==null && props.routeStudentData!==undefined){
         props.routeStudentData.map(stu=>{
           getRouteStudentCoord(stu)
@@ -121,15 +123,15 @@ function MapContainer(props) {
          center={schoolAdd.location}>
 
          <Marker key={schoolAdd.info_text} position={schoolAdd.location} onClick={() => onSelect(schoolAdd)} options={{icon:`${PinImage}`}}></Marker>
-         {
+         {studentAdd!==null && studentAdd!==undefined && studentAdd.length!==0 ?
            studentAdd.map((stu,i)=>{
             return (<Marker key={stu.info_text} position={stu.location} onClick={() => onSelect(stu)}></Marker>)
-            })
+            }):null
          }
-         {
+         {routeAdd!==null && routeAdd!==undefined && routeAdd.length!==0 ?
            routeAdd.map((stu,i)=>{
             return (<Marker key={stu.info_text} position={stu.location} onClick={() => onSelect(stu)} options={{icon:`${PinImage2}`}}></Marker>)
-            })
+            }):null
          }
 
          {

@@ -24,6 +24,7 @@ class EditUserSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         updated_instance = super().update(instance, validated_data)
         updated_instance.set_password(validated_data['password'])
+        updated_instance.save()
         return updated_instance
 
     class Meta:
@@ -49,6 +50,10 @@ class RouteSerializer(serializers.ModelSerializer):
 
 class FormatRouteSerializer(RouteSerializer):
     school = SchoolSerializer()
+    student_count = serializers.SerializerMethodField('get_student_count')
+
+    def get_student_count(self, obj):
+        return obj.students.count()
 
 
 class StudentSerializer(serializers.ModelSerializer):
