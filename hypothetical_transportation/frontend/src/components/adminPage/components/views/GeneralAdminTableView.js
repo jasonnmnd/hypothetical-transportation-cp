@@ -18,10 +18,10 @@ const userColumns = [
         colTitle: "Address",
         dataPath: "address"
     },
-    // {
-    //     colTitle: "Group",
-    //     dataPath: "groups[0].name"
-    // },
+    {
+        colTitle: "Group",
+        dataPath: "groups.0.name"
+    },
 ]
 
 const studentColumns = [
@@ -56,9 +56,24 @@ const schoolColumns = [
 ]
 
 const routeColumns = [
-    "name",
-    "description",
+    {
+        colTitle: "Name",
+        dataPath: "name"
+    },
+    {
+        colTitle: "School",
+        dataPath: "school.name"
+    },
+    // {
+    //     colTitle: "Num Students",
+    //     dataPath: "school.name"
+    // }
 ]
+
+// const routeColumns = [
+//     "name",
+//     "description",
+// ]
 
 const userSortBy = [
     "full_name",
@@ -104,8 +119,7 @@ const schoolFilterBy = [
     "student_id"
 ]
 const routeFilterBy = [
-    "full_name",
-    "student_id"
+    "name",
 ]
 
 
