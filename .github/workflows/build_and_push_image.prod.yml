@@ -2,9 +2,9 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ dev ]
+    branches: [ main ]
   pull_request:
-    branches: [ dev ]
+    branches: [ main ]
 
 jobs:
   build:
@@ -12,11 +12,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Build the web Docker image
-        run: docker build . --file Dockerfile --tag dmm107/ece-458:web-dev
+        run: docker build . --file Dockerfile --tag dmm107/ece-458:web-prod
       - name: Login to DockerHub
         uses: docker/login-action@v1 
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Build and push
-        run: docker push dmm107/ece-458:web-dev
+        run: docker push dmm107/ece-458:web-prod
