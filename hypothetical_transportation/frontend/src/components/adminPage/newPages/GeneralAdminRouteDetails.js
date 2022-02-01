@@ -68,7 +68,7 @@ function GeneralAdminRouteDetails(props) {
             <GeneralAdminTableView title='Associated Students' tableType='student' values={props.students} search={null} />
 
             <div className='edit-delete-buttons'>
-              <Link to={`/admin/route/edit/${props.route.school}/${props.route.id}`}><button>Edit Route</button></Link>
+              <Link to={`/admin/route/edit/${props.route.school.id}/${props.route.id}`}><button>Edit Route</button></Link>
               <button onClick={() => {
                 setOpenModal(true);
               }}>Delete Route</button>
