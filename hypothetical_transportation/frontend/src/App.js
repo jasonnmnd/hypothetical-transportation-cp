@@ -23,6 +23,7 @@ import GeneralAdminRouteDetails from "./components/adminPage/newPages/GeneralAdm
 import GeneralManageStudentPage from "./components/adminPage/newPages/GeneralManageStudentPage";
 import AdminNewPage from "./components/adminPage/pages/AdminNewPage";
 import GeneralResetPasswordPage from "./components/accountPage/GeneralResetPasswordPage";
+import GeneralEditSchoolForm from "./components/adminPage/newPages/GeneralEditSchoolForm";
 
 const testingTableProps = [
   {
@@ -63,6 +64,8 @@ function App( props ) {
           <Route path="/admin/*" element={<PrivateRoute><AdminPage/></PrivateRoute>}></Route>
           <Route exact path="/admin/users" element={<PrivateRoute><GeneralAdminUsersPage /></PrivateRoute>}></Route>
           <Route exact path="/admin/students" element={<PrivateRoute><GeneralAdminStudentsPage /></PrivateRoute>}></Route>
+          <Route exact path="/admin/edit/school/:id" element={<PrivateRoute><GeneralEditSchoolForm action="edit" /></PrivateRoute>}></Route>
+          <Route exact path="/admin/new/school/" element={<PrivateRoute><GeneralEditSchoolForm action="new"/></PrivateRoute>}></Route>
           <Route exact path="/admin/edit/:column/:id" element={<PrivateRoute><AdminEditPage /></PrivateRoute>}></Route>
           <Route exact path="/admin/schools" element={<PrivateRoute><GeneralAdminSchoolsPage /></PrivateRoute>}></Route>
           <Route exact path="/admin/routes" element={<PrivateRoute><GeneralAdminRoutesPage /></PrivateRoute>}></Route>

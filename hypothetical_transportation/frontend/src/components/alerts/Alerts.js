@@ -20,7 +20,7 @@ function Alerts(props) {
       } else {
         // do componentDidUpdate logic
         if (error !== prevErrorRef.current) {
-            if (error.msg.name) alert.error(error.msg.name);
+            if (error.msg.name) alert.error(`Name: ${error.msg.name.join()}`);
             if (error.msg.non_field_errors) alert.error(`${error.msg.non_field_errors.join()}`);
             if (error.msg.password) alert.error(`Password: ${error.msg.password.join()}`);
             if (error.msg.email) alert.error(`Email: ${error.msg.email.join()}`);

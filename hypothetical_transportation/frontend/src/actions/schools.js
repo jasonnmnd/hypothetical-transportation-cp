@@ -1,5 +1,5 @@
 import axios from "axios";
-import { GET_SCHOOLS, POPULATE_TABLE, GET_SCHOOL, DELETE_SCHOOL, DELETE_ITEM } from "./types"; 
+import { GET_SCHOOLS, POPULATE_TABLE, GET_SCHOOL, DELETE_SCHOOL, DELETE_ITEM, ADD_SCHOOL } from "./types"; 
 import { tokenConfig } from './auth';
 
 import { createMessage, returnErrors } from './messages';
@@ -21,6 +21,18 @@ export const getSchools = () => (dispatch, getState) => {
     .catch((err) => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
 
 }
+
+export const addSchool = (school) => (dispatch, getState) => {
+  axios
+    .post('/api/school/', school, tokenConfig(getState))
+    .then((res) => {
+      dispatch({
+        type: ADD_SCHOOL,
+        payload: res.data,
+      });
+    })
+    .catch((err) => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
+};
 
 export const deleteSchool = (id) => (dispatch, getState) => {
   axios
@@ -77,4 +89,18 @@ export const getSchool = (id) => (dispatch, getState) => {
       }).catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
   }
 
-  
+  export const updateSchool = (school, id) => (dispatch, getState) => {
+    axios
+            .put(`/api/school/${id}/`,school, tokenConfig(getState))
+            .then(res =>{
+              dispatch({
+                type: DELETE_SCHOOL,
+                payload: parseInt(id)
+              })
+              dispatch({
+                type: ADD_SCHOOL,
+                payload: res.data
+              })
+                
+            }).catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
+  }
