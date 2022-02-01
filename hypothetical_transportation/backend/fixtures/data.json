@@ -92,7 +92,6 @@
     "model": "backend.Student",
     "fields": {
       "full_name": "Eleanor Shellstrop",
-      "address": "Neighborhood 12358W",
       "active": true,
       "school": 1,
       "student_id": 1,
@@ -104,7 +103,6 @@
     "model": "backend.Student",
     "fields": {
       "full_name": "Chidi Anagonye",
-      "address": "Neighborhood 12358W",
       "active": true,
       "school": 1,
       "student_id": 2,
@@ -116,7 +114,6 @@
     "model": "backend.Student",
     "fields": {
       "full_name": "Jason Mendoza",
-      "address": "Neighborhood 12358W",
       "active": true,
       "school": 1,
       "student_id": 3,
@@ -128,7 +125,6 @@
     "model": "backend.Student",
     "fields": {
       "full_name": "Tahani Al-Jamil",
-      "address": "Neighborhood 12358W",
       "active": true,
       "school": 1,
       "student_id": 4,
@@ -140,7 +136,6 @@
     "model": "backend.Student",
     "fields": {
       "full_name": "Trevor",
-      "address": "The Bad Place",
       "active": true,
       "school": 3,
       "student_id": 1,
@@ -152,7 +147,6 @@
     "model": "backend.Student",
     "fields": {
       "full_name": "Vicky",
-      "address": "The Bad Place",
       "active": true,
       "school": 3,
       "student_id": 2,

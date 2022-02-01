@@ -4,11 +4,15 @@ from rest_framework import status
 from knox.models import AuthToken
 from .serializers import UserSerializer, RegisterSerializer, LoginSerializer, ChangePasswordSerializer
 from django.contrib.auth import get_user_model
+from .permissions import IsAdmin
 
 
 # Register API
 class RegisterAPI(generics.GenericAPIView):
     serializer_class = RegisterSerializer
+    permission_classes = [
+        IsAdmin
+    ]
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)

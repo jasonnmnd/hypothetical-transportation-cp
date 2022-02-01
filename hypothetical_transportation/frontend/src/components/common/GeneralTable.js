@@ -4,25 +4,29 @@ import PropTypes from 'prop-types';
 import "../adminPage/adminPage.css";
 
 function GeneralTable( props ) {
+
+  const getValueFromPath = (path, obj) => {
+    console.log(path);
+    var res = path.split('.').reduce(function(o, k) {
+      return o && o[k];
+    }, obj);
+    return res;
+  }
   
-  const columnsToHide = ["_id"];
+  
 
   const addTableRow = (rowData) => {
-    let row = [];
-    props.columnNames.forEach((col) => {
-      if (!columnsToHide.includes(col)) {
-        row.push(
-          rowData[col]
-        );
-      }
-    });
+    
+
     return (
         <tr className={rowData["routes"] === null ? "tr-red" : "tr-gray"} >
             {
-                Object.keys(row).map((key, index) => {
+                props.columnNames.map((columnInfo, index) => {
+                    const cellData = getValueFromPath(columnInfo.dataPath, rowData)
+                    //console.log(columnInfo.dataPath)
                     return (
-                        <td key={`${row[key]}--${index}`}>
-                            {row[key]}
+                        <td key={`${cellData}--${index}`}>
+                            {cellData}
                         </td>
                     );
                 })
@@ -36,14 +40,12 @@ function GeneralTable( props ) {
 
   const mapTableColumns = () => {
     return props.columnNames.map((col) => {
-        if (!columnsToHide.includes(col)) {
-            const overridedColumnName = overrideColumnName(col);
-            return (
-                <th key={col} scope="col">
-                    {overridedColumnName}
-                </th>
-            );
-        }
+        //const overridedColumnName = overrideColumnName(col.colTitle);
+        return (
+            <th key={col.colTitle} scope="col">
+                {col.colTitle}
+            </th>
+        );
     });
   };
 
@@ -96,7 +98,7 @@ GeneralTable.propTypes = {
     rows: PropTypes.array,
     actionName: PropTypes.string,
     action: PropTypes.func,
-    columnNames: PropTypes.arrayOf(PropTypes.string)
+    columnNames: PropTypes.arrayOf(PropTypes.object)
 }
 
 const mapStateToProps = (state) => ({

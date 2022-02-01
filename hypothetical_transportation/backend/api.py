@@ -7,7 +7,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import School, Route, Student
-from .serializers import UserSerializer, StudentSerializer, RouteSerializer, SchoolSerializer
+from .serializers import UserSerializer, StudentSerializer, RouteSerializer, SchoolSerializer, FormatStudentSerializer, \
+    FormatRouteSerializer, FormatUserSerializer, EditUserSerializer
 from .search import DynamicSearchFilter
 from .customfilters import StudentCountShortCircuitFilter
 from .permissions import is_admin, IsAdminOrReadOnly
@@ -59,7 +60,6 @@ class MapsAPI(APIView):
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    serializer_class = UserSerializer
     permission_classes = [
         # permissions.IsAuthenticated
         IsAdminOrReadOnly
@@ -67,6 +67,13 @@ class UserViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend, DynamicSearchFilter, filters.OrderingFilter]
     filterset_fields = get_filter_dict(get_user_model())
     ordering_fields = ['email', 'full_name']
+
+    def get_serializer_class(self):
+        if self.action == 'partial_update' or self.action == 'update':
+            return EditUserSerializer
+        if self.action == 'list' or self.action == 'retrieve':
+            return FormatUserSerializer
+        return UserSerializer
 
     def get_queryset(self):
         if is_admin(self.request.user):
@@ -81,7 +88,6 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
 class RouteViewSet(viewsets.ModelViewSet):
-    serializer_class = RouteSerializer
     permission_classes = [
         IsAdminOrReadOnly
         # permissions.IsAuthenticated
@@ -89,6 +95,11 @@ class RouteViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend, DynamicSearchFilter, StudentCountShortCircuitFilter]
     filterset_fields = get_filter_dict(Route)
     ordering_fields = ['school__name', 'name', 'students']
+
+    def get_serializer_class(self):
+        if self.action == 'list' or self.action == 'retrieve':
+            return FormatRouteSerializer
+        return RouteSerializer
 
     def get_queryset(self):
         # Only return routes associated with children of current user
@@ -132,7 +143,6 @@ class SchoolViewSet(viewsets.ModelViewSet):
 
 
 class StudentViewSet(viewsets.ModelViewSet):
-    serializer_class = StudentSerializer
     permission_classes = [
         # permissions.IsAuthenticated
         # permissions.AllowAny
@@ -142,6 +152,11 @@ class StudentViewSet(viewsets.ModelViewSet):
     filterset_fields = get_filter_dict(Student)
     ordering_fields = ['school__name', 'student_id', 'full_name']
 
+    def get_serializer_class(self):
+        if self.action == 'list' or self.action == 'retrieve':
+            return FormatStudentSerializer
+        return StudentSerializer
+
     def get_queryset(self):
         # return Student.objects.all().distinct()
         if is_admin(self.request.user):
@@ -149,8 +164,8 @@ class StudentViewSet(viewsets.ModelViewSet):
         else:
             return self.request.user.students.all().distinct()
 
-    def perform_create(self, serializer):
-        serializer.save()
+    # def perform_create(self, serializer):
+    #     serializer.save()
 
     @action(detail=False, permission_classes=[permissions.AllowAny])
     def fields(self, request):

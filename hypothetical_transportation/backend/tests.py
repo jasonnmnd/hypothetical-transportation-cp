@@ -1,6 +1,6 @@
 import json
 
-from django.test import RequestFactory, TestCase
+from django.test import RequestFactory, TestCase, TransactionTestCase
 from django.test import Client
 from .models import Student, School, Route
 from django.contrib.auth import get_user_model
@@ -10,6 +10,21 @@ from django.contrib.auth.models import Group
 # Create your tests here.
 class AuthenticationObjectConsistency(TestCase):
     def setUp(self):
+        admin_group = Group.objects.create(name='Administrator')
+        guardian_group = Group.objects.create(name='Guardian')
+
+        # SET UP ADMINISTRATOR
+        admin_user = get_user_model().objects.create_user(email='admin@example.com', password='wordpass',
+                                                          full_name='admin user', address='loc0')
+        admin_user.groups.add(admin_group)
+
+        login_response = self.client.post('/api/auth/login',
+                                          json.dumps(
+                                              {'email': 'admin@example.com', 'password': 'wordpass'}),
+                                          content_type='application/json')
+        self.admin_token = login_response.data['token']
+        self.admin_user = admin_user
+
         stan = get_user_model().objects.create_user(email='stanpines@mysteryshack.com', password='mysteryshack',
                                                     full_name='Stanley Pines', address='618 Gopher Road')
         dan = get_user_model().objects.create_user(email='manlydan@gmail.com', password='wordpass',
@@ -18,11 +33,11 @@ class AuthenticationObjectConsistency(TestCase):
         high_school = School.objects.create(address='7777 Some St.', name='Gravity Falls High School')
         route = Route.objects.create(name='School Route 1', description='', school=school)
 
-        mabel = Student.objects.create(full_name='Mabel Pines', address='618 Gopher Road', active=True,
+        mabel = Student.objects.create(full_name='Mabel Pines', active=True,
                                        school=school, routes=route, guardian=stan, student_id=1)
-        dipper = Student.objects.create(full_name='Dipper Pines', address='618 Gopher Road',
+        dipper = Student.objects.create(full_name='Dipper Pines',
                                         active=True, school=school, routes=route, guardian=stan, student_id=2)
-        wendy = Student.objects.create(full_name='Wendy Corduroy', address='618 Gopher Road', active=True,
+        wendy = Student.objects.create(full_name='Wendy Corduroy', active=True,
                                        school=high_school, routes=route, guardian=dan, student_id=1)
 
         self.STANS_KIDS = len(stan.students.all())
@@ -43,7 +58,7 @@ class AuthenticationObjectConsistency(TestCase):
                               'address': 'Mostly an alternative dimension',
                               'groups': [],
                               }),
-                         content_type='application/json')
+                         content_type='application/json', HTTP_AUTHORIZATION=f'Token {self.admin_token}')
         num_users = len(get_user_model().objects.all())
         self.assertEqual(num_users, self.INIT_NUM_USERS + 1)
 
@@ -76,43 +91,27 @@ class AuthenticationObjectConsistency(TestCase):
         self.assertEqual(logged_out_check_response.data['detail'].code, 'authentication_failed')
 
 
-class PermissionViews(TestCase):
+class PermissionViews(TransactionTestCase):
+    reset_sequences = True
+
     def setUp(self):
         admin_group = Group.objects.create(name='Administrator')
         guardian_group = Group.objects.create(name='Guardian')
 
         # SET UP ADMINISTRATOR
         admin_user = get_user_model().objects.create_user(email='admin@example.com', password='wordpass',
-
-                                                          full_name='admin user', address='')
+                                                          full_name='admin user', address='loc0')
         admin_user.groups.add(admin_group)
-        login_response = self.client.post('/api/auth/login',
-                                          json.dumps(
-                                              {'email': 'admin@example.com', 'password': 'wordpass'}),
-                                          content_type='application/json')
-        self.admin_token = login_response.data['token']
-        self.admin_user = admin_user
 
         # SET UP USER 1
         normal_user1 = get_user_model().objects.create_user(email='user1@example.com', password='wordpass',
-                                                            full_name='user', address='')
+                                                            full_name='user', address='loc1')
         normal_user1.groups.add(guardian_group)
-        login_response = self.client.post('/api/auth/login',
-                                          json.dumps(
-                                              {'email': 'user1@example.com', 'password': 'wordpass'}),
-                                          content_type='application/json')
-        self.user1_token = login_response.data['token']
-        self.normal_user1 = normal_user1
 
         # SET UP USER 2
         normal_user2 = get_user_model().objects.create_user(email='user2@example.com', password='wordpass',
-                                                            full_name='user', address='')
+                                                            full_name='user', address='loc2')
         normal_user2.groups.add(guardian_group)
-        login_response = self.client.post('/api/auth/login',
-                                          json.dumps(
-                                              {'email': 'user2@example.com', 'password': 'wordpass'}),
-                                          content_type='application/json')
-        self.user2_token = login_response.data['token']
 
         school1 = School.objects.create(address='', name='School 1')
         school2 = School.objects.create(address='', name='School 2')
@@ -124,16 +123,37 @@ class PermissionViews(TestCase):
         route4 = Route.objects.create(name='School Route 4', description='', school=school4)
 
         # User 1 Children
-        student1 = Student.objects.create(full_name='first last', address='', active=True,
+        student1 = Student.objects.create(full_name='first last', active=True,
                                           school=school1, routes=route1, guardian=normal_user1, student_id=1)
-        student2 = Student.objects.create(full_name='first last', address='', active=True,
+        student2 = Student.objects.create(full_name='first last', active=True,
                                           school=school2, routes=route2, guardian=normal_user1, student_id=1)
 
-        student3 = Student.objects.create(full_name='first last', address='', active=True,
+        student3 = Student.objects.create(full_name='first last', active=True,
                                           school=school3, routes=route3, guardian=normal_user1, student_id=1)
         # User 2 Children
-        student4 = Student.objects.create(full_name='first last', address='', active=True,
+        student4 = Student.objects.create(full_name='first last', active=True,
                                           school=school4, routes=route4, guardian=normal_user2, student_id=1)
+
+        login_response = self.client.post('/api/auth/login',
+                                          json.dumps(
+                                              {'email': 'admin@example.com', 'password': 'wordpass'}),
+                                          content_type='application/json')
+        self.admin_token = login_response.data['token']
+        self.admin_user = admin_user
+
+        login_response = self.client.post('/api/auth/login',
+                                          json.dumps(
+                                              {'email': 'user1@example.com', 'password': 'wordpass'}),
+                                          content_type='application/json')
+        self.user1_token = login_response.data['token']
+        self.normal_user1 = normal_user1
+
+        login_response = self.client.post('/api/auth/login',
+                                          json.dumps(
+                                              {'email': 'user2@example.com', 'password': 'wordpass'}),
+                                          content_type='application/json')
+        self.user2_token = login_response.data['token']
+
         self.factory = RequestFactory()
         self.client = Client()
 
@@ -182,7 +202,6 @@ class PermissionViews(TestCase):
                                     json.dumps(
                                         {
                                             'full_name': 'first last',
-                                            'address': '',
                                             'active': True,
                                             'school': 3,
                                             'student_id': 2,
@@ -217,3 +236,79 @@ class PermissionViews(TestCase):
         student_id = self.normal_user1.students.values('id')[0]['id']
         response = self.client.get(f'/api/student/{student_id}/', HTTP_AUTHORIZATION=f'Token {self.user1_token}')
         self.assertEqual(response.status_code, 200)
+
+    def test_admin_create_student_route_consistency(self):
+        # Inconsistent routes forbidden
+        response = self.client.post('/api/student/',
+                                    json.dumps(
+                                        {
+                                            'full_name': 'first last',
+                                            'active': True,
+                                            'school': 1,
+                                            'student_id': 2,
+                                            'routes': 3,
+                                            'guardian': 1,
+                                        }),
+                                    content_type='application/json',
+                                    HTTP_AUTHORIZATION=f'Token {self.admin_token}')
+        self.assertEqual(response.status_code, 400)
+
+        # Consistent routes allowed
+        response = self.client.post('/api/student/',
+                                    json.dumps(
+                                        {
+                                            'full_name': 'first last',
+                                            'active': True,
+                                            'school': 1,
+                                            'student_id': 2,
+                                            'routes': 1,
+                                            'guardian': 1,
+                                        }),
+                                    content_type='application/json',
+                                    HTTP_AUTHORIZATION=f'Token {self.admin_token}')
+        self.assertEqual(response.status_code, 201)
+
+        # Prevent student from updating to some ridiculous route
+        response = self.client.put('/api/student/2/',
+                                   json.dumps(
+                                       {
+                                           'full_name': 'first last',
+                                           'active': True,
+                                           'school': 1,
+                                           'student_id': 3,
+                                           'routes': 3,
+                                           'guardian': 1,
+                                       }),
+                                   content_type='application/json',
+                                   HTTP_AUTHORIZATION=f'Token {self.admin_token}')
+        self.assertEqual(str(response.data['non_field_errors'][0]), 'Student school is not the same as student route!')
+        self.assertEqual(response.status_code, 400)
+
+        # Change other properties (Capitalization of name) is unaffected
+        response = self.client.patch('/api/student/2/',
+                                     json.dumps(
+                                         {
+                                             'full_name': 'Supercaulifloweragilistic'
+                                         }),
+                                     content_type='application/json',
+                                     HTTP_AUTHORIZATION=f'Token {self.admin_token}')
+        self.assertEqual(response.status_code, 200)
+
+    def test_guardian_needs_address(self):
+        # SET UP ADDRESS-LESS USER 3
+        normal_user3 = get_user_model().objects.create_user(email='user3@example.com', password='wordpass',
+                                                            full_name='user', address='')
+        response = self.client.post('/api/student/',
+                                    json.dumps(
+                                        {
+                                            'full_name': 'first last',
+                                            'active': True,
+                                            'school': 1,
+                                            'student_id': 4,
+                                            'routes': 1,
+                                            'guardian': 4,
+                                        }),
+                                    content_type='application/json',
+                                    HTTP_AUTHORIZATION=f'Token {self.admin_token}')
+        self.assertEqual(str(response.data['non_field_errors'][0]), 'User does not have an address configured')
+        self.assertEqual(response.status_code, 400)
