@@ -6,6 +6,7 @@ import "../adminPage/adminPage.css";
 function GeneralTable( props ) {
 
   const getValueFromPath = (path, obj) => {
+    console.log(path);
     var res = path.split('.').reduce(function(o, k) {
       return o && o[k];
     }, obj);

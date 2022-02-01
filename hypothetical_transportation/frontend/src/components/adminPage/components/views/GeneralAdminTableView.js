@@ -6,10 +6,22 @@ import SearchBar from '../searchbar/SearchBar';
 import GeneralTable from '../../../common/GeneralTable';
 
 const userColumns = [
-    "full_name",
-    "email",
-    "address",
-    "groups",
+    {
+        colTitle: "Full Name",
+        dataPath: "full_name"
+    },
+    {
+        colTitle: "Email Address",
+        dataPath: "email"
+    },
+    {
+        colTitle: "Address",
+        dataPath: "address"
+    },
+    // {
+    //     colTitle: "Group",
+    //     dataPath: "groups[0].name"
+    // },
 ]
 
 const studentColumns = [
@@ -78,6 +90,24 @@ const routeSortBy = [
     "-students"
 ]
 
+const userFilterBy = [
+    "full_name",
+    "email"
+]
+
+const studentFilterBy = [
+    "full_name",
+    "student_id"
+]
+const schoolFilterBy = [
+    "full_name",
+    "student_id"
+]
+const routeFilterBy = [
+    "full_name",
+    "student_id"
+]
+
 
 function GeneralAdminTableView( props ) {
 
@@ -143,12 +173,28 @@ function GeneralAdminTableView( props ) {
         }
     }
 
+    const getFilterOptions = () => {
+        switch (props.tableType) {
+            case "user":
+                return userFilterBy;
+            case "student":
+                return studentFilterBy;
+            case "school":
+                return schoolFilterBy;
+            case "route":
+                return routeFilterBy;
+            default:
+                return [];
+        }
+    }
+
+
     
 
     return (
         <div className='table-and-buttons'>
             <h1>{props.title}</h1>
-            {/* {props.search ? <SearchBar buttons={getColumns()} sortBy={getSortOptions()} search={props.search}></SearchBar> : null} */}
+            {props.search ? <SearchBar buttons={getFilterOptions()} sortBy={getSortOptions()} search={props.search}></SearchBar> : null}
             <div className='AdminTable-container'>
                 <GeneralTable rows={props.values} columnNames={getColumns()} actionName={props.actionName?props.actionName:"View"} action={props.action? props.action:handleViewClick}/>
             </div>
