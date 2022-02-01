@@ -141,45 +141,10 @@ export const getStudentsByID = (idObj) => (dispatch, getState) => {
 export const getStudentInfo = (studentID) => (dispatch, getState) => {
   axios.get(`/api/student/${studentID}/`, tokenConfig(getState))
     .then(res => {
-      let thisStudent = res.data;
-
-      axios.get(`/api/user/${thisStudent.guardian}/`, tokenConfig(getState))
-        .then(res => {
-          thisStudent.guardianName = res.data.full_name;
-          
-          axios.get(`/api/school/${thisStudent.school}/`, tokenConfig(getState))
-            .then(res => {
-              thisStudent.schoolName = res.data.name;
-
-              if (thisStudent.routes!==undefined && thisStudent.routes!==null){
-                axios.get(`/api/route/${thisStudent.routes}/`, tokenConfig(getState))
-                  .then(res => {
-                    thisStudent.routeName = res.data.name;
-                    dispatch({
-                      type: GET_STUDENT,
-                      payload: thisStudent,
-                    });
-                }).catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
-              }
-              else{
-                thisStudent.routeName = "NONE";
-                dispatch({
-                  type: GET_STUDENT,
-                  payload: thisStudent,
-                });
-              }
-
-
-          }).catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
-      
-      
-      
-      
-        }).catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
-      
-      
-
-      
+      dispatch({
+        type: GET_STUDENT,
+        payload: res.data,
+      });     
   }).catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
 }
 

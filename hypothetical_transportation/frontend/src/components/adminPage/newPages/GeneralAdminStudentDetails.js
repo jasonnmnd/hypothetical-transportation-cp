@@ -42,22 +42,22 @@ function GeneralAdminStudentDetails(props) {
                   </div>
                   <div className='info-fields'>
                       <h2>Address: </h2>
-                      <h3>{student.address}</h3>
+                      <h3>{student.guardian.address}</h3>
                   </div>
                   <div className='info-fields'>
                       <h2>School: </h2>
-                      <Link to={`/admin/school/${student.school}`}><button className='button'><h3>{student.schoolName}</h3></button></Link>
+                      <Link to={`/admin/school/${student.school.id}`}><button className='button'><h3>{student.school.name}</h3></button></Link>
                   </div>
                   <div className='info-fields'>
                       <h2>Route: </h2>
                       {(student.routes!==undefined && student.routes!==null) ?
-                        <Link to={`/admin/route/${student.routes}`}><button className='button'><h3>{student.routeName}</h3></button></Link>:
+                        <Link to={`/admin/route/${student.routes.id}`}><button className='button'><h3>{student.routes.name}</h3></button></Link>:
                         <h3>No Route for this student</h3>
                       }
                   </div>
                   <div className='info-fields'>
                       <h2>Parent: </h2>
-                      <Link to={`/admin/user/${student.guardian}`}><button className='button'><h3>{student.guardianName}</h3></button></Link>
+                      <Link to={`/admin/user/${student.guardian.id}`}><button className='button'><h3>{student.guardian.full_name}</h3></button></Link>
                   </div>
 
                   {/* Table for Students Here */}
