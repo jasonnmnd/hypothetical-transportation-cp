@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import { logout } from "../../actions/auth";
 import isAdmin from "../../utils/user";
 import SidebarSliding from "../adminPage/components/sidebar/SidebarSliding";
-import { getStudents, searchStudents } from '../../actions/students';
+import { getStudentsByUserID, searchStudents } from '../../actions/students';
 import GeneralParentTableView from "./views/GeneralParentTableView";
 
 function ParentPage(props) {
@@ -16,7 +16,7 @@ function ParentPage(props) {
   const tableType = "student"
 
   useEffect(() => {
-      props.getStudents();
+      props.getStudentsByUserID(props.user.id);
   }, []);
 
   const search = (value) => {
@@ -60,7 +60,7 @@ ParentPage.propTypes = {
       email: PropTypes.string
     }),
     logout: PropTypes.func.isRequired,
-    getStudents: PropTypes.func.isRequired
+    getStudentsByUserID: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => ({
@@ -70,4 +70,4 @@ const mapStateToProps = (state) => ({
     students: state.students.students.results
 });
 
-export default connect(mapStateToProps, {logout, getStudents, searchStudents} )(ParentPage)
+export default connect(mapStateToProps, {logout, getStudentsByUserID, searchStudents} )(ParentPage)

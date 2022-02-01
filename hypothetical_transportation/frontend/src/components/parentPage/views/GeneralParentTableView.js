@@ -5,9 +5,22 @@ import PropTypes from 'prop-types';
 import GeneralTable from '../../common/GeneralTable';
 
 const studentColumns = [
-    "student_id",
-    "full_name",
-    "school"
+    {
+        colTitle: "Student ID",
+        dataPath: "student_id"
+    },
+    {
+        colTitle: "Full Name",
+        dataPath: "full_name"
+    },
+    {
+        colTitle: "School",
+        dataPath: "school.name"
+    },
+    {
+        colTitle: "Route",
+        dataPath: "routes.name"
+    },
 ]
 
 function GeneralParentTableView(props) {
