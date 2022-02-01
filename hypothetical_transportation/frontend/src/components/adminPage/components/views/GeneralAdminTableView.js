@@ -18,10 +18,10 @@ const userColumns = [
         colTitle: "Address",
         dataPath: "address"
     },
-    // {
-    //     colTitle: "Group",
-    //     dataPath: "groups[0].name"
-    // },
+    {
+        colTitle: "Group",
+        dataPath: "groups.0.name"
+    },
 ]
 
 const studentColumns = [
