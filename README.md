@@ -37,7 +37,8 @@ _Seeding the Database with random data:_
 python3 manage.py flush
 python3 manage.py seeddb /*Optional Flags*/
 ```
-Optional flags:
+Optional Flags:
+
 --numusers [param] (default=100)
 
 --numroutes [param] (default=400)
