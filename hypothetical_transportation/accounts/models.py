@@ -43,9 +43,9 @@ class User(AbstractUser):
     # https://stackoverflow.com/questions/49134831/django-make-user-email-required
     username = None
     email = models.EmailField(_('email address'), help_text=_('Required'), blank=False, unique=True, null=False)
-    full_name = models.CharField(_('full name'), max_length=300, help_text=_('Required'), blank=False, unique=False,
+    full_name = models.CharField(_('full name'), max_length=150, help_text=_('Required'), blank=False, unique=False,
                                  null=False)
-    address = models.CharField(_('address'), max_length=300, blank=True)
+    address = models.CharField(_('address'), max_length=150, blank=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []

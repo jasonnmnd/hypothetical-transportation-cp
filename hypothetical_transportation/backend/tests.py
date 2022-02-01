@@ -112,6 +112,7 @@ class PermissionViews(TransactionTestCase):
         normal_user2 = get_user_model().objects.create_user(email='user2@example.com', password='wordpass',
                                                             full_name='user', address='loc2')
         normal_user2.groups.add(guardian_group)
+        self.normal_user2 = normal_user2
 
         school1 = School.objects.create(address='', name='School 1')
         school2 = School.objects.create(address='', name='School 2')
@@ -312,3 +313,33 @@ class PermissionViews(TransactionTestCase):
                                     HTTP_AUTHORIZATION=f'Token {self.admin_token}')
         self.assertEqual(str(response.data['non_field_errors'][0]), 'User does not have an address configured')
         self.assertEqual(response.status_code, 400)
+
+    def test_admin_edit_user(self):
+        response = self.client.put(f'/api/user/{self.normal_user2.id}/',
+                                   json.dumps(
+                                       {'email': 'user2@gmail.com',
+                                        'full_name': 'First Last',
+                                        'password': 'wordpass6',
+                                        'address': '',
+                                        'groups': [],
+                                        }),
+                                   content_type='application/json',
+                                   HTTP_AUTHORIZATION=f'Token {self.admin_token}')
+        self.assertEqual(response.status_code, 200)
+        response = self.client.put(f'/api/user/{self.normal_user2.id}/',
+                                   json.dumps(
+                                       {'email': 'user2@gmail.com',
+                                        'full_name': 'First Last',
+                                        'password': 'wordpass',
+                                        'address': '',
+                                        'groups': [],
+                                        }),
+                                   content_type='application/json',
+                                   HTTP_AUTHORIZATION=f'Token {self.user1_token}')
+        self.assertEqual(response.status_code, 403)
+
+        login_response = self.client.post('/api/auth/login',
+                                          json.dumps(
+                                              {'email': 'user2@gmail.com', 'password': 'wordpass6'}),
+                                          content_type='application/json')
+        self.assertEqual(login_response.status_code, 200)
