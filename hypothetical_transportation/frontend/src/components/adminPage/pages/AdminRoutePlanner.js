@@ -68,7 +68,7 @@ function AdminRoutePlanner(props) {
     axios.get(`/api/route/${param.route_id}/`, config(props.token))
     .then(res => {
       setRoute(res.data);
-      setObj(res.data);
+      setObj({...res.data, ["school"]:res.data.school.id});
     }).catch(err => console.log(err));
   }
 
@@ -126,6 +126,8 @@ function AdminRoutePlanner(props) {
                 .get(`/api/student/${stu.id}/`, config(props.token))
                 .then(res => {
                   res.data.routes=routeID
+                  res.data.guardian=res.data.guardian.id
+                  res.data.school=res.data.school.id
                   axios
                     .put(`/api/student/${stu.id}/`,res.data, config(props.token))
                     .then(res =>{
@@ -147,6 +149,8 @@ function AdminRoutePlanner(props) {
               .get(`/api/student/${stu.id}/`, config(props.token))
               .then(res => {
                 res.data.routes=routeID
+                res.data.guardian=res.data.guardian.id
+                res.data.school=res.data.school.id
                 axios
                   .put(`/api/student/${stu.id}/`,res.data, config(props.token))
                   .then(res =>{
@@ -160,6 +164,8 @@ function AdminRoutePlanner(props) {
               .get(`/api/student/${stu.id}/`, config(props.token))
               .then(res => {
                 res.data.routes=null
+                res.data.guardian=res.data.guardian.id
+                res.data.school=res.data.school.id
                 axios
                   .put(`/api/student/${stu.id}/`,res.data, config(props.token))
                   .then(res =>{
