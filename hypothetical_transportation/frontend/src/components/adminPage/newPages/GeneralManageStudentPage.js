@@ -48,7 +48,7 @@ function GeneralManageStudentPage(props) {
       navigate(`/admin/students/`)
     }
     else{
-      props.updateStudent(obj);
+      props.updateStudent(obj,param.id);
       navigate(`/admin/students/`)
     }
   }
@@ -141,7 +141,7 @@ function GeneralManageStudentPage(props) {
                   <div className="form-group">
                       <label>
                         Route:
-                        <select value={obj.routes.id} onChange={(e) => setObj({ ...obj, ["routes"]: e.target.value })}>
+                        <select value={obj.routes!==null &&obj.routes!==undefined ? obj.routes.id:"null"} onChange={(e) => setObj({ ...obj, ["routes"]: e.target.value })}>
                           <option value={"null"} >{"-----"}</option>
                           {props.routes!==null && props.routes!==undefined && props.routes.length!==0?props.routes.map((u,i)=>{
                               return <option value={u.id} key={i}>{u.name}</option>
