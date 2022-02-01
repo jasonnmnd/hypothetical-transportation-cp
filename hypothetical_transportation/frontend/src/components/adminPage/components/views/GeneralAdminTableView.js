@@ -73,10 +73,10 @@ const routeColumns = [
         colTitle: "School",
         dataPath: "school.name"
     },
-    // {
-    //     colTitle: "Num Students",
-    //     dataPath: "school.name"
-    // }
+    {
+        colTitle: "Number of Students",
+        dataPath: "student_count"
+    }
 ]
 
 // const routeColumns = [
@@ -111,7 +111,7 @@ const routeSortBy = [
     "students",
     "-name",
     "-school__name",
-    "-students"
+    "-students",
 ]
 
 const userFilterBy = [
