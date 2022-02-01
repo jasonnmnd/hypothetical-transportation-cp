@@ -26,5 +26,5 @@ jobs:
           password: ${{secrets.PROD_SSH_PASSWORD}}
           script: |
             cd ece-458
-            sudo docker-compose -f docker-compose.prod.yml build
+            sudo docker login --username ${{ secrets.DOCKERHUB_USERNAME }} --password ${{ secrets.DOCKERHUB_TOKEN }}
             sudo docker-compose -f docker-compose.prod.yml up -d
