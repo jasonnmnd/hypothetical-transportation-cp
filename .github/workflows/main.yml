@@ -3,8 +3,6 @@ name: Build & Deploy [PROD]
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
     
 jobs:
   build:
@@ -20,10 +18,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Push Docker Image
         run: docker push dmm107/ece-458:web-prod
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy
+      - name: Deploy Docker Image
         uses: appleboy/ssh-action@v0.1.2
         with:
           host: ${{secrets.PROD_SSH_HOST}}
