@@ -302,12 +302,19 @@ td {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  gap: 20px;
+  text-align: center;
 }
 
-.confirm_location{
+.table-and-buttons h1 {
+  font-weight: bold;
+  font-size: 48px;
+}
+
+.confirm_location {
   position: absolute;
-  left:0;
-  top:0;
+  left: 0;
+  top: 0;
 }
 
 .admin-edit-page button {
@@ -330,7 +337,7 @@ td {
 .edit-delete-buttons {
   display: flex;
   justify-content: center;
-  gap: 200px;
+  gap: 100px;
 }
 
 .edit-delete-buttons button {
@@ -365,6 +372,10 @@ td {
 
 .middle-content {
   margin-left: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
 }
 
 /* Generic Button Centering */

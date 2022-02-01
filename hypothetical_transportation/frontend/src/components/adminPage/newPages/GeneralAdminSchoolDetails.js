@@ -3,12 +3,9 @@ import Header from '../../header/Header';
 import "../adminPage.css";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import FormDeleteModal from '../components/modals/FormDeleteModal';
-import AdminTable from '../components/table/AdminTable';
 import SidebarSliding from '../components/sidebar/SidebarSliding';
-import axios from 'axios';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import config from '../../../utils/config';
 import { getSchool, deleteSchool } from '../../../actions/schools';
 import { getStudentsByID } from '../../../actions/students';
 import { getRoutesByID } from '../../../actions/routes';
@@ -82,12 +79,13 @@ function GeneralAdminSchoolDetails(props) {
             </div>
           <div className='edit-delete-buttons'>
             <Link to={`/admin/edit/school/${props.school.id}`}><button>Edit School</button></Link>
+            
             <button onClick={() => {
               setOpenModal(true);
             }}>Delete School</button>
 
             <Link to={`/admin/route/plan/${props.school.id}`}>
-              <button>Create New Route for This School</button>
+              <button>Create New Route</button>
             </Link>
 
           </div>
