@@ -34,12 +34,12 @@ function GeneralAdminUsersPage(props) {
         <SidebarSliding/>
         <Header textToDisplay={"Admin Portal"} shouldShowOptions={true}></Header>
         <div className='middle-content'>
-            <div className='add-new-users-buttons'>
+          <GeneralAdminTableView values={props.users} tableType='user' search={search} title={title} />
+            <div className='center-buttons'>
                   <Link to="/admin/new/user">
                     <button className='button'> Add New User</button>
                   </Link>
-              </div>
-          <GeneralAdminTableView values={props.users} tableType='user' search={search} title={title} />
+            </div>
         </div>
     </div>
   )

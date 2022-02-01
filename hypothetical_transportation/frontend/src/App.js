@@ -5,7 +5,6 @@ import AdminPage from "./components/adminPage/AdminPage";
 import { Routes, Route, BrowserRouter} from "react-router-dom";
 import LoginForm from "./components/loginPage/LoginForm.js"
 import AccountPage from "./components/accountPage/AccountPage";
-import AdminEditPage from "./components/adminPage/pages/AdminEditPage";
 import GeneralParentStudentDetails from "./components/parentPage/pages/GeneralParentStudentDetails";
 import AdminRoutePlanner from "./components/adminPage/pages/AdminRoutePlanner";
 import PrivateRoute from "./components/common/PrivateRoute";
@@ -21,32 +20,9 @@ import GeneralAdminStudentDetails from "./components/adminPage/newPages/GeneralA
 import GeneralAdminSchoolDetails from "./components/adminPage/newPages/GeneralAdminSchoolDetails";
 import GeneralAdminRouteDetails from "./components/adminPage/newPages/GeneralAdminRouteDetails";
 import GeneralManageStudentPage from "./components/adminPage/newPages/GeneralManageStudentPage";
-import AdminNewPage from "./components/adminPage/pages/AdminNewPage";
 import GeneralResetPasswordPage from "./components/accountPage/GeneralResetPasswordPage";
 import GeneralEditSchoolForm from "./components/adminPage/newPages/GeneralEditSchoolForm";
 import GeneralEditUserForm from "./components/adminPage/newPages/GeneralEditUserForm";
-
-const testingTableProps = [
-  {
-    username: "fred",
-    email: "aCat@animal.com",
-    school: "hunting school",
-    routeDesc: "this is the route of fred"
-  },
-  {
-    username: "allie",
-    email: "alsoaCat@animal.com",
-    school: "tracking school",
-    routeDesc: "this is the route of allie"
-  },
-  {
-    username: "max",
-    email: "adog@animal.com",
-    school: "fetching school",
-    routeDesc: "max stole this route"
-  }
-]
-
 
 function App( props ) {
   //Handle main login accross the whole app
@@ -56,7 +32,7 @@ function App( props ) {
       <BrowserRouter>
         <Alerts/>
         <Routes>
-          <Route exact path="/testingTable" element={<GeneralTable rows={testingTableProps}/>}></Route>
+          {/* <Route exact path="/testingTable" element={<GeneralTable rows={testingTableProps}/>}></Route> */}
           <Route exact path="/" element={<LoginForm />}></Route>
           <Route path="/parent/*" element={<PrivateRoute><ParentPage /></PrivateRoute>}></Route>
           <Route exact path="/account" element={<PrivateRoute><AccountPage/></PrivateRoute>}></Route>
@@ -69,7 +45,6 @@ function App( props ) {
           <Route exact path="/admin/new/school/" element={<PrivateRoute><GeneralEditSchoolForm action="new"/></PrivateRoute>}></Route>
           <Route exact path="/admin/edit/user/:id" element={<PrivateRoute><GeneralEditUserForm action="edit" /></PrivateRoute>}></Route>
           <Route exact path="/admin/new/user/" element={<PrivateRoute><GeneralEditUserForm action="new"/></PrivateRoute>}></Route>
-          {/* <Route exact path="/admin/edit/:column/:id" element={<PrivateRoute><AdminEditPage /></PrivateRoute>}></Route> */}
           <Route exact path="/admin/schools" element={<PrivateRoute><GeneralAdminSchoolsPage /></PrivateRoute>}></Route>
           <Route exact path="/admin/routes" element={<PrivateRoute><GeneralAdminRoutesPage /></PrivateRoute>}></Route>
           <Route exact path="/admin/user/:id" element={<PrivateRoute><GeneralAdminUserDetails /></PrivateRoute>}/>
@@ -80,7 +55,6 @@ function App( props ) {
           <Route exact path="/admin/route/edit/:school_id/:route_id" element={<PrivateRoute><AdminRoutePlanner action={"edit"}/></PrivateRoute>}/>
           <Route exact path="/admin/new_student/" element={<PrivateRoute><GeneralManageStudentPage action={"new"} /></PrivateRoute>}/>
           <Route exact path="/admin/edit_student/:id" element={<PrivateRoute><GeneralManageStudentPage action={"edit"}/></PrivateRoute>}/>
-          {/* <Route exact path="admin/new/:column" element={<PrivateRoute><AdminNewPage /></PrivateRoute>}></Route> */}
         </Routes>
       </BrowserRouter>
     </div>

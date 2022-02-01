@@ -31,12 +31,12 @@ function GeneralAdminSchoolsPage(props) {
         <SidebarSliding/>
         <Header textToDisplay={"Admin Portal"} shouldShowOptions={true}></Header>
         <div className='middle-content'>
-          <div className='center-buttons'>
-            <Link to="/admin/new/school">
-                  <button className='button'>Add New School</button>
-            </Link>
-          </div>
             <GeneralAdminTableView values={props.schools} title={title} tableType={tableType} search={search} />
+            <div className='center-buttons'>
+              <Link to="/admin/new/school">
+                    <button className='button'>Add New School</button>
+              </Link>
+          </div>
         </div>
     </div>
   )
