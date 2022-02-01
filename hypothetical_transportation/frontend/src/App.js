@@ -9,7 +9,6 @@ import AdminEditPage from "./components/adminPage/pages/AdminEditPage";
 import GeneralParentStudentDetails from "./components/parentPage/pages/GeneralParentStudentDetails";
 import AdminRoutePlanner from "./components/adminPage/pages/AdminRoutePlanner";
 import PrivateRoute from "./components/common/PrivateRoute";
-import { loadUser } from "./actions/auth";
 import { connect } from "react-redux";
 import Alerts from "./components/alerts/Alerts";
 import GeneralTable from "./components/common/GeneralTable";
@@ -22,12 +21,8 @@ import GeneralAdminStudentDetails from "./components/adminPage/newPages/GeneralA
 import GeneralAdminSchoolDetails from "./components/adminPage/newPages/GeneralAdminSchoolDetails";
 import GeneralAdminRouteDetails from "./components/adminPage/newPages/GeneralAdminRouteDetails";
 import GeneralManageStudentPage from "./components/adminPage/newPages/GeneralManageStudentPage";
-import AdminSchoolsPage from "./components/adminPage/pages/AdminSchoolsPage";
-
 import AdminNewPage from "./components/adminPage/pages/AdminNewPage";
-import ManStudentPage from "./components/adminPage/pages/ManStudentPage";
 import GeneralResetPasswordPage from "./components/accountPage/GeneralResetPasswordPage";
-//import GeneralTable from "./components/common/generalTable";
 
 const testingTableProps = [
   {
