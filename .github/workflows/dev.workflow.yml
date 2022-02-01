@@ -16,7 +16,5 @@ jobs:
           password: ${{secrets.DEV_SSH_PASSWORD}}
           script: |
             cd ece-458
-            git fetch origin
-            git pull
             sudo docker-compose -f docker-compose.dev.yml build
             sudo docker-compose -f docker-compose.dev.yml up -d
