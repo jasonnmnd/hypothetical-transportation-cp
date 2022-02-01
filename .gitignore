@@ -46,3 +46,4 @@ boilerplate.zip
 /venv/
 /venv-ece/
 hypothetical_transportation/frontend/static/frontend/main.js/main.js
+.DS_Store
