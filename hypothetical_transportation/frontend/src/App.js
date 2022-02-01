@@ -24,6 +24,7 @@ import GeneralManageStudentPage from "./components/adminPage/newPages/GeneralMan
 import AdminNewPage from "./components/adminPage/pages/AdminNewPage";
 import GeneralResetPasswordPage from "./components/accountPage/GeneralResetPasswordPage";
 import GeneralEditSchoolForm from "./components/adminPage/newPages/GeneralEditSchoolForm";
+import GeneralEditUserForm from "./components/adminPage/newPages/GeneralEditUserForm";
 
 const testingTableProps = [
   {
@@ -66,7 +67,9 @@ function App( props ) {
           <Route exact path="/admin/students" element={<PrivateRoute><GeneralAdminStudentsPage /></PrivateRoute>}></Route>
           <Route exact path="/admin/edit/school/:id" element={<PrivateRoute><GeneralEditSchoolForm action="edit" /></PrivateRoute>}></Route>
           <Route exact path="/admin/new/school/" element={<PrivateRoute><GeneralEditSchoolForm action="new"/></PrivateRoute>}></Route>
-          <Route exact path="/admin/edit/:column/:id" element={<PrivateRoute><AdminEditPage /></PrivateRoute>}></Route>
+          <Route exact path="/admin/edit/user/:id" element={<PrivateRoute><GeneralEditUserForm action="edit" /></PrivateRoute>}></Route>
+          <Route exact path="/admin/new/user/" element={<PrivateRoute><GeneralEditUserForm action="new"/></PrivateRoute>}></Route>
+          {/* <Route exact path="/admin/edit/:column/:id" element={<PrivateRoute><AdminEditPage /></PrivateRoute>}></Route> */}
           <Route exact path="/admin/schools" element={<PrivateRoute><GeneralAdminSchoolsPage /></PrivateRoute>}></Route>
           <Route exact path="/admin/routes" element={<PrivateRoute><GeneralAdminRoutesPage /></PrivateRoute>}></Route>
           <Route exact path="/admin/user/:id" element={<PrivateRoute><GeneralAdminUserDetails /></PrivateRoute>}/>
@@ -77,7 +80,7 @@ function App( props ) {
           <Route exact path="/admin/route/edit/:school_id/:route_id" element={<PrivateRoute><AdminRoutePlanner action={"edit"}/></PrivateRoute>}/>
           <Route exact path="/admin/new_student/" element={<PrivateRoute><GeneralManageStudentPage action={"new"} /></PrivateRoute>}/>
           <Route exact path="/admin/edit_student/:id" element={<PrivateRoute><GeneralManageStudentPage action={"edit"}/></PrivateRoute>}/>
-          <Route exact path="admin/new/:column" element={<PrivateRoute><AdminNewPage /></PrivateRoute>}></Route>
+          {/* <Route exact path="admin/new/:column" element={<PrivateRoute><AdminNewPage /></PrivateRoute>}></Route> */}
         </Routes>
       </BrowserRouter>
     </div>

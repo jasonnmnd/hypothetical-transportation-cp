@@ -90,3 +90,21 @@ export const getUser = (id) => (dispatch, getState) => {
       }).catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
   }
 
+  export const updateUser = (user, id) => (dispatch, getState) => {
+    axios
+            .put(`/api/user/${id}/`,user, tokenConfig(getState))
+            .then(res =>{
+              dispatch({
+                type: DELETE_USER,
+                payload: parseInt(id)
+              })
+              console.log(res.data);
+              dispatch({
+                type: ADD_USER,
+                payload: res.data
+              })
+                
+            }).catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
+  }
+  
+

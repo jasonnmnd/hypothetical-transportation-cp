@@ -35,11 +35,8 @@ function GeneralAdminUsersPage(props) {
         <Header textToDisplay={"Admin Portal"} shouldShowOptions={true}></Header>
         <div className='middle-content'>
             <div className='add-new-users-buttons'>
-                  <Link to="/admin/new/admin_user">
-                    <button className='button'> Add New Admin</button>
-                  </Link>
-                  <Link to="/admin/new/parent_user">
-                    <button className='button'> Add New Parent</button>
+                  <Link to="/admin/new/user">
+                    <button className='button'> Add New User</button>
                   </Link>
               </div>
           <GeneralAdminTableView values={props.users} tableType='user' search={search} title={title} />

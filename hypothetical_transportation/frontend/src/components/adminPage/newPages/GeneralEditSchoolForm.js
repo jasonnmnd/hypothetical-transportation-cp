@@ -15,7 +15,7 @@ import AssistedLocationModal from "../components/modals/AssistedLocationModal";
 //input2: list of fields?
 //input3: a typed object matching the fields
 //input4: string action determining new or edit
-function GeneralManageSchoolForm(props) {
+function GeneralEditSchoolForm(props) {
     const navigate = useNavigate();
     const param = useParams();
     const [openModal, setOpenModal] = useState(false);
@@ -109,7 +109,7 @@ function GeneralManageSchoolForm(props) {
     )
 }
 
-GeneralManageSchoolForm.propTypes = {
+GeneralEditSchoolForm.propTypes = {
     getSchool: PropTypes.func.isRequired,
     updateSchool: PropTypes.func.isRequired,
     addSchool: PropTypes.func.isRequired,
@@ -121,5 +121,5 @@ const mapStateToProps = (state) => ({
 
 });
 
-export default connect(mapStateToProps, {getSchool, updateSchool, addSchool})(GeneralManageSchoolForm)
+export default connect(mapStateToProps, {getSchool, updateSchool, addSchool})(GeneralEditSchoolForm)
 
