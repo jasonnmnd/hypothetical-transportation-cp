@@ -11,6 +11,9 @@ WORKDIR /code
 
 # move requirements into new directory
 COPY requirements.txt /code/
+COPY entrypoint_local.sh /code/
+COPY entrypoint_dev.sh /code/
+COPY entrypoint_prod.sh /code/
 
 CMD ["npm", "run", "build"]
 
