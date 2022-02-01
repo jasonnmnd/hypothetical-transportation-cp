@@ -47,13 +47,22 @@ const studentColumns = [
     }
 ]
 
-
-
-
 const schoolColumns = [
-    "name",
-    "address",
+    {
+        colTitle: "Name",
+        dataPath: "name"
+    },
+    {
+        colTitle: "Address",
+        dataPath: "address"
+    },
 ]
+
+
+// const schoolColumns = [
+//     "name",
+//     "address",
+// ]
 
 const routeColumns = [
     {
@@ -115,8 +124,7 @@ const studentFilterBy = [
     "student_id"
 ]
 const schoolFilterBy = [
-    "full_name",
-    "student_id"
+    "name",
 ]
 const routeFilterBy = [
     "name",
