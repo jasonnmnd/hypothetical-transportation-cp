@@ -5,7 +5,7 @@ on:
     branches: [ dev ]
 
 jobs:
-  build:
+  build, push, and deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -26,5 +26,5 @@ jobs:
           password: ${{secrets.DEV_SSH_PASSWORD}}
           script: |
             cd ece-458
-            sudo docker login --username ${{secrets.DEV_SSH_USERNAME}} --password ${{secrets.DEV_SSH_PASSWORD}}
+            sudo docker login --username ${{ secrets.DOCKERHUB_USERNAME }} --password ${{ secrets.DOCKERHUB_TOKEN }}
             sudo docker-compose -f docker-compose.dev.yml up -d
