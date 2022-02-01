@@ -24,6 +24,7 @@ class EditUserSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         updated_instance = super().update(instance, validated_data)
         updated_instance.set_password(validated_data['password'])
+        updated_instance.save()
         return updated_instance
 
     class Meta:
