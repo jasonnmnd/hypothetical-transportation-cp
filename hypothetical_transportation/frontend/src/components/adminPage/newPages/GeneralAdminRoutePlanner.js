@@ -283,6 +283,8 @@ function GeneralAdminRoutePlanner(props) {
 
 GeneralAdminRoutePlanner.propTypes = {
     getRouteInfo: PropTypes.func.isRequired,
+    getStudentInRoute: PropTypes.func.isRequired,
+    getStudentWithoutRoute: PropTypes.func.isRequired,
     action: PropTypes.string
 }
 
@@ -292,4 +294,4 @@ const mapStateToProps = (state) => ({
   route: state.routes.viewedRoute, 
 });
 
-export default connect(mapStateToProps)(GeneralAdminRoutePlanner)
+export default connect(mapStateToProps, {getRouteInfo,getStudentInRoute,getStudentWithoutRoute})(GeneralAdminRoutePlanner)
