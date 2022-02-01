@@ -343,3 +343,31 @@ class PermissionViews(TransactionTestCase):
                                               {'email': 'user2@gmail.com', 'password': 'wordpass6'}),
                                           content_type='application/json')
         self.assertEqual(login_response.status_code, 200)
+
+    def test_student_routes_guardian_optional(self):
+        response = self.client.post('/api/student/',
+                                    json.dumps(
+                                        {
+                                            'full_name': 'first last',
+                                            'active': True,
+                                            'school': 1,
+                                            'student_id': 100,
+                                            'routes': None,
+                                            'guardian': None,
+                                        }),
+                                    content_type='application/json',
+                                    HTTP_AUTHORIZATION=f'Token {self.admin_token}')
+        self.assertEqual(response.status_code, 201)
+        response = self.client.post('/api/student/',
+                                    json.dumps(
+                                        {
+                                            'full_name': 'first last',
+                                            'active': True,
+                                            'school': None,
+                                            'student_id': 101,
+                                            'routes': None,
+                                            'guardian': None,
+                                        }),
+                                    content_type='application/json',
+                                    HTTP_AUTHORIZATION=f'Token {self.admin_token}')
+        self.assertEqual(response.status_code, 400)
