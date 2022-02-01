@@ -26,4 +26,5 @@ jobs:
           password: ${{secrets.DEV_SSH_PASSWORD}}
           script: |
             cd ece-458
+            sudo docker login --username ${{secrets.DEV_SSH_USERNAME}} --password ${{secrets.DEV_SSH_PASSWORD}}
             sudo docker-compose -f docker-compose.dev.yml up -d
