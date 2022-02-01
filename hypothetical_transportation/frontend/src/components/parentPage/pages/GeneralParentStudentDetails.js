@@ -32,11 +32,11 @@ function ParentStudentDetails(props){
                         </div>
                         <div className='info-fields'>
                             <h2>School:</h2>
-                            <h3>{student.schoolName}</h3>
+                            <h3>{student.school.name}</h3>
                         </div>
                         <div className='info-fields'>
                             <h2>Route:</h2>
-                            <h3>{(student.routes !==undefined && student.routes!==null) ? student.routeName : "NONE"}</h3>
+                            <h3>{(student.routes !==undefined && student.routes!==null) ? student.routes.name : "NONE"}</h3>
                         </div>
 
                         <div className='edit-delete-buttons'>
