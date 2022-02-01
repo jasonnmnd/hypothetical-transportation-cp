@@ -7,7 +7,7 @@ from .models import Route, School, Student
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
-        fields = ('name',)
+        fields = ('id', 'name')
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -55,13 +55,6 @@ class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
         fields = '__all__'
-        validators = [
-            serializers.UniqueTogetherValidator(
-                queryset=model.objects.all(),
-                fields=('school', 'student_id'),
-                message='Student ID must be unique for a given school'
-            )
-        ]
 
     def validate(self, data):
         """
@@ -89,4 +82,4 @@ class StudentSerializer(serializers.ModelSerializer):
 class FormatStudentSerializer(StudentSerializer):
     school = SchoolSerializer()
     routes = RouteSerializer()
-    guardian = UserSerializer()
+    guardian = FormatUserSerializer()
