@@ -1,26 +1,43 @@
-.header{
-    position:absolute;
-    display: flex;
-    left:0;
-    top:0;
-    height:13%;
-    width:100%;
-    background-color: #ffae07;
-    padding: 20px 20px;
+.header {
+  position: absolute;
+  display: flex;
+  left: 0;
+  top: 0;
+  height: 13%;
+  width: 100%;
+  background-color: #ffae07;
+  padding: 20px 20px;
 }
 
 .header-text {
-    margin:auto;
-    color: #FFF;
-    /* padding: 10px; */
-    font-size: 30px;
-    font-family: cursive;
+  margin: auto;
+  color: #fff;
+  /* padding: 10px; */
+  font-size: 30px;
+  font-family: cursive;
 }
 
 .logo {
-    max-width: 100px;
-    height:auto;
-    position: absolute;
-    left:1%;
-    top: 10%;
+  max-width: 100px;
+  height: auto;
+  position: absolute;
+  left: 1%;
+  top: 10%;
+}
+
+.header-button button {
+  display: inline-block;
+  padding: 10px 15px;
+  border-radius: 8px;
+  background-color: #ff4444;
+  background-size: 200%;
+  background-position: 0%;
+  transition: 0.4s;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.header-button button:hover {
+  background-color: #ffc2c2;
 }

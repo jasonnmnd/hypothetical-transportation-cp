@@ -1,17 +1,29 @@
 import React from 'react';
 import "../../adminPage.css";
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
-const AdminRow = ( {header, data, handleViewClick}) => {
+const AdminRow = (props) => {
     return (
-        <tr className={data["route"] == "" ? "tr-red" : "tr-gray"} >
-            {header.map((h,i)=>{
-                return <td key={i}>{data[h].toString().length > 25 ? data[h].toString().slice(0,25)+"...":data[h]}</td>
+        <tr className={props.data["routes"] === null ? "tr-red" : "tr-gray"} >
+            {props.header.map((h,i)=>{
+                return <td key={i}>{props.data[h]!==null&&props.data[h]!==undefined ? props.data[h].toString().length > 25 ? props.data[h].toString().slice(0,25)+"...":props.data[h].toString():"None"}</td>
             })}
             <td>
-                <button onClick={() => handleViewClick(data)}>View</button>
+                <button onClick={() => props.action(props.data)}>{props.actionName}</button>
             </td>
         </tr>
     );
 };
 
-export default AdminRow
+AdminRow.propTypes = {
+    header: PropTypes.arrayOf(PropTypes.string),
+    actionName: PropTypes.string,
+    action: PropTypes.func
+}
+
+const mapStateToProps = (state) => ({
+
+});
+
+export default connect(mapStateToProps)(AdminRow)

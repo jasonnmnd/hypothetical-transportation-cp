@@ -304,6 +304,12 @@ td {
   justify-content: space-between;
 }
 
+.confirm_location{
+  position: absolute;
+  left:0;
+  top:0;
+}
+
 .admin-edit-page button {
   display: inline-block;
   padding: 10px 15px;

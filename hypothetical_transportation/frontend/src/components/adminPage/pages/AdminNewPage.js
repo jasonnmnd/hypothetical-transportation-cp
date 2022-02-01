@@ -6,48 +6,54 @@ import "../adminPage.css";
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import SidebarSliding from '../components/sidebar/SidebarSliding';
 import axios from 'axios';
+import AssistedLocationModal from '../components/modals/AssistedLocationModal';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 
-function AdminNewPage() {
+function AdminNewPage(props) {
     const navigate = useNavigate();
     const param = useParams();
     //param.column refers to "user", "school", etc
     const emptyFields = {
         user: {
-          id: 0,
-          first_name: "",
-          last_name: "",
+          full_name: "",
           email: "",
           address: "",
-          admin: false,
-        },
-        route: {
-          id: 0,
-          name: "",
-          description: "",
+          password: "",
+          groups: param.column.includes("parent")?[2]:[1],
         },
         school: {
-          id: 0,
           name: "",
           address: "",
         }
     }
     const col = param.column.includes("_") ?param.column.split("_")[1]:param.column
     const [obj, setObj] = useState(emptyFields[col])
-    const fields=obj!==null? Object.keys(obj).filter((i)=>param.column.includes("parent")?i!=="id":i!=="id"&&i!=="address"):[];
-  
+    // const fields=Object.keys(emptyFields[col]).filter((i)=>param.column.includes("admin")?i!=="school"&&i!=="address"&&i!=="groups":i!=="school"&&i!=="groups");
+    const fields=Object.keys(emptyFields[col]).filter((i)=>i!=="school"&&i!=="groups");
+
     return ( 
       <>
-        <Header textToDisplay={"Admin Portal"}></Header>
+        <Header textToDisplay={"Admin Portal"} shouldShowOptions={true}></Header>
         <SidebarSliding/>
         <div className='admin-edit-page'>
             
             <EditForm column={param.column} fields={fields} obj={obj} setobj={setObj} action={"new"}></EditForm>
-            {/* <Link to={`/admin/${param.column}s`}><button>To {param.column}</button></Link> */}
+            
             <button onClick={() => navigate(-1)} className='button'>Go Back</button>
         </div>
       </>
         );
 }
 
-export default AdminNewPage;
+AdminNewPage.propTypes = {
+    
+}
+
+const mapStateToProps = (state) => ({
+  user: state.auth.user,
+  token: state.auth.token
+});
+
+export default connect(mapStateToProps)(AdminNewPage)

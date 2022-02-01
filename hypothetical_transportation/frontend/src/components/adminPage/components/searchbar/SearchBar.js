@@ -1,24 +1,38 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../../adminPage.css"
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 //input: a list of buttons - filter by options
 //search: takes in 2 inputs? the filter option, and the inputted text
-function SearchBar({buttons, search}){
-    const [values, setValue] = useState({by:buttons[0], value:""})
+
+function SearchBar(props){
+    const [values, setValue] = useState({filter_by: "", value:"", sort_by: ""})
     
     const searchHandler = (e)=>{
         e.preventDefault();
-        search(values);
-        console.log(values)
+        console.log(values);
+        props.search(values);
     }
+
     return(
         <form className="search">
             <div className="search-inner">
                 <div className="search-group">
+                    {props.sortBy!==undefined && props.sortBy!==null ?<label>
+                    Sort By:
+                    <select value={values.sort_by} onChange={(e) => setValue({ ...values, sort_by: e.target.value })}>
+                        <option value={""} key={"empty"}></option>
+                        {props.sortBy.map((b,i)=>{
+                            return !b.includes("-")? <option value={b} key={i}>{(b.includes("__")? b.split("__")[0] : b )+ " Asc"}</option>:<option value={b} key={i}>{(b.includes("__")? b.split("__")[0]:b).slice(1,) + " Dsc"}</option>
+                        })}
+                    </select>
+                    </label>:null}
                     <label>
                     Filter By:
-                    <select value={values.by} onChange={(e) => setValue({ ...values, by: e.target.value })}>
-                        {buttons.map((b,i)=>{
+                    <select value={values.filter_by} onChange={(e) => setValue({ ...values, filter_by: e.target.value })}>
+                        <option value={""} key={"empty"}></option>
+                        {props.buttons.filter(k=>k!=="routes"&&k!=="school"&&k!=="groups"&&k!=="num_student").map((b,i)=>{
                             return <option value={b} key={i}>{b}</option>
                         })}
                     </select>
@@ -42,4 +56,18 @@ function SearchBar({buttons, search}){
         </form>
     );
 }
-export default SearchBar;
+
+
+SearchBar.propTypes = {
+    buttons: PropTypes.arrayOf(PropTypes.string),
+    sortBy: PropTypes.arrayOf(PropTypes.string),
+    search: PropTypes.func
+  }
+  
+  const mapStateToProps = (state) => ({
+    isAuthenticated: state.auth.isAuthenticated,
+    user: state.auth.user
+  
+  });
+  
+  export default connect(mapStateToProps)(SearchBar)

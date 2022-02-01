@@ -3,27 +3,32 @@ import Header from "../header/Header";
 import { Navigate } from "react-router-dom";
 import "./login.css";
 import image from "../../../public/schoolbusBackground.jpg";
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { login } from "../../actions/auth";
+import isAdmin from "../../utils/user";
 
-function LoginForm( {adminLogin, parentLogin, user, error} ) {
-    
+function LoginForm( props ) {
   const [details, setDetails] = useState({ email: "", password: "" });
 
-  const parentSubmitHandler = (e) => {
+  const submitHandler = (e) => {
     e.preventDefault();
-    parentLogin(details);
+    props.login(details.email, details.password);
   };
 
-  const adminSubmitHandler = (e) => {
-    e.preventDefault();
-    adminLogin(details);
-  };
+  if (props.isAuthenticated) {
+    if(isAdmin(props.user)){
+      return <Navigate to="/admin" />;
+    }
+    return <Navigate to="/parent" />;
+  }
+  
 
   return (
       <div className="login-form" style ={ { backgroundImage: `url(${image})` } }>
-        {user.name === "" ? (
         <div>
-          <Header textToDisplay={"Hypothetical Transportation"}></Header>
-          <form className="login">
+          <Header textToDisplay={"Hypothetical Transportation"} shouldShowOptions={false}></Header>
+          <form className="login" >
             <div className="form-inner">
               <h2>Sign in to your account</h2>
 
@@ -52,27 +57,25 @@ function LoginForm( {adminLogin, parentLogin, user, error} ) {
               </div>
 
               <div className="divider15px" />
-              <button onClick={parentSubmitHandler}>Login as Parent</button>
-
+              <div className="login-buttons">
+                <button onClick={submitHandler}>Login</button>
+              </div>
               <div className="divider15px" />
-
-              <button onClick={adminSubmitHandler}>Login as Admin</button>
-              {
-                /* ERROR! */
-                error !== "" ? <div className="error">{error}</div> : ""
-              }
             </div>
           </form>
         </div>
-        ): user.admin === true ? (
-          <Navigate to="/admin"></Navigate>
-
-        ):(
-          <Navigate to="/parent"></Navigate>
-        )
-        }
       </div>
   );
 }
 
-export default LoginForm;
+LoginForm.propTypes = {
+    isAuthenticated: PropTypes.bool,
+    login: PropTypes.func.isRequired
+}
+
+const mapStateToProps = (state) => ({
+    isAuthenticated: state.auth.isAuthenticated,
+    user: state.auth.user
+});
+
+export default connect(mapStateToProps, { login })(LoginForm)
