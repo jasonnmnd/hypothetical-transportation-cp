@@ -31,7 +31,7 @@ class Student(models.Model):
     )
     routes = models.ForeignKey(
         Route, related_name='students',
-        on_delete=models.CASCADE, null=True
+        on_delete=models.SET_NULL, null=True
     )
     guardian = models.ForeignKey(
         settings.AUTH_USER_MODEL, related_name='students',
@@ -40,4 +40,7 @@ class Student(models.Model):
     student_id = models.IntegerField(null=True)
 
     class Meta:
-        unique_together = ('school', 'student_id')
+        constraints = [
+            models.UniqueConstraint(fields=['school', 'student_id'], name='Student ID and School are unique together')
+        ]
+        # unique_together = ('school', 'student_id')

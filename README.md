@@ -24,7 +24,10 @@ python3 manage.py migrate
 ```
 
 #### Seeding the Database
-
+_Create an admin:_
+```
+python3 manage.py initadmin
+```
 ```
 python3 manage.py flush
 python3 manage.py loaddata backend/fixtures/data.json

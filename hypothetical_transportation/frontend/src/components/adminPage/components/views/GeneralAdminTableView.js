@@ -13,10 +13,29 @@ const userColumns = [
 ]
 
 const studentColumns = [
-    "student_id",
-    "full_name",
-    "school",
+    {
+        colTitle: "Student ID",
+        dataPath: "student_id"
+    },
+    {
+        colTitle: "Full Name",
+        dataPath: "full_name"
+    },
+    {
+        colTitle: "School",
+        dataPath: "school.name"
+    },
+    {
+        colTitle: "Route",
+        dataPath: "routes.name"
+    },
+    {
+        colTitle: "Parent",
+        dataPath: "guardian.full_name"
+    }
 ]
+
+
 
 
 const schoolColumns = [
@@ -66,7 +85,7 @@ function GeneralAdminTableView( props ) {
 
     const handleViewClick = (d) => {
         //route to /props.title?somethingid=id => props.title determins routing to student, route, school, user
-        
+        console.log(d)
         if (props.tableType == 'user') {
             nav(`/admin/user/${d.id}`);
         } 
@@ -129,7 +148,7 @@ function GeneralAdminTableView( props ) {
     return (
         <div className='table-and-buttons'>
             <h1>{props.title}</h1>
-            {props.search ? <SearchBar buttons={getColumns()} sortBy={getSortOptions()} search={props.search}></SearchBar> : null}
+            {/* {props.search ? <SearchBar buttons={getColumns()} sortBy={getSortOptions()} search={props.search}></SearchBar> : null} */}
             <div className='AdminTable-container'>
                 <GeneralTable rows={props.values} columnNames={getColumns()} actionName={props.actionName?props.actionName:"View"} action={props.action? props.action:handleViewClick}/>
             </div>
