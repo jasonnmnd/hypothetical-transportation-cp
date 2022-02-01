@@ -22,10 +22,8 @@ function GeneralManageStudentPage(props) {
     const [openModal, setOpenModal] = useState(false);
 
     const emptyStudent={
-      id: 0,
       student_id: "",
       full_name: "",
-      address: "",
       guardian: "",
       routes: "",
       school: "null",
@@ -37,20 +35,20 @@ function GeneralManageStudentPage(props) {
 
 
 
-  const setAddress = (e)=>{
+  const setParent = (e)=>{
     props.getUser(e.target.value);
-    setObj({ ...obj, ["guardian"]: e.target.value, ["address"]: props.selectedUser.address});
+    setObj({ ...obj, ["guardian"]: e.target.value});
   }
 
 
   const submit = () => {
     if(props.action==="new"){
       console.log(obj)
-      props.addStudent({...obj, ["address"]: props.selectedUser.address})
+      props.addStudent(obj)
       navigate(`/admin/students/`)
     }
     else{
-      props.updateStudent({...obj, ["address"]: props.selectedUser.address}, param.id);
+      props.updateStudent(obj);
       navigate(`/admin/students/`)
     }
   }
@@ -61,6 +59,10 @@ function GeneralManageStudentPage(props) {
     props.getRoutesByID({school: e.target.value});
   }
 
+  const getTitle = () => {
+    return props.action + " student"
+  }
+
 
   useEffect(() => {
     props.getSchools();
@@ -68,7 +70,7 @@ function GeneralManageStudentPage(props) {
     if(props.action==="edit"){
       props.getStudent(param.id);
       setObj(props.student)
-      props.getRoutesByID({school: props.student.school})
+      props.getRoutesByID({school: props.student.school.id})
     }
     else{
       props.getRoutesByID({school: obj.school})
@@ -77,23 +79,14 @@ function GeneralManageStudentPage(props) {
   }, []);
 
 
-
-
-const handleConfirmAddress = () => {
-  console.log("Address confirmed")
-  submit()
-}
-
-
     return ( 
       <>
         <Header textToDisplay={"Admin Portal"} shouldShowOptions={true}></Header>
         <SidebarSliding/>
-        {/* <div className='confirm_location'>{openModal && <AssistedLocationModal closeModal={setOpenModal} handleConfirmAddress={handleConfirmAddress} address={obj.address}></AssistedLocationModal>}</div> */}
         <div className='admin-edit-page'>
         <form>
                 <div className="form-inner">
-                    <h2>{"New Student"}</h2>
+                    <h2>{getTitle()}</h2>
 
                     <div className="form-group">
                       <label htmlFor={"Full Name"}>Name</label>
@@ -124,7 +117,7 @@ const handleConfirmAddress = () => {
                   <div className="form-group">
                       <label>
                         Parent:
-                        <select value={obj.guardian} onChange={setAddress}>
+                        <select value={obj.guardian.id} onChange={setParent}>
                           <option value={""} >{"-----"}</option>
                           {props.users!==null && props.users!==undefined && props.users.length!==0?props.users.map((u,i)=>{
                               return <option value={u.id} key={i}>{u.email}</option>
@@ -136,7 +129,7 @@ const handleConfirmAddress = () => {
                   <div className="form-group">
                       <label>
                         School:
-                        <select value={obj.school} onChange={changeSchool}>
+                        <select value={obj.school.id} onChange={changeSchool}>
                         <option value={"null"} >{"-----"}</option>
                         {props.schoollist!==null && props.schoollist!==undefined && props.schoollist.length!==0?props.schoollist.map((u,i)=>{
                             return <option value={u.id} key={i}>{u.name}</option>
@@ -148,7 +141,7 @@ const handleConfirmAddress = () => {
                   <div className="form-group">
                       <label>
                         Route:
-                        <select value={obj.routes} onChange={(e) => setObj({ ...obj, ["routes"]: e.target.value })}>
+                        <select value={obj.routes.id} onChange={(e) => setObj({ ...obj, ["routes"]: e.target.value })}>
                           <option value={"null"} >{"-----"}</option>
                           {props.routes!==null && props.routes!==undefined && props.routes.length!==0?props.routes.map((u,i)=>{
                               return <option value={u.id} key={i}>{u.name}</option>
