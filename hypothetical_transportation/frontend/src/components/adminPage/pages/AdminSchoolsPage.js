@@ -4,11 +4,12 @@ import Header from '../../header/Header';
 import AdminTable from '../components/table/AdminTable';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-// import { connect } from 'react-redux';
-// import PropTypes from 'prop-types';
-// import { getSchools } from '../../../actions/schools';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import AdminSchoolDetails from './AdminSchoolDetails';
+import config from '../../../utils/config';
 
-function AdminSchoolsPage() {
+function AdminSchoolsPage(props) {
 
   //Mock Users Data (API Call later for real data)
   const title = "Schools"
@@ -33,7 +34,6 @@ function AdminSchoolsPage() {
   // }, []);
 
   const emptySchools = [{
-    id: 0,
     name: "",
     address: "",
   }]
@@ -41,9 +41,9 @@ function AdminSchoolsPage() {
   const [schools, setSchools] = useState(emptySchools);
 
   const getSchools = () => {
-    axios.get('/api/school/')
+    axios.get('/api/school/', config(props.token))
         .then(res => {
-            setSchools(res.data);
+            setSchools(res.data.results);
         }).catch(err => console.log(err));
     }
 
@@ -52,24 +52,37 @@ function AdminSchoolsPage() {
   }, []);
 
 
-  const searchSchool = (i1,i2) => {
-    axios.get(`/api/school?${i1}Includes='${i2}'`)
+  const searchSchool = (i1,i2,i3) => {
+    let url=`/api/school/`
+    if(i1==="" || i2==="" || i1===undefined || i2===undefined){
+      if(i3!==""&& i3!==undefined){
+        url=`/api/school/?ordering=${i3}`
+      }
+    }
+    else{
+      if(i3!=="" && i3!==undefined){
+        url=`/api/school/?search=${i2}&search_fields=${i1}&ordering=${i3}`
+      }
+      else{
+        url=`/api/school/?search=${i2}&search_fields=${i1}`
+      }
+    }
+    axios.get(url, config(props.token))
         .then(res => {
-          console.log(`/api/school?${i1}Includes='${i2}'`)
-          setSchools(res.data);
+          setSchools(res.data.results);
         }).catch(err => console.log(err));
   }
   
 
   const search = (value)=>{
     //somehow get backend to update data (with usestate?)
-    searchSchool(value.by, value.value)
+    searchSchool(value.filter_by, value.value, value.sort_by)
   }
 
   return (
     <div className='admin-page'>
         <SidebarSliding/>
-        <Header textToDisplay={"Admin Portal"}></Header>
+        <Header textToDisplay={"Admin Portal"} shouldShowOptions={true}></Header>
         <div className='middle-content'>
           <div className='center-buttons'>
             <Link to="/admin/new/school">
@@ -78,7 +91,7 @@ function AdminSchoolsPage() {
           </div>
           <div className='table-and-buttons'>
             {/* <AdminTable title={title} header={header} data={data} search={search}/> */}
-            <AdminTable title={title} header={Object.keys(emptySchools[0])} data={schools} search={search}/>
+            <AdminTable title={title} header={Object.keys(emptySchools[0])} data={schools} search={search} sortBy={["name","-name"]}/>
               <div className="prev-next-buttons">
                 <button onClick={handlePrevClick}>Prev</button>
                 <button onClick={handleNextClick}>Next</button> 
@@ -95,4 +108,13 @@ function AdminSchoolsPage() {
 
 // export default connect(mapStateToProps, { getSchools })(AdminSchoolsPage);
 
-export default AdminSchoolsPage;
+AdminSchoolsPage.propTypes = {
+    
+}
+
+const mapStateToProps = (state) => ({
+  user: state.auth.user,
+  token: state.auth.token
+});
+
+export default connect(mapStateToProps)(AdminSchoolsPage)

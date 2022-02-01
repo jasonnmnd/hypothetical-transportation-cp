@@ -27,4 +27,6 @@ jobs:
           script: |
             cd ece-458
             sudo docker login --username ${{ secrets.DOCKERHUB_USERNAME }} --password ${{ secrets.DOCKERHUB_TOKEN }}
-            sudo docker-compose -f docker-compose.prod.yml up -d
+            sudo docker-compose -f docker-compose.prod.yml down --volumes
+            sudo docker-compose -f docker-compose.dev.yml pull
+            sudo docker-compose -f docker-compose.prod.yml up -d --build

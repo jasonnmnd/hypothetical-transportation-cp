@@ -1,18 +1,21 @@
 import React from 'react';
 import "./modal.css";
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+
 
 /*
 Majority of code from this tutorial to make a pop-up modal: https://www.youtube.com/watch?v=ZCvemsUfwPQ
 Edited slightly for our own purposes of a confirmation screen and extra functionality
 */
 
-function DeleteModal( {closeModal, handleConfirmDelete} ) {
+function DeleteModal(props) {
   return (
     <div className='modalBackground'>
         <div className='modalContainer'>
             <div className='titleCloseBtn'>
                     <button onClick={
-                        () => closeModal(false)
+                        () => props.closeModal(false)
                     }> X </button>
             </div>
             <div className='title>'></div>
@@ -21,12 +24,12 @@ function DeleteModal( {closeModal, handleConfirmDelete} ) {
                 <p>This action cannot be undone.</p>
             <div className='footer'></div>
                 <button onClick={
-                    () => closeModal(false)
+                    () => props.closeModal(false)
                 } id="cancelBtn">Cancel</button>
                 <button onClick={
                     () => {
-                        handleConfirmDelete();
-                        closeModal(false);
+                        props.handleConfirmDelete();
+                        props.closeModal(false);
                     }
                 } id="confirmBtn">Continue</button>
         </div>
@@ -34,4 +37,13 @@ function DeleteModal( {closeModal, handleConfirmDelete} ) {
   );
 }
 
-export default DeleteModal;
+DeleteModal.propTypes = {
+    closeModal: PropTypes.func,
+    handleConfirmDelete: PropTypes.func,
+}
+
+const mapStateToProps = (state) => ({
+  user: state.auth.user
+});
+
+export default connect(mapStateToProps)(DeleteModal)

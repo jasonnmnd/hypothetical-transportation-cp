@@ -1,0 +1,157 @@
+[
+  {
+    "model": "auth.group",
+    "fields": {
+      "name": "Administrator",
+      "permissions": []
+    }
+  },
+  {
+    "model": "auth.group",
+    "fields": {
+      "name": "Guardian",
+      "permissions": []
+    }
+  },
+  {
+    "model": "accounts.User",
+    "fields": {
+      "email": "michael@gmail.com",
+      "full_name": "Michael",
+      "address": "Neighborhood 12358W",
+      "password": "defaultpassword",
+      "groups": [
+        2
+      ]
+    }
+  },
+  {
+    "model": "accounts.User",
+    "fields": {
+      "email": "judgegen@gmail.com",
+      "full_name": "Judge Gen",
+      "address": "Neutral Zone",
+      "password": "defaultpassword",
+      "groups": [
+        1
+      ]
+    }
+  },
+  {
+    "model": "backend.school",
+    "fields": {
+      "name": "St. John's University",
+      "address": "Sydney, Australia, Earth"
+    }
+  },
+  {
+    "model": "backend.school",
+    "fields": {
+      "name": "Duke University",
+      "address": "Durham, NC"
+    }
+  },
+  {
+    "model": "backend.school",
+    "fields": {
+      "name": "Brown University",
+      "address": "Providence, Rhode Island"
+    }
+  },
+  {
+    "model": "backend.school",
+    "fields": {
+      "name": "Stanford University",
+      "address": "Palo Alto, California"
+    }
+  },
+  {
+    "model": "backend.school",
+    "fields": {
+      "name": "MIT",
+      "address": "Cambridge, Massachusetts"
+    }
+  },
+  {
+    "model": "backend.Route",
+    "fields": {
+      "name": "The Trans Eternal Railway",
+      "description": "Connects Neighborhood 12358W to other locations in the afterlife.",
+      "school": 2
+    }
+  },
+  {
+    "model": "backend.Route",
+    "fields": {
+      "name": "The Door to Earth",
+      "description": "The Door to Earth",
+      "school": 3
+    }
+  },
+  {
+    "model": "backend.Student",
+    "fields": {
+      "full_name": "Eleanor Shellstrop",
+      "active": true,
+      "school": 1,
+      "student_id": 1,
+      "routes": 1,
+      "guardian": 1
+    }
+  },
+  {
+    "model": "backend.Student",
+    "fields": {
+      "full_name": "Chidi Anagonye",
+      "active": true,
+      "school": 1,
+      "student_id": 2,
+      "routes": 1,
+      "guardian": 1
+    }
+  },
+  {
+    "model": "backend.Student",
+    "fields": {
+      "full_name": "Jason Mendoza",
+      "active": true,
+      "school": 1,
+      "student_id": 3,
+      "routes": 1,
+      "guardian": 1
+    }
+  },
+  {
+    "model": "backend.Student",
+    "fields": {
+      "full_name": "Tahani Al-Jamil",
+      "active": true,
+      "school": 1,
+      "student_id": 4,
+      "routes": null,
+      "guardian": 1
+    }
+  },
+  {
+    "model": "backend.Student",
+    "fields": {
+      "full_name": "Trevor",
+      "active": true,
+      "school": 3,
+      "student_id": 1,
+      "routes": null,
+      "guardian": 1
+    }
+  },
+  {
+    "model": "backend.Student",
+    "fields": {
+      "full_name": "Vicky",
+      "active": true,
+      "school": 3,
+      "student_id": 2,
+      "routes": null,
+      "guardian": 1
+    }
+  }
+]

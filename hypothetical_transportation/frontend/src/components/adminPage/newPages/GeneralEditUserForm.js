@@ -1,0 +1,179 @@
+import React, { useEffect, useState } from "react";
+import axios from 'axios';
+import { useNavigate, useParams } from "react-router-dom";
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import "../adminPage.css"
+import Header from "../../header/Header";
+import SidebarSliding from "../components/sidebar/SidebarSliding";
+
+import { getUser, updateUser } from "../../../actions/users";
+import { register } from "../../../actions/auth";
+import AssistedLocationModal from "../components/modals/AssistedLocationModal";
+
+//input1: title of form
+//input2: list of fields?
+//input3: a typed object matching the fields
+//input4: string action determining new or edit
+function GeneralEditUserForm(props) {
+    const navigate = useNavigate();
+    const param = useParams();
+    const [openModal, setOpenModal] = useState(false);
+    
+    const [fieldValues, setFieldValues] = useState({
+        full_name: "",
+        address: "",
+        email: "",
+        groups: 1,
+        password: ""
+    });
+
+
+
+    useEffect(() => {
+        if(props.action == "edit"){
+            props.getUser(param.id);
+            setFieldValues({
+                full_name: props.curUser.full_name,
+                address: props.curUser.address,
+                email: props.curUser.email,
+                groups: props.curUser.groups[0].id
+            })
+        }
+    }, []);
+
+    const submit = () => {
+        const createVals = {
+            ...fieldValues,
+            groups: [fieldValues.groups]
+        }
+        if(props.action == "edit"){
+            props.updateUser(createVals, param.id);
+        }
+        else{
+            props.register(createVals);
+        }
+        navigate(`/admin/`)
+    }
+
+
+    const confirmation = (e)=>{
+        e.preventDefault();
+        setOpenModal(true)
+    }
+
+    const handleConfirmAddress = () => {
+        console.log("Address confirmed")
+        submit()
+      }
+    
+    return (
+        <div>
+             <Header textToDisplay={"Admin Portal"} shouldShowOptions={true}></Header>
+            <SidebarSliding/>
+            <div className='admin-edit-page'>  
+            <div className='confirm_location'>{openModal && <AssistedLocationModal closeModal={setOpenModal} handleConfirmAddress={handleConfirmAddress} address={fieldValues.address}></AssistedLocationModal>}</div>
+            <form>
+                <div className="form-inner">
+                    <h2>{props.action + " user"}</h2>
+
+                    <div className="form-group">
+                      <label htmlFor={"Full Name"}>Name</label>
+                      <input
+                          className="input"
+                          type={"Full Name"}
+                          name={"Full Name"}
+                          id={"Full Name"}
+                          value={fieldValues.full_name}
+                          onChange={(e)=>{
+                              setFieldValues({...fieldValues, full_name: e.target.value});
+                          }}
+                      />
+                  </div>
+
+                  <div className="form-group">
+                      <label htmlFor={"Address"}>Address</label>
+                      <input
+                          className="input"
+                          type={"id"}
+                          name={"Address"}
+                          id={"Address"}
+                          value={fieldValues.address}
+                          onChange={
+                              (e)=>{
+                                setFieldValues({...fieldValues, address: e.target.value});
+                                }
+                            }
+                      />
+                  </div>
+
+                  <div className="form-group">
+                      <label htmlFor={"Email"}>Email Address</label>
+                      <input
+                          className="input"
+                          type={"id"}
+                          name={"Email"}
+                          id={"Email"}
+                          value={fieldValues.email}
+                          onChange={
+                              (e)=>{
+                                setFieldValues({...fieldValues, email: e.target.value});
+                                }
+                            }
+                      />
+                  </div>
+
+                  <div className="form-group">
+                      <label>
+                        Group:
+                        <select value={fieldValues.groups} onChange={(e)=>{
+                                setFieldValues({...fieldValues, groups: e.target.value});
+                                }}>
+                          <option value={1} >{"Administrator"}</option>
+                          <option value={2} >{"Guardian"}</option>
+                        </select>
+                      </label>
+                  </div>
+
+                  <div className="form-group">
+                      <label htmlFor={"Password"}>Password</label>
+                      <input
+                          className="input"
+                          type={"id"}
+                          name={"Password"}
+                          id={"Password"}
+                          value={fieldValues.password}
+                          onChange={
+                              (e)=>{
+                                setFieldValues({...fieldValues, password: e.target.value});
+                                }
+                            }
+                      />
+                  </div>
+
+                 
+                    <div className="divider15px" />
+                    
+                    <button onClick={confirmation}>Save</button>
+                </div>
+            </form>
+            </div>
+        </div>
+    )
+}
+
+GeneralEditUserForm.propTypes = {
+    getUser: PropTypes.func.isRequired,
+    updateUser: PropTypes.func.isRequired,
+    //addSchool: PropTypes.func.isRequired,
+    action: PropTypes.string,
+    register: PropTypes.func.isRequired
+}
+
+const mapStateToProps = (state) => ({
+    curUser: state.users.viewedUser
+
+});
+
+export default connect(mapStateToProps, {getUser, updateUser, register})(GeneralEditUserForm)
+

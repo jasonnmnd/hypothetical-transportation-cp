@@ -1,8 +1,11 @@
 import React from "react";
 import Logo from '../assets/headerLogo.png';
 import './header.css';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { logout } from "../../actions/auth";
 
-function Header( {textToDisplay} ){
+function Header(props){
 
     return(
         <div className = "header">
@@ -11,13 +14,29 @@ function Header( {textToDisplay} ){
                 
             </div>
 
-            {/* <div className="divider400px"/> */}
-
             <div className="header-text">
-                <h1>{textToDisplay}</h1>
+                <h1>{props.textToDisplay}</h1>
             </div>
+            
+            {props.shouldShowOptions &&
+            <div className="header-button">
+                <button onClick={props.logout}>Logout</button>
+            </div>
+            }
         </div>
             
     )
 }
-export default Header;
+
+Header.propTypes = {
+    textToDisplay: PropTypes.string,
+    shouldShowOptions: PropTypes.bool
+}
+
+const mapStateToProps = (state) => ({
+    isAuthenticated: state.auth.isAuthenticated,
+    user: state.auth.user
+});
+
+
+export default connect(mapStateToProps, { logout })(Header);

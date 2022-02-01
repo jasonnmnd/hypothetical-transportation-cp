@@ -6,9 +6,12 @@ import FormDeleteModal from '../components/modals/FormDeleteModal';
 import AdminTable from '../components/table/AdminTable';
 import SidebarSliding from '../components/sidebar/SidebarSliding';
 import axios from 'axios';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import config from '../../../utils/config';
 
 
-function AdminSchoolDetails() {
+function AdminSchoolDetails(props) {
   const navigate = useNavigate();
   const param = useParams();
   const exampleSchool = {
@@ -56,7 +59,11 @@ function AdminSchoolDetails() {
   const handleConfirmDelete = (schoolName) => {
     //Replace with API call to delete school and all its associated routes/students
     //Route back to students page
-    console.log(schoolName);
+    axios.delete(`/api/school/${param.id}/`, config(props.token))
+        .then(res => {
+          console.log("DELETED Route");
+          navigate(`/admin/schools/`)
+        }).catch(err => console.log(err));
   }
   
   const emptySchool = {
@@ -65,41 +72,70 @@ function AdminSchoolDetails() {
     address: "",
   }
 
+  const emptyStudent = {
+    student_id: "",
+    full_name:"",
+    address: "",
+  }
+
+  const studentObject = [{
+    id: 0,
+    student_id: "",
+    full_name:"",
+    address: "",
+    guardian: 0,
+    routes: 0,
+    school: 0,
+  }]
+
   const emptyRoute = [{
     id: 0,
     name: "",
     description: "",
   }]
 
-  const [school, setSchool] = useState(emptySchool);
+  const [school, setSchool] = useState(emptySchool);  
+  const [students, setStudents] = useState(studentObject);
   const [routes, setRoutes] = useState(emptyRoute);
 
   const getSchool = () => {
-    axios.get(`/api/school/${param.id}`)
+    axios.get(`/api/school/${param.id}/`, config(props.token))
         .then(res => {
+          console.log("hello")
+          console.log(res.data)
             setSchool(res.data);
+        }).catch(err => console.log(err));
+    }
+
+  const getStudent = () => {
+    axios.get(`/api/student/?school=${param.id}`, config(props.token))
+        .then(res => {
+          console.log(res.data.results)
+            setStudents(res.data.results);
         }).catch(err => console.log(err));
     }
   
   const getRoutes = () => {
-    axios.get(`/api/route?school=${param.id}`)
+    axios.get(`/api/route/?school=${param.id}`, config(props.token))
         .then(res => {
-            setRoutes(res.data);
+          console.log(res.data.results)
+            setRoutes(res.data.results);
         }).catch(err => console.log(err));
     }
 
   useEffect(() => {
     getSchool();
     getRoutes();
+    getStudent();
   }, []);
 
 
 
   return (
     <>  
-        <Header textToDisplay={"Admin Portal"}></Header>
+        <Header textToDisplay={"Admin Portal"} shouldShowOptions={true}></Header>
         <SidebarSliding/>
-        {openModal && <FormDeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}
+        <div className='confirm_location'>{openModal && <FormDeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}</div>
         <div className='middle-justify'>
           <div className='admin-details'>
 
@@ -117,7 +153,7 @@ function AdminSchoolDetails() {
 
             <div className='info-fields'>
               {/* <h2>Associated students: </h2> */}
-              <AdminTable title={"Associated Students"} header={Object.keys(exampleSchool.students[0])} data={exampleSchool.students}/>
+              <AdminTable title={"Associated Students"} header={Object.keys(emptyStudent)} data={students}/>
               {/* {
                   exampleSchool.students.map((s,i)=>{
                     return <Link to={`/admin/student/${s.id}`} id={i}><button className='button'>{s.name}</button></Link>
@@ -141,7 +177,7 @@ function AdminSchoolDetails() {
             }}>Delete School</button>
 
             <Link to={`/admin/route/plan/${school.id}`}>
-              <button>Route Planner</button>
+              <button>Create New Route for This School</button>
             </Link>
 
           </div>
@@ -155,4 +191,13 @@ function AdminSchoolDetails() {
   );
 }
 
-export default AdminSchoolDetails;
+AdminSchoolDetails.propTypes = {
+    
+}
+
+const mapStateToProps = (state) => ({
+  user: state.auth.user,
+  token: state.auth.token
+});
+
+export default connect(mapStateToProps)(AdminSchoolDetails)

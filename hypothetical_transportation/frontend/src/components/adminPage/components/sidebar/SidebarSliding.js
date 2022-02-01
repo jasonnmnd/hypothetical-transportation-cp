@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom';
 import { SidebarData } from './SidebarData';
 import "./sidebarsliding.css";
 import { IconContext } from 'react-icons';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 /*
 Majority of the functionality of sliding navbar taken from this tutorial:
@@ -48,4 +50,14 @@ function SidebarSliding() {
   );
 }
 
-export default SidebarSliding;
+
+
+SidebarSliding.propTypes = {
+    
+  }
+  
+const mapStateToProps = (state) => ({
+  
+});
+  
+export default connect(mapStateToProps)(SidebarSliding)

@@ -20,6 +20,7 @@ __pycache__/
 
 # data
 *.dump
+data/
 
 # npm
 node_modules/
@@ -36,9 +37,16 @@ npm-debug.log
 
 # General
 /{{project_name}}-venv/
-/venv/
-venv/
+/venv3.7/
+venv3.7/
 /env/
 /output/
 /cache/
 boilerplate.zip
+*.pyc
+/venv/
+/venv-ece/
+hypothetical_transportation/frontend/static/frontend/main.js/main.js
+.DS_Store
+hypothetical_transportation/accounts/migrations/
+hypothetical_transportation/backend/migrations/
