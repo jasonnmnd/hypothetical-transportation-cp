@@ -48,11 +48,24 @@ npm run build
 
 ### Running the Stack
 #### First Time Installation
+
 ```
 ./scripts/start_django.sh
 python3 manage.py makemigrations
 python3 manage.py migrate
 ```
+
+#### Seeding the Database
+_Create an admin:_
+```
+python3 manage.py initadmin
+```
+```
+python3 manage.py flush
+python3 manage.py loaddata backend/fixtures/data.json
+```
+
+#### Starting the Server
 
 ```
 python3 manage.py runserver
@@ -61,7 +74,9 @@ python3 manage.py runserver
 ### Testing
 
 ## Endpoints
+
 ### Authentication Endpoints
+
 ```
 curl -X GET --header "Authorization: Token <TOKEN>" http://localhost:8000/api/auth/user
 ```

@@ -6,21 +6,44 @@ import "../adminPage.css";
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import SidebarSliding from '../components/sidebar/SidebarSliding';
 import axios from 'axios';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import config from '../../../utils/config';
 
 
-function AdminEditPage() {
+function AdminEditPage(props) {
   const navigate = useNavigate();
   const param = useParams();
+  const emptyFields = {
+    user: {
+      full_name: "",
+      email: "",
+      address: "",
+    },
+    route: {
+      name: "",
+      description: "",
+    },
+    school: {
+      name: "",
+      address: "",
+    }
+}
   const col = param.column.includes("_") ?param.column.split("_")[1]:param.column
   //query the database for param.column (student/user/school/route) and id equals param.id
-  const [obj, setobj] = useState(null);
+  const [obj, setobj] = useState(emptyFields[col]);
   const getOldData = () => {
-    axios.get(`/api/${col}/${param.id}/`)
+    console.log(col);
+    axios.get(`/api/${col}/${param.id}/`, config(props.token))
         .then(res => {
+            console.log(res.data)
             setobj(res.data);
+            console.log(obj)
+            console.log(fields)
         }).catch(err => console.log(err));
     }
-  const fields=obj!==null? Object.keys(obj).filter((i)=>param.column.includes("parent")?i!=="id"&&i!=="admin":i!=="id"&&i!=="admin"&&i!=="address"):[];
+    // const fields=Object.keys(emptyFields[col]).filter((i)=>param.column.includes("admin")?i!=="id"&&i!=="address"&&i!=="is_staff":i!=="id"&&i!=="is_staff");
+    const fields=Object.keys(emptyFields[col]).filter((i)=>i!=="school"&&i!=="groups");
   
   useEffect(() => {
     getOldData();
@@ -32,7 +55,7 @@ function AdminEditPage() {
 
   return (
     <>
-      <Header textToDisplay={"Admin Portal"}></Header>
+      <Header textToDisplay={"Admin Portal"} shouldShowOptions={true}></Header>
       <SidebarSliding/>
       <div className='admin-edit-page'>  
         <EditForm column={param.column} fields={fields} obj={obj} setobj={setobj} action={"edit"}></EditForm>
@@ -43,4 +66,14 @@ function AdminEditPage() {
     );
 }
 
-export default AdminEditPage;
+AdminEditPage.propTypes = {
+    
+}
+
+const mapStateToProps = (state) => ({
+  user: state.auth.user,
+  token: state.auth.token
+});
+
+export default connect(mapStateToProps)(AdminEditPage)
+

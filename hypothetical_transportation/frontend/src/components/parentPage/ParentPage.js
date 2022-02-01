@@ -1,25 +1,39 @@
-import React from "react";
-import ParentTable from "./components/ParentTable";
+import React, {useEffect, useState} from "react";
 import Header from "../header/Header";
-import { Routes, Route, Navigate } from "react-router-dom";
 import "./parentPage.css";
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { logout } from "../../actions/auth";
+import isAdmin from "../../utils/user";
+import SidebarSliding from "../adminPage/components/sidebar/SidebarSliding";
+import { getStudentsByUserID, searchStudents } from '../../actions/students';
+import GeneralParentTableView from "./views/GeneralParentTableView";
 
-function ParentPage( {user, Logout} ) {
+function ParentPage(props) {
+
+  const title = "Students"
+  const tableType = "student"
+
+  useEffect(() => {
+      props.getStudentsByUserID(props.user.id);
+  }, []);
+
+  const search = (value) => {
+    props.searchStudents(value.by, value.value)
+  }
+
     return (
       
         <div className="parent-page">
-          <Header textToDisplay={"Parent Portal"}></Header>
-
-          {user.email==="" ? (<Navigate to="/"></Navigate>):
-          (
+          <Header textToDisplay={"Parent Portal"} shouldShowOptions={true}></Header>
+          {isAdmin(props.user)? <SidebarSliding/>:null}
           <div>
             <div className="welcome">
               <h2>
-                Welcome,<span>{user.name}</span>
+                Welcome,<span>{props.user.full_name}</span>
               </h2>
               <div className="button-spacing">
-                <button onClick={Logout}>Logout</button>
                 <Link to={"/account"}>
                     <button>Account</button>
                 </Link>
@@ -28,17 +42,32 @@ function ParentPage( {user, Logout} ) {
             <br></br>
 
             <div className="page-description">
-              <h2>
-                  Your Students
-              </h2>
+              <GeneralParentTableView values={props.students} title={title} tableType={tableType} search={search} />
             </div>
-            
-            <ParentTable />
+
           </div>
-          )}
+          
         </div>
 
     )
 }
 
-export default ParentPage
+ParentPage.propTypes = {
+    isAuthenticated: PropTypes.bool,
+    user: PropTypes.shape({
+      id: PropTypes.number,
+      username: PropTypes.string,
+      email: PropTypes.string
+    }),
+    logout: PropTypes.func.isRequired,
+    getStudentsByUserID: PropTypes.func.isRequired
+}
+
+const mapStateToProps = (state) => ({
+    isAuthenticated: state.auth.isAuthenticated,
+    user: state.auth.user,
+    token: state.auth.token,
+    students: state.students.students.results
+});
+
+export default connect(mapStateToProps, {logout, getStudentsByUserID, searchStudents} )(ParentPage)

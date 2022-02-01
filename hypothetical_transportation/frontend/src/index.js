@@ -5,14 +5,20 @@ import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
 import store from './store';
 import { login } from "./actions/auth"
+import { Provider as AlertProvider } from 'react-alert';
+import AlertTemplate from 'react-alert-template-basic';
 
+const alertOptions = {
+  timeout: 3000,
+  position: 'top center',
+};
 
 ReactDOM.render(
-  <React.StrictMode>
     <Provider store={store}>
-      <App store={store} login={login}/>
-    </Provider>
-  </React.StrictMode>,
+      <AlertProvider template={AlertTemplate} {...alertOptions}>
+        <App/>
+      </AlertProvider>
+    </Provider>,
   document.getElementById('root')
 );
 
