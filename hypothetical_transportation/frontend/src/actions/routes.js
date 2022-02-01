@@ -81,16 +81,10 @@ export const getRoutesByID = (idObj) => (dispatch, getState) => {
 export const getRouteInfo = (routeID) => (dispatch, getState) => {
   axios.get(`/api/route/${routeID}/`, tokenConfig(getState))
     .then(res => {
-      let thisRoute = res.data;
-      console.log(thisRoute)
-      axios.get(`/api/school/${thisRoute.school}/`, tokenConfig(getState))
-        .then(res => {
-          thisRoute.schoolName = res.data.name;
           dispatch({
             type: GET_ROUTE,
-            payload: thisRoute,
+            payload: res.data,
           });
-        }).catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
   }).catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
 }
 

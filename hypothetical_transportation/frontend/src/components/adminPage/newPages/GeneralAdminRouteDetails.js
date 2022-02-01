@@ -59,7 +59,7 @@ function GeneralAdminRouteDetails(props) {
 
             <div className='info-fields'>
               <h2>School: </h2>
-              <Link to={`/admin/school/${props.route.school}`}><button className='button'><h3>{props.route.schoolName}</h3></button></Link>
+              <Link to={`/admin/school/${props.route.school.id}`}><button className='button'><h3>{props.route.school.name}</h3></button></Link>
             </div>
 
             
