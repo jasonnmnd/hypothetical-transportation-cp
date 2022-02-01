@@ -6,13 +6,13 @@ from django.conf import settings
 
 
 class School(models.Model):
-    name = models.CharField(max_length=100)
-    address = models.CharField(max_length=140)
+    name = models.CharField(max_length=150)
+    address = models.CharField(max_length=150)
 
 
 class Route(models.Model):
-    name = models.CharField(max_length=100)
-    description = models.TextField()
+    name = models.CharField(max_length=150)
+    description = models.TextField(blank=True)
     school = models.ForeignKey(
         School, related_name='routes',
         on_delete=models.CASCADE
@@ -22,7 +22,7 @@ class Route(models.Model):
 class Student(models.Model):
     # first_name = models.CharField(max_length=30)
     # last_name = models.CharField(max_length=30)
-    full_name = models.CharField(max_length=140)
+    full_name = models.CharField(max_length=150)
     active = models.BooleanField(default=True)
     school = models.ForeignKey(
         School, related_name='students',
