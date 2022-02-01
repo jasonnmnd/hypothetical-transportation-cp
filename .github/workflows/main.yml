@@ -11,14 +11,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Build the web Docker image
+      - name: Build the Web Docker Image
         run: docker build . --file Dockerfile --tag dmm107/ece-458:web-prod
       - name: Login to DockerHub
         uses: docker/login-action@v1 
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Build and push
+      - name: Push Docker Image
         run: docker push dmm107/ece-458:web-prod
   deploy:
     runs-on: ubuntu-latest
