@@ -12,6 +12,7 @@ import config from '../../../utils/config';
 import { getRouteInfo, deleteRoute } from '../../../actions/routes';
 import { getStudentsByID } from '../../../actions/students';
 import GeneralAdminTableView from '../components/views/GeneralAdminTableView';
+import MapContainer from '../../maps/MapContainer';
 
 
 function GeneralAdminRouteDetails(props) {
@@ -62,11 +63,12 @@ function GeneralAdminRouteDetails(props) {
               <Link to={`/admin/school/${props.route.school.id}`}><button className='button'><h3>{props.route.school.name}</h3></button></Link>
             </div>
 
-            
+            <MapContainer schoolData={props.route.school} routeStudentData={props.students}/>:
+
             <GeneralAdminTableView title='Associated Students' tableType='student' values={props.students} search={null} />
 
             <div className='edit-delete-buttons'>
-              <Link to={`/admin/route/edit/${props.route.school}/${props.route.id}`}><button>Edit Route</button></Link>
+              <Link to={`/admin/route/edit/${props.route.school.id}/${props.route.id}`}><button>Edit Route</button></Link>
               <button onClick={() => {
                 setOpenModal(true);
               }}>Delete Route</button>

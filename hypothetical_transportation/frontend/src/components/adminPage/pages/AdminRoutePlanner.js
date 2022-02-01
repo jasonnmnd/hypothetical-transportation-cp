@@ -212,7 +212,7 @@ function AdminRoutePlanner(props) {
 
             {props.action==="edit"?
               <div>
-                <AdminTable title={`Students currently in ${route.name} (Green pin)`} header={Object.keys(emptyStudent)} data={route_student.filter(i=>i.routes===route.id&&!toberemoved.includes(i))} actionName={"Remove from Route"} action={removeFromRoute}/>
+                <AdminTable title={`Students currently in ${route.name} (Green pin)`} header={Object.keys(emptyStudent)} data={route_student.filter(i=>i.routes.id===route.id&&!toberemoved.includes(i))} actionName={"Remove from Route"} action={removeFromRoute}/>
                 <AdminTable title={`Students To Be Remove from Route`} header={Object.keys(emptyStudent)} data={toberemoved} actionName={"Remove from Selected"} action={removeFromREMOVE}/>
               </div>:
               <div></div>
