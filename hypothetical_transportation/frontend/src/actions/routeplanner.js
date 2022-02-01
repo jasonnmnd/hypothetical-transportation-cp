@@ -21,9 +21,9 @@ export const getStudentsInRoute = (routeID) => (dispatch, getState) => {
   };
 
 //GET STUDENTS CURRENT NOT IN THE ROUTE (BUT GO TO THE SCHOOL)
-export const getStudentsWithoutRoute = () => (dispatch, getState) => {
+export const getStudentsWithoutRoute = (schoolID) => (dispatch, getState) => {
     axios
-      .get('', tokenConfig(getState))
+      .get(`/student?school=${schoolID}&routes__isnull=true`, tokenConfig(getState))
       .then((res) => {
         dispatch({
           type: GET_STUDENTS_WITHOUT_ROUTE,
