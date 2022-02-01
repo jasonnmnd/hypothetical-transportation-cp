@@ -50,6 +50,10 @@ class RouteSerializer(serializers.ModelSerializer):
 
 class FormatRouteSerializer(RouteSerializer):
     school = SchoolSerializer()
+    student_count = serializers.SerializerMethodField('get_student_count')
+
+    def get_student_count(self, obj):
+        return obj.students.count()
 
 
 class StudentSerializer(serializers.ModelSerializer):
