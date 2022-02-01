@@ -9,6 +9,8 @@ services:
       - POSTGRES_DB=admin
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=admin
+    ports:
+      - 5432:5432
   web:
     image: dmm107/ece-458:web-dev
     command: bash -c "python hypothetical_transportation/manage.py makemigrations && python hypothetical_transportation/manage.py migrate && python hypothetical_transportation/manage.py runserver 0.0.0.0:8000"
