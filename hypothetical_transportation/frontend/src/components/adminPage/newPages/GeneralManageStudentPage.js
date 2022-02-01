@@ -69,7 +69,7 @@ function GeneralManageStudentPage(props) {
     props.getUsers();
     if(props.action==="edit"){
       props.getStudent(param.id);
-      setObj(props.student)
+      setObj({...props.student, ["guardian"]:props.student.guardian.id,["school"]:props.student.school.id,["routes"]:props.student.routes?props.student.routes.id:null})
       props.getRoutesByID({school: props.student.school.id})
     }
     else{
@@ -117,7 +117,7 @@ function GeneralManageStudentPage(props) {
                   <div className="form-group">
                       <label>
                         Parent:
-                        <select value={obj.guardian.id} onChange={setParent}>
+                        <select value={obj.guardian} onChange={setParent}>
                           <option value={""} >{"-----"}</option>
                           {props.users!==null && props.users!==undefined && props.users.length!==0?props.users.map((u,i)=>{
                               return <option value={u.id} key={i}>{u.email}</option>
@@ -129,7 +129,7 @@ function GeneralManageStudentPage(props) {
                   <div className="form-group">
                       <label>
                         School:
-                        <select value={obj.school.id} onChange={changeSchool}>
+                        <select value={obj.school} onChange={changeSchool}>
                         <option value={"null"} >{"-----"}</option>
                         {props.schoollist!==null && props.schoollist!==undefined && props.schoollist.length!==0?props.schoollist.map((u,i)=>{
                             return <option value={u.id} key={i}>{u.name}</option>
