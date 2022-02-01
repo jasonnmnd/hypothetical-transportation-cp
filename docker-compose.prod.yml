@@ -3,6 +3,7 @@ version: "3.9"
 services:
   db:
     image: postgres
+    container_name: db
     volumes:
       - ./data/db:/var/lib/postgresql/data
     environment:
@@ -11,6 +12,7 @@ services:
       - POSTGRES_PASSWORD=admin
   web:
     image: dmm107/ece-458:web-prod
+    container_name: web
     command: bash -c "python hypothetical_transportation/manage.py makemigrations && python hypothetical_transportation/manage.py migrate && python hypothetical_transportation/manage.py runserver_plus  0.0.0.0:8000 --cert-file /etc/letsencrypt/live/hypothetical-transportation.colab.duke.edu/fullchain.pem --key-file /etc/letsencrypt/live/hypothetical-transportation.colab.duke.edu/privkey.pem"
     volumes:
       - .:/code
