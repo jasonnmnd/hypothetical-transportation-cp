@@ -67,10 +67,11 @@ function GeneralEditSchoolForm(props) {
     return (
         <div>
             <SidebarSliding/>
-            <Header textToDisplay={"Admin Portal"} shouldShowOptions={true}></Header>
+            <Header textToDisplay={"Modify School"} shouldShowOptions={true}></Header>
             <div className='admin-edit-page'>  
             {/* <div className='confirm_location'>{openModal && <AssistedLocationModal closeModal={setOpenModal} handleConfirmAddress={handleConfirmAddress} address={address}></AssistedLocationModal>}</div> */}
             <form>
+                <div className="submit-form-content">
                 <div className="form-inner">
                     <h2>{props.action + " school"}</h2>
 
@@ -101,8 +102,11 @@ function GeneralEditSchoolForm(props) {
                   </div>
                     <div className="divider15px" />
                     <AssistedLocationMap address={address} setAddress={setAddress}></AssistedLocationMap>
-                    
-                    <button onClick={submit}>Save</button>
+                    <div className="divider15px" />
+                    <div className="center-buttons">
+                        <button onClick={submit}>Save</button>
+                    </div>
+                </div>
                 </div>
             </form>
             </div>

@@ -72,10 +72,11 @@ function GeneralEditUserForm(props) {
     return (
         <div>
             <SidebarSliding/>
-            <Header textToDisplay={"Admin Portal"} shouldShowOptions={true}></Header>
+            <Header textToDisplay={"Modify User"} shouldShowOptions={true}></Header>
             <div className='admin-edit-page'>  
             {/* <div className='confirm_location'>{openModal && <AssistedLocationModal closeModal={setOpenModal} handleConfirmAddress={handleConfirmAddress} address={fieldValues.address}></AssistedLocationModal>}</div> */}
             <form>
+                <div className="submit-form-content">
                 <div className="form-inner">
                     <h2>{props.action + " user"}</h2>
 
@@ -158,6 +159,7 @@ function GeneralEditUserForm(props) {
                     
                     <button onClick={submit}>Save</button>
                 </div>
+            </div>
             </form>
             </div>
         </div>
