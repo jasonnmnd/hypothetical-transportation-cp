@@ -138,12 +138,29 @@ button {
 
 .info-fields {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  flex-direction: column;
+  justify-content: flex-start;
   align-items: baseline;
+  margin-left: 20px;
 }
 
 .info-fields h2 {
   font-size: 30px;
   font-weight: bold;
+}
+.left-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  gap: 20px;
+  box-shadow: 0 0 5px 5px rgb(110, 110, 110);
+  padding-top: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 20px;
+}
+
+.header-padding {
+  margin-top: 50px;
+  margin-right: 20px;
 }

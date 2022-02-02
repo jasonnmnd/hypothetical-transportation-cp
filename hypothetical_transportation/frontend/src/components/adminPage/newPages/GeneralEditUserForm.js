@@ -156,8 +156,10 @@ function GeneralEditUserForm(props) {
 
                     <div className="divider15px" />
                     <AssistedLocationMap address={fieldValues.address} setAddress={setAddress}></AssistedLocationMap>
-                    
-                    <button onClick={submit}>Save</button>
+                    <div className="divider15px" />
+                    <div className="center-buttons">
+                        <button onClick={submit}>Save</button>
+                    </div>
                 </div>
             </div>
             </form>
