@@ -26,17 +26,41 @@ const studentColumns = [
 ]
 
 const studentFilterBy = [
-    "full_name",
-    "student_id"
+    {
+        key: "full_name",
+        text: "Full Name"
+    },
+    {
+        key: "student_id",
+        text: "Student ID"
+    }
 ]
 
 const studentSortBy = [
-    "full_name",
-    "student_id",
-    "school__name",
-    "-full_name",
-    "-student_id",
-    "-school__name"
+    {
+        key: "full_name",
+        text: "Full Name Ascending"
+    },
+    {
+        key: "student_id",
+        text: "Student ID Ascending"
+    },
+    {
+        key: "school__name",
+        text: "School Name Ascending"
+    },
+    {
+        key: "-full_name",
+        text: "Full Name Descending"
+    },
+    {
+        key: "-student_id",
+        text: "Student ID Descending"
+    },
+    {
+        key: "-school__name",
+        text: "School Name Descending"
+    },
 ]
 
 function GeneralParentTableView(props) {
