@@ -11,8 +11,11 @@ WORKDIR /code
 
 # move requirements into new directory
 COPY requirements.txt /code/
+COPY entrypoint/entrypoint_local.sh .
+COPY entrypoint/entrypoint_dev.sh .
+COPY entrypoint/entrypoint_prod.sh .
 
-CMD ["npm", "run", "build"]
+# CMD ["npm", "run", "build"]
 
 # install requirements
 RUN pip install -r requirements.txt
