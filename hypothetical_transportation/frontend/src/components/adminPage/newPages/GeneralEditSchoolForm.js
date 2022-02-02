@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import "../adminPage.css"
 import Header from "../../header/Header";
 import SidebarSliding from "../components/sidebar/SidebarSliding";
-
+import AssistedLocationMap from "../../maps/AssistedLocationMap";
 
 import { getSchool, updateSchool, addSchool } from "../../../actions/schools";
 import AssistedLocationModal from "../components/modals/AssistedLocationModal";
@@ -54,22 +54,22 @@ function GeneralEditSchoolForm(props) {
     }
 
 
-    const confirmation = (e)=>{
-        e.preventDefault();
-        setOpenModal(true)
-    }
+    // const confirmation = (e)=>{
+    //     e.preventDefault();
+    //     setOpenModal(true)
+    // }
 
-    const handleConfirmAddress = () => {
-        console.log("Address confirmed")
-        submit()
-      }
+    // const handleConfirmAddress = () => {
+    //     console.log("Address confirmed")
+    //     submit()
+    //   }
     
     return (
         <div>
              <Header textToDisplay={"Admin Portal"} shouldShowOptions={true}></Header>
             <SidebarSliding/>
             <div className='admin-edit-page'>  
-            <div className='confirm_location'>{openModal && <AssistedLocationModal closeModal={setOpenModal} handleConfirmAddress={handleConfirmAddress} address={address}></AssistedLocationModal>}</div>
+            {/* <div className='confirm_location'>{openModal && <AssistedLocationModal closeModal={setOpenModal} handleConfirmAddress={handleConfirmAddress} address={address}></AssistedLocationModal>}</div> */}
             <form>
                 <div className="form-inner">
                     <h2>{props.action + " school"}</h2>
@@ -100,8 +100,9 @@ function GeneralEditSchoolForm(props) {
                       />
                   </div>
                     <div className="divider15px" />
+                    <AssistedLocationMap address={address} setAddress={setAddress}></AssistedLocationMap>
                     
-                    <button onClick={confirmation}>Save</button>
+                    <button onClick={submit}>Save</button>
                 </div>
             </form>
             </div>

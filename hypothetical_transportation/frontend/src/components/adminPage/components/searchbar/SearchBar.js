@@ -24,10 +24,10 @@ function SearchBar(props){
         e.preventDefault();
         setSearchParams({
             ...Object.fromEntries([...searchParams]),
-            ordering: values.sort_by,
-            search: values.value,
-            search_fields: values.filter_by,
-            pageNum: 1
+            [`${props.search}ordering`]: values.sort_by,
+            [`${props.search}search`]: values.value,
+            [`${props.search}search_fields`]: values.filter_by,
+            [`${props.search}pageNum`]: 1
         })
         
         console.log(values);
@@ -79,7 +79,7 @@ function SearchBar(props){
 SearchBar.propTypes = {
     buttons: PropTypes.arrayOf(PropTypes.string),
     sortBy: PropTypes.arrayOf(PropTypes.string),
-    search: PropTypes.func
+    search: PropTypes.string
   }
   
   const mapStateToProps = (state) => ({

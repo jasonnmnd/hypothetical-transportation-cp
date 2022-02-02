@@ -4,8 +4,8 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import SearchBar from '../searchbar/SearchBar';
 import GeneralTable from '../../../common/GeneralTable';
-import { createMessage } from '../../../../actions/messages';
 import PaginationButtons from '../../../common/PaginationButtons';
+import "../../adminPage.css";
 
 
 const userColumns = [
@@ -159,16 +159,6 @@ function GeneralAdminTableView( props ) {
             nav(`/admin/route/${d.id}`);
         }
     };
-
-    const handlePrevClick = () => {
-
-        props.setCurrentPage(props.currentPage - 1)
-      }
-    
-      const handleNextClick = () => {
-            props.setCurrentPage(props.currentPage + 1)
-
-      }
   
     const getColumns = () => {
         switch (props.tableType) {
@@ -221,7 +211,7 @@ function GeneralAdminTableView( props ) {
     return (
         <div className='table-and-buttons'>
             <h1>{props.title}</h1>
-            {props.search ? <SearchBar buttons={getFilterOptions()} sortBy={getSortOptions()} search={props.search}></SearchBar> : null}
+            {props.search != null && props.search != undefined ? <SearchBar buttons={getFilterOptions()} sortBy={getSortOptions()} search={props.search}></SearchBar> : null}
             <div className='AdminTable-container'>
                 <GeneralTable rows={props.values} columnNames={getColumns()} actionName={props.actionName?props.actionName:"View"} action={props.action? props.action:handleViewClick}/>
             </div>
@@ -234,18 +224,11 @@ function GeneralAdminTableView( props ) {
 GeneralAdminTableView.propTypes = {
     title: PropTypes.string.isRequired,
     tableType: PropTypes.string.isRequired,
-    search: PropTypes.func,
-    actionName: PropTypes.string,
-    action: PropTypes.func,
     values: PropTypes.arrayOf(PropTypes.object),
-    currentPage: PropTypes.number,
-    setCurrentPage: PropTypes.func,
-    createMessage: PropTypes.func.isRequired,
-    searchParamVals: PropTypes.object,
-    searchParamSetter: PropTypes.func
+    search: PropTypes.string
 }
 
 const mapStateToProps = (state) => ({
 });
 
-export default connect(mapStateToProps, {createMessage})(GeneralAdminTableView)
+export default connect(mapStateToProps)(GeneralAdminTableView)

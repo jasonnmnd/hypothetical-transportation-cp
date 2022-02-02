@@ -143,7 +143,7 @@ td {
   border: 1px solid #ffffff;
   text-align: left;
   padding: 8px;
-  font-size: 32px;
+  font-size: 16px;
 }
 
 .tr-red {
@@ -275,39 +275,23 @@ td {
   background-color: #ffdd99;
 }
 
-.add-new-users-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-}
-
-.add-new-users-buttons button {
-  display: inline-block;
-  padding: 10px 15px;
-  border-radius: 8px;
-  background-color: #ffae07;
-  background-size: 200%;
-  background-position: 0%;
-  transition: 0.4s;
-  color: #fff;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.add-new-users-buttons button:hover {
-  background-color: #ffdd99;
-}
-
 .table-and-buttons {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  gap: 20px;
+  text-align: center;
 }
 
-.confirm_location{
+.table-and-buttons h1 {
+  font-weight: bold;
+  font-size: 48px;
+}
+
+.confirm_location {
   position: absolute;
-  left:0;
-  top:0;
+  left: 0;
+  top: 0;
 }
 
 .admin-edit-page button {
@@ -330,7 +314,7 @@ td {
 .edit-delete-buttons {
   display: flex;
   justify-content: center;
-  gap: 200px;
+  gap: 100px;
 }
 
 .edit-delete-buttons button {
@@ -365,6 +349,10 @@ td {
 
 .middle-content {
   margin-left: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
 }
 
 /* Generic Button Centering */

@@ -24,22 +24,19 @@ function GeneralAdminStudentsPage(props) {
   }, [currentPage, searchParams]);
 
 
-  const search = (value)=>{
-    //somehow get backend to update data (with usestate?)
-    //props.searchStudents(value.filter_by, value.value, value.sort_by, currentPage)
-  }
 
   return (
     <div className='admin-page'>
         <SidebarSliding/>
         <Header textToDisplay={"Admin Portal"} shouldShowOptions={true}></Header>
         <div className='middle-content'>
+        <GeneralAdminTableView values={props.students} title={title} tableType={tableType} search=""/>
           <div className='center-buttons'>
             <Link to="/admin/new_student/">
               <button className='button'>Add New Student</button>
             </Link>          
           </div>
-          <GeneralAdminTableView values={props.students} title={title} tableType={tableType} search={search} currentPage={currentPage} setCurrentPage={setPage}/>
+          
         </div>
     </div>
     

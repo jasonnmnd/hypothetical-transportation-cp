@@ -4,6 +4,39 @@ Senior design course project!
 
 ## Getting Started
 
+### Deployment
+
+Using github actions, a developmental server is automatically deployed upon pushes to the branch `dev`, and a production server is automatically deployed upon pushes to `main`.
+
+The one thing to watch out for: if you edit a docker-compose file, you have to ssh into every host, `git fetch origin && git pull`
+
+The hosts for these servers are as listed:
+
+#### PRODUCTION
+
+`https://hypothetical-transportation.colab.duke.edu:8000`
+
+#### DEV
+
+`https://ht-dev.colab.duke.edu:8000`
+
+#### TEST ENV (must be deployed manually)
+
+`https://ht-test.colab.duke.edu:8000`
+
+### Creating a new server
+
+#### Reserve a VCM/obtain a host
+
+```
+echo '...ssh into your host...'
+echo '...get the repo on there in some way (aka make a ssh key and clone repo)...'
+cd scripts
+echo '...validate that the domains are correct in install_vcm for the creation of certs'
+cat install_vcm.sh
+./install_vcm.sh
+```
+
 ### Running the frontend
 
 Compiles frontend content to be served. Package manager will hang and `Ctrl-C` can be used.
@@ -13,7 +46,13 @@ npm install
 npm run dev
 ```
 
-### Running the Backend Stack
+To compile for production, run:
+
+```
+npm run build
+```
+
+### Running the Stack
 
 #### First Time Installation
 
@@ -24,14 +63,29 @@ python3 manage.py migrate
 ```
 
 #### Seeding the Database
+
 _Create an admin:_
+
 ```
 python3 manage.py initadmin
 ```
+
+_Seeding the Database with random data:_
+
 ```
 python3 manage.py flush
-python3 manage.py loaddata backend/fixtures/data.json
+python3 manage.py seeddb /*Optional Flags*/
 ```
+
+Optional Flags:
+
+--numusers [param] (default=100)
+
+--numroutes [param] (default=400)
+
+--numschools [param] (default=400)
+
+--numstudents [param] (default=1000)
 
 #### Starting the Server
 
