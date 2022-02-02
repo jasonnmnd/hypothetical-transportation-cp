@@ -35,11 +35,7 @@ function GeneralAdminSchoolDetails(props) {
 
 
   useEffect(() => {
-    // let paramsToSend = Object.fromEntries([...searchParams]);
-    // paramsToSend.guardian = param.id;
-    // props.getStudents(paramsToSend);
 
-    // let 
 
     if(searchParams.get(`${STUDENT_PREFIX}pageNum`) != null && searchParams.get(`${ROUTE_PREFIX}pageNum`) != null){
       const allSearchParams = Object.fromEntries([...searchParams]);

@@ -36,7 +36,7 @@ function GeneralAdminRouteDetails(props) {
   }, []);
 
   useEffect(() => {
-    if(searchParams.get(`pageNum`) != null && searchParams.get(`pageNum`) != null){
+    if(searchParams.get(`pageNum`) != null){
       let paramsToSend = Object.fromEntries([...searchParams]);
       paramsToSend.routes = param.id;
       props.getStudents(paramsToSend);
@@ -44,7 +44,6 @@ function GeneralAdminRouteDetails(props) {
     else{
       setSearchParams({
         [`pageNum`]: 1,
-        [`pageNum`]: 1
       })
     }
   }, [searchParams]);

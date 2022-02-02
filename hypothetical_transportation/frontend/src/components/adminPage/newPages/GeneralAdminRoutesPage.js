@@ -18,8 +18,15 @@ function AdminRoutesPage(props) {
   let [searchParams, setSearchParams] = useSearchParams();
   
   useEffect(() => {
-    let paramsToSend = Object.fromEntries([...searchParams]);
-    props.getRoutes(paramsToSend);
+    if(searchParams.get(`pageNum`) != null){
+      let paramsToSend = Object.fromEntries([...searchParams]);
+      props.getRoutes(paramsToSend);
+    }
+    else{
+      setSearchParams({
+        [`pageNum`]: 1,
+      })
+    }
   }, [searchParams]);
 
 

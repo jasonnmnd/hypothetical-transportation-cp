@@ -18,8 +18,15 @@ function GeneralAdminSchoolsPage(props) {
   
 
   useEffect(() => {
-    let paramsToSend = Object.fromEntries([...searchParams]);
-    props.getSchools(paramsToSend);
+    if(searchParams.get(`pageNum`) != null){
+      let paramsToSend = Object.fromEntries([...searchParams]);
+      props.getSchools(paramsToSend);
+    }
+    else{
+      setSearchParams({
+        [`pageNum`]: 1,
+      })
+    }
   }, [searchParams]);
 
 
