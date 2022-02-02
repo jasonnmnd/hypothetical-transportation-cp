@@ -23,8 +23,33 @@ SECRET_KEY = 'django-insecure-dz)xt+ggvmpya26p(yn$y-0gcq1&$tnrj+i_n5*1u0_ek+j3lg
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+LOGGING = {
 
-ALLOWED_HOSTS = []
+    'version': 1,
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'werkzeug': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
+
+ALLOWED_HOSTS = [
+        '0.0.0.0',
+        'hypothetical-transportation.colab.duke.edu',
+        'ht.colab.duke.edu',
+        'ht-dev.colab.duke.edu',
+        'ht-test.colab.duke.edu',
+        'ht-frontend.colab.duke.edu',
+        'ht-backend.colab.duke.edu',
+]
 
 # Application definition
 
@@ -41,12 +66,13 @@ INSTALLED_APPS = [
     'backend',
     'knox',
     'accounts',
+    'django_extensions',
     'django_filters',
 ]
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'PAGE_SIZE': 25,
+    'PAGE_SIZE': 1000000,
     'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',)
 }
 
@@ -94,10 +120,10 @@ WSGI_APPLICATION = 'hypothetical_transportation.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'ht_db',
+        'NAME': 'admin',
         'USER': 'admin',
         'PASSWORD': 'admin',
-        'HOST': 'localhost',
+        'HOST': 'db',
         'PORT': '5432',
     }
 }

@@ -9,7 +9,6 @@ import table from './table';
 import routes from './routes';
 import routeplanner from './routeplanner';
 
-
 export default combineReducers({
   students,
   schools,

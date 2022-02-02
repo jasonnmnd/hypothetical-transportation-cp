@@ -16,7 +16,7 @@ import GeneralAdminTableView from '../components/views/GeneralAdminTableView';
 function GeneralAdminUsersPage(props) {
 
   //Mock Users Data (API Call later for real data)
-  const title = "Parent Users"
+  const title = "Users"
 
   let [searchParams, setSearchParams] = useSearchParams();
   
