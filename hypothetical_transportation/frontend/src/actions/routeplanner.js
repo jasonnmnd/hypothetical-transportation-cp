@@ -38,10 +38,29 @@ export const getStudentsWithoutRoute = (schoolID) => (dispatch, getState) => {
   };
 
 
-  export const addRoute = (route) => (dispatch, getState) => {
+  export const addRoute = (route, students) => (dispatch, getState) => {
     axios
       .post('/api/route/', route, tokenConfig(getState))
       .then((res) => {
+        console.log(students)
+        if(students.length>0){
+          students.map((student)=>{
+            const stu = {...student,["routes"]:res.data.id,["school"]:student.school.id,["guardian"]:student.guardian.id};
+            axios
+            .put(`/api/student/${student.id}/`,stu, tokenConfig(getState))
+            .then(res =>{
+              dispatch({
+                type: DELETE_STUDENT,
+                payload: parseInt(student.id)
+              })
+              console.log(res.data);
+              dispatch({
+                type: ADD_STUDENT,
+                payload: res.data
+              })
+            }).catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});        
+          })
+        }
         dispatch({
           type: ADD_ROUTE,
           payload: res.data,
