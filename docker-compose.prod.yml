@@ -18,7 +18,7 @@ services:
     #           "python hypothetical_transportation/manage.py initadmin && "\
     #           "python hypothetical_transportation/manage.py runserver_plus 0.0.0.0:8000 --cert-file /etc/letsencrypt/live/hypothetical-transportation.colab.duke.edu/fullchain.pem --key-file /etc/letsencrypt/live/hypothetical-transportation.colab.duke.edu/privkey.pem"
     volumes:
-      # - .:/code
+      - .:/local
       - /etc/letsencrypt/:/etc/letsencrypt/
     ports:
       - "8000:8000"
