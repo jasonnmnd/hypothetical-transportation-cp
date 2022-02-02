@@ -1,0 +1,33 @@
+.prev-next-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.button {
+  display: inline-block;
+  padding: 10px 15px;
+  border-radius: 8px;
+  background-color: #ffae07;
+  background-size: 200%;
+  background-position: 0%;
+  transition: 0.4s;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: #ffdd99;
+}
+
+.divider15px {
+  width: 15px;
+  height: auto;
+  display: inline-block;
+}
+
+.align-all-buttons {
+  display: flex;
+  justify-content: center;
+}
