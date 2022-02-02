@@ -50,7 +50,7 @@ function GeneralEditSchoolForm(props) {
                 address: address
             })
         }
-        navigate(`/admin/`)
+        navigate(`/admin/schools`)
     }
 
 
