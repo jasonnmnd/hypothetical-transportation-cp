@@ -6,10 +6,10 @@ import PropTypes from 'prop-types';
 import "../adminPage.css"
 import Header from "../../header/Header";
 import SidebarSliding from "../components/sidebar/SidebarSliding";
-
 import { getUser, updateUser } from "../../../actions/users";
 import { register } from "../../../actions/auth";
 import AssistedLocationModal from "../components/modals/AssistedLocationModal";
+import AssistedLocationMap from "../../maps/AssistedLocationMap";
 
 //input1: title of form
 //input2: list of fields?
@@ -27,6 +27,7 @@ function GeneralEditUserForm(props) {
         groups: 1,
         password: ""
     });
+    const [address, setAddress] = useState("");
 
 
 
@@ -45,7 +46,8 @@ function GeneralEditUserForm(props) {
     const submit = () => {
         const createVals = {
             ...fieldValues,
-            groups: [fieldValues.groups]
+            groups: [fieldValues.groups],
+            address: address
         }
         if(props.action == "edit"){
             props.updateUser(createVals, param.id);
@@ -57,22 +59,22 @@ function GeneralEditUserForm(props) {
     }
 
 
-    const confirmation = (e)=>{
-        e.preventDefault();
-        setOpenModal(true)
-    }
+    // const confirmation = (e)=>{
+    //     e.preventDefault();
+    //     setOpenModal(true)
+    // }
 
-    const handleConfirmAddress = () => {
-        console.log("Address confirmed")
-        submit()
-      }
+    // const handleConfirmAddress = () => {
+    //     console.log("Address confirmed")
+    //     submit()
+    //   }
     
     return (
         <div>
              <Header textToDisplay={"Admin Portal"} shouldShowOptions={true}></Header>
             <SidebarSliding/>
             <div className='admin-edit-page'>  
-            <div className='confirm_location'>{openModal && <AssistedLocationModal closeModal={setOpenModal} handleConfirmAddress={handleConfirmAddress} address={fieldValues.address}></AssistedLocationModal>}</div>
+            {/* <div className='confirm_location'>{openModal && <AssistedLocationModal closeModal={setOpenModal} handleConfirmAddress={handleConfirmAddress} address={fieldValues.address}></AssistedLocationModal>}</div> */}
             <form>
                 <div className="form-inner">
                     <h2>{props.action + " user"}</h2>
@@ -88,22 +90,6 @@ function GeneralEditUserForm(props) {
                           onChange={(e)=>{
                               setFieldValues({...fieldValues, full_name: e.target.value});
                           }}
-                      />
-                  </div>
-
-                  <div className="form-group">
-                      <label htmlFor={"Address"}>Address</label>
-                      <input
-                          className="input"
-                          type={"id"}
-                          name={"Address"}
-                          id={"Address"}
-                          value={fieldValues.address}
-                          onChange={
-                              (e)=>{
-                                setFieldValues({...fieldValues, address: e.target.value});
-                                }
-                            }
                       />
                   </div>
 
@@ -151,10 +137,26 @@ function GeneralEditUserForm(props) {
                       />
                   </div>
 
-                 
+                  <div className="form-group">
+                      <label htmlFor={"Address"}>Address</label>
+                      <input
+                          className="input"
+                          type={"id"}
+                          name={"Address"}
+                          id={"Address"}
+                          value={address}
+                          onChange={
+                              (e)=>{
+                                setAddress(e.target.value);
+                                }
+                            }
+                      />
+                  </div>
+
                     <div className="divider15px" />
+                    <AssistedLocationMap address={fieldValues.address} setAddress={setAddress}></AssistedLocationMap>
                     
-                    <button onClick={confirmation}>Save</button>
+                    <button onClick={submit}>Save</button>
                 </div>
             </form>
             </div>
