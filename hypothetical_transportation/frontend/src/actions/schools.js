@@ -30,6 +30,7 @@ export const addSchool = (school) => (dispatch, getState) => {
   axios
     .post('/api/school/', school, tokenConfig(getState))
     .then((res) => {
+      dispatch(createMessage({ school: 'School Created' }));
       dispatch({
         type: ADD_SCHOOL,
         payload: res.data,
@@ -42,12 +43,9 @@ export const deleteSchool = (id) => (dispatch, getState) => {
   axios
     .delete(`/api/school/${id}/`, tokenConfig(getState))
     .then(res => {
+      dispatch(createMessage({ school: 'School Deleted' }));
       dispatch({
         type: DELETE_SCHOOL,
-        payload: parseInt(id)
-      });
-      dispatch({
-        type: DELETE_ITEM,
         payload: parseInt(id)
       });
     })
@@ -97,6 +95,7 @@ export const getSchool = (id) => (dispatch, getState) => {
     axios
             .put(`/api/school/${id}/`,school, tokenConfig(getState))
             .then(res =>{
+              dispatch(createMessage({ school: 'School Updated' }));
               dispatch({
                 type: DELETE_SCHOOL,
                 payload: parseInt(id)
