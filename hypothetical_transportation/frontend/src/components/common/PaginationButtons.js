@@ -44,12 +44,16 @@ function PaginationButtons( props ) {
                 :
                 <div> 
                 <button className='button' onClick={handlePrevClick} disabled={searchParams.get("pageNum") == 1} >Prev</button>
+                <div className='divider15px'/>
                 {searchParams.get("pageNum")}
+                <div className='divider15px'/>
                 <button className='button' onClick={handleNextClick} disabled={props.nextDisable} >Next</button> 
                 </div>}
             </div>
-            <div className='divider15px'/>
-            <button className='button' onClick={handleAllClick} >Show All</button>
+
+            <div>
+                <button className='button' onClick={handleAllClick} >Show All</button>
+            </div>
         </div>
     )
 

@@ -1,7 +1,8 @@
 import React, { Fragment, useState } from "react";
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import "../adminPage/adminPage.css";
+// import "../adminPage/adminPage.css";
+import "./generalTable.css";
 
 function GeneralTable( props ) {
 
