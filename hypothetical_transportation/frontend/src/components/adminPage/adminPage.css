@@ -104,11 +104,11 @@ td {
 }
 
 .tr-red {
-  background-color: rgb(255, 55, 55);
+  background-color: rgb(255, 136, 136);
 }
 
 .tr-red td {
-  background-color: rgb(255, 55, 55);
+  background-color: rgb(255, 136, 136);
 }
 
 .tr-gray {
@@ -182,7 +182,7 @@ td {
 }
 
 .welcome h2 span {
-  color: #fe4880;
+  color: #000a41;
   font-weight: 700;
 }
 
@@ -207,29 +207,6 @@ td {
   display: flex;
   justify-content: center;
   gap: 15px;
-}
-
-.prev-next-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-}
-
-.prev-next-buttons button {
-  display: inline-block;
-  padding: 10px 15px;
-  border-radius: 8px;
-  background-color: #ffae07;
-  background-size: 200%;
-  background-position: 0%;
-  transition: 0.4s;
-  color: #fff;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.prev-next-buttons button:hover {
-  background-color: #ffdd99;
 }
 
 .table-and-buttons {
