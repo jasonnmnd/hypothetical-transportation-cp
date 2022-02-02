@@ -81,8 +81,8 @@ function GeneralManageStudentPage(props) {
 
     return ( 
       <>
-        <Header textToDisplay={"Admin Portal"} shouldShowOptions={true}></Header>
         <SidebarSliding/>
+        <Header textToDisplay={"Admin Portal"} shouldShowOptions={true}></Header>
         <div className='admin-edit-page'>
         <form>
                 <div className="form-inner">

@@ -15,13 +15,11 @@ function GeneralAdminStudentsPage(props) {
   const tableType = "student"
 
   let [searchParams, setSearchParams] = useSearchParams();
-  const [currentPage, setPage] = useState(0)
   
   useEffect(() => {
-
     let paramsToSend = Object.fromEntries([...searchParams]);
     props.getStudents(paramsToSend);
-  }, [currentPage, searchParams]);
+  }, [searchParams]);
 
 
 
