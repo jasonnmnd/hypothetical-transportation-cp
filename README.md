@@ -79,6 +79,16 @@ Optional Flags:
 
 --numstudents [param] (default=1000)
 
+Optional Flags:
+
+--numusers [param] (default=100)
+
+--numroutes [param] (default=400)
+
+--numschools [param] (default=400)
+
+--numstudents [param] (default=1000)
+
 #### Starting the Server
 
 ```

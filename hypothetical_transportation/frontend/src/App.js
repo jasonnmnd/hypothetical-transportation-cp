@@ -6,7 +6,6 @@ import { Routes, Route, BrowserRouter} from "react-router-dom";
 import LoginForm from "./components/loginPage/LoginForm.js"
 import AccountPage from "./components/accountPage/AccountPage";
 import GeneralParentStudentDetails from "./components/parentPage/pages/GeneralParentStudentDetails";
-import AdminRoutePlanner from "./components/adminPage/pages/AdminRoutePlanner";
 import PrivateRoute from "./components/common/PrivateRoute";
 import { connect } from "react-redux";
 import Alerts from "./components/alerts/Alerts";
@@ -32,6 +31,7 @@ function App( props ) {
       <BrowserRouter>
         <Alerts/>
         <Routes>
+          {/* <Route exact path="/testingTable" element={<GeneralTable rows={testingTableProps}/>}></Route> */}
           <Route exact path="/" element={<LoginForm />}></Route>
           <Route path="/parent/*" element={<PrivateRoute><ParentPage /></PrivateRoute>}></Route>
           <Route exact path="/account" element={<PrivateRoute><AccountPage/></PrivateRoute>}></Route>
@@ -39,7 +39,7 @@ function App( props ) {
           <Route exact path="/parent/student/:school/:id" element={<PrivateRoute><GeneralParentStudentDetails ></GeneralParentStudentDetails></PrivateRoute>}/>
           <Route path="/admin/*" element={<PrivateRoute><AdminPage/></PrivateRoute>}></Route>
           <Route exact path="/admin/users" element={<PrivateRoute><GeneralAdminUsersPage /></PrivateRoute>}></Route>
-          <Route exact path="/admin/students" element={<PrivateRoute><GeneralAdminStudentsPage /></PrivateRoute>}></Route>
+          <Route exact path="/admin/students/*" element={<PrivateRoute><GeneralAdminStudentsPage /></PrivateRoute>}></Route>
           <Route exact path="/admin/edit/school/:id" element={<PrivateRoute><GeneralEditSchoolForm action="edit" /></PrivateRoute>}></Route>
           <Route exact path="/admin/new/school/" element={<PrivateRoute><GeneralEditSchoolForm action="new"/></PrivateRoute>}></Route>
           <Route exact path="/admin/edit/user/:id" element={<PrivateRoute><GeneralEditUserForm action="edit" /></PrivateRoute>}></Route>

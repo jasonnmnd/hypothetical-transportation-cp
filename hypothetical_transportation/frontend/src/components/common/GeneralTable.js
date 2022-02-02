@@ -57,11 +57,23 @@ function GeneralTable( props ) {
     }
   };
 
+  const getTableRows = (results) => {
+    return (results.map((result, index) => {
+      return (<Fragment key={index}>
+          {addTableRow(result)}
+      </Fragment>);
+    }))
+  }
+
+  const getEmptyTableRows = () => {
+    return <tr><td>NO MORE RESULTS</td></tr>
+  }
+
 
   const createTable = (results) => {
-    if(!results || results.length == 0){
-        return null;
-    }
+    // if(!results || results.length == 0){
+    //     return null;
+    // }
     // mapDynamicColumns();
     return (
       <table className='center'>
@@ -73,11 +85,7 @@ function GeneralTable( props ) {
           
         </thead>
         <tbody>
-          {results.map((result, index) => {
-            return (<Fragment key={index}>
-                {addTableRow(result)}
-            </Fragment>);
-          })}
+          {!results || results.length == 0 ?  getEmptyTableRows() : getTableRows(results)}
         </tbody>
       </table>
     );

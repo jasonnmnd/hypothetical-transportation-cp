@@ -10,6 +10,8 @@ import axios from 'axios';
 import config from '../../../utils/config';
 import { getRouteInfo } from '../../../actions/routes';
 import {getStudentsInRoute, getStudentsWithoutRoute} from '../../../actions/routeplanner';
+import GeneralAdminTableView from '../components/views/GeneralAdminTableView';
+import { getSchool } from '../../../actions/schools';
 
 function GeneralAdminRoutePlanner(props) {
   const param = useParams();
@@ -93,8 +95,11 @@ function GeneralAdminRoutePlanner(props) {
         props.getRouteInfo(param.route_id);
         setObj({...props.route, ["school"]:props.route.school.id,})
         props.getStudentsInRoute(param.route_id)
-        props.getStudentsWithoutRoute(param.school_id)
     }
+    props.getStudentsWithoutRoute(param.school_id)
+    props.getSchool(param.school_id)
+    console.log(props.studentsInRoute)
+    console.log(props.studentsWithoutRoute)
   }, []);
 
     
@@ -148,7 +153,7 @@ function GeneralAdminRoutePlanner(props) {
     }
     else{
       axios
-      .put(`/api/route/${route.id}/`,obj, config(props.token))
+      .put(`/api/route/${props.route.id}/`,obj, config(props.token))
       .then(res =>{
         const routeID = res.data.id
         if(tobeadded.length>0){
@@ -194,8 +199,8 @@ function GeneralAdminRoutePlanner(props) {
   return (
     
     <>
-        <Header textToDisplay={"Admin Portal"} shouldShowOptions={true}></Header>
         <SidebarSliding/>
+        <Header textToDisplay={"Admin Portal"} shouldShowOptions={true}></Header>
         <div className='middle-justify'>
           <div className='admin-details'>
            <h1>Route Planner</h1>
@@ -213,13 +218,13 @@ function GeneralAdminRoutePlanner(props) {
             <div className='info-fields'>
               <h2>School (Blue Pin): </h2>
               {/* <Link to={`/admin/school/${exampleRoute.school.id}`}> */}
-                <Link to={`/admin/school/${props.route.school.id}`}><button className='button'><h3>{props.route.school.name}</h3></button></Link>
+                <Link to={`/admin/school/${param.school_id}`}><button className='button'><h3>{props.school.name}</h3></button></Link>
               {/* </Link> */}
             </div>
             <h2>Map of School and Students</h2>
-            {props.acion==="edit"?
-              <MapContainer studentData={props.studentsWithoutRoute.filter(stu=>stu.routes===null)} schoolData={props.route.school}/>:
-              <MapContainer studentData={props.studentsWithoutRoute.filter(stu=>stu.routes===null)} schoolData={props.route.school} routeStudentData={props.studentsInRoute}/>
+            {props.action==="new"?
+              <MapContainer studentData={props.studentsWithoutRoute} schoolData={props.route.school}/>:
+              <MapContainer studentData={props.studentsWithoutRoute} schoolData={props.route.school} routeStudentData={props.studentsInRoute}/>
               }
             {/* <h2> Students inside this Routes </h2>
             <AdminTable title={"Students"} header={Object.keys(emptyStudent)} data={students.filter(i=>i.route!=="")} actionName={"Remove From This Route"} action={removeFromRoute}/> */}
@@ -227,7 +232,7 @@ function GeneralAdminRoutePlanner(props) {
             {props.action==="edit"?
               <div>
                 {/* <AdminTable title={`Students currently in ${props.route.name} (Green pin)`} header={Object.keys(emptyStudent)} data={route_student.filter(i=>i.routes.id===route.id&&!toberemoved.includes(i))} actionName={"Remove from Route"} action={removeFromRoute}/> */}
-                <GeneralAdminTableView values={props.studentsInRoute.filter(i=>i.routes.id===route.id&&!toberemoved.includes(i))} tableType={"student"} title={`Students currently in ${props.route.name} (Green pin)`} actionName={"Remove from Route"} action={removeFromRoute}/>
+                <GeneralAdminTableView values={props.studentsInRoute?props.studentsInRoute.filter(i=>!toberemoved.includes(i)):studentObject} tableType={"student"} title={`Students currently in ${props.route.name} (Green pin)`} actionName={"Remove from Route"} action={removeFromRoute}/>
                 {/* <AdminTable title={`Students To Be Remove from Route`} header={Object.keys(emptyStudent)} data={toberemoved} actionName={"Remove from Selected"} action={removeFromREMOVE}/> */}
                 <GeneralAdminTableView values={toberemoved} tableType={"student"} title={`Students To Be Remove from Route`} actionName={"Remove from Selected"} action={removeFromREMOVE}/>
 
@@ -238,7 +243,7 @@ function GeneralAdminRoutePlanner(props) {
             {/* <AdminTable title={"Students To Be Added into Route"} header={Object.keys(emptyStudent)} data={tobeadded} actionName={"Remove from Selected"} action={removeFromADD}/> */}
             <GeneralAdminTableView values={tobeadded} tableType={"student"} title={`Students To Be Added into Route`} actionName={"Remove from Selected"} action={removeFromADD}/>
             {/* <AdminTable title={`Students at ${props.route.school.name} With No Routes (Red pin)`} header={Object.keys(emptyStudent)} data={students.filter(i=>i.routes===null&&!tobeadded.includes(i))} actionName={"Add to Route"} action={addToRoute}/> */}
-            <GeneralAdminTableView values={props.studentsWithoutRoute.filter(i=>i.routes===null&&!tobeadded.includes(i))} tableType={"student"} title={`Students at ${props.route.school.name}`} actionName={"Add to Route"} action={addToRoute}/>
+            <GeneralAdminTableView values={props.studentsWithoutRoute?props.studentsWithoutRoute.filter(i=>!tobeadded.includes(i)):studentObject} tableType={"student"} title={`Students at ${props.route.school.name} with no route`} actionName={"Add to Route"} action={addToRoute}/>
 
             <form>
               <div className="form-inner">
@@ -295,8 +300,9 @@ const mapStateToProps = (state) => ({
   user: state.auth.user,
   token: state.auth.token,
   route: state.routes.viewedRoute, 
+  school: state.schools.viewedSchool,
   studentsInRoute:state.routeplanner.studentsInRoute.results,
   studentsWithoutRoute:state.routeplanner.studentsWithoutRoute.results
 });
 
-export default connect(mapStateToProps, {getRouteInfo,getStudentsInRoute,getStudentsWithoutRoute})(GeneralAdminRoutePlanner)
+export default connect(mapStateToProps, {getRouteInfo,getStudentsInRoute,getStudentsWithoutRoute, getSchool})(GeneralAdminRoutePlanner)
