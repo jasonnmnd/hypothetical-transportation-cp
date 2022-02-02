@@ -26,7 +26,7 @@ function GeneralAdminStudentsPage(props) {
   return (
     <div className='admin-page'>
         <SidebarSliding/>
-        <Header textToDisplay={"Admin Portal"} shouldShowOptions={true}></Header>
+        <Header textToDisplay={"Students Portal"} shouldShowOptions={true}></Header>
         <div className='middle-content'>
         <GeneralAdminTableView values={props.students} title={title} tableType={tableType} search=""/>
           <div className='center-buttons'>

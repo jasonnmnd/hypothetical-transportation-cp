@@ -34,7 +34,7 @@ function GeneralAdminSchoolsPage(props) {
               <Link to="/admin/new/school">
                     <button className='button'>Add New School</button>
               </Link>
-          </div>
+            </div>
         </div>
     </div>
   )

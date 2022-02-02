@@ -125,7 +125,7 @@ function GeneralEditUserForm(props) {
                       <label htmlFor={"Password"}>Password</label>
                       <input
                           className="input"
-                          type={"id"}
+                          type={"password"}
                           name={"Password"}
                           id={"Password"}
                           value={fieldValues.password}
