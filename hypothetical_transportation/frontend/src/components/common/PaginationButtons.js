@@ -1,36 +1,42 @@
 import React, { Fragment, useState } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { useSearchParams } from 'react-router-dom';
 
 
 
 
 function PaginationButtons( props ) {
 
+    let [searchParams, setSearchParams] = useSearchParams();
 
     const handlePrevClick = () => {
-        props.setCurrentPage(props.currentPage - 1)
+        setSearchParams({
+            ...Object.fromEntries([...searchParams]),
+            pageNum: parseInt(searchParams.get("pageNum")) - 1
+        })
       }
     
       const handleNextClick = () => {
-        props.setCurrentPage(props.currentPage + 1)
+        setSearchParams({
+            ...Object.fromEntries([...searchParams]),
+            pageNum: parseInt(searchParams.get("pageNum")) + 1
+        })
       }
   
     return (
-        <div className='table-and-buttons'>
-            <div className="prev-next-buttons">
-                <button onClick={handlePrevClick}>Prev</button>
-                {props.currentPage+1}
-                <button onClick={handleNextClick}>Next</button> 
-            </div>
+        <div className="prev-next-buttons">
+            <button onClick={handlePrevClick} disabled={searchParams.get("pageNum") == 1} >Prev</button>
+            {searchParams.get("pageNum")}
+            <button onClick={handleNextClick} disabled={props.nextDisable} >Next</button> 
         </div>
     )
 
 }
 
 PaginationButtons.propTypes = {
-    currentPage: PropTypes.number,
-    setCurrentPage: PropTypes.func
+    //prevDisable: PropTypes.bool,
+    nextDisable: PropTypes.bool
 }
 
 const mapStateToProps = (state) => ({

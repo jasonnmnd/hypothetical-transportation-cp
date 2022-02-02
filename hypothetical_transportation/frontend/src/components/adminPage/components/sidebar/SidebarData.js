@@ -21,7 +21,7 @@ export const SidebarData = [
 
     {
         title: 'Students',
-        path: '/admin/students',
+        path: '/admin/students?pageNum=1',
         icon: <IoIcons.IoIosBody />,
         cName: 'nav-text'
     },
