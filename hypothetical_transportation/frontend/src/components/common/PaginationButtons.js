@@ -8,31 +8,34 @@ function PaginationButtons( props ) {
 
     let [searchParams, setSearchParams] = useSearchParams();
 
+    const pageNumWithPrefix = `${props.prefix}pageNum`;
+
+
     const handlePrevClick = () => {
         setSearchParams({
             ...Object.fromEntries([...searchParams]),
-            pageNum: parseInt(searchParams.get("pageNum")) - 1
+            [pageNumWithPrefix]: parseInt(searchParams.get(pageNumWithPrefix)) - 1
         })
       }
     
       const handleNextClick = () => {
         setSearchParams({
             ...Object.fromEntries([...searchParams]),
-            pageNum: parseInt(searchParams.get("pageNum")) + 1
+            [pageNumWithPrefix]: parseInt(searchParams.get(pageNumWithPrefix)) + 1
         })
       }
 
       const handleAllClick = () => {
         setSearchParams({
             ...Object.fromEntries([...searchParams]),
-            pageNum: -1
+            [pageNumWithPrefix]: -1
         })
       }
 
       const handleLessClick = () => {
         setSearchParams({
             ...Object.fromEntries([...searchParams]),
-            pageNum: 1
+            [pageNumWithPrefix]: 1
         })
       }
   
@@ -42,12 +45,16 @@ function PaginationButtons( props ) {
             <button className='button' onClick={handleLessClick}>Show Less</button> :
 
             <div className="prev-next-buttons">
-                <button className='button' onClick={handlePrevClick} disabled={searchParams.get("pageNum") == 1} >Prev</button>
-
-                {searchParams.get("pageNum")}
-
+                {searchParams.get(pageNumWithPrefix) == -1 ? 
+                <button onClick={handleLessClick}>Show Less</button> 
+                :
+                <div> 
+                <button className='button' onClick={handlePrevClick} disabled={searchParams.get(pageNumWithPrefix) == 1} >Prev</button>
+                {searchParams.get(pageNumWithPrefix)}
                 <button className='button' onClick={handleNextClick} disabled={props.nextDisable} >Next</button> 
-                <button className='button' onClick={handleAllClick} >Show All</button>
+                <div className='divider15px'/>
+            <button className='button' onClick={handleAllClick} >Show All</button>
+                </div>}
             </div>
             }
         </div>
@@ -57,7 +64,8 @@ function PaginationButtons( props ) {
 
 PaginationButtons.propTypes = {
     //prevDisable: PropTypes.bool,
-    nextDisable: PropTypes.bool
+    nextDisable: PropTypes.bool,
+    prefix: PropTypes.string
 }
 
 const mapStateToProps = (state) => ({

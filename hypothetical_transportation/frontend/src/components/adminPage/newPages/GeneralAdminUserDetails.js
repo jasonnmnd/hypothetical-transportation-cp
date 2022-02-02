@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import Header from '../../header/Header';
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import "../adminPage.css";
 import DeleteModal from '../components/modals/DeleteModal';
 import AdminTable from '../components/table/AdminTable';
@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import config from '../../../utils/config';
 import { getUser, deleteUser } from '../../../actions/users';
-import { getStudentsByID } from '../../../actions/students';
+import { getStudents } from '../../../actions/students';
 import GeneralAdminTableView from '../components/views/GeneralAdminTableView';
 import isAdmin from '../../../utils/user';
 
@@ -29,22 +29,34 @@ function AdminUserDetails(props) {
   }
 
 
+  let [searchParams, setSearchParams] = useSearchParams();
 
+  useEffect(() => {
+    if(searchParams.get(`pageNum`) != null && searchParams.get(`pageNum`) != null){
+      let paramsToSend = Object.fromEntries([...searchParams]);
+      paramsToSend.guardian = param.id;
+      props.getStudents(paramsToSend);
+    }
+    else{
+      setSearchParams({
+        [`pageNum`]: 1,
+        [`pageNum`]: 1
+      })
+    }
+    
+  }, [searchParams]);
 
   useEffect(() => {
     props.getUser(param.id);
-    props.getStudentsByID({
-      guardian: param.id
-    });
-
   }, []);
 
-  const getUserType = () => {
-      if(props.user.groups.includes(2)){
-          return "parent_user"
-      }
-      return "admin_user"
-  }
+
+  
+
+  
+
+
+
   
   return (
     
@@ -64,6 +76,9 @@ function AdminUserDetails(props) {
           </div>
           <div className='left-content'>
                   <div className='info-fields'>
+                      
+                      
+
                       <h2>Name: </h2>
                       <h3>{props.user.full_name}</h3>
                   </div>
@@ -100,7 +115,7 @@ function AdminUserDetails(props) {
 
 AdminUserDetails.propTypes = {
     getUser: PropTypes.func.isRequired,
-    getStudentsByID: PropTypes.func.isRequired
+    getStudents: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => ({
@@ -110,4 +125,4 @@ const mapStateToProps = (state) => ({
   
 });
 
-export default connect(mapStateToProps, {getUser, getStudentsByID, deleteUser})(AdminUserDetails)
+export default connect(mapStateToProps, {getUser, getStudents, deleteUser})(AdminUserDetails)

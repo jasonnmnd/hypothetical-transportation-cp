@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Header from '../../header/Header';
 import "../adminPage.css";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import FormDeleteModal from '../components/modals/FormDeleteModal';
 import AdminTable from '../components/table/AdminTable';
 import SidebarSliding from '../components/sidebar/SidebarSliding';
@@ -10,14 +10,17 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import config from '../../../utils/config';
 import { getSchool, deleteSchool } from '../../../actions/schools';
-import { getStudentsByID } from '../../../actions/students';
-import { getRoutesByID } from '../../../actions/routes';
+import { getStudents } from '../../../actions/students';
+import { getRoutes } from '../../../actions/routes';
 import GeneralAdminTableView from '../components/views/GeneralAdminTableView';
+import { filterObjectForKey, filterObjectForKeySubstring } from '../../../utils/utils';
 
 
 function GeneralAdminSchoolDetails(props) {
   const navigate = useNavigate();
   const param = useParams();
+  const STUDENT_PREFIX = "stu";
+  const ROUTE_PREFIX = "rou";
   
 
 
@@ -28,16 +31,44 @@ function GeneralAdminSchoolDetails(props) {
     navigate(`/admin/schools/`)
   }
 
+  let [searchParams, setSearchParams] = useSearchParams();
+
+
+  useEffect(() => {
+    // let paramsToSend = Object.fromEntries([...searchParams]);
+    // paramsToSend.guardian = param.id;
+    // props.getStudents(paramsToSend);
+
+    // let 
+
+    if(searchParams.get(`${STUDENT_PREFIX}pageNum`) != null && searchParams.get(`${ROUTE_PREFIX}pageNum`) != null){
+      const allSearchParams = Object.fromEntries([...searchParams]);
+
+      let studentSearchParams = filterObjectForKeySubstring(allSearchParams, STUDENT_PREFIX);
+      studentSearchParams.school = param.id;
+      let routeSearchParams = filterObjectForKeySubstring(allSearchParams, ROUTE_PREFIX);
+      routeSearchParams.school = param.id
+      
+      
+      props.getStudents(studentSearchParams);
+      props.getRoutes(routeSearchParams);
+    }
+    else{
+      setSearchParams({
+        [`${STUDENT_PREFIX}pageNum`]: 1,
+        [`${ROUTE_PREFIX}pageNum`]: 1
+      })
+    }
+
+
+    
+
+  }, [searchParams]);
 
   useEffect(() => {
     props.getSchool(param.id);
-    props.getStudentsByID({
-        school: param.id
-    })
-    props.getRoutesByID({
-        school: param.id
-    });
   }, []);
+
 
 
 
@@ -60,7 +91,7 @@ function GeneralAdminSchoolDetails(props) {
 
             <div className='info-fields'>
               {/* <h2>Associated students: </h2> */}
-              <GeneralAdminTableView values={props.students} tableType='student' title='Associated Students' search={null}/>
+              <GeneralAdminTableView values={props.students} tableType='student' title='Associated Students' search={STUDENT_PREFIX} pagination={STUDENT_PREFIX}/>
               {/* {
                   exampleSchool.students.map((s,i)=>{
                     return <Link to={`/admin/student/${s.id}`} id={i}><button className='button'>{s.name}</button></Link>
@@ -70,7 +101,7 @@ function GeneralAdminSchoolDetails(props) {
 
             <div className='info-fields'>
               {/* <h2>Associated Routes: </h2> */}
-              <GeneralAdminTableView values={props.routes} tableType='route' title='Associated Routes' search={null}/>
+              <GeneralAdminTableView values={props.routes} tableType='route' title='Associated Routes' search={ROUTE_PREFIX} pagination={ROUTE_PREFIX}/>
               {/* {
                   exampleSchool.routes.map((s,i)=>{
                     return <Link to={`/admin/route/${s.id}`} id={i}><button className='button'>{s.id}</button></Link>
@@ -100,8 +131,8 @@ function GeneralAdminSchoolDetails(props) {
 
 GeneralAdminSchoolDetails.propTypes = {
     getSchool: PropTypes.func.isRequired,
-    getStudentsByID: PropTypes.func.isRequired,
-    getRoutesByID: PropTypes.func.isRequired,
+    getStudents: PropTypes.func.isRequired,
+    getRoutes: PropTypes.func.isRequired,
      deleteSchool: PropTypes.func.isRequired
 }
 
@@ -113,4 +144,4 @@ const mapStateToProps = (state) => ({
   routes: state.routes.routes.results
 });
 
-export default connect(mapStateToProps, {getSchool, getStudentsByID, getRoutesByID, deleteSchool})(GeneralAdminSchoolDetails)
+export default connect(mapStateToProps, {getSchool, getStudents, getRoutes, deleteSchool})(GeneralAdminSchoolDetails)

@@ -214,7 +214,7 @@ function GeneralAdminTableView( props ) {
             <div className='AdminTable-container'>
                 <GeneralTable rows={props.values} columnNames={getColumns()} actionName={props.actionName?props.actionName:"View"} action={props.action? props.action:handleViewClick}/>
             </div>
-            <PaginationButtons nextDisable={!props.values || props.values.length == 0} />
+            {props.pagination != null && props.pagination != undefined ? <PaginationButtons nextDisable={!props.values || props.values.length == 0} prefix={props.pagination}/> : null}
         </div>
     )
 
@@ -224,7 +224,13 @@ GeneralAdminTableView.propTypes = {
     title: PropTypes.string.isRequired,
     tableType: PropTypes.string.isRequired,
     values: PropTypes.arrayOf(PropTypes.object),
-    search: PropTypes.string
+    search: PropTypes.string,
+    pagination: PropTypes.string
+}
+
+GeneralAdminTableView.defaultProps = {
+    pagination: "",
+    search: ""
 }
 
 const mapStateToProps = (state) => ({
