@@ -41,9 +41,6 @@ function PaginationButtons( props ) {
   
     return (
         <div className='align-all-buttons'>
-            {searchParams.get("pageNum") == -1 ? 
-            <button className='button' onClick={handleLessClick}>Show Less</button> :
-
             <div className="prev-next-buttons">
                 {searchParams.get(pageNumWithPrefix) == -1 ? 
                 <button onClick={handleLessClick}>Show Less</button> 
@@ -56,7 +53,6 @@ function PaginationButtons( props ) {
             <button className='button' onClick={handleAllClick} >Show All</button>
                 </div>}
             </div>
-            }
         </div>
     )
 

@@ -15,8 +15,6 @@ import { getStudents } from '../../../actions/students';
 import GeneralAdminTableView from '../components/views/GeneralAdminTableView';
 import isAdmin from '../../../utils/user';
 
-
-
 function AdminUserDetails(props) {
   const navigate = useNavigate();
   const param = useParams();
@@ -49,7 +47,7 @@ function AdminUserDetails(props) {
   useEffect(() => {
     props.getUser(param.id);
   }, []);
-    
+
   return (
     <>  
         <SidebarSliding/>
@@ -86,15 +84,16 @@ function AdminUserDetails(props) {
           </div>
 
           <div className='left-content'>
-          {
-            props.user.groups.includes(1)? <div></div>:
-            <div className='info-fields-table'>
-                <h2>List of Students: </h2>
-                <div>
-                  <GeneralAdminTableView values={props.students} tableType='student' title='Students' search={null} />
-                </div>
-            </div>
-          } 
+            {
+              props.user.groups.includes(1)? <div></div>:
+              <div className='info-fields-table'>
+                  <h2>List of Students: </h2>
+                  <div>
+                    <GeneralAdminTableView values={props.students} tableType='student' title='Students' search={null} />
+                    <br></br>
+                  </div>
+              </div>
+            } 
           </div>
           </div>
     </>

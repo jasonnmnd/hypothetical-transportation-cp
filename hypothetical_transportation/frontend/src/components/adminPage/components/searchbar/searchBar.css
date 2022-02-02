@@ -9,6 +9,8 @@
   align-items: baseline;
   gap: 20px;
   padding-top: 30px;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .search .search-inner {
