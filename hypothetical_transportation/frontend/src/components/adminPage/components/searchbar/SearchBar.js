@@ -42,7 +42,8 @@ function SearchBar(props){
                         <select value={values.sort_by} onChange={(e) => setValue({ ...values, sort_by: e.target.value })}>
                         <option value={""} key={"empty"}></option>
                         {props.sortBy.map((b,i)=>{
-                            return !b.includes("-")? <option value={b} key={i}>{(b.includes("__")? b.split("__")[0] : b )+ " Asc"}</option>:<option value={b} key={i}>{(b.includes("__")? b.split("__")[0]:b).slice(1,) + " Dsc"}</option>
+                            // return !b.includes("-")? <option value={b} key={i}>{(b.includes("__")? b.split("__")[0] : b )+ " Asc"}</option>:<option value={b} key={i}>{(b.includes("__")? b.split("__")[0]:b).slice(1,) + " Dsc"}</option>
+                            return <option value={b.key} key={i}>{b.text}</option>
                         })} 
                         </select>
                     </div>
@@ -57,8 +58,8 @@ function SearchBar(props){
                         <h3>Filter By:</h3>
                         <select value={values.filter_by} onChange={(e) => setValue({ ...values, filter_by: e.target.value })}>
                         <option value={""} key={"empty"}></option>
-                        {props.buttons.filter(k=>k!=="routes"&&k!=="school"&&k!=="groups"&&k!=="num_student").map((b,i)=>{
-                            return <option value={b} key={i}>{b}</option>
+                        {props.buttons.map((b,i)=>{
+                            return <option value={b.key} key={i}>{b.text}</option>
                         })}
                     </select>
                     </div>
@@ -84,8 +85,14 @@ function SearchBar(props){
 
 
 SearchBar.propTypes = {
-    buttons: PropTypes.arrayOf(PropTypes.string),
-    sortBy: PropTypes.arrayOf(PropTypes.string),
+    buttons: PropTypes.arrayOf(PropTypes.shape({
+        key: PropTypes.string,
+        text: PropTypes.string
+    })),
+    sortBy: PropTypes.arrayOf(PropTypes.shape({
+        key: PropTypes.string,
+        text: PropTypes.string
+    })),
     search: PropTypes.string
   }
   

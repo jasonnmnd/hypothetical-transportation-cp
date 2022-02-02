@@ -52,11 +52,13 @@ function GeneralEditUserForm(props) {
         }
         if(props.action == "edit"){
             props.updateUser(createVals, param.id);
+            navigate(`/admin/users`)
         }
         else{
             props.register(createVals);
+            navigate(`/admin/new_student`)
         }
-        navigate(`/admin/`)
+        
     }
 
 

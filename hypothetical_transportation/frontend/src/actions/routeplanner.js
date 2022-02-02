@@ -1,6 +1,6 @@
 import axios from "axios";
 import { tokenConfig } from "./auth";
-import { returnErrors } from "./messages";
+import { returnErrors, createMessage } from "./messages";
 import { GET_STUDENTS_IN_ROUTE, GET_STUDENTS_WITHOUT_ROUTE, ADD_ROUTE, DELETE_ROUTE } from './types';
 import { getParameters } from "./utils";
 
@@ -79,6 +79,7 @@ export const getStudentsWithoutRoute = (parameters) => (dispatch, getState) => {
           type: ADD_ROUTE,
           payload: res.data,
         });
+        dispatch(createMessage({ route: 'Route Created' }));
       })
       .catch((err) => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
   };
@@ -88,6 +89,7 @@ export const getStudentsWithoutRoute = (parameters) => (dispatch, getState) => {
     axios
       .put(`/api/route/${id}/`,route, tokenConfig(getState))
       .then(res =>{
+        dispatch(createMessage({ route: 'Route Updated' }));
         dispatch({
           type: DELETE_ROUTE,
           payload: parseInt(id)

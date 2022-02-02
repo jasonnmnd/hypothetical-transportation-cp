@@ -95,12 +95,9 @@ export const deleteRoute = (routeID) => (dispatch, getState) => {
   axios
     .delete(`/api/route/${routeID}/`, tokenConfig(getState))
     .then(res => {
+      dispatch(createMessage({ route: 'Route Deleted' }));
       dispatch({
         type: DELETE_ROUTE,
-        payload: parseInt(id)
-      });
-      dispatch({
-        type: DELETE_ITEM,
         payload: parseInt(id)
       });
     })

@@ -52,12 +52,9 @@ export const deleteStudent = (id) => (dispatch, getState) => {
   axios
     .delete(`/api/student/${id}/`, tokenConfig(getState))
     .then(res => {
+      dispatch(createMessage({ student: 'Student Deleted' }));
       dispatch({
         type: DELETE_STUDENT,
-        payload: parseInt(id)
-      });
-      dispatch({
-        type: DELETE_ITEM,
         payload: parseInt(id)
       });
     })
@@ -69,6 +66,7 @@ export const addStudent = (student) => (dispatch, getState) => {
   axios
     .post('/api/student/', student, tokenConfig(getState))
     .then((res) => {
+      dispatch(createMessage({ student: 'Student Created' }));
       dispatch({
         type: ADD_STUDENT,
         payload: res.data,
@@ -81,6 +79,7 @@ export const updateStudent = (student, id) => (dispatch, getState) => {
   axios
           .put(`/api/student/${id}/`,student, tokenConfig(getState))
           .then(res =>{
+            dispatch(createMessage({ student: 'Student Updated' }));
             dispatch({
               type: DELETE_STUDENT,
               payload: parseInt(id)
