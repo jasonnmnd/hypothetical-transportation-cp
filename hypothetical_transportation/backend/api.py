@@ -93,7 +93,7 @@ class RouteViewSet(viewsets.ModelViewSet):
         IsAdminOrReadOnly
         # permissions.IsAuthenticated
     ]
-    filter_backends = [DjangoFilterBackend, DynamicSearchFilter, StudentCountShortCircuitFilter, filters.OrderingFilter]
+    filter_backends = [DjangoFilterBackend, DynamicSearchFilter, StudentCountShortCircuitFilter]
     filterset_fields = get_filter_dict(Route)
     ordering_fields = ['school__name', 'name', 'students', 'id']
     ordering = 'id'
