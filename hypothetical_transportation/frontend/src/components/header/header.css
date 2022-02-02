@@ -42,6 +42,12 @@
   background-color: #0020d6;
 }
 
+.divider50px {
+  width: 200px;
+  height: auto;
+  display: inline-block;
+}
+
 .divider15px {
   width: 15px;
   height: auto;

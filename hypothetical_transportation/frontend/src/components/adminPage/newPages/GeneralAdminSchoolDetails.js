@@ -84,7 +84,7 @@ function GeneralAdminSchoolDetails(props) {
               <Link to={`/admin/route/plan/${props.school.id}`}>
                 <button>Create New Route for This School</button>
             </Link>
-            <button onClick={() => navigate(-1)} className='button'>Go Back</button>
+            {/* <button onClick={() => navigate(-1)} className='button'>Go Back</button> */}
         </div>
           <div className='left-content'>
               <div className='info-fields'>

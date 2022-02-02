@@ -61,7 +61,7 @@ function AdminUserDetails(props) {
                     <button onClick={() => {
                       setOpenModal(true);
                     }}>Delete User</button>
-                    <button onClick={() => navigate(-1)} className='button'>Go Back</button>
+                    {/* <button onClick={() => navigate(-1)} className='button'>Go Back</button> */}
           </div>
           <div className='left-content'>
                   <div className='info-fields'>

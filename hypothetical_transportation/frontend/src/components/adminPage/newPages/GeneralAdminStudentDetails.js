@@ -35,7 +35,7 @@ function GeneralAdminStudentDetails(props) {
                   <button onClick={() => {
                     setOpenModal(true);
                   }}>Delete Student</button>
-              <button onClick={() => navigate(-1)} className='button'>Go Back</button>
+              {/* <button onClick={() => navigate(-1)} className='button'>Go Back</button> */}
         </div>
 
         <div className='left-content'>
