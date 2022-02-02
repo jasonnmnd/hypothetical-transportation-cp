@@ -56,7 +56,7 @@ function GeneralManageStudentPage(props) {
   const changeSchool = (e)=>{
     setObj({...obj, ["school"]:e.target.value, ["routes"]:""})
 
-    props.getRoutesByID({school: e.target.value});
+    // props.getRoutesByID({school: e.target.value});
   }
 
   const getTitle = () => {
@@ -70,11 +70,11 @@ function GeneralManageStudentPage(props) {
     if(props.action==="edit"){
       props.getStudent(param.id);
       setObj({...props.student, ["guardian"]:props.student.guardian.id,["school"]:props.student.school.id,["routes"]:props.student.routes?props.student.routes.id:null})
-      props.getRoutesByID({school: props.student.school.id}) // Normal to get an api request error on first load
+      // props.getRoutesByID({school: props.student.school.id}) // Normal to get an api request error on first load
     }
-    else{
-      props.getRoutesByID({school: obj.school})
-    }
+    // else{
+    //   props.getRoutesByID({school: obj.school})
+    // }
     
   }, []);
 
@@ -139,7 +139,7 @@ function GeneralManageStudentPage(props) {
                       </label>
                   </div>
 
-                  <div className="form-group">
+                  {/* <div className="form-group">
                       <label>
                         <label>Route</label>
                         <select value={obj.routes!==null &&obj.routes!==undefined ? obj.routes.id:"null"} onChange={(e) => setObj({ ...obj, ["routes"]: e.target.value })}>
@@ -149,7 +149,7 @@ function GeneralManageStudentPage(props) {
                           }):null}
                         </select>
                       </label>
-                  </div>
+                  </div> */}
 
                     <div className="divider15px" />
                     
