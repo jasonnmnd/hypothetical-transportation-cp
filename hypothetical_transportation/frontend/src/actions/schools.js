@@ -1,13 +1,29 @@
 import axios from "axios";
 import { GET_SCHOOLS, POPULATE_TABLE, GET_SCHOOL, DELETE_SCHOOL, DELETE_ITEM, ADD_SCHOOL } from "./types"; 
 import { tokenConfig } from './auth';
+import { pageSize } from "./utils";
 
 import { createMessage, returnErrors } from './messages';
 //GET SCHOOLS
-export const getSchools = () => (dispatch, getState) => {
-
+export const getSchools = (parameters) => (dispatch, getState) => {
+  let config = tokenConfig(getState);
+  if(parameters){
+    //config.params = {}
+    if(parameters.pageNum != null && parameters.pageNum !== undefined){
+      const {pageNum, ...preParams} = parameters
+      config.params = {
+        limit: pageSize,
+        offset: pageSize * (pageNum-1),
+        ...preParams
+      }
+    }
+    else{
+      config.params = parameters
+    }
+    
+  }
     axios
-    .get('/api/school/', tokenConfig(getState))
+    .get('/api/school/', config)
     .then((res) => {
         dispatch({
             type: GET_SCHOOLS,

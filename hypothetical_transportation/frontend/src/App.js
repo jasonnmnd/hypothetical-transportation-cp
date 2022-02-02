@@ -6,11 +6,9 @@ import { Routes, Route, BrowserRouter} from "react-router-dom";
 import LoginForm from "./components/loginPage/LoginForm.js"
 import AccountPage from "./components/accountPage/AccountPage";
 import GeneralParentStudentDetails from "./components/parentPage/pages/GeneralParentStudentDetails";
-import AdminRoutePlanner from "./components/adminPage/pages/AdminRoutePlanner";
 import PrivateRoute from "./components/common/PrivateRoute";
 import { connect } from "react-redux";
 import Alerts from "./components/alerts/Alerts";
-import GeneralTable from "./components/common/GeneralTable";
 import GeneralAdminUsersPage from "./components/adminPage/newPages/GeneralAdminUsersPage";
 import GeneralAdminStudentsPage from "./components/adminPage/newPages/GeneralAdminStudentsPage";
 import GeneralAdminSchoolsPage from "./components/adminPage/newPages/GeneralAdminSchoolsPage";
