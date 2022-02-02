@@ -23,19 +23,19 @@ function Header(props){
             
             {props.shouldShowOptions &&
             <div className="header-button">
-                <button onClick={props.logout}>Logout</button>
-            </div> 
-            }
-
-            <div className="divider15px"></div>
-
-            {props.shouldShowOptions &&
-            <div className="header-button">
                 <Link to={"/account"}>
                   <button>Account</button> 
                 </Link>
             </div>  
             }
+            <div className="divider15px"></div>
+            {props.shouldShowOptions &&
+            <div className="header-button">
+                <button onClick={props.logout}>Logout</button>
+            </div> 
+            }
+
+            
         </div>
             
     )
