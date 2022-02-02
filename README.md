@@ -56,14 +56,28 @@ python3 manage.py migrate
 ```
 
 #### Seeding the Database
+
 _Create an admin:_
+
 ```
 python3 manage.py initadmin
 ```
+
+_Seeding the Database with random data:_
+
 ```
 python3 manage.py flush
-python3 manage.py loaddata backend/fixtures/data.json
+python3 manage.py seeddb /*Optional Flags*/
 ```
+Optional Flags:
+
+--numusers [param] (default=100)
+
+--numroutes [param] (default=400)
+
+--numschools [param] (default=400)
+
+--numstudents [param] (default=1000)
 
 #### Starting the Server
 

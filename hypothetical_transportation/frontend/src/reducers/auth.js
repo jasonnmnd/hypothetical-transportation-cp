@@ -57,7 +57,6 @@ export default function(state = initialState, action) {
                 isLoading: false,
                 user: null
             }
-        case REGISTER_SUCCESS:
         case RESET_PASSWORD_SUCCESS:
             return {
                 ...state,
@@ -68,6 +67,7 @@ export default function(state = initialState, action) {
                 ...state,
                 successfulPasswordReset: false
             }
+        case REGISTER_SUCCESS:
         default:
             return state;
     }

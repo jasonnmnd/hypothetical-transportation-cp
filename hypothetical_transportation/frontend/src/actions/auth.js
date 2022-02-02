@@ -60,19 +60,9 @@ export const login = (email, password) => (dispatch) => {
 }
 
 // REGISTER USER
-export const register = ({ username, password, email }) => (dispatch) => {
-    // Headers
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
-  
-    // Request Body
-    const body = JSON.stringify({ username, email, password });
-  
+export const register = (user) => (dispatch, getState) => {
     axios
-      .post('/api/auth/register', body, config)
+      .post('/api/auth/register', user, tokenConfig(getState))
       .then((res) => {
         dispatch({
           type: REGISTER_SUCCESS,
@@ -81,9 +71,9 @@ export const register = ({ username, password, email }) => (dispatch) => {
       })
       .catch((err) => {
         dispatch(returnErrors(err.response.data, err.response.status));
-        dispatch({
-          type: REGISTER_FAIL,
-        });
+        // dispatch({
+        //   type: REGISTER_FAIL,
+        // });
       });
   };
 

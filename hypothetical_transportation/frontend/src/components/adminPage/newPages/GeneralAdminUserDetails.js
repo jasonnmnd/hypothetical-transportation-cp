@@ -87,7 +87,7 @@ function AdminUserDetails(props) {
                 }     
 
                 <div className='edit-delete-buttons'>
-                  <Link to={`/admin/edit/${getUserType()}/${props.user.id}`}><button>Edit User</button></Link>
+                  <Link to={`/admin/edit/user/${props.user.id}`}><button>Edit User</button></Link>
                   <button onClick={() => {
                     setOpenModal(true);
                   }}>Delete User</button>

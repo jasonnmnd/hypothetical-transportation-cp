@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import SearchBar from '../searchbar/SearchBar';
 import GeneralTable from '../../../common/GeneralTable';
+import "../../adminPage.css";
 
 const userColumns = [
     {

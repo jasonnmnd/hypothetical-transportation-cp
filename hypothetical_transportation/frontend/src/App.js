@@ -5,13 +5,11 @@ import AdminPage from "./components/adminPage/AdminPage";
 import { Routes, Route, BrowserRouter} from "react-router-dom";
 import LoginForm from "./components/loginPage/LoginForm.js"
 import AccountPage from "./components/accountPage/AccountPage";
-import AdminEditPage from "./components/adminPage/pages/AdminEditPage";
 import GeneralParentStudentDetails from "./components/parentPage/pages/GeneralParentStudentDetails";
 import AdminRoutePlanner from "./components/adminPage/pages/AdminRoutePlanner";
 import PrivateRoute from "./components/common/PrivateRoute";
 import { connect } from "react-redux";
 import Alerts from "./components/alerts/Alerts";
-import GeneralTable from "./components/common/GeneralTable";
 import GeneralAdminUsersPage from "./components/adminPage/newPages/GeneralAdminUsersPage";
 import GeneralAdminStudentsPage from "./components/adminPage/newPages/GeneralAdminStudentsPage";
 import GeneralAdminSchoolsPage from "./components/adminPage/newPages/GeneralAdminSchoolsPage";
@@ -21,30 +19,10 @@ import GeneralAdminStudentDetails from "./components/adminPage/newPages/GeneralA
 import GeneralAdminSchoolDetails from "./components/adminPage/newPages/GeneralAdminSchoolDetails";
 import GeneralAdminRouteDetails from "./components/adminPage/newPages/GeneralAdminRouteDetails";
 import GeneralManageStudentPage from "./components/adminPage/newPages/GeneralManageStudentPage";
-import AdminNewPage from "./components/adminPage/pages/AdminNewPage";
 import GeneralResetPasswordPage from "./components/accountPage/GeneralResetPasswordPage";
-
-const testingTableProps = [
-  {
-    username: "fred",
-    email: "aCat@animal.com",
-    school: "hunting school",
-    routeDesc: "this is the route of fred"
-  },
-  {
-    username: "allie",
-    email: "alsoaCat@animal.com",
-    school: "tracking school",
-    routeDesc: "this is the route of allie"
-  },
-  {
-    username: "max",
-    email: "adog@animal.com",
-    school: "fetching school",
-    routeDesc: "max stole this route"
-  }
-]
-
+import GeneralEditSchoolForm from "./components/adminPage/newPages/GeneralEditSchoolForm";
+import GeneralEditUserForm from "./components/adminPage/newPages/GeneralEditUserForm";
+import GeneralAdminRoutePlanner from "./components/adminPage/newPages/GeneralAdminRoutePlanner";
 
 function App( props ) {
   //Handle main login accross the whole app
@@ -54,7 +32,6 @@ function App( props ) {
       <BrowserRouter>
         <Alerts/>
         <Routes>
-          <Route exact path="/testingTable" element={<GeneralTable rows={testingTableProps}/>}></Route>
           <Route exact path="/" element={<LoginForm />}></Route>
           <Route path="/parent/*" element={<PrivateRoute><ParentPage /></PrivateRoute>}></Route>
           <Route exact path="/account" element={<PrivateRoute><AccountPage/></PrivateRoute>}></Route>
@@ -63,18 +40,20 @@ function App( props ) {
           <Route path="/admin/*" element={<PrivateRoute><AdminPage/></PrivateRoute>}></Route>
           <Route exact path="/admin/users" element={<PrivateRoute><GeneralAdminUsersPage /></PrivateRoute>}></Route>
           <Route exact path="/admin/students" element={<PrivateRoute><GeneralAdminStudentsPage /></PrivateRoute>}></Route>
-          <Route exact path="/admin/edit/:column/:id" element={<PrivateRoute><AdminEditPage /></PrivateRoute>}></Route>
+          <Route exact path="/admin/edit/school/:id" element={<PrivateRoute><GeneralEditSchoolForm action="edit" /></PrivateRoute>}></Route>
+          <Route exact path="/admin/new/school/" element={<PrivateRoute><GeneralEditSchoolForm action="new"/></PrivateRoute>}></Route>
+          <Route exact path="/admin/edit/user/:id" element={<PrivateRoute><GeneralEditUserForm action="edit" /></PrivateRoute>}></Route>
+          <Route exact path="/admin/new/user/" element={<PrivateRoute><GeneralEditUserForm action="new"/></PrivateRoute>}></Route>
           <Route exact path="/admin/schools" element={<PrivateRoute><GeneralAdminSchoolsPage /></PrivateRoute>}></Route>
           <Route exact path="/admin/routes" element={<PrivateRoute><GeneralAdminRoutesPage /></PrivateRoute>}></Route>
           <Route exact path="/admin/user/:id" element={<PrivateRoute><GeneralAdminUserDetails /></PrivateRoute>}/>
           <Route exact path="/admin/student/:id" element={<PrivateRoute><GeneralAdminStudentDetails /></PrivateRoute>}/>
           <Route exact path="/admin/school/:id" element={<PrivateRoute><GeneralAdminSchoolDetails /></PrivateRoute>}/>
           <Route exact path="/admin/route/:id" element={<PrivateRoute><GeneralAdminRouteDetails /></PrivateRoute>}/>
-          <Route exact path="/admin/route/plan/:school_id" element={<PrivateRoute><AdminRoutePlanner action={"new"}/></PrivateRoute>}/>
-          <Route exact path="/admin/route/edit/:school_id/:route_id" element={<PrivateRoute><AdminRoutePlanner action={"edit"}/></PrivateRoute>}/>
+          <Route exact path="/admin/route/plan/:school_id" element={<PrivateRoute><GeneralAdminRoutePlanner action={"new"}/></PrivateRoute>}/>
+          <Route exact path="/admin/route/edit/:school_id/:route_id" element={<PrivateRoute><GeneralAdminRoutePlanner action={"edit"}/></PrivateRoute>}/>
           <Route exact path="/admin/new_student/" element={<PrivateRoute><GeneralManageStudentPage action={"new"} /></PrivateRoute>}/>
           <Route exact path="/admin/edit_student/:id" element={<PrivateRoute><GeneralManageStudentPage action={"edit"}/></PrivateRoute>}/>
-          <Route exact path="admin/new/:column" element={<PrivateRoute><AdminNewPage /></PrivateRoute>}></Route>
         </Routes>
       </BrowserRouter>
     </div>

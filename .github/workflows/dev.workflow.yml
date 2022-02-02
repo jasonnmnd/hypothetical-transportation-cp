@@ -29,4 +29,4 @@ jobs:
             sudo docker login --username ${{ secrets.DOCKERHUB_USERNAME }} --password ${{ secrets.DOCKERHUB_TOKEN }}
             sudo docker-compose -f docker-compose.dev.yml pull
             sudo docker-compose -f docker-compose.dev.yml down --volumes
-            sudo docker-compose -f docker-compose.dev.yml up -d
+            sudo docker-compose -f docker-compose.dev.yml up -d --build
