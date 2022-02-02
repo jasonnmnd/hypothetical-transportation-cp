@@ -3,7 +3,7 @@ import SidebarSliding from '../components/sidebar/SidebarSliding';
 import Header from '../../header/Header';
 import AdminTable from "../components/table/AdminTable";
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { getStudents, searchStudents } from '../../../actions/students';
@@ -11,20 +11,22 @@ import GeneralAdminTableView from '../components/views/GeneralAdminTableView';
 import PaginationButtons from '../../common/PaginationButtons';
 
 function GeneralAdminStudentsPage(props) {
-
   const title = "Students"
   const tableType = "student"
-  
-  const [currentPage, setPage] = useState(0)
 
+  let [searchParams, setSearchParams] = useSearchParams();
+  const [currentPage, setPage] = useState(0)
+  
   useEffect(() => {
-    props.getStudents(currentPage);
-  }, [currentPage]);
+
+    let paramsToSend = Object.fromEntries([...searchParams]);
+    props.getStudents(paramsToSend);
+  }, [currentPage, searchParams]);
 
 
   const search = (value)=>{
     //somehow get backend to update data (with usestate?)
-    props.searchStudents(value.filter_by, value.value, value.sort_by)
+    //props.searchStudents(value.filter_by, value.value, value.sort_by, currentPage)
   }
 
   return (
@@ -37,8 +39,7 @@ function GeneralAdminStudentsPage(props) {
               <button className='button'>Add New Student</button>
             </Link>          
           </div>
-          <GeneralAdminTableView values={props.students} title={title} tableType={tableType} search={search} />
-          <PaginationButtons currentPage={currentPage} setCurrentPage={setPage}/>
+          <GeneralAdminTableView values={props.students} title={title} tableType={tableType} search={search} currentPage={currentPage} setCurrentPage={setPage}/>
         </div>
     </div>
     

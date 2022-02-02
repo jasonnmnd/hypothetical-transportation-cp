@@ -2,19 +2,37 @@ import React, { useEffect, useState } from "react";
 import "../../adminPage.css"
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { useSearchParams } from 'react-router-dom';
 
 //input: a list of buttons - filter by options
 //search: takes in 2 inputs? the filter option, and the inputted text
 
 function SearchBar(props){
-    const [values, setValue] = useState({filter_by: "", value:"", sort_by: ""})
+    let [searchParams, setSearchParams] = useSearchParams();
+
+    const getSearchFieldIfExists = (fieldName) => {
+        const fieldVal = searchParams.get(fieldName);
+        if (fieldVal != null && fieldVal !== undefined){
+            return fieldVal;
+        }
+        return ""
+    }
+
+    const [values, setValue] = useState({filter_by: getSearchFieldIfExists("search_fields"), value: getSearchFieldIfExists("search"), sort_by: getSearchFieldIfExists("ordering")})
     
     const searchHandler = (e)=>{
         e.preventDefault();
+        setSearchParams({
+            ...Object.fromEntries([...searchParams]),
+            ordering: values.sort_by,
+            search: values.value,
+            search_fields: values.filter_by,
+            pageNum: 1
+        })
+        
         console.log(values);
         props.search(values);
     }
-
     return(
         <form className="search">
             <div className="search-inner">
