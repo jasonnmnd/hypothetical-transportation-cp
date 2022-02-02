@@ -4,7 +4,7 @@ export const getQueryStringsFormatted = (idObj) => {
     return queryString.substring(0, queryString.length - 1);
 }
 
-export const pageSize = 3;
+export const pageSize = 10;
 
 export const getOffsetString = (pageNum) => {
     if(pageNum != -1){

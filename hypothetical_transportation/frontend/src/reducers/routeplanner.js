@@ -1,4 +1,4 @@
-import { GET_STUDENTS_IN_ROUTE, GET_STUDENTS_WITHOUT_ROUTE } from '../actions/types.js';
+import { GET_STUDENTS_IN_ROUTE, GET_STUDENTS_WITHOUT_ROUTE, ADD_ROUTE } from '../actions/types.js';
 
 
 const initialState = {
@@ -8,6 +8,14 @@ const initialState = {
 
     studentsWithoutRoute: {
         results: [],
+    },
+
+    postedRoute:{
+        id: 0,
+        name: "",
+        description: "",
+        school: "",
+        schoolName: ""
     }
 }
 
@@ -22,6 +30,11 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 studentsWithoutRoute: action.payload
+            }
+        case ADD_ROUTE:
+            return{
+                ...state,
+                postedRoute: action.payload
             }
         default: 
             return state;

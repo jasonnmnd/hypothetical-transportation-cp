@@ -33,11 +33,6 @@ function ParentPage(props) {
               <h2>
                 Welcome,<span>{props.user.full_name}</span>
               </h2>
-              <div className="button-spacing">
-                <Link to={"/account"}>
-                    <button>Account</button>
-                </Link>
-              </div>
             </div>
             <br></br>
 

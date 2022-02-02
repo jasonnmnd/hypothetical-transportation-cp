@@ -71,8 +71,8 @@ function GeneralEditUserForm(props) {
     
     return (
         <div>
-             <Header textToDisplay={"Admin Portal"} shouldShowOptions={true}></Header>
             <SidebarSliding/>
+            <Header textToDisplay={"Admin Portal"} shouldShowOptions={true}></Header>
             <div className='admin-edit-page'>  
             {/* <div className='confirm_location'>{openModal && <AssistedLocationModal closeModal={setOpenModal} handleConfirmAddress={handleConfirmAddress} address={fieldValues.address}></AssistedLocationModal>}</div> */}
             <form>
