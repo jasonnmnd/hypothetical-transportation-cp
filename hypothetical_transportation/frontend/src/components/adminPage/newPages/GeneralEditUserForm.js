@@ -75,7 +75,7 @@ function GeneralEditUserForm(props) {
     return (
         <div>
             <SidebarSliding/>
-            <Header textToDisplay={"Modify User"} shouldShowOptions={true}></Header>
+            <Header textToDisplay={`${props.action} user`} shouldShowOptions={true}></Header>
             <div className='admin-edit-page'>  
             {/* <div className='confirm_location'>{openModal && <AssistedLocationModal closeModal={setOpenModal} handleConfirmAddress={handleConfirmAddress} address={fieldValues.address}></AssistedLocationModal>}</div> */}
             <form>
