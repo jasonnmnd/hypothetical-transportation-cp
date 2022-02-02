@@ -24,8 +24,12 @@ function GeneralAdminSchoolDetails(props) {
   const [openModal, setOpenModal] = useState(false);
 
   const handleConfirmDelete = (schoolName) => {
-    props.deleteSchool(param.id)
-    navigate(`/admin/schools/`)
+    if (props.school.name === schoolName) {
+      props.deleteSchool(param.id)
+      navigate(`/admin/schools/`)
+    } else {
+      alert("School name does not match")
+    }
   }
 
   let [searchParams, setSearchParams] = useSearchParams();
