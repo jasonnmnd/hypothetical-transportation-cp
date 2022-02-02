@@ -11,7 +11,7 @@ import { GET_USERS, ADD_USER, DELETE_USER, POPULATE_TABLE, GET_USER, DELETE_ITEM
 export const getUsers = (parameters) => (dispatch, getState) => {
   let config = tokenConfig(getState);
   if(parameters){
-    if(parameters.pageNum != null && parameters.pageNum !== undefined){
+    if(parameters.pageNum != null && parameters.pageNum !== undefined  && parameters.pageNum != -1){
       const {pageNum, ...preParams} = parameters
       config.params = {
         limit: pageSize,

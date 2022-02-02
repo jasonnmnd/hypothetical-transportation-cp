@@ -8,7 +8,7 @@ import { getQueryStringsFormatted, pageSize } from "./utils";
 export const getRoutes = (parameters) => (dispatch, getState) => {
   let config = tokenConfig(getState);
   if(parameters){
-    if(parameters.pageNum != null && parameters.pageNum !== undefined){
+    if(parameters.pageNum != null && parameters.pageNum !== undefined  && parameters.pageNum != -1){
       const {pageNum, ...preParams} = parameters
       config.params = {
         limit: pageSize,
