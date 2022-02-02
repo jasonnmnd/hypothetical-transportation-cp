@@ -66,7 +66,7 @@ class UserViewSet(viewsets.ModelViewSet):
     ]
     filter_backends = [DjangoFilterBackend, DynamicSearchFilter, filters.OrderingFilter]
     filterset_fields = get_filter_dict(get_user_model())
-    ordering_fields = ['email', 'full_name']
+    ordering_fields = ['email', 'full_name', 'id']
     ordering = 'id'
 
     def get_serializer_class(self):
@@ -93,9 +93,9 @@ class RouteViewSet(viewsets.ModelViewSet):
         IsAdminOrReadOnly
         # permissions.IsAuthenticated
     ]
-    filter_backends = [DjangoFilterBackend, DynamicSearchFilter, StudentCountShortCircuitFilter]
+    filter_backends = [DjangoFilterBackend, DynamicSearchFilter, StudentCountShortCircuitFilter, filters.OrderingFilter]
     filterset_fields = get_filter_dict(Route)
-    ordering_fields = ['school__name', 'name', 'students']
+    ordering_fields = ['school__name', 'name', 'students', 'id']
     ordering = 'id'
 
     def get_serializer_class(self):
@@ -126,7 +126,7 @@ class SchoolViewSet(viewsets.ModelViewSet):
     ]
     filter_backends = [DjangoFilterBackend, DynamicSearchFilter, filters.OrderingFilter]
     filterset_fields = get_filter_dict(School)
-    ordering_fields = ['name']
+    ordering_fields = ['name', 'id']
     ordering = 'id'
 
     # search_fields = [self.request.querystring]
@@ -153,7 +153,7 @@ class StudentViewSet(viewsets.ModelViewSet):
     ]
     filter_backends = [DjangoFilterBackend, DynamicSearchFilter, filters.OrderingFilter]
     filterset_fields = get_filter_dict(Student)
-    ordering_fields = ['school__name', 'student_id', 'full_name']
+    ordering_fields = ['school__name', 'student_id', 'full_name', 'id']
     ordering = 'id'
 
     def get_serializer_class(self):
