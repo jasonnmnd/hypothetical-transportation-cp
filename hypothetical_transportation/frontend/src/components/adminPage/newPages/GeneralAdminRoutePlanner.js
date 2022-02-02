@@ -153,7 +153,7 @@ function GeneralAdminRoutePlanner(props) {
     }
     else{
       axios
-      .put(`/api/route/${route.id}/`,obj, config(props.token))
+      .put(`/api/route/${props.route.id}/`,obj, config(props.token))
       .then(res =>{
         const routeID = res.data.id
         if(tobeadded.length>0){

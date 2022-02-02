@@ -79,7 +79,7 @@ function SearchBar(props){
 SearchBar.propTypes = {
     buttons: PropTypes.arrayOf(PropTypes.string),
     sortBy: PropTypes.arrayOf(PropTypes.string),
-    search: PropTypes.string
+    search: PropTypes.func
   }
   
   const mapStateToProps = (state) => ({
