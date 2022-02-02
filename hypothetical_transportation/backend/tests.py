@@ -320,7 +320,7 @@ class PermissionViews(TransactionTestCase):
                                        {'email': 'user2@gmail.com',
                                         'full_name': 'First Last',
                                         'password': 'wordpass6',
-                                        'address': '',
+                                        'address': 'address',
                                         'groups': [],
                                         }),
                                    content_type='application/json',
@@ -331,7 +331,7 @@ class PermissionViews(TransactionTestCase):
                                        {'email': 'user2@gmail.com',
                                         'full_name': 'First Last',
                                         'password': 'wordpass',
-                                        'address': '',
+                                        'address': 'address',
                                         'groups': [],
                                         }),
                                    content_type='application/json',
@@ -371,3 +371,17 @@ class PermissionViews(TransactionTestCase):
                                     content_type='application/json',
                                     HTTP_AUTHORIZATION=f'Token {self.admin_token}')
         self.assertEqual(response.status_code, 400)
+
+    def test_post_address(self):
+        response = self.client.post('/api/auth/register',
+                                    json.dumps(
+                                        {
+                                            'email': 'bob@gmail.com',
+                                            'full_name': 'bob smith',
+                                            'password': 'wordpass',
+                                            'address': '',
+                                            'groups': [],
+                                        }),
+                                    content_type='application/json',
+                                    HTTP_AUTHORIZATION=f'Token {self.admin_token}')
+        self.assertEqual(response.data['address'][0].code, 'blank')
