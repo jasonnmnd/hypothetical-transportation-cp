@@ -41,3 +41,9 @@
 .header-button button:hover {
   background-color: #ffc2c2;
 }
+
+.divider15px {
+  width: 15px;
+  height: auto;
+  display: inline-block;
+}

@@ -67,6 +67,7 @@ class UserViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend, DynamicSearchFilter, filters.OrderingFilter]
     filterset_fields = get_filter_dict(get_user_model())
     ordering_fields = ['email', 'full_name']
+    ordering = 'id'
 
     def get_serializer_class(self):
         if self.action == 'partial_update' or self.action == 'update':
@@ -95,6 +96,7 @@ class RouteViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend, DynamicSearchFilter, StudentCountShortCircuitFilter]
     filterset_fields = get_filter_dict(Route)
     ordering_fields = ['school__name', 'name', 'students']
+    ordering = 'id'
 
     def get_serializer_class(self):
         if self.action == 'list' or self.action == 'retrieve':
@@ -125,6 +127,7 @@ class SchoolViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend, DynamicSearchFilter, filters.OrderingFilter]
     filterset_fields = get_filter_dict(School)
     ordering_fields = ['name']
+    ordering = 'id'
 
     # search_fields = [self.request.querystring]
 
@@ -151,6 +154,7 @@ class StudentViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend, DynamicSearchFilter, filters.OrderingFilter]
     filterset_fields = get_filter_dict(Student)
     ordering_fields = ['school__name', 'student_id', 'full_name']
+    ordering = 'id'
 
     def get_serializer_class(self):
         if self.action == 'list' or self.action == 'retrieve':
