@@ -15,7 +15,7 @@ export const getStudents = (parameters) => (dispatch, getState) => {
   let config = tokenConfig(getState);
   if(parameters){
     //config.params = {}
-    if(parameters.pageNum != null && parameters.pageNum !== undefined){
+    if(parameters.pageNum != null && parameters.pageNum !== undefined && parameters.pageNum != -1){
       const {pageNum, ...preParams} = parameters
       config.params = {
         limit: pageSize,
