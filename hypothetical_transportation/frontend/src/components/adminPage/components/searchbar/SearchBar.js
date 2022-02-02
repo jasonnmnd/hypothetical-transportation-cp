@@ -27,7 +27,7 @@ function SearchBar(props){
             [`${props.search}ordering`]: values.sort_by,
             [`${props.search}search`]: values.value,
             [`${props.search}search_fields`]: values.filter_by,
-            [`${props.search}pageNum`]: 1
+            [`${props.search}pageNum`]: searchParams.get(`${props.search}pageNum`) == -1 ? -1 : 1
         })
     }
     return(
