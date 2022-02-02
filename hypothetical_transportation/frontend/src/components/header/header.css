@@ -29,7 +29,7 @@
   display: inline-block;
   padding: 10px 15px;
   border-radius: 8px;
-  background-color: #ff4444;
+  background-color: #000a41;
   background-size: 200%;
   background-position: 0%;
   transition: 0.4s;
@@ -39,7 +39,13 @@
 }
 
 .header-button button:hover {
-  background-color: #ffc2c2;
+  background-color: #0020d6;
+}
+
+.divider50px {
+  width: 200px;
+  height: auto;
+  display: inline-block;
 }
 
 .divider15px {
