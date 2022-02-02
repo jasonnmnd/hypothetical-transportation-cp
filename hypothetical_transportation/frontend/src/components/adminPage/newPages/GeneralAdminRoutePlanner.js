@@ -3,11 +3,8 @@ import Header from '../../header/Header';
 import SidebarSliding from '../components/sidebar/SidebarSliding';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import MapContainer from '../../maps/MapContainer';
-import AdminTable from '../components/table/AdminTable';
 import { connect } from 'react-redux';
 import PropTypes, { string } from 'prop-types';
-import axios from 'axios';
-import config from '../../../utils/config';
 import { getRouteInfo } from '../../../actions/routes';
 import {getStudentsInRoute, getStudentsWithoutRoute,addStudentToRoute, removeStudentFromRoute, addRoute, updateRoute} from '../../../actions/routeplanner';
 import GeneralAdminTableView from '../components/views/GeneralAdminTableView';
@@ -147,79 +144,86 @@ function GeneralAdminRoutePlanner(props) {
     
     <>
         <SidebarSliding/>
-        <Header textToDisplay={"Admin Portal"} shouldShowOptions={true}></Header>
-        <div className='middle-justify'>
-          <div className='admin-details'>
-           <h1>Route Planner</h1>
+        <Header textToDisplay={"Route Planner"} shouldShowOptions={true}></Header>
+        <div className='header-padding'>
 
-            <div className='info-fields'>
-              <h2>School (Blue Pin): </h2>
-                <Link to={`/admin/school/${param.school_id}`}><button className='button'><h3>{props.school.name}</h3></button></Link>
-            </div>
-
-            <h2>Map of School and Students</h2>
-            {props.action==="new"?
-              <MapContainer studentData={props.studentsWithoutRoute} schoolData={props.school}/>:
-              <MapContainer studentData={props.studentsWithoutRoute} schoolData={props.route.school} routeStudentData={props.studentsInRoute}/>
-            }
-
-            {props.action==="edit"?
-              <div>
-                <h2>Students currently in {props.route.name} (Green pin)</h2>
-                <GeneralAdminTableView values={props.studentsInRoute.filter(i=>!toberemoved.includes(i))} tableType={"student"} title={`Students currently in ${props.route.name} (Green pin)`} actionName={"Remove from Route"} action={removeFromRoute} search={STUDENTS_IN_ROUTE_PREFIX} pagination={STUDENTS_IN_ROUTE_PREFIX} />
-                <h2>Students To Be Remove from Route</h2>
-                <GeneralAdminTableView values={toberemoved} tableType={"student"} title={`Students To Be Remove from Route`} actionName={"Remove from Selected"} action={removeFromREMOVE} search={null} pagination={null}/>
-              </div>:
-              <div></div>
-            }
-
-            <div>
-                <h2>Students To Be Added into Route</h2>
-                <GeneralAdminTableView values={tobeadded} tableType={"student"} title={`Students To Be Added into Route`} actionName={"Remove from Selected"} action={removeFromADD} search={null} pagination={null}/>
-                
-                <h2>Students at {props.route.school.name} with no route</h2>
-                <GeneralAdminTableView values={props.studentsWithoutRoute.filter(i=>!tobeadded.includes(i))} tableType={"student"} title={`Students at ${props.route.school.name} with no route`} actionName={"Add to Route"} action={addToRoute} search={STUDENTS_WO_ROUTE_PREFIX} pagination={STUDENTS_WO_ROUTE_PREFIX}/>
-            </div>
-
-            <form>
-              <div className="form-inner">
-                <h2>{props.action==="new" ? "New Route" : "Edit Route"}</h2>
-
-                <div className="form-group">
-                  <label htmlFor={"Full Name"}>Name</label>
-                  <input
-                      className="input"
-                      type={"Full Name"}
-                      name={"Full Name"}
-                      id={"Full Name"}
-                      value={obj.name}
-                      onChange={(e)=>{
-                          setObj({...obj, ["name"]: e.target.value})
-                      }}
-                  />
+          <div className='left-content'>
+              <div className='info-fields'>
+                <h2>School (Blue Pin): </h2>
+                  <Link to={`/admin/school/${param.school_id}`}><button className='button'><h3>{props.school.name}</h3></button></Link>
               </div>
 
-                <div className="form-group">
-                  <label htmlFor={"Description"}>Description</label>
-                  <textarea
-                      className="input"
-                      type={"Description"}
-                      name={"Description"}
-                      id={"Description"}
-                      value={obj.description}
-                      onChange={(e)=>{setObj({...obj, ["description"]: e.target.value})}}
-                  />
+              <h2>Map of School and Students</h2>
+              {props.action==="new"?
+                <MapContainer studentData={props.studentsWithoutRoute} schoolData={props.school}/>:
+                <MapContainer studentData={props.studentsWithoutRoute} schoolData={props.route.school} routeStudentData={props.studentsInRoute}/>
+              }
+
+              {props.action==="edit"?
+              <>
+                <div className='shadow-box'>
+                  <h2>Students currently in {props.route.name} (Green pin)</h2>
+                  <GeneralAdminTableView values={props.studentsInRoute.filter(i=>!toberemoved.includes(i))} tableType={"student"} title={`Students currently in ${props.route.name} (Green pin)`} actionName={"Remove from Route"} action={removeFromRoute} search={STUDENTS_IN_ROUTE_PREFIX} pagination={STUDENTS_IN_ROUTE_PREFIX} />
+                </div>
+                <div className='shadow-box'>
+                  <h2>Students To Be Remove from Route</h2>
+                  <GeneralAdminTableView values={toberemoved} tableType={"student"} title={`Students To Be Remove from Route`} actionName={"Remove from Selected"} action={removeFromREMOVE} search={null} pagination={null}/>
+                </div></>:
+                <div></div>
+              }
+          </div>
+
+          <div className='left-content'>
+                  <h2>Students To Be Added into Route</h2>
+                  <GeneralAdminTableView values={tobeadded} tableType={"student"} title={`Students To Be Added into Route`} actionName={"Remove from Selected"} action={removeFromADD} search={null} pagination={null}/>
+          </div>
+
+          <div className='left-content'>
+                  <h2>Students at {props.route.school.name} with no route</h2>
+                  <GeneralAdminTableView values={props.studentsWithoutRoute.filter(i=>!tobeadded.includes(i))} tableType={"student"} title={`Students at ${props.route.school.name} with no route`} actionName={"Add to Route"} action={addToRoute} search={STUDENTS_WO_ROUTE_PREFIX} pagination={STUDENTS_WO_ROUTE_PREFIX}/>
+          </div>
+
+          <div className='left-content'>
+              <form>
+                <div className="form-inner">
+                  <h2>{props.action==="new" ? "New Route" : "Edit Route"}</h2>
+
+                  <div className="form-group">
+                    <label htmlFor={"Full Name"}>Name</label>
+                    <input
+                        className="input"
+                        type={"Full Name"}
+                        name={"Full Name"}
+                        id={"Full Name"}
+                        value={obj.name}
+                        onChange={(e)=>{
+                            setObj({...obj, ["name"]: e.target.value})
+                        }}
+                    />
                 </div>
 
-                
-                <div className="divider15px" />
-                    
-                <button className="button" onClick={submit}>Save</button>
-                <div className="divider15px" />
+                  <div className="form-group">
+                    <label htmlFor={"Description"}>Description</label>
+                    <textarea
+                        className="input"
+                        type={"Description"}
+                        name={"Description"}
+                        id={"Description"}
+                        value={obj.description}
+                        onChange={(e)=>{setObj({...obj, ["description"]: e.target.value})}}
+                    />
+                  </div>
+
+                  
+                  <div className="divider15px" />
+                  <div className='center-buttons'>
+                    <button className="button" onClick={submit}>Save</button>
+                  </div>
+                  <div className="divider15px" />
+                </div>
+              </form>
               </div>
-            </form>
           </div>
-        </div>
     </>
 
     );
