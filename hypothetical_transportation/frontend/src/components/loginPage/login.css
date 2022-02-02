@@ -149,6 +149,7 @@ form textarea {
   color: #fff;
   font-weight: 700;
   cursor: pointer;
+  border-color: #ffae07;
 }
 
 .login-buttons button:hover {

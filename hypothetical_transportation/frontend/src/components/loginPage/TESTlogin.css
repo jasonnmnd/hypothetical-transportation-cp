@@ -1,0 +1,38 @@
+.masthead {
+  min-height: 100vh;
+  position: relative;
+}
+
+.color-overlay {
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.2);
+  height: 100%;
+  width: 100%;
+  mix-blend-mode: normal;
+}
+
+form {
+  background-color: white;
+  box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.login-buttons {
+  display: inline-block;
+  padding: 10px 15px;
+  border-radius: 8px;
+  background-color: #ffae07;
+  background-size: 200%;
+  background-position: 0%;
+  transition: 0.4s;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  border-color: #ffae07;
+}
+
+.login-buttons:hover {
+  background-color: #ffdd99;
+}
