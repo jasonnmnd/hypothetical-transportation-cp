@@ -1,5 +1,10 @@
 .parent-page {
   background-image: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 .parent-page h2 {
@@ -15,7 +20,7 @@
 
 table {
   border-collapse: collapse;
-  width: 60%;
+  width: 100%;
 }
 
 .center {
