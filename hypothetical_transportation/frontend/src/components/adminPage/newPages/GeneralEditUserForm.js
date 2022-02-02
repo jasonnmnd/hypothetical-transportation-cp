@@ -39,7 +39,8 @@ function GeneralEditUserForm(props) {
                 address: props.curUser.address,
                 email: props.curUser.email,
                 groups: props.curUser.groups[0].id
-            })
+            });
+            setAddress(props.curUser.address);
         }
     }, []);
 
@@ -155,7 +156,7 @@ function GeneralEditUserForm(props) {
                   </div>
 
                     <div className="divider15px" />
-                    <AssistedLocationMap address={fieldValues.address} setAddress={setAddress}></AssistedLocationMap>
+                    <AssistedLocationMap address={address} setAddress={setAddress}></AssistedLocationMap>
                     <div className="divider15px" />
                     <div className="center-buttons">
                         <button onClick={submit}>Save</button>
