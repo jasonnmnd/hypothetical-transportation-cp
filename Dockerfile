@@ -7,12 +7,13 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
 # create a new directory called code
-WORKDIR /code
+WORKDIR .
 
 # move requirements into new directory
-COPY requirements.txt /code/
+COPY requirements.txt .
+COPY entrypoint/ .
 
-CMD ["npm", "run", "build"]
+# CMD ["npm", "run", "build"]
 
 # install requirements
 RUN pip install -r requirements.txt

@@ -1,4 +1,4 @@
-# ECE-458
+# ECE-458 LeGoons
 
 Senior design course project!
 
