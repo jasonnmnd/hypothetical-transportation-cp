@@ -130,13 +130,14 @@ function GeneralAdminRoutePlanner(props) {
     e.preventDefault();
     if(props.action==="new"){
         console.log("mew")
-        props.addRoute(obj);
-        if(tobeadded.length>0){
-            console.log("addie")
-            tobeadded.map((stu)=>{
-                props.addStudentToRoute(stu,props.postedRoute.id)
-            })
-        }
+        props.addRoute(obj,tobeadded);
+        // console.log(props.postedRoute.id)
+        // if(tobeadded.length>0){
+        //     console.log("addie")
+        //     tobeadded.map((stu)=>{
+        //         props.addStudentToRoute(stu,props.postedRoute.id)
+        //     })
+        // }
     }
     else{
         console.log("edit")
