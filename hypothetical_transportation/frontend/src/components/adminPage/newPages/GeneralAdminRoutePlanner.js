@@ -9,7 +9,7 @@ import PropTypes, { string } from 'prop-types';
 import axios from 'axios';
 import config from '../../../utils/config';
 import { getRouteInfo } from '../../../actions/routes';
-import {getStudentsInRoute, getStudentsWithoutRoute} from '../../../actions/routeplanner';
+import {getStudentsInRoute, getStudentsWithoutRoute,addStudentToRoute, removeStudentFromRoute, addRoute, updateRoute} from '../../../actions/routeplanner';
 import GeneralAdminTableView from '../components/views/GeneralAdminTableView';
 import { getSchool } from '../../../actions/schools';
 
@@ -129,67 +129,88 @@ function GeneralAdminRoutePlanner(props) {
   const submit = (e)=>{
     e.preventDefault();
     if(props.action==="new"){
-      axios
-        .post(`/api/route/`,obj, config(props.token))
-        .then(res =>{
-          const routeID = res.data.id
-          if(tobeadded.length>0){
+        addRoute(obj);
+        if(tobeadded.length>0){
             tobeadded.map((stu)=>{
-              axios
-                .get(`/api/student/${stu.id}/`, config(props.token))
-                .then(res => {
-                  res.data.routes=routeID
-                  res.data.guardian=res.data.guardian.id
-                  res.data.school=res.data.school.id
-                  axios
-                    .put(`/api/student/${stu.id}/`,res.data, config(props.token))
-                    .then(res =>{
-                        console.log(res.data.id)
-                    }).catch(err => console.log(err));
-                }).catch(err => console.log(err));
-          })}
-          navigate(`/admin/routes`);
-        }).catch(err => console.log(err));
+                addStudentToRoute(stu,props.postedRoute.id)
+            })
+        }
     }
     else{
-      axios
-      .put(`/api/route/${props.route.id}/`,obj, config(props.token))
-      .then(res =>{
-        const routeID = res.data.id
+        updateRoute(obj, obj.id);
         if(tobeadded.length>0){
-          tobeadded.map((stu)=>{
-            axios
-              .get(`/api/student/${stu.id}/`, config(props.token))
-              .then(res => {
-                res.data.routes=routeID
-                res.data.guardian=res.data.guardian.id
-                res.data.school=res.data.school.id
-                axios
-                  .put(`/api/student/${stu.id}/`,res.data, config(props.token))
-                  .then(res =>{
-                      console.log(res.data.id)
-                  }).catch(err => console.log(err));
-              }).catch(err => console.log(err));
-        })}
+            tobeadded.map((stu)=>{
+                addStudentToRoute(stu,obj.id)
+            })
+        }
         if(toberemoved.length>0){
-          toberemoved.map((stu)=>{
-            axios
-              .get(`/api/student/${stu.id}/`, config(props.token))
-              .then(res => {
-                res.data.routes=null
-                res.data.guardian=res.data.guardian.id
-                res.data.school=res.data.school.id
-                axios
-                  .put(`/api/student/${stu.id}/`,res.data, config(props.token))
-                  .then(res =>{
-                      console.log(res.data.id)
-                  }).catch(err => console.log(err));
-              }).catch(err => console.log(err));
-        })}
-        navigate(`/admin/routes`);
-      }).catch(err => console.log(err));
-
+            toberemoved.map((stu)=>{
+                removeStudentFromRoute(stu)
+            })
+        }
     }
+    // if(props.action==="new"){
+    //   axios
+    //     .post(`/api/route/`,obj, config(props.token))
+    //     .then(res =>{
+    //       const routeID = res.data.id
+    //       if(tobeadded.length>0){
+    //         tobeadded.map((stu)=>{
+    //           axios
+    //             .get(`/api/student/${stu.id}/`, config(props.token))
+    //             .then(res => {
+    //               res.data.routes=routeID
+    //               res.data.guardian=res.data.guardian.id
+    //               res.data.school=res.data.school.id
+    //               axios
+    //                 .put(`/api/student/${stu.id}/`,res.data, config(props.token))
+    //                 .then(res =>{
+    //                     console.log(res.data.id)
+    //                 }).catch(err => console.log(err));
+    //             }).catch(err => console.log(err));
+    //       })}
+    //       navigate(`/admin/routes`);
+    //     }).catch(err => console.log(err));
+    // }
+    // else{
+    //   axios
+    //   .put(`/api/route/${props.route.id}/`,obj, config(props.token))
+    //   .then(res =>{
+    //     const routeID = res.data.id
+    //     if(tobeadded.length>0){
+    //       tobeadded.map((stu)=>{
+    //         axios
+    //           .get(`/api/student/${stu.id}/`, config(props.token))
+    //           .then(res => {
+    //             res.data.routes=routeID
+    //             res.data.guardian=res.data.guardian.id
+    //             res.data.school=res.data.school.id
+    //             axios
+    //               .put(`/api/student/${stu.id}/`,res.data, config(props.token))
+    //               .then(res =>{
+    //                   console.log(res.data.id)
+    //               }).catch(err => console.log(err));
+    //           }).catch(err => console.log(err));
+    //     })}
+    //     if(toberemoved.length>0){
+    //       toberemoved.map((stu)=>{
+    //         axios
+    //           .get(`/api/student/${stu.id}/`, config(props.token))
+    //           .then(res => {
+    //             res.data.routes=null
+    //             res.data.guardian=res.data.guardian.id
+    //             res.data.school=res.data.school.id
+    //             axios
+    //               .put(`/api/student/${stu.id}/`,res.data, config(props.token))
+    //               .then(res =>{
+    //                   console.log(res.data.id)
+    //               }).catch(err => console.log(err));
+    //           }).catch(err => console.log(err));
+    //     })}
+    //     navigate(`/admin/routes`);
+    //   }).catch(err => console.log(err));
+
+    // }
     
 }
 
@@ -302,7 +323,8 @@ const mapStateToProps = (state) => ({
   route: state.routes.viewedRoute, 
   school: state.schools.viewedSchool,
   studentsInRoute:state.routeplanner.studentsInRoute.results,
-  studentsWithoutRoute:state.routeplanner.studentsWithoutRoute.results
+  studentsWithoutRoute:state.routeplanner.studentsWithoutRoute.results,
+  postedRoute:state.routeplanner.postedRoute,
 });
 
-export default connect(mapStateToProps, {getRouteInfo,getStudentsInRoute,getStudentsWithoutRoute, getSchool})(GeneralAdminRoutePlanner)
+export default connect(mapStateToProps, {getRouteInfo,getStudentsInRoute,getStudentsWithoutRoute, getSchool, addStudentToRoute, removeStudentFromRoute, addRoute, updateRoute})(GeneralAdminRoutePlanner)
