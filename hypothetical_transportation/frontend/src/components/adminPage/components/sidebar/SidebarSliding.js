@@ -39,7 +39,7 @@ function SidebarSliding() {
                 {SidebarData.map((item, index) => {
                     return (
                         <li key={index} className={item.cName}>
-                            <Link to={item.path}>
+                            <Link to={`${item.path}?pageNum=1`}>
                                 {item.icon}
                                 <span>{item.title}</span>
                             </Link>

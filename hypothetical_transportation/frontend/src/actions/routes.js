@@ -3,12 +3,26 @@ import { DELETE_ROUTE, GET_ROUTE, GET_ROUTES, POPULATE_TABLE, DELETE_ITEM } from
 import { tokenConfig } from './auth';
 
 import { createMessage, returnErrors } from './messages';
-import { getQueryStringsFormatted } from "./utils";
+import { getQueryStringsFormatted, pageSize } from "./utils";
 
-export const getRoutes = () => (dispatch, getState) => {
-
+export const getRoutes = (parameters) => (dispatch, getState) => {
+  let config = tokenConfig(getState);
+  if(parameters){
+    if(parameters.pageNum != null && parameters.pageNum !== undefined  && parameters.pageNum != -1){
+      const {pageNum, ...preParams} = parameters
+      config.params = {
+        limit: pageSize,
+        offset: pageSize * (pageNum-1),
+        ...preParams
+      }
+    }
+    else{
+      config.params = parameters
+    }
+    
+  }
     axios
-    .get('/api/route/', tokenConfig(getState))
+    .get('/api/route/', config)
     .then((res) => {
         dispatch({
             type: GET_ROUTES,

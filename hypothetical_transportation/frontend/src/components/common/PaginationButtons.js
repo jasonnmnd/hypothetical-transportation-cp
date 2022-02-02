@@ -23,12 +23,32 @@ function PaginationButtons( props ) {
             pageNum: parseInt(searchParams.get("pageNum")) + 1
         })
       }
+
+      const handleAllClick = () => {
+        setSearchParams({
+            ...Object.fromEntries([...searchParams]),
+            pageNum: -1
+        })
+      }
+
+      const handleLessClick = () => {
+        setSearchParams({
+            ...Object.fromEntries([...searchParams]),
+            pageNum: 1
+        })
+      }
   
     return (
         <div className="prev-next-buttons">
+            {searchParams.get("pageNum") == -1 ? 
+            <button onClick={handleLessClick}>Show Less</button> 
+            :
+            <div> 
             <button onClick={handlePrevClick} disabled={searchParams.get("pageNum") == 1} >Prev</button>
             {searchParams.get("pageNum")}
             <button onClick={handleNextClick} disabled={props.nextDisable} >Next</button> 
+            <button onClick={handleAllClick} >Show All</button>
+            </div>}
         </div>
     )
 
