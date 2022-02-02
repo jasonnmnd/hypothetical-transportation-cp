@@ -30,7 +30,7 @@ function AdminUserDetails(props) {
   let [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
-    if(searchParams.get(`pageNum`) != null && searchParams.get(`pageNum`) != null){
+    if(searchParams.get(`pageNum`) != null){
       let paramsToSend = Object.fromEntries([...searchParams]);
       paramsToSend.guardian = param.id;
       props.getStudents(paramsToSend);
@@ -38,7 +38,6 @@ function AdminUserDetails(props) {
     else{
       setSearchParams({
         [`pageNum`]: 1,
-        [`pageNum`]: 1
       })
     }
     
