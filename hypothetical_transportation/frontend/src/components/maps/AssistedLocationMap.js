@@ -27,6 +27,7 @@ function TestMap(props) {
     const [location, setLocation] = useState(defaultCenter);
 
     const getLongLatFromAddress = (address) => {
+      console.log("Called");
       Geocode.fromAddress(address).then(
           (response) => {
               // console.log(response.results[0].geometry.location);

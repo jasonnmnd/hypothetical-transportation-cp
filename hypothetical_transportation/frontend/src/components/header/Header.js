@@ -4,7 +4,7 @@ import './header.css';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { logout } from "../../actions/auth";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import isAdmin from "../../utils/user";
 
 function Header(props){
@@ -17,18 +17,12 @@ function Header(props){
                 </Link>
             </div>
 
+            {props.shouldShowOptions && <div className="divider50px"></div>}
+
             <div className="header-text">
                 <h1>{props.textToDisplay}</h1>
             </div>
             
-            {props.shouldShowOptions &&
-            <div className="header-button">
-                <button onClick={props.logout}>Logout</button>
-            </div> 
-            }
-
-            <div className="divider15px"></div>
-
             {props.shouldShowOptions &&
             <div className="header-button">
                 <Link to={"/account"}>
@@ -36,6 +30,14 @@ function Header(props){
                 </Link>
             </div>  
             }
+            <div className="divider15px"></div>
+            {props.shouldShowOptions &&
+            <div className="header-button">
+                <button onClick={props.logout}>Logout</button>
+            </div> 
+            }
+
+            
         </div>
             
     )
