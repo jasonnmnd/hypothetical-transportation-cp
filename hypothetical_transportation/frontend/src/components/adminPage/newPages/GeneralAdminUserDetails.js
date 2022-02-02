@@ -79,16 +79,19 @@ function AdminUserDetails(props) {
                   <div className='info-fields'>
                       <h2>Admin: </h2>
                       <h3>{isAdmin(props.user) ? "true":"false"}</h3>
-                  </div>
-                  {
-                    props.user.groups.includes(1)? <div></div>:
-                    <div className='info-fields-table'>
-                        <h2>List of Students: </h2>
-                        <div>
-                          <GeneralAdminTableView values={props.students} tableType='student' title='Students' search={null} />
-                        </div>
-                    </div>
-                  }     
+                  </div>    
+          </div>
+
+          <div className='left-content'>
+          {
+            props.user.groups.includes(1)? <div></div>:
+            <div className='info-fields-table'>
+                <h2>List of Students: </h2>
+                <div>
+                  <GeneralAdminTableView values={props.students} tableType='student' title='Students' search={null} />
+                </div>
+            </div>
+          } 
           </div>
           </div>
     </>
