@@ -4,25 +4,38 @@ import { tokenConfig } from './auth';
 
 import { createMessage, returnErrors } from './messages';
 import { getStudents } from './students';
-
+import { pageSize } from './utils';
 import { GET_USERS, ADD_USER, DELETE_USER, POPULATE_TABLE, GET_USER, DELETE_ITEM } from './types';
 
 
-export const getUsers = () => (dispatch, getState) => {
+export const getUsers = (parameters) => (dispatch, getState) => {
+  let config = tokenConfig(getState);
+  if(parameters){
+    if(parameters.pageNum != null && parameters.pageNum !== undefined){
+      const {pageNum, ...preParams} = parameters
+      config.params = {
+        limit: pageSize,
+        offset: pageSize * (pageNum-1),
+        ...preParams
+      }
+    }
+    else{
+      config.params = parameters
+    }
+  }
+
   axios
-    .get('/api/user/', tokenConfig(getState))
+    .get('/api/user/', config)
     .then((res) => {
       dispatch({
         type: GET_USERS,
         payload: res.data,
       });
-      dispatch({
-        type: POPULATE_TABLE,
-        payload: res.data,
-      });
     })
     .catch((err) => dispatch(returnErrors(err.response.data, err.response.status)));
 };
+
+
 
 export const deleteUser = (id) => (dispatch, getState) => {
     axios.delete(`/api/user/${id}/`, tokenConfig(getState))

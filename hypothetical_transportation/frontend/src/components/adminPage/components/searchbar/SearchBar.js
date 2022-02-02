@@ -29,9 +29,6 @@ function SearchBar(props){
             [`${props.search}search_fields`]: values.filter_by,
             [`${props.search}pageNum`]: 1
         })
-        
-        console.log(values);
-        props.search(values);
     }
     return(
         <form className="search">
@@ -69,7 +66,7 @@ function SearchBar(props){
                     />
                 </div>
                 <br></br>
-                <button onClick={searchHandler}>Search</button>
+                <button onClick={searchHandler}>Search/Sort</button>
             </div>
         </form>
     );

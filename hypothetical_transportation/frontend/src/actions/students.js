@@ -28,11 +28,6 @@ export const getStudents = (parameters) => (dispatch, getState) => {
     }
     
   }
-  
-
-  console.log(config);
-
-  
   axios
   .get("/api/student/", config)
     .then((res) => {
