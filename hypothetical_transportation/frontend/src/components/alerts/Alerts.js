@@ -40,6 +40,7 @@ function Alerts(props) {
           if (message.school) alert.success(message.school);
           if (message.route) alert.success(message.route);
           if (message.passwordNotMatch) alert.error(message.passwordNotMatch);
+          prevMessageRef.current = props.message;
         }
       }
     });
