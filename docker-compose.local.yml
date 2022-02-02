@@ -12,14 +12,15 @@ services:
     ports:
       - 5432:5432
   web:
-    image: dmm107/ece-458:web-local
-    command: bash -c "python hypothetical_transportation/manage.py makemigrations && "\
-              "python hypothetical_transportation/manage.py migrate && "\
-              "python hypothetical_transportation/manage.py loaddata hypothetical_transportation/backend/fixtures/data.json &&"\
-              "python hypothetical_transportation/manage.py initadmin && "\
-              "python hypothetical_transportation/manage.py runserver 0.0.0.0:8000"
-    volumes:
-      - .:/code
+    build: .
+    command: ./entrypoint_local.sh
+    # command: bash -c "python hypothetical_transportation/manage.py makemigrations && "\
+    #           "python hypothetical_transportation/manage.py migrate && "\
+    #           "python hypothetical_transportation/manage.py loaddata hypothetical_transportation/backend/fixtures/data.json &&"\
+    #           "python hypothetical_transportation/manage.py initadmin && "\
+    #           "python hypothetical_transportation/manage.py runserver 0.0.0.0:8000"
+    # volumes:
+      # - .:/code/
     ports:
       - "8000:8000"
     environment:
