@@ -113,7 +113,7 @@ function GeneralEditUserForm(props) {
 
                   <div className="form-group">
                       <label>
-                        Group:
+                        <label>Group</label>
                         <select value={fieldValues.groups} onChange={(e)=>{
                                 setFieldValues({...fieldValues, groups: e.target.value});
                                 }}>
