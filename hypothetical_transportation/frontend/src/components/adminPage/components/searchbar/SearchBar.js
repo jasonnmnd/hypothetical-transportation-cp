@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import "../../adminPage.css"
+// import "../../adminPage.css"
+import "./searchBar.css"
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { useSearchParams } from 'react-router-dom';
