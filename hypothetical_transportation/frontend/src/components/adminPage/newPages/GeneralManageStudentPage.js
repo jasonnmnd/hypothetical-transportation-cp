@@ -82,7 +82,7 @@ function GeneralManageStudentPage(props) {
     return ( 
       <>
         <SidebarSliding/>
-        <Header textToDisplay={"Modify Student"} shouldShowOptions={true}></Header>
+        <Header textToDisplay={`${props.action} student`} shouldShowOptions={true}></Header>
         <div className='admin-edit-page'>
         <form>
             <div className="submit-form-content"> 
