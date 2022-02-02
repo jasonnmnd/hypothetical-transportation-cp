@@ -21,8 +21,15 @@ function GeneralAdminUsersPage(props) {
   let [searchParams, setSearchParams] = useSearchParams();
   
   useEffect(() => {
-    let paramsToSend = Object.fromEntries([...searchParams]);
-    props.getUsers(paramsToSend);
+    if(searchParams.get(`pageNum`) != null){
+      let paramsToSend = Object.fromEntries([...searchParams]);
+      props.getUsers(paramsToSend);
+    }
+    else{
+      setSearchParams({
+        [`pageNum`]: 1,
+      })
+    }
   }, [searchParams]);
 
   return (

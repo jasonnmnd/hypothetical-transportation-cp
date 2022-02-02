@@ -4,7 +4,7 @@ import './header.css';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { logout } from "../../actions/auth";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import isAdmin from "../../utils/user";
 
 function Header(props){
@@ -16,6 +16,8 @@ function Header(props){
                     <img src={Logo} className="logo" alt={"The logo is here"}></img>
                 </Link>
             </div>
+
+            {props.shouldShowOptions && <div className="divider50px"></div>}
 
             <div className="header-text">
                 <h1>{props.textToDisplay}</h1>
