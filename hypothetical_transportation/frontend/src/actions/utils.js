@@ -12,3 +12,26 @@ export const getOffsetString = (pageNum) => {
     }
     return `limit=&offset=`;
 }
+
+const doesValExist = (val) => {
+    return val != null && val !== undefined
+}
+
+export const getParameters = (params) => {
+    let parameters = params;
+    if(doesValExist(parameters.pageNum)){
+        if(parameters.pageNum != -1){
+            parameters = {
+              limit: pageSize,
+              offset: pageSize * (parameters.pageNum-1),
+              ...parameters
+            }
+        }
+        delete parameters.pageNum;
+    }
+
+    if(doesValExist(parameters.ordering)){
+        parameters.ordering = `${parameters.ordering},id`
+    }
+    return parameters;
+}

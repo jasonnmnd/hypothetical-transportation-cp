@@ -4,24 +4,14 @@ import { tokenConfig } from './auth';
 
 import { createMessage, returnErrors } from './messages';
 import { getStudents } from './students';
-import { pageSize } from './utils';
+import { getParameters } from './utils';
 import { GET_USERS, ADD_USER, DELETE_USER, POPULATE_TABLE, GET_USER, DELETE_ITEM } from './types';
 
 
 export const getUsers = (parameters) => (dispatch, getState) => {
   let config = tokenConfig(getState);
   if(parameters){
-    if(parameters.pageNum != null && parameters.pageNum !== undefined  && parameters.pageNum != -1){
-      const {pageNum, ...preParams} = parameters
-      config.params = {
-        limit: pageSize,
-        offset: pageSize * (pageNum-1),
-        ...preParams
-      }
-    }
-    else{
-      config.params = parameters
-    }
+    config.params = getParameters(parameters);
   }
 
   axios
