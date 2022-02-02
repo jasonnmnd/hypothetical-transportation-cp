@@ -260,19 +260,23 @@ function GeneralAdminRoutePlanner(props) {
             {props.action==="edit"?
               <div>
                 {/* <AdminTable title={`Students currently in ${props.route.name} (Green pin)`} header={Object.keys(emptyStudent)} data={route_student.filter(i=>i.routes.id===route.id&&!toberemoved.includes(i))} actionName={"Remove from Route"} action={removeFromRoute}/> */}
+                <h2>Students currently in {props.route.name} (Green pin)</h2>
                 <GeneralAdminTableView values={props.studentsInRoute?props.studentsInRoute.filter(i=>!toberemoved.includes(i)):studentObject} tableType={"student"} title={`Students currently in ${props.route.name} (Green pin)`} actionName={"Remove from Route"} action={removeFromRoute}/>
                 {/* <AdminTable title={`Students To Be Remove from Route`} header={Object.keys(emptyStudent)} data={toberemoved} actionName={"Remove from Selected"} action={removeFromREMOVE}/> */}
+                <h2>Students To Be Remove from Route</h2>
                 <GeneralAdminTableView values={toberemoved} tableType={"student"} title={`Students To Be Remove from Route`} actionName={"Remove from Selected"} action={removeFromREMOVE}/>
 
               </div>:
               <div></div>
             }
-
-            {/* <AdminTable title={"Students To Be Added into Route"} header={Object.keys(emptyStudent)} data={tobeadded} actionName={"Remove from Selected"} action={removeFromADD}/> */}
-            <GeneralAdminTableView values={tobeadded} tableType={"student"} title={`Students To Be Added into Route`} actionName={"Remove from Selected"} action={removeFromADD}/>
-            {/* <AdminTable title={`Students at ${props.route.school.name} With No Routes (Red pin)`} header={Object.keys(emptyStudent)} data={students.filter(i=>i.routes===null&&!tobeadded.includes(i))} actionName={"Add to Route"} action={addToRoute}/> */}
-            <GeneralAdminTableView values={props.studentsWithoutRoute?props.studentsWithoutRoute.filter(i=>!tobeadded.includes(i)):studentObject} tableType={"student"} title={`Students at ${props.route.school.name} with no route`} actionName={"Add to Route"} action={addToRoute}/>
-
+            <div>
+                {/* <AdminTable title={"Students To Be Added into Route"} header={Object.keys(emptyStudent)} data={tobeadded} actionName={"Remove from Selected"} action={removeFromADD}/> */}
+                <h2>Students To Be Added into Route</h2>
+                <GeneralAdminTableView values={tobeadded} tableType={"student"} title={`Students To Be Added into Route`} actionName={"Remove from Selected"} action={removeFromADD}/>
+                {/* <AdminTable title={`Students at ${props.route.school.name} With No Routes (Red pin)`} header={Object.keys(emptyStudent)} data={students.filter(i=>i.routes===null&&!tobeadded.includes(i))} actionName={"Add to Route"} action={addToRoute}/> */}
+                <h2>Students at {props.route.school.name} with no route</h2>
+                <GeneralAdminTableView values={props.studentsWithoutRoute?props.studentsWithoutRoute.filter(i=>!tobeadded.includes(i)):studentObject} tableType={"student"} title={`Students at ${props.route.school.name} with no route`} actionName={"Add to Route"} action={addToRoute}/>
+            </div>
             <form>
               <div className="form-inner">
                 <h2>{props.action==="new" ? "New Route" : "Edit Route"}</h2>
