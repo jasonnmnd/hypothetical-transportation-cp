@@ -18,33 +18,32 @@ function ParentStudentDetails(props){
 
     return(
         <>
-        <Header textToDisplay={"Parent Portal"} shouldShowOptions={true}></Header>
-            <div className='middle-justify'>
-                <div className='parent-details'>
-                        <h1>Your Student's Details</h1>
-                        <div className='info-fields'>
-                            <h2>Name:</h2>
-                            <h3>{student.full_name}</h3>
-                        </div>
-                        <div className='info-fields'>
-                            <h2>ID:</h2>
-                            <h3>{student.student_id}</h3>
-                        </div>
-                        <div className='info-fields'>
-                            <h2>School:</h2>
-                            <h3>{student.school.name}</h3>
-                        </div>
-                        <div className='info-fields'>
-                            <h2>Route:</h2>
-                            <h3>{(student.routes !==undefined && student.routes!==null) ? student.routes.name : "NONE"}</h3>
-                        </div>
-
-                        <div className='edit-delete-buttons'>
-                            <Link to="/parent">
-                                <button>Go Back</button>
-                            </Link>
-                        </div>
+        <Header textToDisplay={"Student Details"} shouldShowOptions={true}></Header>
+            <div className='header-padding'>
+            <div className='left-content'>
+                <div className='info-fields'>
+                    <h2>Name:</h2>
+                    <h3>{student.full_name}</h3>
                 </div>
+                <div className='info-fields'>
+                    <h2>ID:</h2>
+                    <h3>{student.student_id}</h3>
+                </div>
+                <div className='info-fields'>
+                    <h2>School:</h2>
+                    <h3>{student.school.name}</h3>
+                </div>
+                <div className='info-fields'>
+                    <h2>Route:</h2>
+                    <h3>{(student.routes !==undefined && student.routes!==null) ? student.routes.name : "NONE"}</h3>
+                </div>
+
+                <div className='edit-delete-buttons'>
+                    <Link to="/parent">
+                        <button>Go Back</button>
+                    </Link>
+                </div>
+            </div>
             </div>
         </>
     )

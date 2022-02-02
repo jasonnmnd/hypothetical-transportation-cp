@@ -39,7 +39,8 @@ function GeneralEditUserForm(props) {
                 address: props.curUser.address,
                 email: props.curUser.email,
                 groups: props.curUser.groups[0].id
-            })
+            });
+            setAddress(props.curUser.address);
         }
     }, []);
 
@@ -72,10 +73,11 @@ function GeneralEditUserForm(props) {
     return (
         <div>
             <SidebarSliding/>
-            <Header textToDisplay={"Admin Portal"} shouldShowOptions={true}></Header>
+            <Header textToDisplay={"Modify User"} shouldShowOptions={true}></Header>
             <div className='admin-edit-page'>  
             {/* <div className='confirm_location'>{openModal && <AssistedLocationModal closeModal={setOpenModal} handleConfirmAddress={handleConfirmAddress} address={fieldValues.address}></AssistedLocationModal>}</div> */}
             <form>
+                <div className="submit-form-content">
                 <div className="form-inner">
                     <h2>{props.action + " user"}</h2>
 
@@ -125,7 +127,7 @@ function GeneralEditUserForm(props) {
                       <label htmlFor={"Password"}>Password</label>
                       <input
                           className="input"
-                          type={"id"}
+                          type={"password"}
                           name={"Password"}
                           id={"Password"}
                           value={fieldValues.password}
@@ -154,10 +156,13 @@ function GeneralEditUserForm(props) {
                   </div>
 
                     <div className="divider15px" />
-                    <AssistedLocationMap address={fieldValues.address} setAddress={setAddress}></AssistedLocationMap>
-                    
-                    <button onClick={submit}>Save</button>
+                    <AssistedLocationMap address={address} setAddress={setAddress}></AssistedLocationMap>
+                    <div className="divider15px" />
+                    <div className="center-buttons">
+                        <button onClick={submit}>Save</button>
+                    </div>
                 </div>
+            </div>
             </form>
             </div>
         </div>
