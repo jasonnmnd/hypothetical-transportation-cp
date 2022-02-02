@@ -43,7 +43,7 @@ function GeneralAdminRouteDetails(props) {
   return (
     <>  
         <SidebarSliding/>
-        <Header textToDisplay={"Admin Portal"} shouldShowOptions={true}></Header>
+        <Header textToDisplay={"Route Details"} shouldShowOptions={true}></Header>
         <div className='confirm_location'>{openModal && <DeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}</div>
         <div className='middle-content'>
           <div className='admin-details'>

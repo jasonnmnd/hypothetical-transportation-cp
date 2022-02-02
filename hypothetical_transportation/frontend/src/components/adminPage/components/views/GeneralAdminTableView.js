@@ -210,7 +210,6 @@ function GeneralAdminTableView( props ) {
 
     return (
         <div className='table-and-buttons'>
-            <h1>{props.title}</h1>
             {props.search != null && props.search != undefined ? <SearchBar buttons={getFilterOptions()} sortBy={getSortOptions()} search={props.search}></SearchBar> : null}
             <div className='AdminTable-container'>
                 <GeneralTable rows={props.values} columnNames={getColumns()} actionName={props.actionName?props.actionName:"View"} action={props.action? props.action:handleViewClick}/>

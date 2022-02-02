@@ -29,7 +29,7 @@ function GeneralAdminSchoolsPage(props) {
   return (
     <div className='admin-page'>
         <SidebarSliding/>
-        <Header textToDisplay={"Admin Portal"} shouldShowOptions={true}></Header>
+        <Header textToDisplay={"Schools Portal"} shouldShowOptions={true}></Header>
         <div className='middle-content'>
             <GeneralAdminTableView values={props.schools} title={title} tableType={tableType} search={search} />
             <div className='center-buttons'>

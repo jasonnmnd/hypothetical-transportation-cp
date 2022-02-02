@@ -44,7 +44,7 @@ function GeneralAdminSchoolDetails(props) {
   return (
     <>  
         <SidebarSliding/>
-        <Header textToDisplay={"Admin Portal"} shouldShowOptions={true}></Header>
+        <Header textToDisplay={"School Details"} shouldShowOptions={true}></Header>
         <div className='confirm_location'>{openModal && <FormDeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}</div>
         <div className='middle-content'>
           <div className='admin-details'>

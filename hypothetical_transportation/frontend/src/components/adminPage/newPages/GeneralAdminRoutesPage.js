@@ -28,7 +28,7 @@ function AdminRoutesPage(props) {
   return (
     <div className='admin-page'>
         <SidebarSliding/>
-        <Header textToDisplay={"Admin Portal"} shouldShowOptions={true}></Header>
+        <Header textToDisplay={"Routes Portal"} shouldShowOptions={true}></Header>
         <div className='middle-content'>
           {/* <div className='center-buttons'>
             <Link to={`/admin/new/route`}>
