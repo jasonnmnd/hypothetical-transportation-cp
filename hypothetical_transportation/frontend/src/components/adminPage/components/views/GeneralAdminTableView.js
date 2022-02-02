@@ -224,7 +224,7 @@ GeneralAdminTableView.propTypes = {
     title: PropTypes.string.isRequired,
     tableType: PropTypes.string.isRequired,
     values: PropTypes.arrayOf(PropTypes.object),
-    search: PropTypes.func
+    search: PropTypes.string
 }
 
 const mapStateToProps = (state) => ({
