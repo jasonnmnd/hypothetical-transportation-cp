@@ -56,38 +56,40 @@ function GeneralAdminRouteDetails(props) {
         <SidebarSliding/>
         <Header textToDisplay={"Route Details"} shouldShowOptions={true}></Header>
         <div className='confirm_location'>{openModal && <DeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}</div>
-        <div className='middle-content'>
-          <div className='admin-details'>
-
-            <div className='info-fields'>
-              <h2>Name: </h2>
-              <h3>{props.route.name}</h3>
-            </div>
-
-            <div className='info-fields'>
-              <h2>Description: </h2>
-              <h3>{props.route.description}</h3>
-            </div>
-
-            <div className='info-fields'>
-              <h2>School: </h2>
-              <Link to={`/admin/school/${props.route.school.id}`}><button className='button'><h3>{props.route.school.name}</h3></button></Link>
-            </div>
-
-            <MapContainer schoolData={props.route.school} routeStudentData={props.students}/>:
-
-            <GeneralAdminTableView title='Associated Students' tableType='student' values={props.students} search="" />
-
-            <div className='edit-delete-buttons'>
-              <Link to={`/admin/route/edit/${props.route.school.id}/${props.route.id}`}><button>Edit Route</button></Link>
+        <div className='header-padding'>
+          <div className='action-bar'>
+            <Link to={`/admin/route/edit/${props.route.school.id}/${props.route.id}`}><button>Edit Route</button></Link>
               <button onClick={() => {
                 setOpenModal(true);
               }}>Delete Route</button>
+              {/* <button onClick={() => navigate(-1)} className='button'>Go Back</button> */}
+          </div>
+        
+          <div className='left-content'>
+              <div className='info-fields'>
+                <h2>Name: </h2>
+                <h3>{props.route.name}</h3>
+              </div>
+
+              <div className='info-fields'>
+                <h2>Description: </h2>
+                <h3>{props.route.description}</h3>
+              </div>
+
+              <div className='info-fields'>
+                <h2>School: </h2>
+                <Link to={`/admin/school/${props.route.school.id}`}><button className='button'><h3>{props.route.school.name}</h3></button></Link>
+                <br></br>
+                <MapContainer schoolData={props.route.school} routeStudentData={props.students}/>:
+              </div>
+
+          </div>
+          <div className='left-content'>
+            <div className='info-fields'>
+              <h2>Associated Students: </h2>
+              <GeneralAdminTableView title='Associated Students' tableType='student' values={props.students} search="" />
+              <br></br>
             </div>
-            {/* <Link to="/admin/routes">
-              <button className='button'> To Routes</button>
-            </Link> */}
-            <button onClick={() => navigate(-1)} className='button'>Go Back</button>
           </div>
         </div>
     </>
