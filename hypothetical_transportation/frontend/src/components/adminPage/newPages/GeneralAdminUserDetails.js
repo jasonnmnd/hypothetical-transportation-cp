@@ -49,17 +49,8 @@ function AdminUserDetails(props) {
   useEffect(() => {
     props.getUser(param.id);
   }, []);
-
-
-  
-
-  
-
-
-
-  
-  return (
     
+  return (
     <>  
         <SidebarSliding/>
         <Header textToDisplay={"User Details"} shouldShowOptions={true}></Header>
@@ -76,9 +67,6 @@ function AdminUserDetails(props) {
           </div>
           <div className='left-content'>
                   <div className='info-fields'>
-                      
-                      
-
                       <h2>Name: </h2>
                       <h3>{props.user.full_name}</h3>
                   </div>

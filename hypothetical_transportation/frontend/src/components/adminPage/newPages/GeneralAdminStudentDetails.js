@@ -29,7 +29,16 @@ function GeneralAdminStudentDetails(props) {
       <SidebarSliding/>
       <Header textToDisplay={"Student Details"} shouldShowOptions={true}></Header>
       <div className='confirm_location'>{openModal && <DeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}</div>
-        <div className='middle-content'>
+        <div className='header-padding'>
+        <div className='action-bar'>
+          <Link to={`/admin/edit_student/${student.id}`}><button>Edit Student</button></Link>
+                  <button onClick={() => {
+                    setOpenModal(true);
+                  }}>Delete Student</button>
+              <button onClick={() => navigate(-1)} className='button'>Go Back</button>
+        </div>
+
+        <div className='left-content'>
           <div className='admin-details'>
 
                   <div className='info-fields'>
@@ -59,21 +68,9 @@ function GeneralAdminStudentDetails(props) {
                       <h2>Parent: </h2>
                       <Link to={`/admin/user/${student.guardian.id}`}><button className='button'><h3>{student.guardian.full_name}</h3></button></Link>
                   </div>
-
-                  {/* Table for Students Here */}
-
-                  <div className='edit-delete-buttons'>
-                        <Link to={`/admin/edit_student/${student.id}`}><button>Edit Student</button></Link>
-                        <button onClick={() => {
-                          setOpenModal(true);
-                        }}>Delete Student</button>
-                  </div>
-                    {/* <Link to="/admin/students">
-                      <button className='button'>To Students</button>
-                    </Link> */}
-                    <button onClick={() => navigate(-1)} className='button'>Go Back</button>
               </div>
             </div>
+          </div>
     </>
   );
 }
