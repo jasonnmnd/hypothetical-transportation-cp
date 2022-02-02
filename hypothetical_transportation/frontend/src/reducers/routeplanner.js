@@ -1,4 +1,4 @@
-import { GET_STUDENTS_IN_ROUTE, GET_STUDENTS_WITHOUT_ROUTE, POST_ROUTE } from '../actions/types.js';
+import { GET_STUDENTS_IN_ROUTE, GET_STUDENTS_WITHOUT_ROUTE, ADD_ROUTE } from '../actions/types.js';
 
 
 const initialState = {

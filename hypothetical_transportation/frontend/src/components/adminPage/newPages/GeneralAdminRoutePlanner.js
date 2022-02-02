@@ -129,26 +129,32 @@ function GeneralAdminRoutePlanner(props) {
   const submit = (e)=>{
     e.preventDefault();
     if(props.action==="new"){
-        addRoute(obj);
+        console.log("mew")
+        props.addRoute(obj);
         if(tobeadded.length>0){
+            console.log("addie")
             tobeadded.map((stu)=>{
-                addStudentToRoute(stu,props.postedRoute.id)
+                props.addStudentToRoute(stu,props.postedRoute.id)
             })
         }
     }
     else{
-        updateRoute(obj, obj.id);
+        console.log("edit")
+        props.updateRoute(obj, obj.id);
         if(tobeadded.length>0){
+            console.log("adding")
             tobeadded.map((stu)=>{
-                addStudentToRoute(stu,obj.id)
+                props.addStudentToRoute(stu,obj.id)
             })
         }
         if(toberemoved.length>0){
+            console.log("removing")
             toberemoved.map((stu)=>{
-                removeStudentFromRoute(stu)
+                props.removeStudentFromRoute(stu)
             })
         }
     }
+    navigate(`/admin/routes`);
     // if(props.action==="new"){
     //   axios
     //     .post(`/api/route/`,obj, config(props.token))
