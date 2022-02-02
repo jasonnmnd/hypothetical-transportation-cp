@@ -6,7 +6,7 @@ import { GET_STUDENTS_IN_ROUTE, GET_STUDENTS_WITHOUT_ROUTE } from './types';
 //GET STUDENTS CURRENTLY IN THE ROUTE
 export const getStudentsInRoute = (routeID) => (dispatch, getState) => {
     axios
-      .get(`/api/?routes=${routeID}`, tokenConfig(getState))
+      .get(`/api/student/?routes=${routeID}`, tokenConfig(getState))
       .then((res) => {
         dispatch({
           type: GET_STUDENTS_IN_ROUTE,
@@ -23,7 +23,7 @@ export const getStudentsInRoute = (routeID) => (dispatch, getState) => {
 //GET STUDENTS CURRENT NOT IN THE ROUTE (BUT GO TO THE SCHOOL)
 export const getStudentsWithoutRoute = (schoolID) => (dispatch, getState) => {
     axios
-      .get(`/student?school=${schoolID}&routes__isnull=true`, tokenConfig(getState))
+      .get(`/api/student/?school=${schoolID}&routes__isnull=true`, tokenConfig(getState))
       .then((res) => {
         dispatch({
           type: GET_STUDENTS_WITHOUT_ROUTE,

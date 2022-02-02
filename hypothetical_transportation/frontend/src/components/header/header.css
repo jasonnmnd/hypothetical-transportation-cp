@@ -5,7 +5,7 @@
   top: 0;
   height: 13%;
   width: 100%;
-  background-color: #ffae07;
+  background-color: #07ff6e;
   padding: 20px 20px;
 }
 
@@ -40,4 +40,10 @@
 
 .header-button button:hover {
   background-color: #ffc2c2;
+}
+
+.divider15px {
+  width: 15px;
+  height: auto;
+  display: inline-block;
 }

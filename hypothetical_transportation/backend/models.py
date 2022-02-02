@@ -9,6 +9,9 @@ class School(models.Model):
     name = models.CharField(max_length=150, validators=[MinLengthValidator(1)])
     address = models.CharField(max_length=150, validators=[MinLengthValidator(1)])
 
+    class Meta:
+        ordering = ['id']
+
 
 class Route(models.Model):
     name = models.CharField(max_length=150, validators=[MinLengthValidator(1)])
@@ -17,6 +20,9 @@ class Route(models.Model):
         School, related_name='routes',
         on_delete=models.CASCADE
     )
+
+    class Meta:
+        ordering = ['id']
 
 
 class Student(models.Model):
@@ -37,3 +43,6 @@ class Student(models.Model):
         on_delete=models.CASCADE, null=True, blank=True
     )
     student_id = models.PositiveIntegerField(null=True)
+
+    class Meta:
+        ordering = ['id']
