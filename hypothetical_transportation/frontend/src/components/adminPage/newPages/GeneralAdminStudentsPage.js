@@ -17,8 +17,15 @@ function GeneralAdminStudentsPage(props) {
   let [searchParams, setSearchParams] = useSearchParams();
   
   useEffect(() => {
-    let paramsToSend = Object.fromEntries([...searchParams]);
-    props.getStudents(paramsToSend);
+    if(searchParams.get(`pageNum`) != null){
+      let paramsToSend = Object.fromEntries([...searchParams]);
+      props.getStudents(paramsToSend);
+    }
+    else{
+      setSearchParams({
+        [`pageNum`]: 1,
+      })
+    }
   }, [searchParams]);
 
 

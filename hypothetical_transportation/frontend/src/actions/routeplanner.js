@@ -2,11 +2,19 @@ import axios from "axios";
 import { tokenConfig } from "./auth";
 import { returnErrors } from "./messages";
 import { GET_STUDENTS_IN_ROUTE, GET_STUDENTS_WITHOUT_ROUTE, ADD_ROUTE, DELETE_ROUTE } from './types';
+import { getParameters } from "./utils";
 
 //GET STUDENTS CURRENTLY IN THE ROUTE
-export const getStudentsInRoute = (routeID) => (dispatch, getState) => {
-    axios
-      .get(`/api/student/?routes=${routeID}`, tokenConfig(getState))
+
+export const getStudentsInRoute = (parameters) => (dispatch, getState) => {
+  
+  let config = tokenConfig(getState);
+  if(parameters){
+    config.params = getParameters(parameters);
+  }
+  //?routes=${routeID}  
+  axios
+      .get(`/api/student/`, config)
       .then((res) => {
         dispatch({
           type: GET_STUDENTS_IN_ROUTE,
@@ -21,9 +29,15 @@ export const getStudentsInRoute = (routeID) => (dispatch, getState) => {
   };
 
 //GET STUDENTS CURRENT NOT IN THE ROUTE (BUT GO TO THE SCHOOL)
-export const getStudentsWithoutRoute = (schoolID) => (dispatch, getState) => {
-    axios
-      .get(`/api/student/?school=${schoolID}&routes__isnull=true`, tokenConfig(getState))
+export const getStudentsWithoutRoute = (parameters) => (dispatch, getState) => {
+  
+  let config = tokenConfig(getState);
+  if(parameters){
+    config.params = getParameters(parameters);
+  }
+  //?school=${schoolID}&routes__isnull=true  
+  axios
+      .get(`/api/student/`, config)
       .then((res) => {
         dispatch({
           type: GET_STUDENTS_WITHOUT_ROUTE,
