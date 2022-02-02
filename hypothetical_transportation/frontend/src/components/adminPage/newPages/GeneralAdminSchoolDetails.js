@@ -48,9 +48,6 @@ function GeneralAdminSchoolDetails(props) {
         <div className='confirm_location'>{openModal && <FormDeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}</div>
         <div className='middle-content'>
           <div className='admin-details'>
-
-            <h1>School Details</h1>
-
             <div className='info-fields'>
               <h2>Name: </h2>
               <h3>{props.school.name}</h3>

@@ -45,11 +45,6 @@ function AdminUserDetails(props) {
       }
       return "admin_user"
   }
-
-  
-
-
-
   
   return (
     
@@ -57,47 +52,45 @@ function AdminUserDetails(props) {
         <SidebarSliding/>
         <Header textToDisplay={"User Details"} shouldShowOptions={true}></Header>
         <div className='confirm_location'>{openModal && <DeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}</div>
-        <div className='middle-content'>
-            <div className='admin-details'>
-                <h1>User Details</h1>
-                <div className='info-fields'>
-                    <h2>Name: </h2>
-                    <h3>{props.user.full_name}</h3>
-                </div>
-                <div className='info-fields'>
-                    <h2>Email: </h2>
-                    <h3>{props.user.email}</h3>
-                </div>
-                {!isAdmin(props.user)?<div className='info-fields'>
-                    <h2>Address: </h2>
-                    <h3>{props.user.address}</h3>
-                </div>:<div></div>
-                }
-                <div className='info-fields'>
-                    <h2>Admin: </h2>
-                    <h3>{isAdmin(props.user) ? "true":"false"}</h3>
-                </div>
-                {
-                  props.user.groups.includes(1)? <div></div>:
+          <div className='header-padding'>
+          <div className='action-bar'>
+                    <Link to={`/admin/edit/user/${props.user.id}`}>
+                    <button>Edit User</button>
+                    </Link>
+                    <button onClick={() => {
+                      setOpenModal(true);
+                    }}>Delete User</button>
+                    <button onClick={() => navigate(-1)} className='button'>Go Back</button>
+          </div>
+          <div className='left-content'>
                   <div className='info-fields'>
-                      
-                      <GeneralAdminTableView values={props.students} tableType='student' title='Students' search={null} />
-
+                      <h2>Name: </h2>
+                      <h3>{props.user.full_name}</h3>
                   </div>
-                }     
-
-                <div className='edit-delete-buttons'>
-                  <Link to={`/admin/edit/user/${props.user.id}`}><button>Edit User</button></Link>
-                  <button onClick={() => {
-                    setOpenModal(true);
-                  }}>Delete User</button>
-                </div>
-                  {/* <Link to="/admin/users">
-                    <button className='button'> To Users</button>
-                  </Link> */}
-                  <button onClick={() => navigate(-1)} className='button'>Go Back</button>
-            </div>
-        </div>
+                  <div className='info-fields'>
+                      <h2>Email: </h2>
+                      <h3>{props.user.email}</h3>
+                  </div>
+                  {!isAdmin(props.user)?<div className='info-fields'>
+                      <h2>Address: </h2>
+                      <h3>{props.user.address}</h3>
+                  </div>:<div></div>
+                  }
+                  <div className='info-fields'>
+                      <h2>Admin: </h2>
+                      <h3>{isAdmin(props.user) ? "true":"false"}</h3>
+                  </div>
+                  {
+                    props.user.groups.includes(1)? <div></div>:
+                    <div className='info-fields-table'>
+                        <h2>List of Students: </h2>
+                        <div>
+                          <GeneralAdminTableView values={props.students} tableType='student' title='Students' search={null} />
+                        </div>
+                    </div>
+                  }     
+          </div>
+          </div>
     </>
   );
 }

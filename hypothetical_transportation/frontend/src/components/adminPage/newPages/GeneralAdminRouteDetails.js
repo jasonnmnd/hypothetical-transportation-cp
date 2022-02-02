@@ -47,7 +47,7 @@ function GeneralAdminRouteDetails(props) {
         <div className='confirm_location'>{openModal && <DeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}</div>
         <div className='middle-content'>
           <div className='admin-details'>
-            <h1>Route Details</h1>
+
             <div className='info-fields'>
               <h2>Name: </h2>
               <h3>{props.route.name}</h3>
