@@ -43,7 +43,6 @@ function GeneralManageStudentPage(props) {
 
   const submit = () => {
     if(props.action==="new"){
-      console.log(obj)
       props.addStudent(obj)
       navigate(`/admin/students/`)
     }

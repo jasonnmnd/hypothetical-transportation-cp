@@ -23,7 +23,7 @@ function ResetPasswordPage(props){
 
             axios.put(`/api/auth/change-password`, payload, config(props.token))
             .then(res => {navigate(`/`)})
-            .catch(err => console.log(err))
+            .catch(err => {})
         } else {
             alert("Passwords do not match. Try again.")
         }
@@ -31,7 +31,7 @@ function ResetPasswordPage(props){
 
     const resetHandler = (e) => {
         e.preventDefault();
-        console.log(values)
+        //console.log(values)
         saveNewPassword(values);
       };
 

@@ -16,12 +16,10 @@ function AdminUsersPage(props) {
 
   const handlePrevClick = () => {
     //API Call here to get new data to display for next page
-    console.log("Prev Clicked");
   }
 
   const handleNextClick = () => {
     //API Call here to get new data to display for next page
-    console.log("Next Clicked");
   }
 
   const emptyUser = [{
@@ -39,17 +37,15 @@ function AdminUsersPage(props) {
   //           console.log(res.data.results)
   //           console.log(res.data.results[0].groups)
   //           setUsers(res.data.results);
-  //       }).catch(err => console.log(err));
+  //       }).catch(err => /*/*console.log(err)*/{}*/{});
   //   }
 
 
   const getUsers = () => {
     axios.get('/api/user/', config(props.token))
         .then(res => {
-            console.log(res.data.results)
-            console.log(res.data.results[0].groups)
             setUsers(res.data.results);
-        }).catch(err => console.log(err));
+        }).catch(err => /*console.log(err)*/{});
     }
 
   useEffect(() => {
@@ -77,7 +73,7 @@ function AdminUsersPage(props) {
     axios.get(url, config(props.token))
         .then(res => {
           setUsers(res.data.results);
-        }).catch(err => console.log(err));
+        }).catch(err => /*console.log(err)*/{});
   }
   
 

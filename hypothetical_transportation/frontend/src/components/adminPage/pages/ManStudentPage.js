@@ -51,7 +51,7 @@ function ManStudentPage(props) {
       axios.get('/api/school/', config(props.token))
         .then(res => {
           setSchoolList(res.data.results);
-        }).catch(err => console.log(err));
+        }).catch(err => /*console.log(err)*/{});
     }
 
     const getStudent = () => {
@@ -59,14 +59,14 @@ function ManStudentPage(props) {
         .then(res => {
           setObj(res.data);
           getRoutes(res.data.school);
-        }).catch(err => console.log(err));
+        }).catch(err => /*console.log(err)*/{});
     }
 
     const getUsers = () => {
       axios.get('/api/user/', config(props.token))
         .then(res => {
           setUsers(res.data.results);//.filter(s=>!s.groups.includes(1)));
-        }).catch(err => console.log(err));
+        }).catch(err => /*console.log(err)*/{});
     }
 
   const getRoutes = (i) => {
@@ -74,7 +74,7 @@ function ManStudentPage(props) {
     axios.get(`/api/route/?school=${i}`, config(props.token))
       .then(res => {
         setRoutes(res.data.results);
-      }).catch(err => console.log(err));
+      }).catch(err => /*console.log(err)*/{});
     }
     else{
       setRoutes(null)
@@ -86,7 +86,7 @@ function ManStudentPage(props) {
     axios.get(`/api/user/${e.target.value}/`, config(props.token))
       .then(res => {
         setObj({ ...obj, ["guardian"]: e.target.value, ["address"]: res.data.address});
-      }).catch(err => console.log(err));
+      }).catch(err => /*console.log(err)*/{});
   }
 
 
@@ -98,21 +98,20 @@ function ManStudentPage(props) {
           .post(`/api/student/`,obj, config(props.token))
           .then(res =>{
               navigate(`/admin/students/`)
-          }).catch(err => console.log(err));
+          }).catch(err => /*console.log(err)*/{});
     }
     else{
       axios
           .put(`/api/student/${param.id}/`,obj, config(props.token))
           .then(res =>{
               navigate(`/admin/students/`)
-          }).catch(err => console.log(err));
+          }).catch(err => /*console.log(err)*/{});
     }
   }
 
   const changeSchool = (e)=>{
     setObj({...obj, ["school"]:e.target.value, ["routes"]:""})
     getRoutes(e.target.value)
-    console.log(routes)
   }
 
 
@@ -141,7 +140,6 @@ function ManStudentPage(props) {
 }
 
 const handleConfirmAddress = () => {
-  console.log("Address confirmed")
   submit()
 }
 

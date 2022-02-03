@@ -21,7 +21,7 @@ export const getStudentsInRoute = (parameters) => (dispatch, getState) => {
           payload: res.data,
         });
       })
-      .catch((err) => {console.log(err);returnErrors(err.response.data, err.response.status)});
+      .catch((err) => {/*console.log(err);*/returnErrors(err.response.data, err.response.status)});
   };
 
 //GET STUDENTS CURRENT NOT IN THE ROUTE (BUT GO TO THE SCHOOL)
@@ -40,7 +40,7 @@ export const getStudentsWithoutRoute = (parameters) => (dispatch, getState) => {
           payload: res.data,
         });
       })
-      .catch((err) => {console.log(err);returnErrors(err.response.data, err.response.status)});
+      .catch((err) => {/*console.log(err);*/returnErrors(err.response.data, err.response.status)});
   };
 
 
@@ -48,7 +48,6 @@ export const getStudentsWithoutRoute = (parameters) => (dispatch, getState) => {
     axios
       .post('/api/route/', route, tokenConfig(getState))
       .then((res) => {
-        console.log(students)
         if(students.length>0){
           students.map((student)=>{
             const stu = {...student,["routes"]:res.data.id,["school"]:student.school.id,["guardian"]:student.guardian.id};
@@ -59,12 +58,12 @@ export const getStudentsWithoutRoute = (parameters) => (dispatch, getState) => {
                 type: DELETE_STUDENT,
                 payload: parseInt(student.id)
               })
-              console.log(res.data);
+              //console.log(res.data);
               dispatch({
                 type: ADD_STUDENT,
                 payload: res.data
               })
-            }).catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});        
+            }).catch(err => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});        
           })
         }
         dispatch({
@@ -73,7 +72,7 @@ export const getStudentsWithoutRoute = (parameters) => (dispatch, getState) => {
         });
         dispatch(createMessage({ route: 'Route Created' }));
       })
-      .catch((err) => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
+      .catch((err) => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});
   };
 
 
@@ -86,13 +85,13 @@ export const getStudentsWithoutRoute = (parameters) => (dispatch, getState) => {
           type: DELETE_ROUTE,
           payload: parseInt(id)
         })
-        console.log(res.data);
+        //console.log(res.data);
         dispatch({
           type: ADD_ROUTE,
           payload: res.data
         })
           
-      }).catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
+      }).catch(err => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});
   }
   
   export const removeStudentFromRoute = (student) => (dispatch,getState)=>{
@@ -109,7 +108,7 @@ export const getStudentsWithoutRoute = (parameters) => (dispatch, getState) => {
         type: ADD_STUDENT,
         payload: res.data
       })
-    }).catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
+    }).catch(err => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});
   }
 
   export const addStudentToRoute = (student, id) => (dispatch,getState)=>{
@@ -126,5 +125,5 @@ export const getStudentsWithoutRoute = (parameters) => (dispatch, getState) => {
         type: ADD_STUDENT,
         payload: res.data
       })
-    }).catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
+    }).catch(err => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});
   }
