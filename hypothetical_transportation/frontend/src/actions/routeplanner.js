@@ -20,12 +20,8 @@ export const getStudentsInRoute = (parameters) => (dispatch, getState) => {
           type: GET_STUDENTS_IN_ROUTE,
           payload: res.data,
         });
-        dispatch({
-          type: POPULATE_TABLE,
-          payload: res.data
-        })
       })
-      .catch((err) => dispatch(returnErrors(err.response.data, err.response.status)));
+      .catch((err) => {console.log(err);returnErrors(err.response.data, err.response.status)});
   };
 
 //GET STUDENTS CURRENT NOT IN THE ROUTE (BUT GO TO THE SCHOOL)
@@ -43,12 +39,8 @@ export const getStudentsWithoutRoute = (parameters) => (dispatch, getState) => {
           type: GET_STUDENTS_WITHOUT_ROUTE,
           payload: res.data,
         });
-        dispatch({
-          type: POPULATE_TABLE,
-          payload: res.data
-        })
       })
-      .catch((err) => dispatch(returnErrors(err.response.data, err.response.status)));
+      .catch((err) => {console.log(err);returnErrors(err.response.data, err.response.status)});
   };
 
 

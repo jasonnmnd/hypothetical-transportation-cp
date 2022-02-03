@@ -62,7 +62,7 @@ function GeneralAdminRoutePlanner(props) {
       inRouteSearchParams.routes = param.route_id;
       let woRouteSearchParams = filterObjectForKeySubstring(allSearchParams, STUDENTS_WO_ROUTE_PREFIX);
       woRouteSearchParams.school = param.school_id;
-      woRouteSearchParams.routes__isnull = true;
+      //woRouteSearchParams.routes__isnull = true;
       
       if(props.action==="edit"){
         props.getStudentsInRoute(inRouteSearchParams)
@@ -137,7 +137,17 @@ function GeneralAdminRoutePlanner(props) {
     
 }
 
-
+const getRouteMatches = (i) => {
+  console.log("HEREEEE")
+  console.log(i);
+  console.log("HEREEEE111")
+  if(i.routes != null && i.routes != undefined){
+    console.log("INN")
+    return i.routes.id != props.route.id
+  }
+  return true;
+  
+}
 
 
   return (
@@ -179,8 +189,8 @@ function GeneralAdminRoutePlanner(props) {
           </div>
 
           <div className='left-content'>
-                  <h2>Students at {props.route.school.name} with no route</h2>
-                  <GeneralAdminTableView values={props.studentsWithoutRoute.filter(i=>!tobeadded.includes(i))} tableType={"student"} title={`Students at ${props.route.school.name} with no route`} actionName={"Add to Route"} action={addToRoute} search={STUDENTS_WO_ROUTE_PREFIX} pagination={STUDENTS_WO_ROUTE_PREFIX}/>
+                  <h2>Students at {props.route.school.name} not on this route</h2>
+                  <GeneralAdminTableView values={props.studentsWithoutRoute.filter(i=>!tobeadded.includes(i) && getRouteMatches(i))} tableType={"student"} title={`Students at ${props.route.school.name} with no route`} actionName={"Add to Route"} action={addToRoute} search={STUDENTS_WO_ROUTE_PREFIX} pagination={STUDENTS_WO_ROUTE_PREFIX}/>
           </div>
 
           <div className='left-content'>
