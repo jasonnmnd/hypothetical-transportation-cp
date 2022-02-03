@@ -14,6 +14,9 @@ from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -43,6 +46,7 @@ LOGGING = {
 
 ALLOWED_HOSTS = [
         '0.0.0.0',
+        'localhost',
         'hypothetical-transportation.colab.duke.edu',
         'ht.colab.duke.edu',
         'ht-dev.colab.duke.edu',

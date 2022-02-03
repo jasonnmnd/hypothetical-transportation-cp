@@ -18,3 +18,4 @@ typing-extensions==4.0.1
 django-extensions
 Werkzeug
 pyOpenSSL
+gunicorn==20.1.0

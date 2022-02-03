@@ -19,13 +19,28 @@ services:
     #           "python hypothetical_transportation/manage.py loaddata hypothetical_transportation/backend/fixtures/data.json &&"\
     #           "python hypothetical_transportation/manage.py initadmin && "\
     #           "python hypothetical_transportation/manage.py runserver 0.0.0.0:8000"
-    # volumes:
+    volumes:
+      - static_volume:/code/staticfiles
       # - .:/code/
-    ports:
-      - "8000:8000"
+    # ports:
+      # - "8000:8000"
+    expose:
+      - "8000"
+      
     environment:
       - POSTGRES_DB=admin
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=admin
     depends_on:
       - db
+  nginx:
+    build: ./nginx
+    ports:
+      - "1337:80"
+    depends_on:
+      - web
+    volumes:
+      - static_volume:/code/staticfiles
+
+volumes:
+  static_volume:
