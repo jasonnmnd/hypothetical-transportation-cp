@@ -35,7 +35,7 @@ export const deleteUser = (id) => (dispatch, getState) => {
             type: DELETE_USER,
             payload: parseInt(id)
           });
-    }).catch(err => {console.log("FAIL");console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
+    }).catch(err => {console.log("FAIL");/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});
 }
 
 export const addUser = (user) => (dispatch, getState) => {
@@ -87,7 +87,7 @@ export const getUser = (id) => (dispatch, getState) => {
           payload: res.data
         })
         //res.data.groups.includes(1)?setColumn("admin_user"):setColumn("parent_user")
-      }).catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
+      }).catch(err => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});
   }
 
   export const updateUser = (user, id) => (dispatch, getState) => {
@@ -99,13 +99,13 @@ export const getUser = (id) => (dispatch, getState) => {
                 type: DELETE_USER,
                 payload: parseInt(id)
               })
-              console.log(res.data);
+              //console.log(res.data);
               dispatch({
                 type: ADD_USER,
                 payload: res.data
               })
                 
-            }).catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
+            }).catch(err => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});
   }
   
 

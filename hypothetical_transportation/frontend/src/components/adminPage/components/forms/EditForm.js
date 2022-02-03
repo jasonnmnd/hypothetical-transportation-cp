@@ -35,34 +35,34 @@ function EditForm(props) {
                                     axios
                                         .put(`/api/student/${stu.id}/`,stu, config(props.token))
                                         .then(res =>{
-                                        }).catch(err => console.log(err));
+                                        }).catch(err => /*console.log(err)*/{});
                                 })
                             }
                             navigate(`/admin/${col}/${props.obj.id}/`)
-                            }).catch(err => console.log(err));
+                            }).catch(err => /*console.log(err)*/{});
                     }
                     else{
                         navigate(`/admin/${col}/${props.obj.id}/`)
                     }
 
-                }).catch(err => console.log(err));
+                }).catch(err => /*console.log(err)*/{});
         }else if(props.action==="new"){
-            console.log("new")
-            console.log(props.obj)
+            //console.log("new")
+            //console.log(props.obj)
             if(col.includes("user")){
                 axios
                     .post(`/api/auth/register`,props.obj, config(props.token))
                     .then(res =>{
                         navigate(`/admin/${col}s/`)
 
-                    }).catch(err => console.log(err));
+                    }).catch(err => /*console.log(err)*/{});
             }else{            
                 axios
                     .post(`/api/${col}/`,props.obj, config(props.token))
                     .then(res =>{
                         navigate(`/admin/${col}s/`)
 
-                    }).catch(err => console.log(err));
+                    }).catch(err => /*console.log(err)*/{});
             }
         }
     }
@@ -73,7 +73,7 @@ function EditForm(props) {
     }
 
     const handleConfirmAddress = () => {
-        console.log("Address confirmed")
+        //console.log("Address confirmed")
         submit()
       }
     

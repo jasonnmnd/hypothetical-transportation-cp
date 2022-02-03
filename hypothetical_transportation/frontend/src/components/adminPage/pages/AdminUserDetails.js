@@ -15,7 +15,6 @@ import { getUser } from '../../../actions/users';
 
 
 function AdminUserDetails(props) {
-  console.log("HIIII")
   const navigate = useNavigate();
   const param = useParams();
 
@@ -24,9 +23,9 @@ function AdminUserDetails(props) {
   const handleConfirmDelete = () => {
     axios.delete(`/api/user/${param.id}/`, config(props.token))
         .then(res => {
-          console.log("DELETED User");
+
           navigate(`/admin/users/`)
-        }).catch(err => console.log(err));
+        }).catch(err => /*console.log(err)*/{});
   }
 
 
@@ -67,23 +66,19 @@ function AdminUserDetails(props) {
   //       .then(res => {
   //         setUser(res.data);
   //         res.data.groups.includes(1)?setColumn("admin_user"):setColumn("parent_user")
-  //       }).catch(err => console.log(err));
+  //       }).catch(err => /*console.log(err)*/{});
   //   }
   
   const getStudents = () => {
     axios.get(`/api/student/?guardian=${param.id}`, config(props.token))
         .then(res => {
-          console.log(res.data.results)
           setStudents(res.data.results);
-        }).catch(err => console.log(err));
+        }).catch(err => /*console.log(err)*/{});
     }
 
   useEffect(() => {
-    console.log("HIIII")
-    console.log(props)
     props.getUser();
     getStudents();
-    console.log(colum)
 
   }, []);
 

@@ -22,7 +22,7 @@ export const getSchools = (parameters) => (dispatch, getState) => {
         payload: res.data,
       });
     })
-    .catch((err) => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
+    .catch((err) => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});
 
 }
 
@@ -36,7 +36,7 @@ export const addSchool = (school) => (dispatch, getState) => {
         payload: res.data,
       });
     })
-    .catch((err) => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
+    .catch((err) => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});
 };
 
 export const deleteSchool = (id) => (dispatch, getState) => {
@@ -49,7 +49,7 @@ export const deleteSchool = (id) => (dispatch, getState) => {
         payload: parseInt(id)
       });
     })
-    .catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
+    .catch(err => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});
 }
 
 export const searchSchools = (i1, i2, i3) => (dispatch, getState) => {
@@ -78,7 +78,7 @@ export const searchSchools = (i1, i2, i3) => (dispatch, getState) => {
             type: POPULATE_TABLE,
             payload: res.data
           })
-        }).catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
+        }).catch(err => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});
 };
 
 export const getSchool = (id) => (dispatch, getState) => {
@@ -88,7 +88,7 @@ export const getSchool = (id) => (dispatch, getState) => {
           type: GET_SCHOOL,
           payload: res.data
         })
-      }).catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
+      }).catch(err => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});
   }
 
   export const updateSchool = (school, id) => (dispatch, getState) => {
@@ -105,5 +105,5 @@ export const getSchool = (id) => (dispatch, getState) => {
                 payload: res.data
               })
                 
-            }).catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
+            }).catch(err => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});
   }

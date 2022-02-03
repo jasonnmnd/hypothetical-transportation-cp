@@ -35,22 +35,22 @@ function AdminStudentDetails(props) {
         axios.get(`/api/user/${res.data.guardian}/`, config(props.token))
           .then(res => {
             setParentName(res.data.full_name);
-        }).catch(err => console.log(err));
+        }).catch(err => /*console.log(err)*/{});
         axios.get(`/api/school/${res.data.school}/`, config(props.token))
           .then(res => {
             setSchoolName(res.data.name);
-        }).catch(err => console.log(err));
+        }).catch(err => /*console.log(err)*/{});
         if (res.data.routes!==undefined && res.data.routes!==null){
           axios.get(`/api/route/${res.data.routes}/`, config(props.token))
             .then(res => {
               setRouteName(res.data.name);
               setRouteExist(true)
-          }).catch(err => console.log(err));
+          }).catch(err => /*console.log(err)*/{});
         }
         else{
           setRouteName("NONE")
         }
-    }).catch(err => console.log(err));
+    }).catch(err => /*console.log(err)*/{});
   }
 
 
@@ -60,10 +60,9 @@ function AdminStudentDetails(props) {
     //Replace with API call to delete student
     //Route back to students page
     axios.delete(`/api/student/${param.id}/`, config(props.token)).then(res => {
-      console.log("DELETED STUDENT");
       navigate(`/admin/students/`)
 
-    }).catch(err => console.log(err));
+    }).catch(err => /*console.log(err)*/{});
   }
 
   useEffect(() => {

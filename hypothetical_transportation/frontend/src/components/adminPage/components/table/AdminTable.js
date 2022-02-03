@@ -20,7 +20,6 @@ function AdminTable(props) {
 
     const handleViewClick = (d) => {
         setData(d);
-        console.log(d);
         //route to /props.title?somethingid=id => props.title determins routing to student, route, school, user
         if (props.title.toLowerCase().includes('user')) {
             nav(`/admin/user/${d.id}`);

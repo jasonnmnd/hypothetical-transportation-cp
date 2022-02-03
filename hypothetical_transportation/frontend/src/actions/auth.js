@@ -64,7 +64,6 @@ export const register = (user) => (dispatch, getState) => {
     axios
       .post('/api/auth/register', user, tokenConfig(getState))
       .then((res) => {
-        console.log("REGI")
         dispatch(createMessage({ user: 'User Created' }));
         dispatch({
           type: REGISTER_SUCCESS,
@@ -89,7 +88,7 @@ export const logout = () => (dispatch, getState) => {
         });
       })
       .catch((err) => {
-        console.log(err)
+        //console.log(err)
         dispatch(returnErrors(err.response.data, err.response.status));
       });
   };
