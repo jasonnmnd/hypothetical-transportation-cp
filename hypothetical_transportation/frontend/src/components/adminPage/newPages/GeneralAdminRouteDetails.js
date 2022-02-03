@@ -53,9 +53,9 @@ function GeneralAdminRouteDetails(props) {
 
   return (
     <>  
+        <div className='confirm_location'>{openModal && <DeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}</div>
         <SidebarSliding/>
         <Header textToDisplay={"Route Details"} shouldShowOptions={true}></Header>
-        <div className='confirm_location'>{openModal && <DeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}</div>
         <div className='header-padding'>
           <div className='action-bar'>
             <Link to={`/admin/route/edit/${props.route.school.id}/${props.route.id}`}><button>Edit Route</button></Link>
@@ -80,9 +80,11 @@ function GeneralAdminRouteDetails(props) {
                 <h2>School: </h2>
                 <Link to={`/admin/school/${props.route.school.id}`}><button className='button'><h3>{props.route.school.name}</h3></button></Link>
                 <br></br>
-                <MapContainer schoolData={props.route.school} routeStudentData={props.students}/>:
               </div>
 
+              <div className='info-fields'>
+                <MapContainer schoolData={props.route.school} routeStudentData={props.students}/>
+              </div>
           </div>
           <div className='left-content'>
             <div className='info-fields'>
