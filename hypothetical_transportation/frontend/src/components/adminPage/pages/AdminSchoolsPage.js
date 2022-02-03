@@ -16,12 +16,10 @@ function AdminSchoolsPage(props) {
 
   const handlePrevClick = () => {
     //API Call here to get new data to display for next page
-    console.log("Prev Clicked");
   }
 
   const handleNextClick = () => {
     //API Call here to get new data to display for next page
-    console.log("Next Clicked");
   }
 
   // const propTypes = {
@@ -44,7 +42,7 @@ function AdminSchoolsPage(props) {
     axios.get('/api/school/', config(props.token))
         .then(res => {
             setSchools(res.data.results);
-        }).catch(err => console.log(err));
+        }).catch(err => {});
     }
 
   useEffect(() => {
@@ -70,7 +68,7 @@ function AdminSchoolsPage(props) {
     axios.get(url, config(props.token))
         .then(res => {
           setSchools(res.data.results);
-        }).catch(err => console.log(err));
+        }).catch(err => /*console.log(err)*/{});
   }
   
 

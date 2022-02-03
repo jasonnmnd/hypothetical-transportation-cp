@@ -31,7 +31,7 @@ function AdminRoutesPage(props) {
     axios.get(`/api/route/`, config(props.token))
         .then(res => {
           setRoutes(res.data.results);
-        }).catch(err => console.log(err));
+        }).catch(err => /*console.log(err)*/{});
   }
 
   const searchRoute = (i1,i2,i3) => {
@@ -52,7 +52,7 @@ function AdminRoutesPage(props) {
     axios.get(url, config(props.token))
         .then(res => {
           setRoutes(res.data.results);
-        }).catch(err => console.log(err));
+        }).catch(err => /*console.log(err)*/{});
   }
   
   useEffect(() => {
@@ -69,21 +69,20 @@ function AdminRoutesPage(props) {
               list = list.concat({id: route.id,name:route.name, school:school.data.name, num_student:res.data.results.length})
               list.sort((a, b) => routes.findIndex((r) => r.id === a.id) - routes.findIndex((r) => r.id === b.id));
               setTable(list)
-            }).catch(err => console.log(err));
-      }).catch(err => console.log(err));
+            }).catch(err => /*console.log(err)*/{});
+      }).catch(err => /*console.log(err)*/{});
     })
-    console.log(table)
+
   },[routes]);
 
 
   const handlePrevClick = () => {
     //API Call here to get new data to display for next page
-    console.log("Prev Clicked");
+
   }
 
   const handleNextClick = () => {
-    //API Call here to get new data to display for next page
-    console.log("Next Clicked");
+
   }
 
   const search = (value)=>{

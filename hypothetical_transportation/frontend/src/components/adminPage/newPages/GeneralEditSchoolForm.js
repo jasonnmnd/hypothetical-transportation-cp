@@ -50,7 +50,7 @@ function GeneralEditSchoolForm(props) {
                 address: address
             })
         }
-        navigate(`/admin/`)
+        navigate(`/admin/schools`)
     }
 
 
@@ -67,7 +67,7 @@ function GeneralEditSchoolForm(props) {
     return (
         <div>
             <SidebarSliding/>
-            <Header textToDisplay={"Modify School"} shouldShowOptions={true}></Header>
+            <Header textToDisplay={`${props.action} school`} shouldShowOptions={true}></Header>
             <div className='admin-edit-page'>  
             {/* <div className='confirm_location'>{openModal && <AssistedLocationModal closeModal={setOpenModal} handleConfirmAddress={handleConfirmAddress} address={address}></AssistedLocationModal>}</div> */}
             <form>

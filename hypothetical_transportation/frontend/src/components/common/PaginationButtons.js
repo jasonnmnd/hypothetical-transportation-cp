@@ -46,9 +46,9 @@ function PaginationButtons( props ) {
                 <button className='button' onClick={handleLessClick}>Show Less</button> 
                 :
                 <div> 
-                <button className='button' onClick={handlePrevClick} disabled={searchParams.get(pageNumWithPrefix) == 1} >Prev</button>
+                <button className={(searchParams.get(pageNumWithPrefix) == 1) ? 'button-disabled' : 'button'} onClick={handlePrevClick} disabled={searchParams.get(pageNumWithPrefix) == 1} >Prev</button>
                 {searchParams.get(pageNumWithPrefix)}
-                <button className='button' onClick={handleNextClick} disabled={props.nextDisable} >Next</button> 
+                <button className={props.nextDisable ? 'button-disabled' : 'button'} onClick={handleNextClick} disabled={props.nextDisable} >Next</button> 
                 <div className='divider15px'/>
             <button className='button' onClick={handleAllClick} >Show All</button>
                 </div>}

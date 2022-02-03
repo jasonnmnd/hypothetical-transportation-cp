@@ -61,9 +61,8 @@ function AdminSchoolDetails(props) {
     //Route back to students page
     axios.delete(`/api/school/${param.id}/`, config(props.token))
         .then(res => {
-          console.log("DELETED Route");
           navigate(`/admin/schools/`)
-        }).catch(err => console.log(err));
+        }).catch(err => /*console.log(err)*/{});
   }
   
   const emptySchool = {
@@ -101,26 +100,22 @@ function AdminSchoolDetails(props) {
   const getSchool = () => {
     axios.get(`/api/school/${param.id}/`, config(props.token))
         .then(res => {
-          console.log("hello")
-          console.log(res.data)
             setSchool(res.data);
-        }).catch(err => console.log(err));
+        }).catch(err => /*console.log(err)*/{});
     }
 
   const getStudent = () => {
     axios.get(`/api/student/?school=${param.id}`, config(props.token))
         .then(res => {
-          console.log(res.data.results)
             setStudents(res.data.results);
-        }).catch(err => console.log(err));
+        }).catch(err => /*console.log(err)*/{});
     }
   
   const getRoutes = () => {
     axios.get(`/api/route/?school=${param.id}`, config(props.token))
         .then(res => {
-          console.log(res.data.results)
             setRoutes(res.data.results);
-        }).catch(err => console.log(err));
+        }).catch(err => /*console.log(err)*/{});
     }
 
   useEffect(() => {

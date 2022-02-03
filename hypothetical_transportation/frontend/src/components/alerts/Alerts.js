@@ -35,9 +35,12 @@ function Alerts(props) {
         }
 
         if (message !== prevMessageRef.current) {
-          if (message.deleteLead) alert.success(message.deleteLead);
-          if (message.addLead) alert.success(message.addLead);
+          if (message.student) alert.success(message.student);
+          if (message.user) alert.success(message.user);
+          if (message.school) alert.success(message.school);
+          if (message.route) alert.success(message.route);
           if (message.passwordNotMatch) alert.error(message.passwordNotMatch);
+          prevMessageRef.current = props.message;
         }
       }
     });

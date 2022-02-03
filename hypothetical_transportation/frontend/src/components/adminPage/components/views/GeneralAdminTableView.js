@@ -88,49 +88,121 @@ const routeColumns = [
 // ]
 
 const userSortBy = [
-    "full_name",
-    "email",
-    "-full_name",
-    "-email"
+    {
+        key: "full_name",
+        text: "Full Name Ascending"
+    },
+    {
+        key: "email",
+        text: "Email Address Ascending"
+    },
+    {
+        key: "-full_name",
+        text: "Full Name Descending"
+    },
+    {
+        key: "-email",
+        text: "Email Address Descending"
+    },
 ]
 
 const studentSortBy = [
-    "full_name",
-    "student_id",
-    "school__name",
-    "-full_name",
-    "-student_id",
-    "-school__name"
+    {
+        key: "full_name",
+        text: "Full Name Ascending"
+    },
+    {
+        key: "student_id",
+        text: "Student ID Ascending"
+    },
+    {
+        key: "school__name",
+        text: "School Name Ascending"
+    },
+    {
+        key: "-full_name",
+        text: "Full Name Descending"
+    },
+    {
+        key: "-student_id",
+        text: "Student ID Descending"
+    },
+    {
+        key: "-school__name",
+        text: "School Name Descending"
+    },
 ]
 
 const schoolSortBy = [
-    "name",
-    "-name"
+    {
+        key: "name",
+        text: "Name Ascending"
+    },
+    {
+        key: "-name",
+        text: "Name Descending"
+    }
 ]
 
 const routeSortBy = [
-    "name",
-    "school__name",
-    "students",
-    "-name",
-    "-school__name",
-    "-students",
+    {
+        key: "name",
+        text: "Name Ascending"
+    },
+    {
+        key: "-name",
+        text: "Name Descending"
+    },,
+    {
+        key: "school__name",
+        text: "School Name Ascending"
+    },
+    {
+        key: "-school__name",
+        text: "School Name Descending"
+    },
+    {
+        key: "students",
+        text: "Number of Students Ascending"
+    },
+    {
+        key: "-students",
+        text: "Number of Students Descending"
+    },
 ]
 
 const userFilterBy = [
-    "full_name",
-    "email"
+    {
+        key: "full_name",
+        text: "Full Name"
+    },
+    {
+        key: "email",
+        text: "Email Address"
+    }
 ]
 
 const studentFilterBy = [
-    "full_name",
-    "student_id"
+    {
+        key: "full_name",
+        text: "Full Name"
+    },
+    {
+        key: "student_id",
+        text: "Student ID"
+    }
 ]
 const schoolFilterBy = [
-    "name",
+    {
+        key: "name",
+        text: "Name"
+    },
 ]
 const routeFilterBy = [
-    "name",
+    {
+        key: "name",
+        text: "Name"
+    },
 ]
 
 
@@ -142,7 +214,7 @@ function GeneralAdminTableView( props ) {
 
     const handleViewClick = (d) => {
         //route to /props.title?somethingid=id => props.title determins routing to student, route, school, user
-        console.log(d)
+        //console.log(d)
         if (props.tableType == 'user') {
             nav(`/admin/user/${d.id}`);
         } 

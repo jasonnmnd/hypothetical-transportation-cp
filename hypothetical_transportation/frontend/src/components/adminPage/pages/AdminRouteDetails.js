@@ -20,10 +20,9 @@ function AdminRouteDetails(props) {
     //Replace with API call to delete school and all its associated routes/students
     //Route back to students page
     axios.delete(`/api/route/${param.id}/`, config(props.token)).then(res => {
-      console.log("DELETED Route");
       navigate(`/admin/routes/`)
 
-    }).catch(err => console.log(err));
+    }).catch(err => /*console.log(err)*/{});
 
   }
   
@@ -64,17 +63,16 @@ function AdminRouteDetails(props) {
       axios.get(`/api/school/${res.data.school}/`, config(props.token))
           .then(res => {
             setSchoolName(res.data.name);
-        }).catch(err => console.log(err));
-    }).catch(err => console.log(err));
+        }).catch(err => /*console.log(err)*/{});
+    }).catch(err => /*console.log(err)*/{});
   }
   
   
   const getStudent = () => {
   axios.get(`/api/student/?routes=${param.id}`, config(props.token))
     .then(res => {
-      console.log(res.data.results)
       setStudents(res.data.results);
-    }).catch(err => console.log(err));
+    }).catch(err => /*console.log(err)*/{});
   }
   
 

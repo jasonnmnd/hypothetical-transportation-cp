@@ -1,6 +1,6 @@
 import axios from "axios";
 import { tokenConfig } from "./auth";
-import { returnErrors } from "./messages";
+import { returnErrors, createMessage } from "./messages";
 import { GET_STUDENTS_IN_ROUTE, GET_STUDENTS_WITHOUT_ROUTE, ADD_ROUTE, DELETE_ROUTE } from './types';
 import { getParameters } from "./utils";
 
@@ -20,12 +20,8 @@ export const getStudentsInRoute = (parameters) => (dispatch, getState) => {
           type: GET_STUDENTS_IN_ROUTE,
           payload: res.data,
         });
-        dispatch({
-          type: POPULATE_TABLE,
-          payload: res.data
-        })
       })
-      .catch((err) => dispatch(returnErrors(err.response.data, err.response.status)));
+      .catch((err) => {/*console.log(err);*/returnErrors(err.response.data, err.response.status)});
   };
 
 //GET STUDENTS CURRENT NOT IN THE ROUTE (BUT GO TO THE SCHOOL)
@@ -43,12 +39,8 @@ export const getStudentsWithoutRoute = (parameters) => (dispatch, getState) => {
           type: GET_STUDENTS_WITHOUT_ROUTE,
           payload: res.data,
         });
-        dispatch({
-          type: POPULATE_TABLE,
-          payload: res.data
-        })
       })
-      .catch((err) => dispatch(returnErrors(err.response.data, err.response.status)));
+      .catch((err) => {/*console.log(err);*/returnErrors(err.response.data, err.response.status)});
   };
 
 
@@ -56,7 +48,6 @@ export const getStudentsWithoutRoute = (parameters) => (dispatch, getState) => {
     axios
       .post('/api/route/', route, tokenConfig(getState))
       .then((res) => {
-        console.log(students)
         if(students.length>0){
           students.map((student)=>{
             const stu = {...student,["routes"]:res.data.id,["school"]:student.school.id,["guardian"]:student.guardian.id};
@@ -67,20 +58,21 @@ export const getStudentsWithoutRoute = (parameters) => (dispatch, getState) => {
                 type: DELETE_STUDENT,
                 payload: parseInt(student.id)
               })
-              console.log(res.data);
+              //console.log(res.data);
               dispatch({
                 type: ADD_STUDENT,
                 payload: res.data
               })
-            }).catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});        
+            }).catch(err => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});        
           })
         }
         dispatch({
           type: ADD_ROUTE,
           payload: res.data,
         });
+        dispatch(createMessage({ route: 'Route Created' }));
       })
-      .catch((err) => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
+      .catch((err) => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});
   };
 
 
@@ -88,17 +80,18 @@ export const getStudentsWithoutRoute = (parameters) => (dispatch, getState) => {
     axios
       .put(`/api/route/${id}/`,route, tokenConfig(getState))
       .then(res =>{
+        dispatch(createMessage({ route: 'Route Updated' }));
         dispatch({
           type: DELETE_ROUTE,
           payload: parseInt(id)
         })
-        console.log(res.data);
+        //console.log(res.data);
         dispatch({
           type: ADD_ROUTE,
           payload: res.data
         })
           
-      }).catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
+      }).catch(err => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});
   }
   
   export const removeStudentFromRoute = (student) => (dispatch,getState)=>{
@@ -115,7 +108,7 @@ export const getStudentsWithoutRoute = (parameters) => (dispatch, getState) => {
         type: ADD_STUDENT,
         payload: res.data
       })
-    }).catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
+    }).catch(err => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});
   }
 
   export const addStudentToRoute = (student, id) => (dispatch,getState)=>{
@@ -132,5 +125,5 @@ export const getStudentsWithoutRoute = (parameters) => (dispatch, getState) => {
         type: ADD_STUDENT,
         payload: res.data
       })
-    }).catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
+    }).catch(err => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});
   }

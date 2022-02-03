@@ -33,9 +33,8 @@ function AdminStudentsPage(props) {
   const getStudent = () => {
     axios.get(`/api/student/`, config(props.token))
         .then(res => {
-          console.log(res.data.results)
           setStudents(res.data.results);
-        }).catch(err => console.log(err));
+        }).catch(err => /*console.log(err)*/{});
     }
   
 
@@ -60,9 +59,8 @@ function AdminStudentsPage(props) {
     }
     axios.get(url, config(props.token))
         .then(res => {
-          console.log(res.data.results)
           setStudents(res.data.results);
-        }).catch(err => console.log(err));
+        }).catch(err => /*console.log(err)*/{});
   }
   
 
@@ -73,12 +71,11 @@ function AdminStudentsPage(props) {
 
   const handlePrevClick = () => {
     //API Call here to get new data to display for next page
-    console.log("Prev Clicked");
   }
 
   const handleNextClick = () => {
     //API Call here to get new data to display for next page
-    console.log("Next Clicked");
+
   }
 
   

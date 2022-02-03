@@ -62,7 +62,7 @@ function GeneralAdminRoutePlanner(props) {
       inRouteSearchParams.routes = param.route_id;
       let woRouteSearchParams = filterObjectForKeySubstring(allSearchParams, STUDENTS_WO_ROUTE_PREFIX);
       woRouteSearchParams.school = param.school_id;
-      woRouteSearchParams.routes__isnull = true;
+      //woRouteSearchParams.routes__isnull = true;
       
       if(props.action==="edit"){
         props.getStudentsInRoute(inRouteSearchParams)
@@ -91,43 +91,35 @@ function GeneralAdminRoutePlanner(props) {
   const addToRoute =  (i)=>{
     const list = tobeadded.concat(i)
     setAdd(list)
-    console.log("add to route")
   }
 
   const removeFromADD =  (i)=>{
     setAdd(tobeadded.filter(item=>item.id!==i.id))
-    console.log("remove from selected to be added")
   }
 
 
   const removeFromREMOVE =  (i)=>{
     setRemove(toberemoved.filter(item=>item.id!==i.id))
-    console.log("remove from selected to be removed")
   }
 
   const removeFromRoute =  (i)=>{
     const list = toberemoved.concat(i)
     setRemove(list)
-    console.log("remove from this route")
   }
 
   const submit = (e)=>{
     e.preventDefault();
     if(props.action==="new"){
-        console.log("mew")
         props.addRoute(obj,tobeadded);
     }
     else{
-        console.log("edit")
         props.updateRoute(obj, obj.id);
         if(tobeadded.length>0){
-            console.log("adding")
             tobeadded.map((stu)=>{
                 props.addStudentToRoute(stu,obj.id)
             })
         }
         if(toberemoved.length>0){
-            console.log("removing")
             toberemoved.map((stu)=>{
                 props.removeStudentFromRoute(stu)
             })
@@ -137,7 +129,13 @@ function GeneralAdminRoutePlanner(props) {
     
 }
 
-
+const getRouteMatches = (i) => {
+  if(i.routes != null && i.routes != undefined){
+    return i.routes.id != props.route.id
+  }
+  return true;
+  
+}
 
 
   return (
@@ -156,32 +154,43 @@ function GeneralAdminRoutePlanner(props) {
               <h2>Map of School and Students</h2>
               {props.action==="new"?
                 <MapContainer studentData={props.studentsWithoutRoute} schoolData={props.school}/>:
-                <MapContainer studentData={props.studentsWithoutRoute} schoolData={props.route.school} routeStudentData={props.studentsInRoute}/>
+                <MapContainer studentData={props.studentsWithoutRoute.filter(i => getRouteMatches(i))} schoolData={props.route.school} routeStudentData={props.studentsInRoute}/>
               }
 
-              {props.action==="edit"?
-              <>
-                <div className='shadow-box'>
-                  <h2>Students currently in {props.route.name} (Green pin)</h2>
-                  <GeneralAdminTableView values={props.studentsInRoute.filter(i=>!toberemoved.includes(i))} tableType={"student"} title={`Students currently in ${props.route.name} (Green pin)`} actionName={"Remove from Route"} action={removeFromRoute} search={STUDENTS_IN_ROUTE_PREFIX} pagination={STUDENTS_IN_ROUTE_PREFIX} />
-                </div>
-                <div className='shadow-box'>
-                  <h2>Students To Be Remove from Route</h2>
-                  <GeneralAdminTableView values={toberemoved} tableType={"student"} title={`Students To Be Remove from Route`} actionName={"Remove from Selected"} action={removeFromREMOVE} search={null} pagination={null}/>
-                </div></>:
+              {
+              props.action==="edit" ?
+                <>
+                  <div className='shadow-box'>
+                    <h2>Students Currently in {props.route.name} (Green Pin)</h2>
+                    <GeneralAdminTableView values={props.studentsInRoute.filter(i=>!toberemoved.includes(i))} tableType={"student"} title={`Students currently in ${props.route.name} (Green pin)`} actionName={"Remove from Route"} action={removeFromRoute} search={STUDENTS_IN_ROUTE_PREFIX} pagination={STUDENTS_IN_ROUTE_PREFIX} />
+                  </div>
+                </>
+                : 
+                <div></div>  
+              }
+              <div className='shadow-box'>
+                  <h2>Students at {props.route.school.name} not in {props.route.name} (Red Pin) </h2>
+                  <GeneralAdminTableView values={props.studentsWithoutRoute.filter(i=>!tobeadded.includes(i) && getRouteMatches(i))} tableType={"student"} title={`Students at ${props.route.school.name} with no route`} actionName={"Add to Route"} action={addToRoute} search={STUDENTS_WO_ROUTE_PREFIX} pagination={STUDENTS_WO_ROUTE_PREFIX}/>
+              </div>
+              <div className='shadow-box'>
+              <h2>Students to be Added to {props.route.name}</h2>
+              <GeneralAdminTableView values={tobeadded} tableType={"student"} title={`Students To Be Added into Route`} actionName={"Remove from Selected"} action={removeFromADD} search={null} pagination={null}/>
+              </div>
+              {
+              props.action==="edit" ?
+                <>
+                  <div className='shadow-box'>
+                    <h2>Students to be Removed from {props.route.name}</h2>
+                    <GeneralAdminTableView values={toberemoved} tableType={"student"} title={`Students To Be Remove from Route`} actionName={"Remove from Selected"} action={removeFromREMOVE} search={null} pagination={null}/>
+                  </div>
+                </>
+                :
                 <div></div>
               }
           </div>
 
-          <div className='left-content'>
-                  <h2>Students To Be Added into Route</h2>
-                  <GeneralAdminTableView values={tobeadded} tableType={"student"} title={`Students To Be Added into Route`} actionName={"Remove from Selected"} action={removeFromADD} search={null} pagination={null}/>
-          </div>
 
-          <div className='left-content'>
-                  <h2>Students at {props.route.school.name} with no route</h2>
-                  <GeneralAdminTableView values={props.studentsWithoutRoute.filter(i=>!tobeadded.includes(i))} tableType={"student"} title={`Students at ${props.route.school.name} with no route`} actionName={"Add to Route"} action={addToRoute} search={STUDENTS_WO_ROUTE_PREFIX} pagination={STUDENTS_WO_ROUTE_PREFIX}/>
-          </div>
+          
 
           <div className='left-content'>
               <form>

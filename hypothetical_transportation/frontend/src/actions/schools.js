@@ -22,7 +22,7 @@ export const getSchools = (parameters) => (dispatch, getState) => {
         payload: res.data,
       });
     })
-    .catch((err) => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
+    .catch((err) => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});
 
 }
 
@@ -30,28 +30,26 @@ export const addSchool = (school) => (dispatch, getState) => {
   axios
     .post('/api/school/', school, tokenConfig(getState))
     .then((res) => {
+      dispatch(createMessage({ school: 'School Created' }));
       dispatch({
         type: ADD_SCHOOL,
         payload: res.data,
       });
     })
-    .catch((err) => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
+    .catch((err) => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});
 };
 
 export const deleteSchool = (id) => (dispatch, getState) => {
   axios
     .delete(`/api/school/${id}/`, tokenConfig(getState))
     .then(res => {
+      dispatch(createMessage({ school: 'School Deleted' }));
       dispatch({
         type: DELETE_SCHOOL,
         payload: parseInt(id)
       });
-      dispatch({
-        type: DELETE_ITEM,
-        payload: parseInt(id)
-      });
     })
-    .catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
+    .catch(err => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});
 }
 
 export const searchSchools = (i1, i2, i3) => (dispatch, getState) => {
@@ -80,7 +78,7 @@ export const searchSchools = (i1, i2, i3) => (dispatch, getState) => {
             type: POPULATE_TABLE,
             payload: res.data
           })
-        }).catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
+        }).catch(err => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});
 };
 
 export const getSchool = (id) => (dispatch, getState) => {
@@ -90,13 +88,14 @@ export const getSchool = (id) => (dispatch, getState) => {
           type: GET_SCHOOL,
           payload: res.data
         })
-      }).catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
+      }).catch(err => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});
   }
 
   export const updateSchool = (school, id) => (dispatch, getState) => {
     axios
             .put(`/api/school/${id}/`,school, tokenConfig(getState))
             .then(res =>{
+              dispatch(createMessage({ school: 'School Updated' }));
               dispatch({
                 type: DELETE_SCHOOL,
                 payload: parseInt(id)
@@ -106,5 +105,5 @@ export const getSchool = (id) => (dispatch, getState) => {
                 payload: res.data
               })
                 
-            }).catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
+            }).catch(err => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});
   }
