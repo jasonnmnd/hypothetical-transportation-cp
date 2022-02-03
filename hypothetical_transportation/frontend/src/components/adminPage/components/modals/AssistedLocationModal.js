@@ -20,11 +20,11 @@ function AssistedLocationModal(props) {
         Geocode.fromAddress(props.address).then(
             (response) => {
                 const { lat, lng } = response.results[0].geometry.location;
-                console.log(lat, lng);
+                //console.log(lat, lng);
                 setUserLocation({lat: lat, lng: lng})
             },
             (error) => {
-                console.log(error);
+                //console.log(error);
         });
     }
     

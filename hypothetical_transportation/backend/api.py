@@ -66,7 +66,8 @@ class UserViewSet(viewsets.ModelViewSet):
     ]
     filter_backends = [DjangoFilterBackend, DynamicSearchFilter, filters.OrderingFilter]
     filterset_fields = get_filter_dict(get_user_model())
-    ordering_fields = ['email', 'full_name']
+    ordering_fields = ['email', 'full_name', 'id']
+    ordering = 'id'
 
     def get_serializer_class(self):
         if self.action == 'partial_update' or self.action == 'update':
@@ -77,9 +78,9 @@ class UserViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         if is_admin(self.request.user):
-            return get_user_model().objects.all().distinct()
+            return get_user_model().objects.all().distinct().order_by('id')
         else:
-            return get_user_model().objects.filter(id=self.request.user.id).distinct()
+            return get_user_model().objects.filter(id=self.request.user.id).distinct().order_by('id')
 
     @action(detail=False, permission_classes=[permissions.AllowAny])
     def fields(self, request):
@@ -94,7 +95,8 @@ class RouteViewSet(viewsets.ModelViewSet):
     ]
     filter_backends = [DjangoFilterBackend, DynamicSearchFilter, StudentCountShortCircuitFilter]
     filterset_fields = get_filter_dict(Route)
-    ordering_fields = ['school__name', 'name', 'students']
+    ordering_fields = ['school__name', 'name', 'students', 'id']
+    ordering = 'id'
 
     def get_serializer_class(self):
         if self.action == 'list' or self.action == 'retrieve':
@@ -104,10 +106,10 @@ class RouteViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         # Only return routes associated with children of current user
         if is_admin(self.request.user):
-            return Route.objects.all().distinct()
+            return Route.objects.all().distinct().order_by('id')
         else:
             students_queryset = self.request.user.students
-            return Route.objects.filter(id__in=students_queryset.values('routes_id')).distinct()
+            return Route.objects.filter(id__in=students_queryset.values('routes_id')).distinct().order_by('id')
             # return Route.objects.all().distinct()
 
     @action(detail=False, permission_classes=[permissions.AllowAny])
@@ -124,17 +126,18 @@ class SchoolViewSet(viewsets.ModelViewSet):
     ]
     filter_backends = [DjangoFilterBackend, DynamicSearchFilter, filters.OrderingFilter]
     filterset_fields = get_filter_dict(School)
-    ordering_fields = ['name']
+    ordering_fields = ['name', 'id']
+    ordering = 'id'
 
     # search_fields = [self.request.querystring]
 
     def get_queryset(self):
         if is_admin(self.request.user):
-            return School.objects.all().distinct()
+            return School.objects.all().distinct().order_by('id')
         else:
             # Only return schools associated with children of current user
             students_queryset = self.request.user.students
-            return School.objects.filter(id__in=students_queryset.values('school_id')).distinct()
+            return School.objects.filter(id__in=students_queryset.values('school_id')).distinct().order_by('id')
 
     @action(detail=False, permission_classes=[permissions.AllowAny])
     def fields(self, request):
@@ -150,7 +153,8 @@ class StudentViewSet(viewsets.ModelViewSet):
     ]
     filter_backends = [DjangoFilterBackend, DynamicSearchFilter, filters.OrderingFilter]
     filterset_fields = get_filter_dict(Student)
-    ordering_fields = ['school__name', 'student_id', 'full_name']
+    ordering_fields = ['school__name', 'student_id', 'full_name', 'id']
+    ordering = 'id'
 
     def get_serializer_class(self):
         if self.action == 'list' or self.action == 'retrieve':
@@ -160,9 +164,9 @@ class StudentViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         # return Student.objects.all().distinct()
         if is_admin(self.request.user):
-            return Student.objects.all().distinct()
+            return Student.objects.all().distinct().order_by('id')
         else:
-            return self.request.user.students.all().distinct()
+            return self.request.user.students.all().distinct().order_by('id')
 
     # def perform_create(self, serializer):
     #     serializer.save()

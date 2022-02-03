@@ -8,7 +8,11 @@ const initialState = {
         id: 0,
         name: "",
         description: "",
-        school: "",
+        school: {
+            name: "",
+            address: "Durham, NC",
+            id: -1
+        },
         schoolName: ""
     }
 };

@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django.core.validators import MinLengthValidator
 
 
 # Tutorial: https://tech.serhatteker.com/post/2020-01/email-as-username-django/
@@ -45,9 +46,12 @@ class User(AbstractUser):
     email = models.EmailField(_('email address'), help_text=_('Required'), blank=False, unique=True, null=False)
     full_name = models.CharField(_('full name'), max_length=150, help_text=_('Required'), blank=False, unique=False,
                                  null=False)
-    address = models.CharField(_('address'), max_length=150, blank=True)
+    address = models.CharField(_('address'), max_length=150, validators=[MinLengthValidator(1)])
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
     objects = CustomUserManager()
+
+    class Meta:
+        ordering = ['id']

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { returnErrors } from './messages';
+import { returnErrors, createMessage } from './messages';
 import {
     USER_LOADED,
     USER_LOADING,
@@ -64,6 +64,7 @@ export const register = (user) => (dispatch, getState) => {
     axios
       .post('/api/auth/register', user, tokenConfig(getState))
       .then((res) => {
+        dispatch(createMessage({ user: 'User Created' }));
         dispatch({
           type: REGISTER_SUCCESS,
           payload: res.data,
@@ -87,7 +88,7 @@ export const logout = () => (dispatch, getState) => {
         });
       })
       .catch((err) => {
-        console.log(err)
+        //console.log(err)
         dispatch(returnErrors(err.response.data, err.response.status));
       });
   };

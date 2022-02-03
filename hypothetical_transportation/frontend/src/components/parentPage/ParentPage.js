@@ -1,13 +1,13 @@
 import React, {useEffect, useState} from "react";
 import Header from "../header/Header";
 import "./parentPage.css";
-import { Link } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { logout } from "../../actions/auth";
 import isAdmin from "../../utils/user";
 import SidebarSliding from "../adminPage/components/sidebar/SidebarSliding";
-import { getStudentsByUserID, searchStudents } from '../../actions/students';
+import { getStudents } from '../../actions/students';
 import GeneralParentTableView from "./views/GeneralParentTableView";
 
 function ParentPage(props) {
@@ -15,34 +15,39 @@ function ParentPage(props) {
   const title = "Students"
   const tableType = "student"
 
-  useEffect(() => {
-      props.getStudentsByUserID(props.user.id);
-  }, []);
+  let [searchParams, setSearchParams] = useSearchParams();
 
-  const search = (value) => {
-    props.searchStudents(value.by, value.value)
-  }
+
+  useEffect(() => {
+    if(searchParams.get(`pageNum`) != null){
+      let paramsToSend = Object.fromEntries([...searchParams]);
+      paramsToSend.guardian = props.user.id;
+      props.getStudents(paramsToSend);
+    }
+    else{
+      setSearchParams({
+        [`pageNum`]: 1,
+      })
+    }
+    
+  }, [searchParams]);
+
 
     return (
       
         <div className="parent-page">
-          <Header textToDisplay={"Parent Portal"} shouldShowOptions={true}></Header>
           {isAdmin(props.user)? <SidebarSliding/>:null}
+          <Header textToDisplay={"Parent Portal"} shouldShowOptions={true}></Header>
           <div>
             <div className="welcome">
               <h2>
                 Welcome,<span>{props.user.full_name}</span>
               </h2>
-              <div className="button-spacing">
-                <Link to={"/account"}>
-                    <button>Account</button>
-                </Link>
-              </div>
             </div>
             <br></br>
 
             <div className="page-description">
-              <GeneralParentTableView values={props.students} title={title} tableType={tableType} search={search} />
+              <GeneralParentTableView values={props.students} title={title} tableType={tableType} />
             </div>
 
           </div>
@@ -60,7 +65,7 @@ ParentPage.propTypes = {
       email: PropTypes.string
     }),
     logout: PropTypes.func.isRequired,
-    getStudentsByUserID: PropTypes.func.isRequired
+    getStudents: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => ({
@@ -70,4 +75,4 @@ const mapStateToProps = (state) => ({
     students: state.students.students.results
 });
 
-export default connect(mapStateToProps, {logout, getStudentsByUserID, searchStudents} )(ParentPage)
+export default connect(mapStateToProps, {logout, getStudents} )(ParentPage)

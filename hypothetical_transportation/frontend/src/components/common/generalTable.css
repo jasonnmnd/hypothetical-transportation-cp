@@ -1,0 +1,88 @@
+.prev-next-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.button {
+  display: inline-block;
+  padding: 10px 15px;
+  border-radius: 8px;
+  background-color: #ffae07;
+  background-size: 200%;
+  background-position: 0%;
+  transition: 0.4s;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.button-disabled {
+  display: inline-block;
+  padding: 10px 15px;
+  border-radius: 8px;
+  background-color: #ffe5b1;
+  background-size: 200%;
+  background-position: 0%;
+  transition: 0.4s;
+  color: #fff;
+  font-weight: 700;
+  cursor: not-allowed;
+}
+
+.button:hover {
+  background-color: #ffdd99;
+}
+
+.divider15px {
+  width: 15px;
+  height: auto;
+  display: inline-block;
+}
+
+.align-all-buttons {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+table {
+  border-collapse: collapse;
+  width: 97%;
+}
+
+.center {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+th,
+td {
+  border: 1px solid #ffffff;
+  text-align: left;
+  padding: 8px;
+  font-size: 16px;
+}
+
+.tr-red {
+  background-color: rgb(255, 136, 136);
+}
+
+.tr-red td {
+  background-color: rgb(255, 136, 136);
+}
+
+.tr-gray {
+  background-color: #d3d3d3;
+}
+
+th {
+  background-color: #ffae07;
+}
+
+td {
+  background-color: #d3d3d3;
+}

@@ -53,15 +53,14 @@ function AdminRoutePlanner(props) {
     axios.get(`/api/school/${param.school_id}/`, config(props.token))
         .then(res => {
             setSchool(res.data);
-        }).catch(err => console.log(err));
+        }).catch(err => /*console.log(err)*/{});
     }
 
   const getStudent = () => {
     axios.get(`/api/student/?school=${param.school_id}`, config(props.token))
         .then(res => {
-          console.log(res.data.results)
           setStudents(res.data.results);
-        }).catch(err => console.log(err));
+        }).catch(err => /*console.log(err)*/{});
   }
 
   const getRoute = ()=>{
@@ -69,15 +68,14 @@ function AdminRoutePlanner(props) {
     .then(res => {
       setRoute(res.data);
       setObj({...res.data, ["school"]:res.data.school.id});
-    }).catch(err => console.log(err));
+    }).catch(err => /*console.log(err)*/{});
   }
 
   const getStudentRelatedToRoute = ()=>{
     axios.get(`/api/student/?routes=${param.route_id}`, config(props.token))
         .then(res => {
-          console.log(res.data.results)
           setRouteStudents(res.data.results);
-        }).catch(err => console.log(err));
+        }).catch(err => /*console.log(err)*/{});
   }
   
   useEffect(() => {
@@ -93,24 +91,21 @@ function AdminRoutePlanner(props) {
   const addToRoute =  (i)=>{
     const list = tobeadded.concat(i)
     setAdd(list)
-    console.log("add to route")
+
   }
 
   const removeFromADD =  (i)=>{
     setAdd(tobeadded.filter(item=>item.id!==i.id))
-    console.log("remove from selected to be added")
   }
 
 
   const removeFromREMOVE =  (i)=>{
     setRemove(toberemoved.filter(item=>item.id!==i.id))
-    console.log("remove from selected to be removed")
   }
 
   const removeFromRoute =  (i)=>{
     const list = toberemoved.concat(i)
     setRemove(list)
-    console.log("remove from this route")
   }
 
   const submit = (e)=>{
@@ -131,12 +126,11 @@ function AdminRoutePlanner(props) {
                   axios
                     .put(`/api/student/${stu.id}/`,res.data, config(props.token))
                     .then(res =>{
-                        console.log(res.data.id)
-                    }).catch(err => console.log(err));
-                }).catch(err => console.log(err));
+                    }).catch(err => /*console.log(err)*/{});
+                }).catch(err => /*console.log(err)*/{});
           })}
           navigate(`/admin/routes`);
-        }).catch(err => console.log(err));
+        }).catch(err => /*console.log(err)*/{});
     }
     else{
       axios
@@ -154,9 +148,8 @@ function AdminRoutePlanner(props) {
                 axios
                   .put(`/api/student/${stu.id}/`,res.data, config(props.token))
                   .then(res =>{
-                      console.log(res.data.id)
-                  }).catch(err => console.log(err));
-              }).catch(err => console.log(err));
+                  }).catch(err => /*console.log(err)*/{});
+              }).catch(err => /*console.log(err)*/{});
         })}
         if(toberemoved.length>0){
           toberemoved.map((stu)=>{
@@ -169,12 +162,11 @@ function AdminRoutePlanner(props) {
                 axios
                   .put(`/api/student/${stu.id}/`,res.data, config(props.token))
                   .then(res =>{
-                      console.log(res.data.id)
-                  }).catch(err => console.log(err));
-              }).catch(err => console.log(err));
+                  }).catch(err => /*console.log(err)*/{});
+              }).catch(err => /*console.log(err)*/{});
         })}
         navigate(`/admin/routes`);
-      }).catch(err => console.log(err));
+      }).catch(err => /*console.log(err)*/{});
 
     }
     

@@ -4,15 +4,20 @@ import './header.css';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { logout } from "../../actions/auth";
+import { Link, useNavigate } from "react-router-dom";
+import isAdmin from "../../utils/user";
 
 function Header(props){
 
     return(
         <div className = "header">
             <div className="header-logo">
-                <img src={Logo} className="logo" alt={"The logo is here"}></img>
-                
+                <Link to={props.isAuthenticated ? (isAdmin(props.user) ? "/admin" : "/parent") : "/"}>
+                    <img src={Logo} className="logo" alt={"The logo is here"}></img>
+                </Link>
             </div>
+
+            {props.shouldShowOptions && <div className="divider50px"></div>}
 
             <div className="header-text">
                 <h1>{props.textToDisplay}</h1>
@@ -20,9 +25,19 @@ function Header(props){
             
             {props.shouldShowOptions &&
             <div className="header-button">
-                <button onClick={props.logout}>Logout</button>
-            </div>
+                <Link to={"/account"}>
+                  <button>Account</button> 
+                </Link>
+            </div>  
             }
+            <div className="divider15px"></div>
+            {props.shouldShowOptions &&
+            <div className="header-button">
+                <button onClick={props.logout}>Logout</button>
+            </div> 
+            }
+
+            
         </div>
             
     )

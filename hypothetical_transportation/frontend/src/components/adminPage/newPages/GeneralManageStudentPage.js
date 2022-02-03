@@ -43,7 +43,6 @@ function GeneralManageStudentPage(props) {
 
   const submit = () => {
     if(props.action==="new"){
-      console.log(obj)
       props.addStudent(obj)
       navigate(`/admin/students/`)
     }
@@ -56,7 +55,7 @@ function GeneralManageStudentPage(props) {
   const changeSchool = (e)=>{
     setObj({...obj, ["school"]:e.target.value, ["routes"]:""})
 
-    props.getRoutesByID({school: e.target.value});
+    // props.getRoutesByID({school: e.target.value});
   }
 
   const getTitle = () => {
@@ -70,21 +69,22 @@ function GeneralManageStudentPage(props) {
     if(props.action==="edit"){
       props.getStudent(param.id);
       setObj({...props.student, ["guardian"]:props.student.guardian.id,["school"]:props.student.school.id,["routes"]:props.student.routes?props.student.routes.id:null})
-      props.getRoutesByID({school: props.student.school.id})
+      // props.getRoutesByID({school: props.student.school.id}) // Normal to get an api request error on first load
     }
-    else{
-      props.getRoutesByID({school: obj.school})
-    }
+    // else{
+    //   props.getRoutesByID({school: obj.school})
+    // }
     
   }, []);
 
 
     return ( 
       <>
-        <Header textToDisplay={"Admin Portal"} shouldShowOptions={true}></Header>
         <SidebarSliding/>
+        <Header textToDisplay={`${props.action} student`} shouldShowOptions={true}></Header>
         <div className='admin-edit-page'>
         <form>
+            <div className="submit-form-content"> 
                 <div className="form-inner">
                     <h2>{getTitle()}</h2>
 
@@ -116,7 +116,7 @@ function GeneralManageStudentPage(props) {
 
                   <div className="form-group">
                       <label>
-                        Parent:
+                        <label>Parent</label>
                         <select value={obj.guardian} onChange={setParent}>
                           <option value={""} >{"-----"}</option>
                           {props.users!==null && props.users!==undefined && props.users.length!==0?props.users.map((u,i)=>{
@@ -128,7 +128,7 @@ function GeneralManageStudentPage(props) {
 
                   <div className="form-group">
                       <label>
-                        School:
+                        <label>School</label>
                         <select value={obj.school} onChange={changeSchool}>
                         <option value={"null"} >{"-----"}</option>
                         {props.schoollist!==null && props.schoollist!==undefined && props.schoollist.length!==0?props.schoollist.map((u,i)=>{
@@ -138,9 +138,9 @@ function GeneralManageStudentPage(props) {
                       </label>
                   </div>
 
-                  <div className="form-group">
+                  {/* <div className="form-group">
                       <label>
-                        Route:
+                        <label>Route</label>
                         <select value={obj.routes!==null &&obj.routes!==undefined ? obj.routes.id:"null"} onChange={(e) => setObj({ ...obj, ["routes"]: e.target.value })}>
                           <option value={"null"} >{"-----"}</option>
                           {props.routes!==null && props.routes!==undefined && props.routes.length!==0?props.routes.map((u,i)=>{
@@ -148,15 +148,18 @@ function GeneralManageStudentPage(props) {
                           }):null}
                         </select>
                       </label>
-                  </div>
+                  </div> */}
 
                     <div className="divider15px" />
                     
-                    <button onClick={submit}>Save</button>
+                    <div className="center-buttons">
+                      <button onClick={submit}>Save</button>
+                    </div>
                 </div>
+              </div>
             </form>
             {/* <Link to={`/admin/${param.column}s`}><button>To {param.column}</button></Link> */}
-            <button onClick={() => navigate(-1)} className='button'>Go Back</button>
+            {/* <button onClick={() => navigate(-1)} className='button'>Go Back</button> */}
         </div>
       </>
         );
