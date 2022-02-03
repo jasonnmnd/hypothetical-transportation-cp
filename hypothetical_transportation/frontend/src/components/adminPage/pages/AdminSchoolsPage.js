@@ -42,7 +42,7 @@ function AdminSchoolsPage(props) {
     axios.get('/api/school/', config(props.token))
         .then(res => {
             setSchools(res.data.results);
-        }).catch(err => );
+        }).catch(err => {});
     }
 
   useEffect(() => {
