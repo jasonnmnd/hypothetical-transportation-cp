@@ -25,7 +25,7 @@ function NEWHeader() {
                     <NavDropdown title="Users" href='/admin/users?pageNum=1'>
                         <NavDropdown.Item as={Link} to={`/admin/users?pageNum=1`}><IoIcons.IoIosWoman /> View Users</NavDropdown.Item>
                         <NavDropdown.Divider/>
-                        <NavDropdown.Item as={Link} to={`/admin/new/user`}>Create Users</NavDropdown.Item>
+                        <NavDropdown.Item as={Link} to={`/admin/new/user/`}>Create Users</NavDropdown.Item>
                     </NavDropdown>
                     <NavDropdown title="Students">
                         <NavDropdown.Item as={Link} to={`/admin/students?pageNum=1`}><IoIcons.IoIosBody /> View Students</NavDropdown.Item>
@@ -35,7 +35,7 @@ function NEWHeader() {
                     <NavDropdown title="Schools">
                         <NavDropdown.Item as={Link} to={`/admin/schools?pageNum=1`}><FaIcons.FaSchool /> View Schools</NavDropdown.Item>
                         <NavDropdown.Divider/>
-                        <NavDropdown.Item as={Link} to={`/`}> Create Schools</NavDropdown.Item>
+                        <NavDropdown.Item as={Link} to={`/admin/new/school/`}> Create Schools</NavDropdown.Item>
                     </NavDropdown>
                     <NavDropdown title="Routes">
                         <NavDropdown.Item as={Link} to={`/admin/routes?pageNum=1`}><GiIcons.GiPathDistance /> View Routes</NavDropdown.Item>
