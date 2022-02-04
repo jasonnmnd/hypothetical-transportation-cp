@@ -10,7 +10,7 @@ import { getUser, updateUser } from "../../../actions/users";
 import { register } from "../../../actions/auth";
 import AssistedLocationModal from "../components/modals/AssistedLocationModal";
 import AssistedLocationMap from "../../maps/AssistedLocationMap";
-import { Form, Button, Row, Col, Container, InputGroup, DropdownButton, Dropdown, FormControl} from 'react-bootstrap';
+import { Form, Button, Row, Col, Container, InputGroup, ButtonGroup, ToggleButton} from 'react-bootstrap';
 
 //input1: title of form
 //input2: list of fields?
@@ -60,6 +60,11 @@ function NEWGeneralEditUserForm(props) {
         
     }
 
+    const groupTypes = [
+        {name: "Administrator", value: 1},
+        {name: "Guardian", value: 2}
+    ]
+
 
     // const confirmation = (e)=>{
     //     e.preventDefault();
@@ -80,19 +85,36 @@ function NEWGeneralEditUserForm(props) {
                         <Row className="mb-3">
                             <Form.Group as={Col} controlId="formGridAddress2">
                                 <Form.Label>Full Name</Form.Label>
-                                <Form.Control placeholder="Enter name here..." />
+                                <Form.Control 
+                                required type="text"
+                                placeholder="Enter name..." 
+                                value={fieldValues.full_name}
+                                onChange={(e)=>{
+                                    setFieldValues({...fieldValues, full_name: e.target.value});
+                                }}
+                                />
                             </Form.Group>
                             <Form.Group as={Col}>
                                 <Form.Label>User Type</Form.Label>
                                 <InputGroup className="mb-3">
-                                    <DropdownButton
-                                    variant="outline-secondary"
-                                    title="Select..."
-                                    id="input-group-dropdown-1"
+                                <ButtonGroup>
+                                    {groupTypes.map((radio, idx) => (
+                                    <ToggleButton
+                                        key={idx}
+                                        id={`radio-${idx}`}
+                                        type="radio"
+                                        variant={'outline-success'}
+                                        name="radio"
+                                        value={radio.value}
+                                        checked={fieldValues.groups == radio.value}
+                                        onChange={(e)=>{
+                                            setFieldValues({...fieldValues, groups: e.target.value});
+                                        }}
                                     >
-                                    <Dropdown.Item href="#">Administrator</Dropdown.Item>
-                                    <Dropdown.Item href="#">Guardian</Dropdown.Item>
-                                    </DropdownButton>
+                                        {radio.name}
+                                    </ToggleButton>
+                                    ))}
+                                </ButtonGroup>
                                 </InputGroup>
                             </Form.Group>
                         </Row>
@@ -100,21 +122,52 @@ function NEWGeneralEditUserForm(props) {
                         <Row className="mb-3">
                             <Form.Group as={Col} controlId="formGridEmail">
                             <Form.Label>Email</Form.Label>
-                            <Form.Control type="email" placeholder="Enter email..." />
+                            <Form.Control 
+                            required type="email" 
+                            placeholder="Enter email..." 
+                            value={fieldValues.email}
+                            onChange={
+                              (e)=>{
+                                setFieldValues({...fieldValues, email: e.target.value});
+                                }
+                            }/>
                             </Form.Group>
 
                             <Form.Group as={Col} controlId="formGridPassword">
                             <Form.Label>Password</Form.Label>
-                            <Form.Control type="password" placeholder="Password..." />
+                            <Form.Control 
+                            type="password" 
+                            placeholder="Enter password..." 
+                            value={fieldValues.password}
+                            onChange={
+                              (e)=>{
+                                setFieldValues({...fieldValues, password: e.target.value});
+                                }
+                            }
+                            />
                             </Form.Group>
                         </Row>
                                                 
                         <Form.Group className="mb-3" controlId="formGridAddress1">
                             <Form.Label>Address</Form.Label>
-                            <Form.Control placeholder="1234 Main St" />
+                            <Form.Control 
+                            placeholder="Enter address..." 
+                            value={address}
+                            onChange={
+                              (e)=>{
+                                setAddress(e.target.value);
+                                }
+                            }
+                            />
                         </Form.Group>
 
-                        <Button variant="yellowsubmit" type="submit">
+                        <Form.Group className="mb-3">
+                            <Form.Label>Location Assistance</Form.Label>
+                            <AssistedLocationMap address={address} setAddress={setAddress}></AssistedLocationMap>
+
+                        </Form.Group>
+
+                        <Button variant="yellowsubmit" type="submit" onClick={submit}>
                             Submit
                         </Button>
                     </Form>
