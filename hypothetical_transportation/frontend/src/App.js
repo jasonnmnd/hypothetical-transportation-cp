@@ -1,5 +1,6 @@
 import React from "react";
 import "./App.css";
+import 'bootstrap/dist/css/bootstrap.css';
 import ParentPage from "./components/parentPage/ParentPage";
 import AdminPage from "./components/adminPage/AdminPage";
 import { Routes, Route, BrowserRouter} from "react-router-dom";
@@ -23,8 +24,6 @@ import GeneralEditSchoolForm from "./components/adminPage/newPages/GeneralEditSc
 import GeneralEditUserForm from "./components/adminPage/newPages/GeneralEditUserForm";
 import GeneralAdminRoutePlanner from "./components/adminPage/newPages/GeneralAdminRoutePlanner";
 
-import TESTLoginForm from "./components/loginPage/TESTLoginForm";
-
 function App( props ) {
   //Handle main login accross the whole app
 
@@ -33,9 +32,7 @@ function App( props ) {
       <BrowserRouter>
         <Alerts/>
         <Routes>
-          {/* <Route exact path="/testingTable" element={<GeneralTable rows={testingTableProps}/>}></Route> */}
-          {/* <Route exact path="/" element={<LoginForm />}></Route> */}
-          <Route exact path="/" element={<TESTLoginForm />}></Route>
+          <Route exact path="/" element={<LoginForm />}></Route>
           <Route path="/parent/*" element={<PrivateRoute><ParentPage /></PrivateRoute>}></Route>
           <Route exact path="/account" element={<PrivateRoute><AccountPage/></PrivateRoute>}></Route>
           <Route exact path="/account/password" element={<PrivateRoute><GeneralResetPasswordPage/></PrivateRoute>}></Route>

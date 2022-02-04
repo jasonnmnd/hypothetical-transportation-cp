@@ -1,0 +1,24 @@
+.container-adminPage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px 20px;
+  margin-left: 100px;
+}
+
+.btn-yellow {
+  display: inline-block;
+  padding: 10px 15px;
+  border-radius: 8px;
+  background-color: #ffae07;
+  background-size: 200%;
+  background-position: 0%;
+  transition: 0.4s;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-yellow:hover {
+  background-color: #ffdd99;
+}
