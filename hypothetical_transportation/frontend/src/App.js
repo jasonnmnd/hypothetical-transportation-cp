@@ -27,6 +27,12 @@ import GeneralAdminRoutePlanner from "./components/adminPage/newPages/GeneralAdm
 import NEWGeneralEditUserForm from "./components/adminPage/pages/NEWGeneralEditUserForm";
 import NEWGeneralEditSchoolForm from "./components/adminPage/pages/NEWGeneralEditSchoolForm";
 
+import NEWGeneralAdminRoutesPage from "./components/adminPage/pages/NEWGeneralAdminRoutesPage";
+import NEWGeneralAdminSchoolsPage from "./components/adminPage/pages/NEWGeneralAdminSchoolsPage";
+import NEWGeneralAdminStudentsPage from "./components/adminPage/pages/NEWGeneralAdminStudentsPage";
+import NEWGeneralAdminUsersPage from "./components/adminPage/pages/NEWGeneralAdminUsersPage";
+
+
 function App( props ) {
   //Handle main login accross the whole app
 
@@ -41,14 +47,18 @@ function App( props ) {
           <Route exact path="/account/password" element={<PrivateRoute><GeneralResetPasswordPage/></PrivateRoute>}></Route>
           <Route exact path="/parent/student/:school/:id" element={<PrivateRoute><GeneralParentStudentDetails ></GeneralParentStudentDetails></PrivateRoute>}/>
           <Route path="/admin/*" element={<PrivateRoute><AdminPage/></PrivateRoute>}></Route>
-          <Route exact path="/admin/users" element={<PrivateRoute><GeneralAdminUsersPage /></PrivateRoute>}></Route>
-          <Route exact path="/admin/students/*" element={<PrivateRoute><GeneralAdminStudentsPage /></PrivateRoute>}></Route>
+
+          
+          <Route exact path="/admin/users" element={<PrivateRoute><NEWGeneralAdminUsersPage /></PrivateRoute>}></Route>
+          <Route exact path="/admin/students/*" element={<PrivateRoute><NEWGeneralAdminStudentsPage /></PrivateRoute>}></Route>
+          <Route exact path="/admin/schools" element={<PrivateRoute><NEWGeneralAdminSchoolsPage /></PrivateRoute>}></Route>
+          <Route exact path="/admin/routes" element={<PrivateRoute><NEWGeneralAdminRoutesPage /></PrivateRoute>}></Route>
+
           <Route exact path="/admin/edit/school/:id" element={<PrivateRoute><NEWGeneralEditSchoolForm action="edit" /></PrivateRoute>}></Route>
           <Route exact path="/admin/new/school/" element={<PrivateRoute><NEWGeneralEditSchoolForm action="new"/></PrivateRoute>}></Route>
           <Route exact path="/admin/edit/user/:id" element={<PrivateRoute><NEWGeneralEditUserForm action="edit" /></PrivateRoute>}></Route>
           <Route exact path="/admin/new/user/" element={<PrivateRoute><NEWGeneralEditUserForm action="new"/></PrivateRoute>}></Route>
-          <Route exact path="/admin/schools" element={<PrivateRoute><GeneralAdminSchoolsPage /></PrivateRoute>}></Route>
-          <Route exact path="/admin/routes" element={<PrivateRoute><GeneralAdminRoutesPage /></PrivateRoute>}></Route>
+
           <Route exact path="/admin/user/:id" element={<PrivateRoute><GeneralAdminUserDetails /></PrivateRoute>}/>
           <Route exact path="/admin/student/:id" element={<PrivateRoute><GeneralAdminStudentDetails /></PrivateRoute>}/>
           <Route exact path="/admin/school/:id" element={<PrivateRoute><GeneralAdminSchoolDetails /></PrivateRoute>}/>
