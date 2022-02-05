@@ -31,7 +31,7 @@ function NEWHeader() {
                     <NavDropdown title="Students">
                         <NavDropdown.Item as={Link} to={`/admin/students?pageNum=1`}><IoIcons.IoIosBody /> View Students</NavDropdown.Item>
                         <NavDropdown.Divider/>
-                        <NavDropdown.Item as={Link} to={`/`}>Create Students</NavDropdown.Item>
+                        <NavDropdown.Item as={Link} to={`/admin/new_student/`}>Create Students</NavDropdown.Item>
                     </NavDropdown>
                     <NavDropdown title="Schools">
                         <NavDropdown.Item as={Link} to={`/admin/schools?pageNum=1`}><FaIcons.FaSchool /> View Schools</NavDropdown.Item>
