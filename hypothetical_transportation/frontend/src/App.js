@@ -65,9 +65,9 @@ function App( props ) {
           <Route exact path="/admin/new/user/" element={<PrivateRoute><NEWGeneralEditUserForm action="new"/></PrivateRoute>}></Route>
 
           <Route exact path="/admin/user/:id" element={<PrivateRoute><NEWGeneralAdminUserDetails /></PrivateRoute>}/>
-          <Route exact path="/admin/student/:id" element={<PrivateRoute><GeneralAdminStudentDetails /></PrivateRoute>}/>
-          <Route exact path="/admin/school/:id" element={<PrivateRoute><GeneralAdminSchoolDetails /></PrivateRoute>}/>
-          <Route exact path="/admin/route/:id" element={<PrivateRoute><GeneralAdminRouteDetails /></PrivateRoute>}/>
+          <Route exact path="/admin/student/:id" element={<PrivateRoute><NEWGeneralAdminStudentDetails /></PrivateRoute>}/>
+          <Route exact path="/admin/school/:id" element={<PrivateRoute><NEWGeneralAdminSchoolDetails /></PrivateRoute>}/>
+          <Route exact path="/admin/route/:id" element={<PrivateRoute><NEWGeneralAdminRouteDetails /></PrivateRoute>}/>
           <Route exact path="/admin/route/plan/:school_id" element={<PrivateRoute><GeneralAdminRoutePlanner action={"new"}/></PrivateRoute>}/>
           <Route exact path="/admin/route/edit/:school_id/:route_id" element={<PrivateRoute><GeneralAdminRoutePlanner action={"edit"}/></PrivateRoute>}/>
           <Route exact path="/admin/new_student/" element={<PrivateRoute><GeneralManageStudentPage action={"new"} /></PrivateRoute>}/>

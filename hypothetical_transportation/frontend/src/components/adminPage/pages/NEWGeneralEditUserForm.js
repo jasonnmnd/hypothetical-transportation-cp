@@ -84,7 +84,7 @@ function NEWGeneralEditUserForm(props) {
 
                         <Row className="mb-3">
                             <Form.Group as={Col} controlId="formGridAddress2">
-                                <Form.Label>Full Name</Form.Label>
+                                <Form.Label as="h5">Full Name</Form.Label>
                                 <Form.Control 
                                 required type="text"
                                 placeholder="Enter name..." 
@@ -95,7 +95,7 @@ function NEWGeneralEditUserForm(props) {
                                 />
                             </Form.Group>
                             <Form.Group as={Col}>
-                                <Form.Label>User Type</Form.Label>
+                                <Form.Label as="h5">User Type</Form.Label>
                                 <InputGroup className="mb-3">
                                 <ButtonGroup>
                                     {groupTypes.map((radio, idx) => (
@@ -121,7 +121,7 @@ function NEWGeneralEditUserForm(props) {
 
                         <Row className="mb-3">
                             <Form.Group as={Col} controlId="formGridEmail">
-                            <Form.Label>Email</Form.Label>
+                            <Form.Label as="h5">Email</Form.Label>
                             <Form.Control 
                             required type="email" 
                             placeholder="Enter email..." 
@@ -134,7 +134,7 @@ function NEWGeneralEditUserForm(props) {
                             </Form.Group>
 
                             <Form.Group as={Col} controlId="formGridPassword">
-                            <Form.Label>Password</Form.Label>
+                            <Form.Label as="h5">Password</Form.Label>
                             <Form.Control 
                             type="password" 
                             placeholder="Enter password..." 
@@ -149,7 +149,7 @@ function NEWGeneralEditUserForm(props) {
                         </Row>
                                                 
                         <Form.Group className="mb-3" controlId="formGridAddress1">
-                            <Form.Label>Address</Form.Label>
+                            <Form.Label as="h5">Address</Form.Label>
                             <Form.Control 
                             placeholder="Enter address..." 
                             value={address}
@@ -162,7 +162,7 @@ function NEWGeneralEditUserForm(props) {
                         </Form.Group>
 
                         <Form.Group className="mb-3">
-                            <Form.Label>Location Assistance</Form.Label>
+                            <Form.Label as="h5">Location Assistance</Form.Label>
                             <AssistedLocationMap address={address} setAddress={setAddress}></AssistedLocationMap>
 
                         </Form.Group>

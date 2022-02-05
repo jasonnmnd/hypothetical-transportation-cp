@@ -38,7 +38,7 @@ function NEWGeneralAdminStudentsPage(props) {
     <div>
         <Header></Header>
         <Container className="container-main">
-          <div class="shadow-lg p-3 mb-5 bg-white rounded">
+          <div className="shadow-lg p-3 mb-5 bg-white rounded">
             <GeneralAdminTableView values={props.students} tableType={tableType} search="" title={title} />
           </div>
         </Container>

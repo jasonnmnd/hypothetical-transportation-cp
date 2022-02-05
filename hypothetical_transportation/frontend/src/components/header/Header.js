@@ -13,11 +13,12 @@ function NEWHeader() {
   return (
       <div className='Header'>
           <Navbar bg="dark" variant="dark" sticky="top" expand="sm" collapseOnSelect>
-            <Navbar.Brand>
-            <a href="/"><img src={logo} alt="Hypothetical Transportation Logo" width="60" height="50"></img></a>
-                Hypothetical Transportation
-            </Navbar.Brand>
-
+            <Nav.Link as={Link} to={`/`}> 
+                <Navbar.Brand>
+                    <img src={logo} alt="Hypothetical Transportation Logo" width="60" height="50"></img>
+                        Hypothetical Transportation
+                </Navbar.Brand>
+            </Nav.Link>
             <Navbar.Toggle/>
             
             <Navbar.Collapse>
@@ -44,7 +45,7 @@ function NEWHeader() {
                     </NavDropdown>
                     <Nav.Link as={Link} to={`/account`}> Account</Nav.Link>
                     <Nav.Link as={Link} to={`/parent?pageNum=1`}> Your Parent Portal</Nav.Link>
-                    <Nav.Link as={Link} to={`/`}> Logout</Nav.Link>
+                    <Nav.Link href={`/`}> Logout</Nav.Link>
                     
                 </Nav>
             </Navbar.Collapse>

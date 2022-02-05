@@ -72,7 +72,7 @@ function GeneralEditSchoolForm(props) {
                     <Form className="shadow-lg p-3 mb-5 bg-white rounded">
 
                         <Form.Group className="mb-3" controlId="validationCustom01">
-                            <Form.Label>Name of School</Form.Label>
+                            <Form.Label as="h5">Name of School</Form.Label>
                             <Form.Control 
                             required type="text"
                             placeholder="Enter Name..." 
@@ -82,7 +82,7 @@ function GeneralEditSchoolForm(props) {
                         </Form.Group>
                                                 
                         <Form.Group className="mb-3" controlId="formGridAddress1">
-                            <Form.Label>Address</Form.Label>
+                            <Form.Label as="h5">Address</Form.Label>
                             <Form.Control 
                             required type="text"
                             placeholder="Enter Address..." 
@@ -92,7 +92,7 @@ function GeneralEditSchoolForm(props) {
                         </Form.Group>
 
                         <Form.Group className="mb-3">
-                            <Form.Label>Location Assistance</Form.Label>
+                            <Form.Label as="h5">Location Assistance</Form.Label>
                             <AssistedLocationMap address={address} setAddress={setAddress}></AssistedLocationMap>
                         </Form.Group>
 

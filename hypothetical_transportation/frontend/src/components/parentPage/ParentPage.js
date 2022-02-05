@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from "react";
+import PlainHeader from "../header/PlainHeader";
 import Header from "../header/Header";
 import "./parentPage.css";
 import { useSearchParams } from 'react-router-dom';
@@ -9,6 +10,7 @@ import isAdmin from "../../utils/user";
 import SidebarSliding from "../adminPage/components/sidebar/SidebarSliding";
 import { getStudents } from '../../actions/students';
 import GeneralParentTableView from "./views/GeneralParentTableView";
+import { Container, Row, Col } from 'react-bootstrap';
 
 function ParentPage(props) {
 
@@ -35,23 +37,38 @@ function ParentPage(props) {
 
     return (
       
-        <div className="parent-page">
-          {isAdmin(props.user)? <SidebarSliding/>:null}
-          <Header textToDisplay={"Parent Portal"} shouldShowOptions={true}></Header>
-          <div>
-            <div className="welcome">
-              <h2>
-                Welcome,<span>{props.user.full_name}</span>
-              </h2>
-            </div>
-            <br></br>
+        // <div className="parent-page">
+        //   {isAdmin(props.user)? <SidebarSliding/>:null}
+        //   <Header textToDisplay={"Parent Portal"} shouldShowOptions={true}></Header>
+        //   <div>
+        //     <div className="welcome">
+        //       <h2>
+        //         Welcome,<span>{props.user.full_name}</span>
+        //       </h2>
+        //     </div>
+        //     <br></br>
 
-            <div className="page-description">
-              <GeneralParentTableView values={props.students} title={title} tableType={tableType} />
-            </div>
+        //     <div className="page-description">
+        //       <GeneralParentTableView values={props.students} title={title} tableType={tableType} />
+        //     </div>
 
-          </div>
+        //   </div>
           
+        // </div>
+        <div>
+          {
+            isAdmin(props.user) ? <Header></Header> : <PlainHeader></PlainHeader>
+          }
+          <Container className="d-flex flex-column justify-content-center align-items-center" style={{gap: "20px"}}>
+              <Row>
+                <Col><h1>Welcome, <span>{props.user.full_name}</span></h1></Col>
+              </Row>
+
+              <div className="shadow-lg p-3 mb-5 bg-white rounded">
+                <GeneralParentTableView values={props.students} title={title} tableType={tableType} />
+              </div>
+
+          </Container>
         </div>
 
     )
