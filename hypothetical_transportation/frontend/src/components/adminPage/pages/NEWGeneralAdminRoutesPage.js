@@ -38,9 +38,9 @@ function NEWAdminRoutesPage(props) {
     <div>
         <Header></Header>
         <Container className="container-main">
-          {/* <Form className="shadow-lg p-3 mb-5 bg-white rounded"> */}
+          <div class="shadow-lg p-3 mb-5 bg-white rounded">
             <GeneralAdminTableView values={props.routes} tableType={tableType} search="" title={title} />
-          {/* </Form> */}
+          </div>
         </Container>
     </div>
   )

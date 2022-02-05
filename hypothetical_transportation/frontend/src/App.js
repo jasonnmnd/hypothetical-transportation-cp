@@ -32,6 +32,11 @@ import NEWGeneralAdminSchoolsPage from "./components/adminPage/pages/NEWGeneralA
 import NEWGeneralAdminStudentsPage from "./components/adminPage/pages/NEWGeneralAdminStudentsPage";
 import NEWGeneralAdminUsersPage from "./components/adminPage/pages/NEWGeneralAdminUsersPage";
 
+import NEWGeneralAdminUserDetails from "./components/adminPage/pages/NEWGeneralAdminUserDetails";
+import NEWGeneralAdminStudentDetails from "./components/adminPage/pages/NEWGeneralAdminStudentDetails";
+import NEWGeneralAdminSchoolDetails from "./components/adminPage/pages/NEWGeneralAdminSchoolDetails";
+import NEWGeneralAdminRouteDetails from "./components/adminPage/pages/NEWGeneralAdminRouteDetails";
+
 
 function App( props ) {
   //Handle main login accross the whole app
@@ -59,7 +64,7 @@ function App( props ) {
           <Route exact path="/admin/edit/user/:id" element={<PrivateRoute><NEWGeneralEditUserForm action="edit" /></PrivateRoute>}></Route>
           <Route exact path="/admin/new/user/" element={<PrivateRoute><NEWGeneralEditUserForm action="new"/></PrivateRoute>}></Route>
 
-          <Route exact path="/admin/user/:id" element={<PrivateRoute><GeneralAdminUserDetails /></PrivateRoute>}/>
+          <Route exact path="/admin/user/:id" element={<PrivateRoute><NEWGeneralAdminUserDetails /></PrivateRoute>}/>
           <Route exact path="/admin/student/:id" element={<PrivateRoute><GeneralAdminStudentDetails /></PrivateRoute>}/>
           <Route exact path="/admin/school/:id" element={<PrivateRoute><GeneralAdminSchoolDetails /></PrivateRoute>}/>
           <Route exact path="/admin/route/:id" element={<PrivateRoute><GeneralAdminRouteDetails /></PrivateRoute>}/>

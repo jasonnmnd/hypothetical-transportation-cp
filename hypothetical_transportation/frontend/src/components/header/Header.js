@@ -42,7 +42,10 @@ function NEWHeader() {
                         <NavDropdown.Divider/>
                         <NavDropdown.Item as={Link} to={`/`}> Create Routes</NavDropdown.Item>
                     </NavDropdown>
+                    <Nav.Link as={Link} to={`/account`}> Account</Nav.Link>
                     <Nav.Link as={Link} to={`/parent?pageNum=1`}> Your Parent Portal</Nav.Link>
+                    <Nav.Link as={Link} to={`/`}> Logout</Nav.Link>
+                    
                 </Nav>
             </Navbar.Collapse>
           </Navbar>
