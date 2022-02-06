@@ -37,11 +37,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'rest_framework',
+    'rest_framework.authtoken',
+    'knox',
+    'authemail',
+    'django_filters',
     'frontend',
     'backend',
-    'knox',
     'accounts',
-    'django_filters',
 ]
 
 REST_FRAMEWORK = {
@@ -105,9 +107,9 @@ DATABASES = {
 # User Model
 AUTH_USER_MODEL = 'accounts.User'
 
-AUTHENTICATION_BACKENDS = [
-    'accounts.backends.EmailBackend'
-]
+# AUTHENTICATION_BACKENDS = [
+#     'accounts.backends.EmailBackend'
+# ]
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

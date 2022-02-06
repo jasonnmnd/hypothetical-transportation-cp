@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import MinLengthValidator
+from authemail.models import EmailUserManager, EmailAbstractUser
 
 
 # Tutorial: https://tech.serhatteker.com/post/2020-01/email-as-username-django/
@@ -40,18 +41,16 @@ class CustomUserManager(BaseUserManager):
 
 # Create your models here.
 
-class User(AbstractUser):
-    # https://stackoverflow.com/questions/49134831/django-make-user-email-required
-    username = None
-    email = models.EmailField(_('email address'), help_text=_('Required'), blank=False, unique=True, null=False)
+
+class User(EmailAbstractUser):
+    first_name = None
+    last_name = None
     full_name = models.CharField(_('full name'), max_length=150, help_text=_('Required'), blank=False, unique=False,
                                  null=False)
     address = models.CharField(_('address'), max_length=150, validators=[MinLengthValidator(1)])
+    objects = EmailUserManager()
 
-    USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
-
-    objects = CustomUserManager()
 
     class Meta:
         ordering = ['id']
