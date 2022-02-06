@@ -13,6 +13,9 @@ class MyUserAdmin(EmailUserAdmin):
         ('Important dates', {'fields': ('last_login', 'date_joined')}),
         ('Custom info', {'fields': ('date_of_birth',)}),
     )
+    list_display = ('email', 'is_verified', 'full_name',
+                    'is_staff')
+    search_fields = ('full_name', 'email')
 
 
 admin.site.unregister(get_user_model())
