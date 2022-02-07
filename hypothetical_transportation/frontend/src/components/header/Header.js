@@ -7,9 +7,11 @@ import * as FaIcons from "react-icons/fa";
 import * as AiIcons from "react-icons/ai";
 import * as IoIcons from "react-icons/io";
 import * as GiIcons from "react-icons/gi";
+import { logout } from '../../actions/auth';
+import { connect } from 'react-redux';
 
 
-function NEWHeader() {
+function NEWHeader( props ) {
   return (
       <div className='Header'>
           <Navbar bg="dark" variant="dark" sticky="top" expand="sm" collapseOnSelect>
@@ -45,7 +47,7 @@ function NEWHeader() {
                     </NavDropdown>
                     <Nav.Link as={Link} to={`/account`}> Account</Nav.Link>
                     <Nav.Link as={Link} to={`/parent?pageNum=1`}> Your Parent Portal</Nav.Link>
-                    <Nav.Link href={`/`}> Logout</Nav.Link>
+                    <Nav.Link  onClick={props.logout}> Logout</Nav.Link>
                     
                 </Nav>
             </Navbar.Collapse>
@@ -54,4 +56,7 @@ function NEWHeader() {
   );
 }
 
-export default NEWHeader;
+const mapStateToProps = state => ({
+});
+
+export default connect(mapStateToProps, {logout})(NEWHeader);

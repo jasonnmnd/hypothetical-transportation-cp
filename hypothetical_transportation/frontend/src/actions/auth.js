@@ -80,6 +80,7 @@ export const register = (user) => (dispatch, getState) => {
 
 // LOGOUT USER
 export const logout = () => (dispatch, getState) => {
+  console.log("LOGGING OUT")
     axios
       .post('/api/auth/logout/', null, tokenConfig(getState))
       .then((res) => {
@@ -119,6 +120,30 @@ export const resetResetPassword = () => (dispatch) => {
   dispatch({
     type: RESET_PASSWORD_FAIL
   })
+}
+
+export const failLogin = () => (dispatch) => {
+  dispatch({
+    type: LOGIN_FAIL
+  })
+}
+
+export const tokenLogin = (token) => (dispatch) => {
+  //check if token is valid and return user
+  
+  dispatch({
+    type: LOGIN_SUCCESS,
+    payload: {
+      token: token,
+      user: {
+        id: 10,
+        email: "fakeEmail@email.com",
+        full_name: "Faker McFakerson",
+        address: "123 Fake Street",
+        groups: [1]
+      }
+    }
+  });
 }
   
 // Setup config with token - helper function
