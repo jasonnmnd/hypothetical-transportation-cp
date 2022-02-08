@@ -124,7 +124,7 @@ function GeneralEditUserForm(props) {
                       </label>
                   </div>
 
-                  {/* <div className="form-group">
+                  <div className="form-group">
                       <label htmlFor={"Password"}>Password</label>
                       <input
                           className="input"
@@ -138,7 +138,7 @@ function GeneralEditUserForm(props) {
                                 }
                             }
                       />
-                  </div> */}
+                  </div>
 
                   <div className="form-group">
                       <label htmlFor={"Address"}>Address</label>
