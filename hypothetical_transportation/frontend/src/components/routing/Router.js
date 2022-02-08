@@ -24,7 +24,7 @@ import PrivateRoute from './PrivateRoute';
 import Alerts from "../alerts/Alerts";
 
 
-const Router = () => {
+const Router = (props) => {
     return (
         <BrowserRouter>
         <Alerts/>

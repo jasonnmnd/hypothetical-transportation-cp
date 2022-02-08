@@ -50,7 +50,7 @@ function NEWGeneralEditUserForm(props) {
             address: address
         }
         if(props.action == "edit"){
-            props.updateUser(createVals, param.id);
+            props.updateUser(createVals, param.id).then(console.log("EDITED"));
             navigate(`/admin/users`)
         }
         else{

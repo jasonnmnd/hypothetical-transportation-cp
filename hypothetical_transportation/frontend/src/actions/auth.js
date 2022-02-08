@@ -131,19 +131,30 @@ export const failLogin = () => (dispatch) => {
 export const tokenLogin = (token) => (dispatch) => {
   //check if token is valid and return user
   
-  dispatch({
-    type: LOGIN_SUCCESS,
-    payload: {
-      token: token,
-      user: {
-        id: 10,
-        email: "fakeEmail@email.com",
-        full_name: "Faker McFakerson",
-        address: "123 Fake Street",
-        groups: [1]
-      }
-    }
-  });
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${token}`
+    },
+  };
+  
+  return axios
+      .get('/api/auth/user', config)
+      .then((res) => {
+        dispatch({
+          type: LOGIN_SUCCESS,
+          payload: {
+            user: res.data,
+            token: token
+          }
+        });
+      })
+      .catch((err) => {
+        dispatch(returnErrors(err.response.data, err.response.status));
+        // dispatch({
+        //   type: REGISTER_FAIL,
+        // });
+      });
 }
   
 // Setup config with token - helper function
