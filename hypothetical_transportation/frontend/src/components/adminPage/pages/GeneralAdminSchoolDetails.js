@@ -12,7 +12,7 @@ import GeneralAdminTableView from '../components/views/GeneralAdminTableView';
 import { filterObjectForKeySubstring } from '../../../utils/utils';
 import { Container, Card, Button, Row, Col } from 'react-bootstrap'
 
-function NEWGeneralAdminSchoolDetails(props) {
+function GeneralAdminSchoolDetails(props) {
   const navigate = useNavigate();
   const param = useParams();
   const STUDENT_PREFIX = "stu";
@@ -126,7 +126,7 @@ function NEWGeneralAdminSchoolDetails(props) {
   );
 }
 
-NEWGeneralAdminSchoolDetails.propTypes = {
+GeneralAdminSchoolDetails.propTypes = {
     getSchool: PropTypes.func.isRequired,
     getStudents: PropTypes.func.isRequired,
     getRoutes: PropTypes.func.isRequired,
@@ -141,4 +141,4 @@ const mapStateToProps = (state) => ({
   routes: state.routes.routes.results
 });
 
-export default connect(mapStateToProps, {getSchool, getStudents, getRoutes, deleteSchool})(NEWGeneralAdminSchoolDetails)
+export default connect(mapStateToProps, {getSchool, getStudents, getRoutes, deleteSchool})(GeneralAdminSchoolDetails)

@@ -3,8 +3,10 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import AccountPage from '../accountPage/AccountPage';
 import LoginForm from '../loginPage/LoginForm';
 import ParentPage from '../parentPage/ParentPage';
+
 import GeneralEditUserForm from "../adminPage/pages/GeneralEditUserForm";
 import GeneralEditSchoolForm from "../adminPage/pages/GeneralEditSchoolForm";
+import GeneralEditRouteForm from '../adminPage/pages/GeneralEditRouteForm';
 
 import GeneralAdminRoutesPage from "../adminPage/pages/GeneralAdminRoutesPage";
 import GeneralAdminSchoolsPage from "../adminPage/pages/GeneralAdminSchoolsPage";
@@ -52,6 +54,9 @@ const Router = (props) => {
           <Route exact path="/admin/new/user/" element={<PrivateRoute><GeneralEditUserForm action="new"/></PrivateRoute>}></Route>
           <Route exact path="/admin/new_student/" element={<PrivateRoute><GeneralManageStudentPage action={"new"} /></PrivateRoute>}/>
           <Route exact path="/admin/edit_student/:id" element={<PrivateRoute><GeneralManageStudentPage action={"edit"}/></PrivateRoute>}/>
+          {/* Fix Edit, New Route*/}
+          <Route exact path="/admin/new/route/" element={<PrivateRoute><GeneralEditRouteForm></GeneralEditRouteForm></PrivateRoute>}/>
+
 
           <Route exact path="/admin/user/:id" element={<PrivateRoute><GeneralAdminUserDetails /></PrivateRoute>}/>
           <Route exact path="/admin/student/:id" element={<PrivateRoute><GeneralAdminStudentDetails /></PrivateRoute>}/>

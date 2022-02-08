@@ -9,7 +9,7 @@ import "../NEWadminPage.css";
 import { Container } from 'react-bootstrap'
 
 
-function NEWAdminRoutesPage(props) {
+function AdminRoutesPage(props) {
 
   const title = "Routes"
   const tableType = "route"
@@ -42,7 +42,7 @@ function NEWAdminRoutesPage(props) {
     </div>
   )
 }
-NEWAdminRoutesPage.propTypes = {
+AdminRoutesPage.propTypes = {
     getRoutes: PropTypes.func.isRequired,
 }
 
@@ -51,4 +51,4 @@ const mapStateToProps = (state) => ({
   routes: state.routes.routes.results
 });
 
-export default connect(mapStateToProps, {getRoutes})(NEWAdminRoutesPage)
+export default connect(mapStateToProps, {getRoutes})(AdminRoutesPage)

@@ -16,8 +16,8 @@ import GeneralAdminTableView from '../components/views/GeneralAdminTableView';
 import MapContainer from '../../maps/MapContainer';
 import { Container, Card, Button, Row, Col } from 'react-bootstrap'
 
-//url will be admin/stop/:route_id/:stop_id
-function NEWGeneralAdminStopDetails(props) {
+
+function GeneralAdminStopDetails(props) {
 
 
   const [openModal, setOpenModal] = useState(false);
@@ -80,7 +80,7 @@ function NEWGeneralAdminStopDetails(props) {
   )
 }
 
-NEWGeneralAdminStopDetails.propTypes = {
+GeneralAdminStopDetails.propTypes = {
     getStopInfo: PropTypes.func.isRequired,
     deleteStop: PropTypes.func.isRequired,
 }
@@ -89,5 +89,5 @@ const mapStateToProps = (state) => ({
   stop: state.stops.stop
 });
 
-export default connect(mapStateToProps, {getStopInfo,deleteStop})(NEWGeneralAdminStopDetails)
+export default connect(mapStateToProps, {})(GeneralAdminStopDetails)
 

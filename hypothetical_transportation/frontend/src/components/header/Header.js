@@ -43,7 +43,7 @@ function Header( props ) {
                     <NavDropdown title="Routes">
                         <NavDropdown.Item as={Link} to={`/admin/routes?pageNum=1`}><GiIcons.GiPathDistance /> View Routes</NavDropdown.Item>
                         <NavDropdown.Divider/>
-                        <NavDropdown.Item as={Link} to={`/`}> Create Routes</NavDropdown.Item>
+                        <NavDropdown.Item as={Link} to={`/admin/new/route/`}> Create Routes</NavDropdown.Item>
                     </NavDropdown>
                     <Nav.Link as={Link} to={`/account`}> Account</Nav.Link>
                     <Nav.Link as={Link} to={`/parent?pageNum=1`}> Your Parent Portal</Nav.Link>

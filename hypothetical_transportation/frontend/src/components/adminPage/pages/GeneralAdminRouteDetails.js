@@ -12,7 +12,7 @@ import MapContainer from '../../maps/MapContainer';
 import { Container, Card, Button, Row, Col } from 'react-bootstrap'
 
 
-function NEWGeneralAdminRouteDetails(props) {
+function GeneralAdminRouteDetails(props) {
 
 
   const [openModal, setOpenModal] = useState(false);
@@ -110,7 +110,7 @@ function NEWGeneralAdminRouteDetails(props) {
     );
 }
 
-NEWGeneralAdminRouteDetails.propTypes = {
+GeneralAdminRouteDetails.propTypes = {
     getRouteInfo: PropTypes.func.isRequired,
     getStudents: PropTypes.func.isRequired,
     deleteRoute: PropTypes.func.isRequired
@@ -123,5 +123,5 @@ const mapStateToProps = (state) => ({
   students: state.students.students.results
 });
 
-export default connect(mapStateToProps, {getRouteInfo, getStudents, deleteRoute})(NEWGeneralAdminRouteDetails)
+export default connect(mapStateToProps, {getRouteInfo, getStudents, deleteRoute})(GeneralAdminRouteDetails)
 

@@ -10,7 +10,7 @@ import { Container } from 'react-bootstrap'
 
 
 
-function NEWGeneralAdminStudentsPage(props) {
+function GeneralAdminStudentsPage(props) {
   const title = "Students"
   const tableType = "student"
 
@@ -41,7 +41,7 @@ function NEWGeneralAdminStudentsPage(props) {
     </div>    
   )
 }
-NEWGeneralAdminStudentsPage.propTypes = {
+GeneralAdminStudentsPage.propTypes = {
     getStudents: PropTypes.func.isRequired
 }
 
@@ -50,4 +50,4 @@ const mapStateToProps = (state) => ({
   students: state.students.students.results
 });
 
-export default connect(mapStateToProps, {getStudents, searchStudents})(NEWGeneralAdminStudentsPage)
+export default connect(mapStateToProps, {getStudents, searchStudents})(GeneralAdminStudentsPage)

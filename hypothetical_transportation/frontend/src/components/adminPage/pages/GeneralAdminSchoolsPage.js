@@ -9,7 +9,7 @@ import "../NEWadminPage.css";
 import { Container } from 'react-bootstrap'
 
 
-function NEWGeneralAdminSchoolsPage(props) {
+function GeneralAdminSchoolsPage(props) {
 
   //Mock Users Data (API Call later for real data)
   const title = "Schools"
@@ -45,7 +45,7 @@ function NEWGeneralAdminSchoolsPage(props) {
   )
 }
 
-NEWGeneralAdminSchoolsPage.propTypes = {
+GeneralAdminSchoolsPage.propTypes = {
     getSchools: PropTypes.func.isRequired,
 }
 
@@ -54,4 +54,4 @@ const mapStateToProps = (state) => ({
   schools: state.schools.schools.results
 });
 
-export default connect(mapStateToProps, {getSchools})(NEWGeneralAdminSchoolsPage)
+export default connect(mapStateToProps, {getSchools})(GeneralAdminSchoolsPage)
