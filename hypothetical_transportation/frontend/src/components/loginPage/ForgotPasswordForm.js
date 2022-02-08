@@ -1,10 +1,7 @@
 import React, { useState } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import image from "../../../public/schoolbusBackground.jpg";
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import { login } from "../../actions/auth";
-import isAdmin from "../../utils/user";
 
 import { Button, Form, Col } from 'react-bootstrap';
 import "./login.css";
