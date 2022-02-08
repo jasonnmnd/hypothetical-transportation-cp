@@ -10,6 +10,8 @@ import AdminPic from '../assets/adminPic.jpg';
 import StudentsPic from '../assets/studentsPic.jpg';
 import SchoolPic from '../assets/schoolPic.jpg';
 import RoutesPic from '../assets/routesPic.jpg';
+import StopsPic from '../assets/stopsPic.jpg';
+import EmailPic from '../assets/emailPic.jpg';
 
 //This page will be used for the admin page to declutter App.js
 function AdminPage( props ) {
@@ -52,6 +54,7 @@ function AdminPage( props ) {
                   </Card>
                 </Col>
               </Row>
+
               <Row>
                 <Col>
                   <Card className="text-center" style={{ width: '35rem' }}>
@@ -77,6 +80,37 @@ function AdminPage( props ) {
                       </Card.Text>
                         <Link to={`/admin/routes?pageNum=1`}>
                           <Button variant="yellow" size="lg">View Routes</Button>
+                        </Link>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              </Row>
+
+              <Row>
+                <Col>
+                  <Card className="text-center" style={{ width: '35rem' }}>
+                    <Card.Img variant="top" src={StopsPic} />
+                    <Card.Body>
+                      <Card.Title>Stops Portal</Card.Title>
+                      <Card.Text>
+                        View and modify existing stops.
+                      </Card.Text>
+                      <Link to={`/`}>
+                        <Button variant="yellow" size="lg">View Stops</Button>
+                      </Link>  
+                    </Card.Body>
+                  </Card>
+                </Col>
+                <Col>
+                  <Card className="text-center" style={{ width: '35rem' }}>
+                    <Card.Img variant="top" src={EmailPic} />
+                    <Card.Body>
+                      <Card.Title>Routes Portal</Card.Title>
+                      <Card.Text>
+                        Send an email to parents.
+                      </Card.Text>
+                        <Link to={`/`}>
+                          <Button variant="yellow" size="lg">Send Email</Button>
                         </Link>
                     </Card.Body>
                   </Card>
