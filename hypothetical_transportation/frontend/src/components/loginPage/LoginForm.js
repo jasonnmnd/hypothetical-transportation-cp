@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Navigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import image from "../../../public/schoolbusBackground.jpg";
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -56,6 +56,9 @@ function TESTLoginForm( props ) {
                         Submit
                     </Button>
                 </div>
+                <Link to={`/forgot_password`} className="d-flex justify-content-center align-items-center"> 
+                    Forgot Password? Click here.
+                </Link>
             </Form>
         </div>
     );

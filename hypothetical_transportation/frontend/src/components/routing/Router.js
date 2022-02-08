@@ -22,6 +22,7 @@ import AdminPage from "../adminPage/AdminPage";
 import GeneralParentStudentDetails from "../parentPage/pages/GeneralParentStudentDetails";
 import PrivateRoute from './PrivateRoute';
 import Alerts from "../alerts/Alerts";
+import ForgotPasswordForm from '../loginPage/ForgotPasswordForm';
 
 
 const Router = (props) => {
@@ -30,6 +31,7 @@ const Router = (props) => {
         <Alerts/>
         <Routes>
           <Route exact path="/" element={<LoginForm />}></Route>
+          <Route exact path="/forgot_password" element={<ForgotPasswordForm />}></Route>
           <Route path="/parent/*" element={<PrivateRoute><ParentPage /></PrivateRoute>}></Route>
           <Route exact path="/account" element={<PrivateRoute><AccountPage/></PrivateRoute>}></Route>
           <Route exact path="/account/password" element={<PrivateRoute><GeneralResetPasswordPage/></PrivateRoute>}></Route>

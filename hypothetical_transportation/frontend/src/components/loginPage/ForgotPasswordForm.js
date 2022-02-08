@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Navigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import image from "../../../public/schoolbusBackground.jpg";
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -14,6 +14,7 @@ function ForgotPasswordForm( props ) {
   
     const submitHandler = (e) => {
       e.preventDefault();
+      console.log(details)
       //backend send email to submitted value
       //if email is not associated with the user do something else?
     };
@@ -42,12 +43,20 @@ function ForgotPasswordForm( props ) {
                         Submit
                     </Button>
                 </div>
+                <div className="d-flex justify-content-center align-items-center">
+                    <Link to={`/`}> 
+                        <Button className="login-buttons">
+                            Back To Login
+                        </Button>
+                    </Link>                
+                </div>
+
             </Form>
         </div>
     );
   }
   
-  TESTLoginForm.propTypes = {
+  ForgotPasswordForm.propTypes = {
   }
   
   const mapStateToProps = (state) => ({
