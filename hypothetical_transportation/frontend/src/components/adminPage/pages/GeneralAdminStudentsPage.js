@@ -1,16 +1,12 @@
-import React,{useEffect, useState} from 'react';
-import SidebarSliding from '../components/sidebar/SidebarSliding';
+import React,{useEffect} from 'react';
 import Header from '../../header/Header';
-import AdminTable from "../components/table/AdminTable";
-import axios from 'axios';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { getStudents, searchStudents } from '../../../actions/students';
 import GeneralAdminTableView from '../components/views/GeneralAdminTableView';
-import PaginationButtons from '../../common/PaginationButtons';
 import "../NEWadminPage.css";
-import { Container, Form } from 'react-bootstrap'
+import { Container } from 'react-bootstrap'
 
 
 

@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from "react";
-import axios from 'axios';
 import { useNavigate, useParams } from "react-router-dom";
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import "../NEWadminPage.css"
 import Header from "../../header/Header";
-import SidebarSliding from "../components/sidebar/SidebarSliding";
 import { getUser, updateUser } from "../../../actions/users";
 import { register } from "../../../actions/auth";
-import AssistedLocationModal from "../components/modals/AssistedLocationModal";
 import AssistedLocationMap from "../../maps/AssistedLocationMap";
 import { Form, Button, Row, Col, Container, InputGroup, ButtonGroup, ToggleButton} from 'react-bootstrap';
 

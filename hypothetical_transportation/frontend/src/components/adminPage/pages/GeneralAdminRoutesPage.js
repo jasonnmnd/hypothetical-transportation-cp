@@ -1,15 +1,12 @@
-import React, {useState, useEffect} from 'react';
-import SidebarSliding from '../components/sidebar/SidebarSliding';
+import React, {useEffect} from 'react';
 import Header from '../../header/Header';
-import AdminTable from '../components/table/AdminTable';
-import axios from 'axios';
 import { Link, useSearchParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { getRoutes } from '../../../actions/routes';
 import GeneralAdminTableView from '../components/views/GeneralAdminTableView';
 import "../NEWadminPage.css";
-import { Container, Form } from 'react-bootstrap'
+import { Container } from 'react-bootstrap'
 
 
 function NEWAdminRoutesPage(props) {
