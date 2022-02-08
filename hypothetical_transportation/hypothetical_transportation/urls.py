@@ -21,5 +21,6 @@ urlpatterns = [
     path('api/accounts/', include('authemail.urls')),
     path('api/', include('backend.urls')),
     path('', include('accounts.urls')),
+    path('', include('communications.urls')),
     path('', include('frontend.urls')),
 ]

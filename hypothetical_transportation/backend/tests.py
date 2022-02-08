@@ -92,21 +92,21 @@ class AuthenticationObjectConsistency(TestCase):
         self.assertEqual(logged_out_check_response.data['detail'].code, 'authentication_failed')
 
 
-class StopOperations(TestCase):
-    def setUp(self):
-        self.stop1 = Stop.objects.create(name='stop1', location='loc1')
-        self.stop2 = Stop.objects.create(name='stop2', location='loc2')
-        self.stop3 = Stop.objects.create(name='stop3', location='loc3')
-        self.school1 = School.objects.create(name='school1', address='loc2', bus_arrival_time=datetime.time(9, 0, 0),
-                                             bus_departure_time=datetime.time(15, 0, 0))
-        self.route1 = Route.objects.create(name='route1', description='', school=self.school1)
-        StopRoute.objects.create(stop=self.stop1, route=self.route1)
-        StopRoute.objects.create(stop=self.stop3, route=self.route1)
-        StopRoute.objects.create(stop=self.stop2, route=self.route1)
-
-    def test_order_preservation(self):
-        # TODO: not yet a real test!
-        print(self.route1.stops.all().order_by('stoproute__id'))
+# class StopOperations(TestCase):
+#     def setUp(self):
+#         self.stop1 = Stop.objects.create(name='stop1', location='loc1')
+#         self.stop2 = Stop.objects.create(name='stop2', location='loc2')
+#         self.stop3 = Stop.objects.create(name='stop3', location='loc3')
+#         self.school1 = School.objects.create(name='school1', address='loc2', bus_arrival_time=datetime.time(9, 0, 0),
+#                                              bus_departure_time=datetime.time(15, 0, 0))
+#         self.route1 = Route.objects.create(name='route1', description='', school=self.school1)
+#         StopRoute.objects.create(stop=self.stop1, route=self.route1)
+#         StopRoute.objects.create(stop=self.stop3, route=self.route1)
+#         StopRoute.objects.create(stop=self.stop2, route=self.route1)
+#
+#     def test_order_preservation(self):
+#         # TODO: not yet a real test!
+#         print(self.route1.stops.all().order_by('stoproute__id'))
 
 
 class PermissionViews(TransactionTestCase):
