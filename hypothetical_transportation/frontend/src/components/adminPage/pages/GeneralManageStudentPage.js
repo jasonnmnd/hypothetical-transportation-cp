@@ -8,12 +8,12 @@ import SidebarSliding from '../components/sidebar/SidebarSliding';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import AssistedLocationModal from '../components/modals/AssistedLocationModal';
-import config from '../../../utils/config';
 import { getSchools } from '../../../actions/schools';
 import { getUsers, getUser } from '../../../actions/users';
 import { getStudent, addStudent, updateStudent } from '../../../actions/students';
 import { getRoutesByID } from '../../../actions/routes';
+import { Form, Button, Row, Col, Container, InputGroup, ButtonGroup, ToggleButton} from 'react-bootstrap';
+
 
 function GeneralManageStudentPage(props) {
     const param = useParams()
@@ -80,9 +80,8 @@ function GeneralManageStudentPage(props) {
 
     return ( 
       <>
-        <SidebarSliding/>
-        <Header textToDisplay={`${props.action} student`} shouldShowOptions={true}></Header>
-        <div className='admin-edit-page'>
+        <Header></Header>
+        {/* <div className='admin-edit-page'>
         <form>
             <div className="submit-form-content"> 
                 <div className="form-inner">
@@ -137,19 +136,6 @@ function GeneralManageStudentPage(props) {
                         </select>
                       </label>
                   </div>
-
-                  {/* <div className="form-group">
-                      <label>
-                        <label>Route</label>
-                        <select value={obj.routes!==null &&obj.routes!==undefined ? obj.routes.id:"null"} onChange={(e) => setObj({ ...obj, ["routes"]: e.target.value })}>
-                          <option value={"null"} >{"-----"}</option>
-                          {props.routes!==null && props.routes!==undefined && props.routes.length!==0?props.routes.map((u,i)=>{
-                              return <option value={u.id} key={i}>{u.name}</option>
-                          }):null}
-                        </select>
-                      </label>
-                  </div> */}
-
                     <div className="divider15px" />
                     
                     <div className="center-buttons">
@@ -158,9 +144,60 @@ function GeneralManageStudentPage(props) {
                 </div>
               </div>
             </form>
-            {/* <Link to={`/admin/${param.column}s`}><button>To {param.column}</button></Link> */}
-            {/* <button onClick={() => navigate(-1)} className='button'>Go Back</button> */}
-        </div>
+        </div> */}
+        <Container className="container-main">
+          <Form className="shadow-lg p-3 mb-5 bg-white rounded">
+          <Row className="mb-3">
+            <Form.Group as={Col} controlId="formGridName">
+                <Form.Label as="h5">Full Name</Form.Label>
+                <Form.Control 
+                required type="text"
+                placeholder="Enter name..." 
+                value={obj.full_name}
+                onChange={(e)=>{
+                  setObj({...obj, ["full_name"]: e.target.value})
+                }}
+                />
+            </Form.Group>
+
+            <Form.Group as={Col} controlId="formGridID">
+                <Form.Label as="h5">Student ID</Form.Label>
+                <Form.Control 
+                required type="text"
+                placeholder="Enter name..." 
+                value={obj.student_id}
+                onChange={(e)=>{setObj({...obj, ["student_id"]: e.target.value})}}
+                />
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="">
+                <Form.Label as="h5">Parent</Form.Label>
+                <Form.Select size="sm" value={obj.guardian} onChange={setParent}>
+                <option value={""}>{"-----"}</option>:
+                {props.users!==null && props.users!==undefined && props.users.length!==0?props.users.map((u,i)=>{
+                    return <option value={u.id} key={i}>{u.email}</option>
+                }):null}
+                </Form.Select>
+            </Form.Group>
+            
+            <Form.Group className="mb-3" controlId="">
+                <Form.Label as="h5">School</Form.Label>
+                <Form.Select size="sm" value={obj.school} onChange={changeSchool}>
+                  <option value={"null"} >{"-----"}</option>
+                    {props.schoollist!==null && props.schoollist!==undefined && props.schoollist.length!==0?props.schoollist.map((u,i)=>{
+                        return <option value={u.id} key={i}>{u.name}</option>
+                    }):null}
+                </Form.Select>
+            </Form.Group>
+
+            <Button variant="yellowsubmit" type="submit" onClick={submit}>
+                Submit
+            </Button>
+
+          </Row>
+          </Form>
+
+        </Container>
       </>
         );
 }
