@@ -36,3 +36,21 @@ form {
 .login-buttons:hover {
   background-color: #ffdd99;
 }
+
+.btn-yellow {
+  display: inline-block;
+  padding: 10px 15px;
+  border-radius: 8px;
+  background-color: #ffae07;
+  background-size: 200%;
+  background-position: 0%;
+  transition: 0.4s;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  width: 200px;
+}
+
+.btn-yellow:hover {
+  background-color: #ffdd99;
+}

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import image from "../../../public/schoolbusBackground.jpg";
 import { connect } from 'react-redux';
 
-import { Button, Form, Col } from 'react-bootstrap';
+import { Button, Form, Col, Row, Container} from 'react-bootstrap';
 import "./login.css";
 
 function ForgotPasswordForm( props ) {
@@ -35,19 +35,24 @@ function ForgotPasswordForm( props ) {
                     value={details.email}/>
                 </Form.Group>
 
-                <div className="d-flex justify-content-center align-items-center">
-                    <Button className="login-buttons" type="submit" onClick={submitHandler}>
-                        Submit
-                    </Button>
-                </div>
-                <div className="d-flex justify-content-center align-items-center">
-                    <Link to={`/`}> 
-                        <Button className="login-buttons">
-                            Back To Login
-                        </Button>
-                    </Link>                
-                </div>
-
+                <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
+                    <Row>
+                        <Col>
+                            <Button variant="yellow" type="submit" onClick={submitHandler}>
+                                Submit
+                            </Button>
+                        </Col>
+                        <Col>
+                        <div className="d-flex justify-content-center align-items-center">
+                            <Link to={`/`}> 
+                                <Button variant="yellow">
+                                    Back To Login
+                                </Button>
+                            </Link>                
+                        </div>
+                        </Col>
+                    </Row>
+                </Container>
             </Form>
         </div>
     );
