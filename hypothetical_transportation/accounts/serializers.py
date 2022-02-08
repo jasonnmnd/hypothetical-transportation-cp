@@ -4,12 +4,20 @@ from django.contrib.auth import authenticate
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
+from .models import PendingUser
 
 
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = ('name',)
+
+
+# Change Password Serializers
+class InviteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PendingUser
+        fields = ('email', 'full_name', 'address', 'initial_group')
 
 
 # Change Password Serializers
