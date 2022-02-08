@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import EditForm from '../components/forms/EditForm';
 import Header from '../../header/Header';
-import AdminPage from '../AdminPage';
 import "../adminPage.css";
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import SidebarSliding from '../components/sidebar/SidebarSliding';
-import axios from 'axios';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { getSchools } from '../../../actions/schools';

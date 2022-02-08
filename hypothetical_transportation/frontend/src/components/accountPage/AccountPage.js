@@ -1,6 +1,5 @@
 import React from "react";
 import { Link, Navigate, useNavigate } from 'react-router-dom';
-import SidebarSliding from "../adminPage/components/sidebar/SidebarSliding";
 import Header from "../header/Header";
 import ParentHeader from "../header/ParentHeader";
 import { connect } from 'react-redux';

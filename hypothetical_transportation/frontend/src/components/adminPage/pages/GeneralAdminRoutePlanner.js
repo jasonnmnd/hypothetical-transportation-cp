@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import Header from '../../header/Header';
-import SidebarSliding from '../components/sidebar/SidebarSliding';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import MapContainer from '../../maps/MapContainer';
 import { connect } from 'react-redux';

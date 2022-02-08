@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { logout } from "../../actions/auth";
 import isAdmin from "../../utils/user";
-import SidebarSliding from "../adminPage/components/sidebar/SidebarSliding";
 import { getStudents } from '../../actions/students';
 import GeneralParentTableView from "./views/GeneralParentTableView";
 import { Container, Row, Col } from 'react-bootstrap';

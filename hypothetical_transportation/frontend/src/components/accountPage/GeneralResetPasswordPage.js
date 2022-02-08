@@ -1,14 +1,11 @@
 import React from "react";
 import { useState } from "react";
 import { Link, Navigate, useNavigate } from 'react-router-dom';
-import SidebarSliding from "../adminPage/components/sidebar/SidebarSliding";
 import Header from "../header/Header";
 import ParentHeader from "../header/ParentHeader";
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import isAdmin from "../../utils/user";
-import config from "../../utils/config";
-import axios from "axios";
 import { resetPassword, resetResetPassword } from '../../actions/auth'
 import "../adminPage/NEWadminPage.css"
 import { Form, Button, Row, Col, Container, InputGroup, ButtonGroup, ToggleButton} from 'react-bootstrap';

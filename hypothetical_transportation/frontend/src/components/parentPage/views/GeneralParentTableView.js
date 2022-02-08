@@ -76,12 +76,10 @@ function GeneralParentTableView(props) {
     
 
     return (
-        <div className='table-and-buttons'>
+        <div className="d-flex justify-content-space-between flex-column" style={{gap: "20px"}}>
             <h1>{props.title}</h1>
             {props.search != null && props.search != undefined ? <SearchBar buttons={studentFilterBy} sortBy={studentSortBy} search={props.search}></SearchBar> : null}
-            <div className='parentTable-container'>
-                <GeneralTable rows={props.values} columnNames={getColumns()} actionName={props.actionName?props.actionName:"View"} action={props.action? props.action:handleViewClick}/>
-            </div>
+            <GeneralTable rows={props.values} columnNames={getColumns()} actionName={props.actionName?props.actionName:"View"} action={props.action? props.action:handleViewClick}/>
             {props.pagination != null && props.pagination != undefined ? <PaginationButtons nextDisable={!props.values || props.values.length == 0} prefix={props.pagination}/> : null}
         </div>
     )}
