@@ -24,8 +24,7 @@ function GeneralEditUserForm(props) {
         full_name: "",
         address: "",
         email: "",
-        groups: 1,
-        password: ""
+        groups: 1
     });
     const [address, setAddress] = useState("");
 
@@ -125,7 +124,7 @@ function GeneralEditUserForm(props) {
                       </label>
                   </div>
 
-                  <div className="form-group">
+                  {/* <div className="form-group">
                       <label htmlFor={"Password"}>Password</label>
                       <input
                           className="input"
@@ -139,7 +138,7 @@ function GeneralEditUserForm(props) {
                                 }
                             }
                       />
-                  </div>
+                  </div> */}
 
                   <div className="form-group">
                       <label htmlFor={"Address"}>Address</label>
