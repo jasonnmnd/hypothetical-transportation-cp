@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 
 class SendAnnouncementSerializer(serializers.Serializer):
-    object_id = serializers.IntegerField()
+    object_id = serializers.IntegerField(required=False)
     id_type = serializers.ChoiceField(choices=[
         ('ROUTE', 'Route'),
         ('SCHOOL', 'School'),

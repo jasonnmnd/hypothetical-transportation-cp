@@ -40,8 +40,8 @@ class Command(BaseCommand):
                                                         full_name=f'{first_name} {last_name}', address=address)
             user.groups.add(guardian_group)
 
-        for _ in tqdm(range(num_schools)):
-            school_name = f'{data_generator.name()} University'
+        for school_num in tqdm(range(1, num_schools + 1)):
+            school_name = f'{data_generator.name()} University est. {school_num} '
             school_address = data_generator.address()
             School.objects.create(address=school_address, name=f'{school_name}')
 
