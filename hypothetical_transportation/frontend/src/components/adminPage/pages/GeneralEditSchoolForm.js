@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from "react";
-import axios from 'axios';
 import { useNavigate, useParams } from "react-router-dom";
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import "../NEWadminPage.css"
 import Header from "../../header/Header";
-import SidebarSliding from "../components/sidebar/SidebarSliding";
 import AssistedLocationMap from "../../maps/AssistedLocationMap";
 
 import { getSchool, updateSchool, addSchool } from "../../../actions/schools";
-import AssistedLocationModal from "../components/modals/AssistedLocationModal";
 import { Container, Form, Button } from 'react-bootstrap';
 
 //input1: title of form

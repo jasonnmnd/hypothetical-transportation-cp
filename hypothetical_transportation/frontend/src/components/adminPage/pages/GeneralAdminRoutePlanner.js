@@ -10,6 +10,8 @@ import {getStudentsInRoute, getStudentsWithoutRoute,addStudentToRoute, removeStu
 import GeneralAdminTableView from '../components/views/GeneralAdminTableView';
 import { getSchool } from '../../../actions/schools';
 import { filterObjectForKeySubstring } from '../../../utils/utils';
+import { Container, Card, Button, Form } from 'react-bootstrap';
+import '../NEWadminPage.css';
 
 function GeneralAdminRoutePlanner(props) {
   const STUDENTS_IN_ROUTE_PREFIX = "STINROUPREF";
@@ -141,11 +143,10 @@ const getRouteMatches = (i) => {
   return (
     
     <>
-        <SidebarSliding/>
         <Header textToDisplay={"Route Planner"} shouldShowOptions={true}></Header>
-        <div className='header-padding'>
+        <Container className="container-main d-flex flex-column" style={{gap: "20px"}}>
 
-          <div className='left-content'>
+          {/* <div className="shadow-lg p-3 mb-5 bg-white rounded">
               <div className='info-fields'>
                 <h2>School (Blue Pin): </h2>
                   <Link to={`/admin/school/${param.school_id}`}><button className='button'><h3>{props.school.name}</h3></button></Link>
@@ -189,9 +190,6 @@ const getRouteMatches = (i) => {
               }
           </div>
 
-
-          
-
           <div className='left-content'>
               <form>
                 <div className="form-inner">
@@ -231,8 +229,104 @@ const getRouteMatches = (i) => {
                   <div className="divider15px" />
                 </div>
               </form>
-              </div>
-          </div>
+        </div> */}
+        <Card>
+            <Card.Header as="h5">School</Card.Header>
+            <Card.Body>
+              <Link to={`/admin/school/${param.school_id}`}>
+                  <Button variant='yellow'><h3>{props.school.name}</h3></Button>
+              </Link>
+            </Card.Body>
+        </Card>
+
+        <Card>
+            <Card.Header as="h5">Map View of School and Students</Card.Header>
+            <Card.Body>
+              {props.action==="new"?
+                <MapContainer studentData={props.studentsWithoutRoute} schoolData={props.school}/>:
+                <MapContainer studentData={props.studentsWithoutRoute.filter(i => getRouteMatches(i))} schoolData={props.route.school} routeStudentData={props.studentsInRoute}/>
+              }
+            </Card.Body>
+        </Card>
+       
+
+        {
+        props.action==="edit" ?
+          <>
+            <Card>
+              <Card.Header as="h5">Students Currently in {props.route.name} (Green Pin)</Card.Header>
+              <Card.Body>
+                <GeneralAdminTableView values={props.studentsInRoute.filter(i=>!toberemoved.includes(i))} tableType={"student"} title={`Students currently in ${props.route.name} (Green pin)`} actionName={"Remove from Route"} action={removeFromRoute} search={STUDENTS_IN_ROUTE_PREFIX} pagination={STUDENTS_IN_ROUTE_PREFIX} />
+              </Card.Body>
+            </Card>
+          </>
+          : 
+          <div></div>  
+        } 
+
+        <Card>
+            <Card.Header as="h5">Students at {props.route.school.name} not in {props.route.name} (Red Pin)</Card.Header>
+            <Card.Body>
+              <GeneralAdminTableView values={props.studentsWithoutRoute.filter(i=>!tobeadded.includes(i) && getRouteMatches(i))} tableType={"student"} title={`Students at ${props.route.school.name} with no route`} actionName={"Add to Route"} action={addToRoute} search={STUDENTS_WO_ROUTE_PREFIX} pagination={STUDENTS_WO_ROUTE_PREFIX}/>
+            </Card.Body>
+        </Card>
+
+        <Card>
+            <Card.Header as="h5">Students to be Added to {props.route.name}</Card.Header>
+            <Card.Body>
+              <GeneralAdminTableView values={tobeadded} tableType={"student"} title={`Students To Be Added into Route`} actionName={"Remove from Selected"} action={removeFromADD} search={null} pagination={null}/>
+            </Card.Body>
+        </Card>
+        
+        {
+        props.action==="edit" ?
+          <>
+            <Card>
+              <Card.Header as="h5">Students to be Removed from {props.route.name}</Card.Header>
+              <Card.Body>
+                <GeneralAdminTableView values={toberemoved} tableType={"student"} title={`Students To Be Remove from Route`} actionName={"Remove from Selected"} action={removeFromREMOVE} search={null} pagination={null}/>
+              </Card.Body>
+          </Card>
+          </>
+          :
+          <div></div>
+        }
+
+        <Card>
+          <Card.Header as="h5">{props.action==="new" ? "New Route" : "Edit Route"}</Card.Header>
+          <Card.Body>
+            <Form className="shadow-lg p-3 mb-5 bg-white rounded">
+                  <Form.Group className="mb-3" controlId="validationCustom01">
+                      <Form.Label as="h5">Name of Route</Form.Label>
+                      <Form.Control 
+                      required type="text"
+                      placeholder="Enter Route Name..." 
+                      value={obj.name}
+                      onChange={(e)=>{
+                          setObj({...obj, ["name"]: e.target.value})
+                      }}
+                      />
+                  </Form.Group>
+
+                  <Form.Group className="mb-3" controlId="formGridDescription">
+                      <Form.Label as="h5">Route Description</Form.Label>
+                      <Form.Control 
+                      as="textarea"
+                      required type="text"
+                      style={{ height: '100px' }}
+                      placeholder="Enter Route Description..." 
+                      value={obj.description}
+                      onChange={(e)=>{setObj({...obj, ["description"]: e.target.value})}}                    />
+                  </Form.Group>
+
+                  <Button variant="yellowsubmit" type="submit" onClick={submit}>
+                      Save
+                  </Button>
+              </Form>
+            </Card.Body>
+            
+        </Card>
+      </Container>
     </>
 
     );

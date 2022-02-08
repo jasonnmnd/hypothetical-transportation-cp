@@ -16,7 +16,7 @@ import GeneralAdminTableView from '../components/views/GeneralAdminTableView';
 import isAdmin from '../../../utils/user';
 import { Container, Card, Button, Row, Col } from 'react-bootstrap'
 
-function NEWAdminUserDetails(props) {
+function AdminUserDetails(props) {
   const navigate = useNavigate();
   const param = useParams();
 
@@ -108,7 +108,7 @@ function NEWAdminUserDetails(props) {
   );
 }
 
-NEWAdminUserDetails.propTypes = {
+AdminUserDetails.propTypes = {
     getUser: PropTypes.func.isRequired,
     getStudents: PropTypes.func.isRequired
 }
@@ -120,4 +120,4 @@ const mapStateToProps = (state) => ({
   
 });
 
-export default connect(mapStateToProps, {getUser, getStudents, deleteUser})(NEWAdminUserDetails)
+export default connect(mapStateToProps, {getUser, getStudents, deleteUser})(AdminUserDetails)

@@ -16,7 +16,7 @@ import MapContainer from '../../maps/MapContainer';
 import { Container, Card, Button, Row, Col } from 'react-bootstrap'
 
 
-function NEWGeneralAdminStopDetails(props) {
+function GeneralAdminStopDetails(props) {
 
 
   const [openModal, setOpenModal] = useState(false);
@@ -44,12 +44,12 @@ function NEWGeneralAdminStopDetails(props) {
   )
 }
 
-NEWGeneralAdminStopDetails.propTypes = {
+GeneralAdminStopDetails.propTypes = {
     getStopInfo: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = (state) => ({
 });
 
-export default connect(mapStateToProps, {})(NEWGeneralAdminStopDetails)
+export default connect(mapStateToProps, {})(GeneralAdminStopDetails)
 

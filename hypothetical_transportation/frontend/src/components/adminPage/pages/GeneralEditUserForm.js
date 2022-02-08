@@ -16,7 +16,7 @@ import { Form, Button, Row, Col, Container, InputGroup, ButtonGroup, ToggleButto
 //input2: list of fields?
 //input3: a typed object matching the fields
 //input4: string action determining new or edit
-function NEWGeneralEditUserForm(props) {
+function GeneralEditUserForm(props) {
     const navigate = useNavigate();
     const param = useParams();
     const [openModal, setOpenModal] = useState(false);
@@ -176,7 +176,7 @@ function NEWGeneralEditUserForm(props) {
     )
 }
 
-NEWGeneralEditUserForm.propTypes = {
+GeneralEditUserForm.propTypes = {
     getUser: PropTypes.func.isRequired,
     updateUser: PropTypes.func.isRequired,
     //addSchool: PropTypes.func.isRequired,
@@ -189,5 +189,5 @@ const mapStateToProps = (state) => ({
 
 });
 
-export default connect(mapStateToProps, {getUser, updateUser, register})(NEWGeneralEditUserForm)
+export default connect(mapStateToProps, {getUser, updateUser, register})(GeneralEditUserForm)
 

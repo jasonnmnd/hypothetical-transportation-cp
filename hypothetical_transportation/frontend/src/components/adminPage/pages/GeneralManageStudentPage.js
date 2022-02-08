@@ -15,7 +15,7 @@ import { getUsers, getUser } from '../../../actions/users';
 import { getStudent, addStudent, updateStudent } from '../../../actions/students';
 import { getRoutesByID } from '../../../actions/routes';
 
-function NEWGeneralManageStudentPage(props) {
+function GeneralManageStudentPage(props) {
     const param = useParams()
     const navigate = useNavigate();
 
@@ -165,7 +165,7 @@ function NEWGeneralManageStudentPage(props) {
         );
 }
 
-NEWGeneralManageStudentPage.propTypes = {
+GeneralManageStudentPage.propTypes = {
     action: PropTypes.string,
     getSchools: PropTypes.func.isRequired,
     getUsers: PropTypes.func.isRequired,
@@ -186,4 +186,4 @@ const mapStateToProps = (state) => ({
   selectedUser: state.users.viewedUser
 });
 
-export default connect(mapStateToProps, {getSchools, getUsers, getStudent, getRoutesByID, getUser, addStudent, updateStudent})(NEWGeneralManageStudentPage)
+export default connect(mapStateToProps, {getSchools, getUsers, getStudent, getRoutesByID, getUser, addStudent, updateStudent})(GeneralManageStudentPage)

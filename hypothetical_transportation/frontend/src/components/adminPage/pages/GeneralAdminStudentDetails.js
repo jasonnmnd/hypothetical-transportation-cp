@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import { getStudentInfo, deleteStudent } from '../../../actions/students';
 import { Container, Card, Button, Row, Col } from 'react-bootstrap'
 
-function NEWGeneralAdminStudentDetails(props) {
+function GeneralAdminStudentDetails(props) {
   const navigate = useNavigate();
   const param = useParams();
 
@@ -101,7 +101,7 @@ function NEWGeneralAdminStudentDetails(props) {
   );
 }
 
-NEWGeneralAdminStudentDetails.propTypes = {
+GeneralAdminStudentDetails.propTypes = {
     getStudentInfo: PropTypes.func.isRequired,
     deleteStudent: PropTypes.func.isRequired
 }
@@ -110,4 +110,4 @@ const mapStateToProps = (state) => ({
   student: state.students.viewedStudent
 });
 
-export default connect(mapStateToProps, {getStudentInfo, deleteStudent})(NEWGeneralAdminStudentDetails)
+export default connect(mapStateToProps, {getStudentInfo, deleteStudent})(GeneralAdminStudentDetails)

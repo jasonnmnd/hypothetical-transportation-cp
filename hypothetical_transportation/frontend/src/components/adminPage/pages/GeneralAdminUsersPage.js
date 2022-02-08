@@ -14,7 +14,7 @@ import GeneralAdminTableView from '../components/views/GeneralAdminTableView';
 import { Container, Form } from 'react-bootstrap'
 
 
-function NEWGeneralAdminUsersPage(props) {
+function GeneralAdminUsersPage(props) {
 
   //Mock Users Data (API Call later for real data)
   const title = "Parent Users"
@@ -46,7 +46,7 @@ function NEWGeneralAdminUsersPage(props) {
   )
 }
 
-NEWGeneralAdminUsersPage.propTypes = {
+GeneralAdminUsersPage.propTypes = {
     getUsers: PropTypes.func.isRequired,
 }
 
@@ -55,4 +55,4 @@ const mapStateToProps = (state) => ({
   users: state.users.users.results,
 });
 
-export default connect(mapStateToProps, {getUsers} )(NEWGeneralAdminUsersPage)
+export default connect(mapStateToProps, {getUsers} )(GeneralAdminUsersPage)
