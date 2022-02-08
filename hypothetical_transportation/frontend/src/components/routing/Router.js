@@ -3,20 +3,22 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import AccountPage from '../accountPage/AccountPage';
 import LoginForm from '../loginPage/LoginForm';
 import ParentPage from '../parentPage/ParentPage';
-import NEWGeneralEditUserForm from "../adminPage/pages/NEWGeneralEditUserForm";
-import NEWGeneralEditSchoolForm from "../adminPage/pages/NEWGeneralEditSchoolForm";
+import GeneralEditUserForm from "../adminPage/pages/GeneralEditUserForm";
+import GeneralEditSchoolForm from "../adminPage/pages/GeneralEditSchoolForm";
 
-import NEWGeneralAdminRoutesPage from "../adminPage/pages/NEWGeneralAdminRoutesPage";
-import NEWGeneralAdminSchoolsPage from "../adminPage/pages/NEWGeneralAdminSchoolsPage";
-import NEWGeneralAdminStudentsPage from "../adminPage/pages/NEWGeneralAdminStudentsPage";
-import NEWGeneralAdminUsersPage from "../adminPage/pages/NEWGeneralAdminUsersPage";
+import GeneralAdminRoutesPage from "../adminPage/pages/GeneralAdminRoutesPage";
+import GeneralAdminSchoolsPage from "../adminPage/pages/GeneralAdminSchoolsPage";
+import GeneralAdminStudentsPage from "../adminPage/pages/GeneralAdminStudentsPage";
+import GeneralAdminUsersPage from "../adminPage/pages/GeneralAdminUsersPage";
 
-import NEWGeneralAdminUserDetails from "../adminPage/pages/NEWGeneralAdminUserDetails";
-import NEWGeneralAdminStudentDetails from "../adminPage/pages/NEWGeneralAdminStudentDetails";
-import NEWGeneralAdminSchoolDetails from "../adminPage/pages/NEWGeneralAdminSchoolDetails";
-import NEWGeneralAdminRouteDetails from "../adminPage/pages/NEWGeneralAdminRouteDetails";
-import GeneralAdminRoutePlanner from "../adminPage/newPages/GeneralAdminRoutePlanner";
-import GeneralManageStudentPage from "../adminPage/newPages/GeneralManageStudentPage";
+import GeneralAdminUserDetails from "../adminPage/pages/GeneralAdminUserDetails";
+import GeneralAdminStudentDetails from "../adminPage/pages/GeneralAdminStudentDetails";
+import GeneralAdminSchoolDetails from "../adminPage/pages/GeneralAdminSchoolDetails";
+import GeneralAdminRouteDetails from "../adminPage/pages/GeneralAdminRouteDetails";
+
+import GeneralAdminRoutePlanner from "../adminPage/pages/GeneralAdminRoutePlanner";
+import GeneralManageStudentPage from "../adminPage/pages/GeneralManageStudentPage";
+
 import GeneralResetPasswordPage from "../accountPage/GeneralResetPasswordPage";
 import AdminPage from "../adminPage/AdminPage";
 import GeneralParentStudentDetails from "../parentPage/pages/GeneralParentStudentDetails";
@@ -39,22 +41,22 @@ const Router = (props) => {
           <Route path="/admin/*" element={<PrivateRoute><AdminPage/></PrivateRoute>}></Route>
 
           
-          <Route exact path="/admin/users" element={<PrivateRoute><NEWGeneralAdminUsersPage /></PrivateRoute>}></Route>
-          <Route exact path="/admin/students/*" element={<PrivateRoute><NEWGeneralAdminStudentsPage /></PrivateRoute>}></Route>
-          <Route exact path="/admin/schools" element={<PrivateRoute><NEWGeneralAdminSchoolsPage /></PrivateRoute>}></Route>
-          <Route exact path="/admin/routes" element={<PrivateRoute><NEWGeneralAdminRoutesPage /></PrivateRoute>}></Route>
+          <Route exact path="/admin/users" element={<PrivateRoute><GeneralAdminUsersPage /></PrivateRoute>}></Route>
+          <Route exact path="/admin/students/*" element={<PrivateRoute><GeneralAdminStudentsPage /></PrivateRoute>}></Route>
+          <Route exact path="/admin/schools" element={<PrivateRoute><GeneralAdminSchoolsPage /></PrivateRoute>}></Route>
+          <Route exact path="/admin/routes" element={<PrivateRoute><GeneralAdminRoutesPage /></PrivateRoute>}></Route>
 
-          <Route exact path="/admin/edit/school/:id" element={<PrivateRoute><NEWGeneralEditSchoolForm action="edit" /></PrivateRoute>}></Route>
-          <Route exact path="/admin/new/school/" element={<PrivateRoute><NEWGeneralEditSchoolForm action="new"/></PrivateRoute>}></Route>
-          <Route exact path="/admin/edit/user/:id" element={<PrivateRoute><NEWGeneralEditUserForm action="edit" /></PrivateRoute>}></Route>
-          <Route exact path="/admin/new/user/" element={<PrivateRoute><NEWGeneralEditUserForm action="new"/></PrivateRoute>}></Route>
+          <Route exact path="/admin/edit/school/:id" element={<PrivateRoute><GeneralEditSchoolForm action="edit" /></PrivateRoute>}></Route>
+          <Route exact path="/admin/new/school/" element={<PrivateRoute><GeneralEditSchoolForm action="new"/></PrivateRoute>}></Route>
+          <Route exact path="/admin/edit/user/:id" element={<PrivateRoute><GeneralEditUserForm action="edit" /></PrivateRoute>}></Route>
+          <Route exact path="/admin/new/user/" element={<PrivateRoute><GeneralEditUserForm action="new"/></PrivateRoute>}></Route>
           <Route exact path="/admin/new_student/" element={<PrivateRoute><GeneralManageStudentPage action={"new"} /></PrivateRoute>}/>
           <Route exact path="/admin/edit_student/:id" element={<PrivateRoute><GeneralManageStudentPage action={"edit"}/></PrivateRoute>}/>
 
-          <Route exact path="/admin/user/:id" element={<PrivateRoute><NEWGeneralAdminUserDetails /></PrivateRoute>}/>
-          <Route exact path="/admin/student/:id" element={<PrivateRoute><NEWGeneralAdminStudentDetails /></PrivateRoute>}/>
-          <Route exact path="/admin/school/:id" element={<PrivateRoute><NEWGeneralAdminSchoolDetails /></PrivateRoute>}/>
-          <Route exact path="/admin/route/:id" element={<PrivateRoute><NEWGeneralAdminRouteDetails /></PrivateRoute>}/>
+          <Route exact path="/admin/user/:id" element={<PrivateRoute><GeneralAdminUserDetails /></PrivateRoute>}/>
+          <Route exact path="/admin/student/:id" element={<PrivateRoute><GeneralAdminStudentDetails /></PrivateRoute>}/>
+          <Route exact path="/admin/school/:id" element={<PrivateRoute><GeneralAdminSchoolDetails /></PrivateRoute>}/>
+          <Route exact path="/admin/route/:id" element={<PrivateRoute><GeneralAdminRouteDetails /></PrivateRoute>}/>
           
           <Route exact path="/admin/route/plan/:school_id" element={<PrivateRoute><GeneralAdminRoutePlanner action={"new"}/></PrivateRoute>}/>
           <Route exact path="/admin/route/edit/:school_id/:route_id" element={<PrivateRoute><GeneralAdminRoutePlanner action={"edit"}/></PrivateRoute>}/>
