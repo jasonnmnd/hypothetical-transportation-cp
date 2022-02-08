@@ -51,7 +51,7 @@ function Header( props ) {
                         <NavDropdown.Divider/>
                         <NavDropdown.Item as={Link} to={`/`}><IoIcons5.IoCreate /> Create Stops</NavDropdown.Item>
                     </NavDropdown>
-                    <Nav.Link as={Link} to={`/`}> Send Emails</Nav.Link>
+                    <Nav.Link as={Link} to={`/admin/email`}> Send Email</Nav.Link>
                     <Nav.Link as={Link} to={`/parent?pageNum=1`}> Your Parent Portal</Nav.Link>
                         <Navbar.Brand width="200" height="50">
                         </Navbar.Brand>

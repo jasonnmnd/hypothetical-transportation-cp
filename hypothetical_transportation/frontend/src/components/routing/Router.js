@@ -21,6 +21,8 @@ import GeneralAdminRouteDetails from "../adminPage/pages/GeneralAdminRouteDetail
 import GeneralAdminRoutePlanner from "../adminPage/pages/GeneralAdminRoutePlanner";
 import GeneralManageStudentPage from "../adminPage/pages/GeneralManageStudentPage";
 
+import GeneralAdminEmailPage from '../adminPage/pages/GeneralAdminEmailPage';
+
 import GeneralResetPasswordPage from "../accountPage/GeneralResetPasswordPage";
 import AdminPage from "../adminPage/AdminPage";
 import GeneralParentStudentDetails from "../parentPage/pages/GeneralParentStudentDetails";
@@ -54,6 +56,7 @@ const Router = (props) => {
           <Route exact path="/admin/new/user/" element={<PrivateRoute><GeneralEditUserForm action="new"/></PrivateRoute>}></Route>
           <Route exact path="/admin/new_student/" element={<PrivateRoute><GeneralManageStudentPage action={"new"} /></PrivateRoute>}/>
           <Route exact path="/admin/edit_student/:id" element={<PrivateRoute><GeneralManageStudentPage action={"edit"}/></PrivateRoute>}/>
+          
           {/* Fix Edit, New Route*/}
           <Route exact path="/admin/new/route/" element={<PrivateRoute><GeneralEditRouteForm></GeneralEditRouteForm></PrivateRoute>}/>
 
@@ -65,6 +68,8 @@ const Router = (props) => {
           
           <Route exact path="/admin/route/plan/:school_id" element={<PrivateRoute><GeneralAdminRoutePlanner action={"new"}/></PrivateRoute>}/>
           <Route exact path="/admin/route/edit/:school_id/:route_id" element={<PrivateRoute><GeneralAdminRoutePlanner action={"edit"}/></PrivateRoute>}/>
+
+          <Route exact path="/admin/email" element={<PrivateRoute><GeneralAdminEmailPage/></PrivateRoute>}/>
         </Routes>
       </BrowserRouter>
     )

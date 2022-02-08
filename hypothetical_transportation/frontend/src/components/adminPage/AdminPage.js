@@ -105,9 +105,9 @@ function AdminPage( props ) {
                   <Card className="text-center" style={{ width: '35rem' }}>
                     <Card.Img variant="top" src={EmailPic} />
                     <Card.Body>
-                      <Card.Title>Routes Portal</Card.Title>
+                      <Card.Title>Email Portal</Card.Title>
                       <Card.Text>
-                        Send an email to parents.
+                        Send an email to users.
                       </Card.Text>
                         <Link to={`/`}>
                           <Button variant="yellow" size="lg">Send Email</Button>
