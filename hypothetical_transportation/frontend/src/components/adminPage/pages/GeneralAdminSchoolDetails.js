@@ -3,17 +3,13 @@ import Header from '../../header/Header';
 import "../adminPage.css";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import FormDeleteModal from '../components/modals/FormDeleteModal';
-import AdminTable from '../components/table/AdminTable';
-import SidebarSliding from '../components/sidebar/SidebarSliding';
-import axios from 'axios';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import config from '../../../utils/config';
 import { getSchool, deleteSchool } from '../../../actions/schools';
 import { getStudents } from '../../../actions/students';
 import { getRoutes } from '../../../actions/routes';
 import GeneralAdminTableView from '../components/views/GeneralAdminTableView';
-import { filterObjectForKey, filterObjectForKeySubstring } from '../../../utils/utils';
+import { filterObjectForKeySubstring } from '../../../utils/utils';
 import { Container, Card, Button, Row, Col } from 'react-bootstrap'
 
 function GeneralAdminSchoolDetails(props) {

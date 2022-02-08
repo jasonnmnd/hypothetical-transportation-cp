@@ -3,7 +3,6 @@ import Header from '../../header/Header';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import "../NEWadminPage.css";
 import DeleteModal from '../components/modals/DeleteModal';
-import SidebarSliding from '../components/sidebar/SidebarSliding';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { getStudentInfo, deleteStudent } from '../../../actions/students';

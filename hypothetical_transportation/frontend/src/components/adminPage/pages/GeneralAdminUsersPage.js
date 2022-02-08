@@ -1,17 +1,12 @@
-import React, {Fragment, useEffect, useState} from 'react';
-import SidebarSliding from '../components/sidebar/SidebarSliding';
+import React, { useEffect} from 'react';
 import Header from '../../header/Header';
-import AdminTable from '../components/table/AdminTable';
 import "../NEWadminPage.css";
-import axios from 'axios';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { getUsers } from '../../../actions/users';
-import SearchBar from '../components/searchbar/SearchBar';
-import GeneralTable from '../../common/GeneralTable';
 import GeneralAdminTableView from '../components/views/GeneralAdminTableView';
-import { Container, Form } from 'react-bootstrap'
+import { Container } from 'react-bootstrap'
 
 
 function GeneralAdminUsersPage(props) {

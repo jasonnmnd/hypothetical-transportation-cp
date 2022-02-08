@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import "../NEWadminPage.css"
 import Header from "../../header/Header";
 import AssistedLocationMap from "../../maps/AssistedLocationMap";
-
 import { getSchool, updateSchool, addSchool } from "../../../actions/schools";
 import { Container, Form, Button } from 'react-bootstrap';
 
