@@ -24,7 +24,8 @@ function GeneralEditUserForm(props) {
         full_name: "",
         address: "",
         email: "",
-        groups: 1
+        groups: 1,
+        password: ""
     });
     const [address, setAddress] = useState("");
 
