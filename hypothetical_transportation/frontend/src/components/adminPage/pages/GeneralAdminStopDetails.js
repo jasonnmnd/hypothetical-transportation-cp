@@ -3,16 +3,12 @@ import Header from '../../header/Header';
 import "../adminPage.css";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import DeleteModal from '../components/modals/DeleteModal';
-import AdminTable from '../components/table/AdminTable';
-import SidebarSliding from '../components/sidebar/SidebarSliding';
-import axios from 'axios';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import config from '../../../utils/config';
 import { getRouteInfo, deleteRoute } from '../../../actions/routes';
 import { getStopInfo, deleteStop } from '../../../actions/stops';
 import { getStudents } from '../../../actions/students';
-import GeneralAdminTableView from '../components/views/GeneralAdminTableView';
 import MapContainer from '../../maps/MapContainer';
 import { Container, Card, Button, Row, Col } from 'react-bootstrap'
 
@@ -21,18 +17,23 @@ function GeneralAdminStopDetails(props) {
 
 
   const [openModal, setOpenModal] = useState(false);
-
   const navigate = useNavigate();
   const param = useParams();
+  let [searchParams, setSearchParams] = useSearchParams();
+
 
   const handleConfirmDelete = () => {
     props.deleteStop(parseInt(param.stop_id));
     navigate(`/admin/route/${param.route_id}`);
   }
   
-
+  //things that need to be on the map: this stop, students in the route (and complete or not)
   useEffect(() => {
-    props.getStopInfo(param.id);
+    props.getStopInfo(param.stop_id);
+    let paramsToSend = Object.fromEntries([...searchParams]);
+    paramsToSend.routes = param.route_id;
+    props.getStudents(paramsToSend);
+
   }, []);
 
 
@@ -69,6 +70,15 @@ function GeneralAdminStopDetails(props) {
       </Card>
 
       <Card>
+          <Card.Header as="h5">Associated Route </Card.Header>
+          <Card.Body>
+              <Link to={`/admin/user/${props.stop.route.id}`}>
+                <Button variant='yellow'><h3>{props.stop.route.name}</h3></Button>
+              </Link>
+          </Card.Body>
+      </Card>
+
+      <Card>
           <Card.Header as="h5">Map View </Card.Header>
           <Card.Body>
           </Card.Body>
@@ -81,13 +91,15 @@ function GeneralAdminStopDetails(props) {
 }
 
 GeneralAdminStopDetails.propTypes = {
+    getStudents: PropTypes.func.isRequired,
     getStopInfo: PropTypes.func.isRequired,
     deleteStop: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = (state) => ({
-  stop: state.stops.stop
+  stop: state.stops.viewedStop,
+  students: state.students.students.results
 });
 
-export default connect(mapStateToProps, {})(GeneralAdminStopDetails)
+export default connect(mapStateToProps, {getStopInfo,deleteStop,getStudents})(GeneralAdminStopDetails)
 
