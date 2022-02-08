@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
-import PlainHeader from "../header/PlainHeader";
+import ParentHeader from "../header/ParentHeader";
 import Header from "../header/Header";
-import "./parentPage.css";
 import { useSearchParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -57,7 +56,7 @@ function ParentPage(props) {
         // </div>
         <div>
           {
-            isAdmin(props.user) ? <Header></Header> : <PlainHeader></PlainHeader>
+            isAdmin(props.user) ? <Header></Header> : <ParentHeader></ParentHeader>
           }
           <Container className="d-flex flex-column justify-content-center align-items-center" style={{gap: "20px"}}>
               <Row>

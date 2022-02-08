@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import image from "../../../public/schoolbusBackground.jpg";
 import { connect } from 'react-redux';
+import PlainHeader from "../header/PlainHeader";
 
 import { Button, Form, Col, Row, Container} from 'react-bootstrap';
 import "./login.css";
@@ -19,6 +20,8 @@ function ForgotPasswordForm( props ) {
     
   
     return (
+        <>
+        <PlainHeader></PlainHeader>
         <div className="color-overlay d-flex justify-content-center align-items-center" style ={{ 
             backgroundImage: `url(${image})`,
             backgroundRepeat: 'no-repeat',
@@ -55,6 +58,7 @@ function ForgotPasswordForm( props ) {
                 </Container>
             </Form>
         </div>
+        </>
     );
   }
   

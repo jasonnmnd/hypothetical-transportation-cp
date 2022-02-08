@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import SidebarSliding from "../adminPage/components/sidebar/SidebarSliding";
 import Header from "../header/Header";
-import PlainHeader from "../header/PlainHeader";
+import ParentHeader from "../header/ParentHeader";
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import isAdmin from "../../utils/user";
@@ -42,7 +42,7 @@ function GeneralResetPasswordPage(props){
     return(
         <div>
             {
-                isAdmin(props.user) ?  <Header></Header> : <PlainHeader></PlainHeader>
+                isAdmin(props.user) ?  <Header></Header> : <ParentHeader></ParentHeader>
             }
             <Container className="container-main">
                 <Form className="shadow-lg p-3 mb-5 bg-white rounded">

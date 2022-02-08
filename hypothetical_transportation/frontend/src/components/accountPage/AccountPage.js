@@ -2,7 +2,7 @@ import React from "react";
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import SidebarSliding from "../adminPage/components/sidebar/SidebarSliding";
 import Header from "../header/Header";
-import PlainHeader from "../header/PlainHeader";
+import ParentHeader from "../header/ParentHeader";
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import isAdmin from "../../utils/user";
@@ -36,7 +36,7 @@ function AccountPage(props){
 
         <div>  
         {
-           isAdmin(props.user) ?  <Header></Header> : <PlainHeader></PlainHeader>
+           isAdmin(props.user) ?  <Header></Header> : <ParentHeader></ParentHeader>
         }
         <Container className="container-main d-flex flex-column" style={{gap: "20px"}}>
         <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>

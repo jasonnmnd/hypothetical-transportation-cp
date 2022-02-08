@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "../parentPage.css";
-import PlainHeader from "../../header/PlainHeader";
+import ParentHeader from "../../header/ParentHeader";
 import { Link, useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -49,7 +48,7 @@ function ParentStudentDetails(props){
         // </>
 
         <div>  
-        <PlainHeader></PlainHeader>
+        <ParentHeader></ParentHeader>
         <Container className="container-main d-flex flex-column" style={{gap: "20px"}}>
         
         <Card>

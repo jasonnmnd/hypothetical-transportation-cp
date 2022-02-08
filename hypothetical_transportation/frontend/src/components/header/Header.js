@@ -11,7 +11,7 @@ import { logout } from '../../actions/auth';
 import { connect } from 'react-redux';
 
 
-function NEWHeader( props ) {
+function Header( props ) {
   return (
       <div className='Header'>
           <Navbar bg="dark" variant="dark" sticky="top" expand="sm" collapseOnSelect>
@@ -59,4 +59,4 @@ function NEWHeader( props ) {
 const mapStateToProps = state => ({
 });
 
-export default connect(mapStateToProps, {logout})(NEWHeader);
+export default connect(mapStateToProps, {logout})(Header);

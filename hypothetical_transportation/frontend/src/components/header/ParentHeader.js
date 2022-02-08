@@ -6,16 +6,24 @@ import { logout } from '../../actions/auth';
 import { connect } from 'react-redux';
 import "./header.css";
 
-function PlainHeader(props) {
+function ParentHeader(props) {
   return (
       <div className='Header'>
-          <Navbar bg="dark" variant="dark" sticky="top">
+          <Navbar bg="dark" variant="dark" sticky="top" expand="sm" collapseOnSelect>
             <Nav.Link as={Link} to={`/`}>
                     <Navbar.Brand>
                         <img src={logo} alt="Hypothetical Transportation Logo" width="60" height="50"></img>
                             Hypothetical Transportation
                     </Navbar.Brand>
                 </Nav.Link>
+            <Navbar.Toggle/>
+            
+            <Navbar.Collapse>
+                <Nav>
+                    <Nav.Link as={Link} to={`/account`}> Account</Nav.Link>
+                    <Nav.Link onClick={props.logout}> Logout</Nav.Link>
+                </Nav>
+            </Navbar.Collapse>
           </Navbar>
       </div>
   );
@@ -24,4 +32,4 @@ function PlainHeader(props) {
 const mapStateToProps = state => ({
 });
 
-export default connect(mapStateToProps, {logout})(PlainHeader);
+export default connect(mapStateToProps, {logout})(ParentHeader);

@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { login } from "../../actions/auth";
 import isAdmin from "../../utils/user";
-
+import PlainHeader from "../header/PlainHeader";
 import { Button, Form, Col } from 'react-bootstrap';
 import "./login.css";
 
@@ -26,6 +26,8 @@ function TESTLoginForm( props ) {
     
   
     return (
+        <>
+        <PlainHeader></PlainHeader>
         <div className="color-overlay d-flex justify-content-center align-items-center" style ={{ 
             backgroundImage: `url(${image})`,
             backgroundRepeat: 'no-repeat',
@@ -61,6 +63,7 @@ function TESTLoginForm( props ) {
                 </Link>
             </Form>
         </div>
+        </>
     );
   }
   
