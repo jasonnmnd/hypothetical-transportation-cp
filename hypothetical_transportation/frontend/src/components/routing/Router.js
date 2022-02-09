@@ -22,6 +22,8 @@ import AdminPage from "../adminPage/AdminPage";
 import GeneralParentStudentDetails from "../parentPage/pages/GeneralParentStudentDetails";
 import PrivateRoute from './PrivateRoute';
 import Alerts from "../alerts/Alerts";
+import MapComponent from '../maps/MapComponent';
+import ExampleMapUsage from '../maps/ExampleMapUsage';
 
 
 const Router = (props) => {
@@ -29,7 +31,7 @@ const Router = (props) => {
         <BrowserRouter>
         <Alerts/>
         <Routes>
-          <Route exact path="/" element={<LoginForm />}></Route>
+          <Route exact path="/testingMap" element={<ExampleMapUsage />}></Route>
           <Route path="/parent/*" element={<PrivateRoute><ParentPage /></PrivateRoute>}></Route>
           <Route exact path="/account" element={<PrivateRoute><AccountPage/></PrivateRoute>}></Route>
           <Route exact path="/account/password" element={<PrivateRoute><GeneralResetPasswordPage/></PrivateRoute>}></Route>
@@ -56,6 +58,7 @@ const Router = (props) => {
           
           <Route exact path="/admin/route/plan/:school_id" element={<PrivateRoute><GeneralAdminRoutePlanner action={"new"}/></PrivateRoute>}/>
           <Route exact path="/admin/route/edit/:school_id/:route_id" element={<PrivateRoute><GeneralAdminRoutePlanner action={"edit"}/></PrivateRoute>}/>
+          <Route exact path="/*" element={<LoginForm />}></Route>
         </Routes>
       </BrowserRouter>
     )
