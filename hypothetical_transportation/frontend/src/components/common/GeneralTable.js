@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 // import "../adminPage/adminPage.css";
 import "./generalTable.css";
+import { Container, Table } from 'react-bootstrap';
 
 function GeneralTable( props ) {
 
@@ -19,7 +20,7 @@ function GeneralTable( props ) {
     
 
     return (
-        <tr className={rowData["routes"] === null ? "tr-red" : "tr-gray"} >
+        <tr className={rowData["routes"] === null ? "tr-red" : "tr-gray"} onClick={() => props.action(rowData)} className="tr-hover">
             {
                 props.columnNames.map((columnInfo, index) => {
                     const cellData = getValueFromPath(columnInfo.dataPath, rowData)
@@ -31,9 +32,6 @@ function GeneralTable( props ) {
                     );
                 })
             }
-            <td>
-                <button className="button" onClick={() => props.action(rowData)}>{props.actionName}</button>
-            </td>
         </tr>
     )
   };
@@ -77,18 +75,16 @@ function GeneralTable( props ) {
     // }
     // mapDynamicColumns();
     return (
-      <table className='center'>
+      <Table striped bordered hover size="sm">
         <thead>
           <tr>
-              {mapTableColumns()}
-              <th>actions</th>
-            </tr>
-          
+            {mapTableColumns()}
+          </tr>
         </thead>
         <tbody>
           {!results || results.length == 0 ?  getEmptyTableRows() : getTableRows(results)}
         </tbody>
-      </table>
+      </Table>
     );
   };
 

@@ -86,3 +86,7 @@ th {
 td {
   background-color: #d3d3d3;
 }
+
+.tr-hover {
+  cursor: pointer;
+}
