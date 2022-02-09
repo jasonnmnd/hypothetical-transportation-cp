@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 // import "../adminPage/adminPage.css";
 import "./generalTable.css";
-import { Container, Table } from 'react-bootstrap';
+import { Button, Container, Table } from 'react-bootstrap';
 
 function GeneralTable( props ) {
 
@@ -42,6 +42,7 @@ function GeneralTable( props ) {
         return (
             <th key={col.colTitle} scope="col">
                 {col.colTitle}
+                <Button variant="sortreverse">▲</Button>
             </th>
         );
     });

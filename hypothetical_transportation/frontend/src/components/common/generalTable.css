@@ -61,3 +61,10 @@
 .table-header-rows {
   background-color: #ffae07;
 }
+
+.btn-sort {
+}
+
+.btn-sortreverse {
+  transform: rotate(180deg);
+}
