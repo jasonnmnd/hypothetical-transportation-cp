@@ -46,11 +46,11 @@ function Header( props ) {
                         <NavDropdown.Divider/>
                         <NavDropdown.Item as={Link} to={`/admin/new/route/`}><IoIcons5.IoCreate /> Create Routes</NavDropdown.Item>
                     </NavDropdown>
-                    <NavDropdown title="Stops">
+                    {/* <NavDropdown title="Stops">
                         <NavDropdown.Item as={Link} to={`/`}><GiIcons.GiBusStop /> View Stops</NavDropdown.Item>
                         <NavDropdown.Divider/>
                         <NavDropdown.Item as={Link} to={`/`}><IoIcons5.IoCreate /> Create Stops</NavDropdown.Item>
-                    </NavDropdown>
+                    </NavDropdown> */}
                     <Nav.Link as={Link} to={`/admin/email`}> Send Email</Nav.Link>
                     <Nav.Link as={Link} to={`/parent?pageNum=1`}> Your Parent Portal</Nav.Link>
                         <Navbar.Brand width="200" height="50">

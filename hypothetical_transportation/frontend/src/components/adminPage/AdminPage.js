@@ -87,7 +87,7 @@ function AdminPage( props ) {
               </Row>
 
               <Row>
-                <Col>
+                {/* <Col>
                   <Card className="text-center" style={{ width: '35rem' }}>
                     <Card.Img variant="top" src={StopsPic} />
                     <Card.Body>
@@ -100,7 +100,7 @@ function AdminPage( props ) {
                       </Link>  
                     </Card.Body>
                   </Card>
-                </Col>
+                </Col> */}
                 <Col>
                   <Card className="text-center" style={{ width: '35rem' }}>
                     <Card.Img variant="top" src={EmailPic} />
