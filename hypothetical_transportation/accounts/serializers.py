@@ -4,7 +4,6 @@ from django.contrib.auth import authenticate
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
-from .models import PendingUser
 
 
 class GroupSerializer(serializers.ModelSerializer):
@@ -13,11 +12,14 @@ class GroupSerializer(serializers.ModelSerializer):
         fields = ('name',)
 
 
-# Change Password Serializers
 class InviteSerializer(serializers.ModelSerializer):
     class Meta:
-        model = PendingUser
-        fields = ('email', 'full_name', 'address', 'initial_group')
+        model = get_user_model()
+        fields = ('id', 'email', 'full_name', 'address', 'groups')
+
+
+class InviteVerifySerializer(serializers.Serializer):
+    password = serializers.CharField(required=True, min_length=1)
 
 
 # Change Password Serializers

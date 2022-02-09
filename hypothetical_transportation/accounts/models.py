@@ -2,7 +2,7 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager, Group
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import MinLengthValidator
-from authemail.models import EmailUserManager, EmailAbstractUser, _generate_code
+from authemail.models import EmailUserManager, EmailAbstractUser, _generate_code, SignupCodeManager
 
 """
 Heavily inspired by the design of django-rest-authemail
@@ -60,23 +60,6 @@ class User(EmailAbstractUser):
         ordering = ['id']
 
 
-class PendingUser(models.Model):
-    """
-    Models a user that has not yet been fully registered in the system.
-
-    Duplicate emails can exist in this state to allow multiple invites on a first-come, first-serve basis.  While the
-    only required field is an email, the remaining fields allow a user to specify prepopulated data for a new user's
-    convenience.
-    """
-    email = models.EmailField(_('email address'), max_length=255, unique=False)
-    full_name = models.CharField(_('full name'), max_length=150, blank=True, unique=False, null=False)
-    address = models.CharField(_('address'), max_length=150, blank=True)
-    initial_group = models.ForeignKey(Group, null=True, on_delete=models.SET_NULL)
-
-    class Meta:
-        ordering = ['id']
-
-
 class AbstractVerificationCode(models.Model):
     """
     Models operations that require an access code to confirm identity
@@ -88,20 +71,25 @@ class AbstractVerificationCode(models.Model):
         abstract = True
 
 
-# TODO: Consider just using the SignupCodeManager from django-rest-authemail
-class InviteCodeManager(models.Manager):
-    def create_signup_code(self, user, ipaddr):
-        code = _generate_code()
-        signup_code = self.create(user=user, code=code, ipaddr=ipaddr)
-        return signup_code
+class InviteCodeManager(SignupCodeManager):
+    def set_user_is_verified(self, code):
+        try:
+            invite_code = InvitationCode.objects.get(code=code)
+            invite_code.user.is_verified = True
+            invite_code.user.save()
+            return True
+        except InvitationCode.DoesNotExist:
+            pass
+        return False
 
 
 # class ResetPasswordCodeManager(models.Manager):
 
 
 class InvitationCode(AbstractVerificationCode):
-    user = models.ForeignKey(PendingUser, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     ipaddr = models.GenericIPAddressField(_('ip address'))
+    objects = InviteCodeManager()
 
 # class ResetPasswordCode(AbstractVerificationCode):
 #     email = models.EmailField(_('email address'), max_length=255)
