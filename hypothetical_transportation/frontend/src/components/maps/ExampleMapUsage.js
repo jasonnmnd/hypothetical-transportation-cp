@@ -2,7 +2,9 @@ import MapComponent from "./MapComponent";
 import React from 'react';
 
 
-
+const onSchoolClick = (pinStuff) => {
+    console.log(pinStuff);
+}
 
 const school = {
     id: 2,
@@ -135,11 +137,13 @@ const getStudentsWRoute = () => {
 
 
 const stop1 = {
+    id: 1,
     name: "STOP ALPHA",
     address: "2699 West Knox Street, Durham, NC"
 }
 
 const stop2 = {
+    id: 2,
     name: "STOP BETA",
     address: "714 Ninth Street, Durham, NC"
 }
@@ -151,7 +155,7 @@ const pinData = [
         markerProps: {
             draggable: true
         },
-        pins: getStudentsWRoute().map(student => {return {address: student.guardian.address}})
+        pins: getStudentsWRoute().map(student => {return {address: student.guardian.address, id: student.id}})
     },
     {
         iconColor: "red",
@@ -159,13 +163,14 @@ const pinData = [
         markerProps: {
             draggable: false
         },
-        pins: getStudentsWORoute().map(student => {return {address: student.guardian.address}})
+        pins: getStudentsWORoute().map(student => {return {address: student.guardian.address, id: student.id}})
     },
     {
         iconColor: "black",
         iconType: "school",
         markerProps: {
-            draggable: false
+            draggable: false,
+            onDblClick: onSchoolClick
         },
         pins: [
             school

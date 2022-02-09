@@ -5,6 +5,8 @@ import PropTypes from 'prop-types';
 import Geocode from "react-geocode";
 import { SCHOOL_MARKER, STOP_MARKER, STUDENT_MARKER } from './static/markers';
 
+const CLICK_FUNCTIONS = ["onClick", "onDblClick"]
+
 function MapComponent(props) {
     const mapStyles = {        
         height: "50vh",
@@ -49,6 +51,21 @@ function MapComponent(props) {
 
 
 
+    
+    const setClickFunc = (pinObj, markerInfo, propName) => {
+        if(markerInfo[propName]){
+            const tempFunc = markerInfo[propName];
+            markerInfo[propName] = () => {tempFunc(pinObj)}
+        }
+    }
+
+    
+    const setPinClickFunctions = (pinObj, markerInfo) => {
+        CLICK_FUNCTIONS.forEach(funcName => {
+            setClickFunc(pinObj, markerInfo, funcName)
+        })
+    }
+    
     const initializePins = (inPinData) => {
         inPinData.forEach((pinGroup) => {
             pinGroup.pins.forEach((pin) => {
@@ -62,8 +79,10 @@ function MapComponent(props) {
                             lng: lng
                         },
                         icon: getColoredIcon(pinGroup.iconColor, pinGroup.iconType),
+                        id: pin.id,
                         ...pinGroup.markerProps
                     }
+                    setPinClickFunctions(pin, temp)
                     pinInfo = pinInfo.concat(temp);
                     setPins(pinInfo)
                     
@@ -76,8 +95,8 @@ function MapComponent(props) {
 
 
     const getMarkers = (inPins) => {
-        return inPins.map((pin) => {
-                return <Marker {...pin} />
+        return inPins.map((pin, pinInd) => {
+                return <Marker {...pin} key={pinInd} />
         })
     }
 
