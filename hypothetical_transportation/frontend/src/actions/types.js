@@ -39,6 +39,7 @@ export const GET_ROUTE = "GET_ROUTE"
 
 export const GET_STOPS = "GET_STOPS"
 export const GET_STOP = "GET_STOP"
+export const ADD_STOP = "ADD_STOP"
 export const DELETE_STOP = "DELETE_STOP"
 
 export const GET_STUDENTS_IN_ROUTE = "LOAD_STUDENTS_IN_ROUTE"
