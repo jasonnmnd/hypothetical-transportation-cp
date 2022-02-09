@@ -72,7 +72,7 @@ class InvitationCode(AbstractVerificationCode):
             'last_name': self.user.last_name,
             'code': self.code
         }
-        send_multi_format_email('signup_email', ctxt, target_email=self.user.email)
+        send_multi_format_email('invite_email', ctxt, target_email=self.user.email)
 
 # class ResetPasswordCode(AbstractVerificationCode):
 #     email = models.EmailField(_('email address'), max_length=255)

@@ -157,11 +157,19 @@ CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000'
 ]
 
+# EMAIL_FROM = 'DONOTREPLY@hypotheticaltransportation.com'
+# EMAIL_BCC = ''
+#
+# EMAIL_PORT = 1025
+# EMAIL_HOST_USER = ''
+# EMAIL_HOST_PASSWORD = ''
+# EMAIL_USE_TLS = False
 
 EMAIL_FROM = 'DONOTREPLY@hypotheticaltransportation.com'
 EMAIL_BCC = ''
 
-EMAIL_PORT = 1025
-EMAIL_HOST_USER = ''
+EMAIL_PORT = 587
+EMAIL_HOST = 'smtp.mailgun.org'
+EMAIL_HOST_USER = 'postmaster@sandbox821110f77aa448738ccef77534e2f65a.mailgun.org'
 EMAIL_HOST_PASSWORD = ''
-EMAIL_USE_TLS = False
+EMAIL_USE_TLS = True
