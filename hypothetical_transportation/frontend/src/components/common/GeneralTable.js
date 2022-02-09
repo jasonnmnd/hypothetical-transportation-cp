@@ -20,7 +20,7 @@ function GeneralTable( props ) {
     
 
     return (
-        <tr className={rowData["routes"] === null ? "tr-red" : "tr-gray"} onClick={() => props.action(rowData)} className="tr-hover">
+        <tr className={"tr-clickable"} onClick={() => props.action(rowData)} style={{backgroundColor: rowData["routes"] === null ? "rgb(255, 136, 136)": ""}}>
             {
                 props.columnNames.map((columnInfo, index) => {
                     const cellData = getValueFromPath(columnInfo.dataPath, rowData)
@@ -77,7 +77,7 @@ function GeneralTable( props ) {
     return (
       <Table striped bordered hover size="sm">
         <thead>
-          <tr>
+          <tr className="table-header-rows">
             {mapTableColumns()}
           </tr>
         </thead>
