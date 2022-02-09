@@ -38,7 +38,8 @@ class InviteAPI(generics.GenericAPIView):
             ipaddr = self.request.META.get('REMOTE_ADDR', '0.0.0.0')
             invite_code = InvitationCode.objects.create_signup_code(user=user, ipaddr=ipaddr)
             # # TODO: Send email with the following link
-            print(invite_code.code)
+            print('DEBUG:', invite_code.code)
+            invite_code.send_invitation_email()
             return Response({}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

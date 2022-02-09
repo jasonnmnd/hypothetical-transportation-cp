@@ -2,7 +2,8 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager, Group
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import MinLengthValidator
-from authemail.models import EmailUserManager, EmailAbstractUser, _generate_code, SignupCodeManager
+from authemail.models import EmailUserManager, EmailAbstractUser, _generate_code, SignupCodeManager, \
+    send_multi_format_email
 
 """
 Heavily inspired by the design of django-rest-authemail
@@ -63,6 +64,15 @@ class InvitationCode(AbstractVerificationCode):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     ipaddr = models.GenericIPAddressField(_('ip address'))
     objects = InviteCodeManager()
+
+    def send_invitation_email(self):
+        ctxt = {
+            'email': self.user.email,
+            'first_name': self.user.first_name,
+            'last_name': self.user.last_name,
+            'code': self.code
+        }
+        send_multi_format_email('signup_email', ctxt, target_email=self.user.email)
 
 # class ResetPasswordCode(AbstractVerificationCode):
 #     email = models.EmailField(_('email address'), max_length=255)
