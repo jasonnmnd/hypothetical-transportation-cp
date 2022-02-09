@@ -15,9 +15,10 @@ class AuthenticationObjectConsistency(TestCase):
         guardian_group = Group.objects.create(name='Guardian')
 
         # SET UP ADMINISTRATOR
-        admin_user = get_user_model().objects.create_user(email='admin@example.com', password='wordpass',
-                                                          full_name='admin user', address='loc0')
+        admin_user = get_user_model().objects.create_verified_user(email='admin@example.com', password='wordpass',
+                                                                   full_name='admin user', address='loc0')
         admin_user.groups.add(admin_group)
+        # admin_user.is_verified = True
 
         login_response = self.client.post('/api/auth/login',
                                           json.dumps(
@@ -26,10 +27,11 @@ class AuthenticationObjectConsistency(TestCase):
         self.admin_token = login_response.data['token']
         self.admin_user = admin_user
 
-        stan = get_user_model().objects.create_user(email='stanpines@mysteryshack.com', password='mysteryshack',
-                                                    full_name='Stanley Pines', address='618 Gopher Road')
-        dan = get_user_model().objects.create_user(email='manlydan@gmail.com', password='wordpass',
-                                                   full_name='Manly Dan', address='')
+        stan = get_user_model().objects.create_verified_user(email='stanpines@mysteryshack.com',
+                                                             password='mysteryshack',
+                                                             full_name='Stanley Pines', address='618 Gopher Road')
+        dan = get_user_model().objects.create_verified_user(email='manlydan@gmail.com', password='wordpass',
+                                                            full_name='Manly Dan', address='')
         school = School.objects.create(address='1111 Some St.', name='Eggbert Elementary')
         high_school = School.objects.create(address='7777 Some St.', name='Gravity Falls High School')
         route = Route.objects.create(name='School Route 1', description='', school=school)
@@ -117,18 +119,18 @@ class PermissionViews(TransactionTestCase):
         guardian_group = Group.objects.create(name='Guardian')
 
         # SET UP ADMINISTRATOR
-        admin_user = get_user_model().objects.create_user(email='admin@example.com', password='wordpass',
-                                                          full_name='admin user', address='loc0')
+        admin_user = get_user_model().objects.create_verified_user(email='admin@example.com', password='wordpass',
+                                                                   full_name='admin user', address='loc0')
         admin_user.groups.add(admin_group)
 
         # SET UP USER 1
-        normal_user1 = get_user_model().objects.create_user(email='user1@example.com', password='wordpass',
-                                                            full_name='user', address='loc1')
+        normal_user1 = get_user_model().objects.create_verified_user(email='user1@example.com', password='wordpass',
+                                                                     full_name='user', address='loc1')
         normal_user1.groups.add(guardian_group)
 
         # SET UP USER 2
-        normal_user2 = get_user_model().objects.create_user(email='user2@example.com', password='wordpass',
-                                                            full_name='user', address='loc2')
+        normal_user2 = get_user_model().objects.create_verified_user(email='user2@example.com', password='wordpass',
+                                                                     full_name='user', address='loc2')
         normal_user2.groups.add(guardian_group)
         self.normal_user2 = normal_user2
 
@@ -315,8 +317,8 @@ class PermissionViews(TransactionTestCase):
 
     def test_guardian_needs_address(self):
         # SET UP ADDRESS-LESS USER 3
-        normal_user3 = get_user_model().objects.create_user(email='user3@example.com', password='wordpass',
-                                                            full_name='user', address='')
+        normal_user3 = get_user_model().objects.create_verified_user(email='user3@example.com', password='wordpass',
+                                                                     full_name='user', address='')
         response = self.client.post('/api/student/',
                                     json.dumps(
                                         {

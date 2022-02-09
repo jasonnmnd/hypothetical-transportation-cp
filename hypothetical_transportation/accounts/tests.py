@@ -3,14 +3,15 @@ from django.test import TestCase
 from django.test import RequestFactory, TestCase
 from django.test import Client
 from django.contrib.auth import get_user_model
+from .serializers import UserSerializer
 
 
 # Create your tests here.
 
 class AuthenticationActions(TestCase):
     def setUp(self):
-        self.newuser = get_user_model().objects.create_user(email='az@gmail.com', password='bassword',
-                                                            full_name='Aziraphale', address='')
+        self.newuser = get_user_model().objects.create_verified_user(email='az@gmail.com', password='bassword',
+                                                                     full_name='Aziraphale', address='')
         self.factory = RequestFactory()
         self.client = Client()
         response = self.client.post('/api/auth/login',

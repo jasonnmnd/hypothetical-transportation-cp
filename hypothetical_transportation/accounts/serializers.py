@@ -51,6 +51,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             address=validated_data['address'],
         )
         user.groups.add(*validated_data['groups'])
+        user.is_verified = True
         return user
 
 
@@ -61,6 +62,6 @@ class LoginSerializer(serializers.Serializer):
 
     def validate(self, data):
         user = authenticate(**data)
-        if user and user.is_active:
+        if user and user.is_active and user.is_verified:
             return user
         raise serializers.ValidationError("Incorrect Credentials")

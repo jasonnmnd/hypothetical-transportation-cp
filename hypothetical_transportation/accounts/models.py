@@ -9,41 +9,14 @@ Heavily inspired by the design of django-rest-authemail
 """
 
 
-# Tutorial: https://tech.serhatteker.com/post/2020-01/email-as-username-django/
-class CustomUserManager(BaseUserManager):
-    """
-    Custom user model manager where email is the unique identifiers
-    for authentication instead of usernames.
-    """
-
-    def create_user(self, email, password, **extra_fields):
-        """
-        Create and save a User with the given email and password.
-        """
-        if not email:
-            raise ValueError(_('The Email must be set'))
-        email = self.normalize_email(email)
-        user = self.model(email=email, **extra_fields)
-        user.set_password(password)
-        user.save()
-        return user
-
-    def create_superuser(self, email, password, **extra_fields):
-        """
-        Create and save a SuperUser with the given email and password.
-        """
-        extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_superuser', True)
-        extra_fields.setdefault('is_active', True)
-
-        if extra_fields.get('is_staff') is not True:
-            raise ValueError(_('Superuser must have is_staff=True.'))
-        if extra_fields.get('is_superuser') is not True:
-            raise ValueError(_('Superuser must have is_superuser=True.'))
-        return self.create_user(email, password, **extra_fields)
-
-
 # Create your models here.
+class CustomEmailUserManager(EmailUserManager):
+    """
+    Extends the functionality of the basic EmailUserManager to verify on construction instead of accessing the field later.
+    """
+
+    def create_verified_user(self, email, password, **extra_fields):
+        return super()._create_user(email, password, False, False, True, **extra_fields)
 
 
 class User(EmailAbstractUser):
@@ -52,7 +25,7 @@ class User(EmailAbstractUser):
     full_name = models.CharField(_('full name'), max_length=150, help_text=_('Required'), blank=False, unique=False,
                                  null=False)
     address = models.CharField(_('address'), max_length=150, validators=[MinLengthValidator(1)])
-    objects = EmailUserManager()
+    objects = CustomEmailUserManager()
 
     REQUIRED_FIELDS = []
 
