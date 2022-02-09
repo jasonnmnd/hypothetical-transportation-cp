@@ -52,17 +52,17 @@ function MapComponent(props) {
 
 
     
-    const setClickFunc = (pinObj, markerInfo, propName) => {
+    const setClickFunc = (pinObj, position, markerInfo, propName) => {
         if(markerInfo[propName]){
             const tempFunc = markerInfo[propName];
-            markerInfo[propName] = () => {tempFunc(pinObj)}
+            markerInfo[propName] = () => {tempFunc(pinObj, position)}
         }
     }
 
     
-    const setPinClickFunctions = (pinObj, markerInfo) => {
+    const setPinClickFunctions = (pinObj, position, markerInfo) => {
         CLICK_FUNCTIONS.forEach(funcName => {
-            setClickFunc(pinObj, markerInfo, funcName)
+            setClickFunc(pinObj, position, markerInfo, funcName)
         })
     }
     
@@ -82,7 +82,7 @@ function MapComponent(props) {
                         id: pin.id,
                         ...pinGroup.markerProps
                     }
-                    setPinClickFunctions(pin, temp)
+                    setPinClickFunctions(pin, {lat: lat, lng: lng}, temp)
                     pinInfo = pinInfo.concat(temp);
                     setPins(pinInfo)
                     
@@ -96,6 +96,7 @@ function MapComponent(props) {
 
     const getMarkers = (inPins) => {
         return inPins.map((pin, pinInd) => {
+            //console.log(pin)
                 return <Marker {...pin} key={pinInd} />
         })
     }
@@ -108,6 +109,7 @@ function MapComponent(props) {
             center={props.center}
         >
             {getMarkers(pins)}
+            {props.otherMapComponents}
         </GoogleMap>
         )
 
@@ -132,7 +134,8 @@ MapComponent.propTypes = {
     center: PropTypes.shape({
         lng: PropTypes.number,
         lat: PropTypes.number
-    })
+    }),
+    otherMapComponents: PropTypes.element
 }
 
 MapComponent.defaultProps = {
@@ -140,7 +143,8 @@ MapComponent.defaultProps = {
     center: {
         lat: 36.0016944, lng: -78.9480547
     },
-    zoom: 13
+    zoom: 13,
+    otherMapComponents: null
 }
 
 const mapStateToProps = (state) => ({
