@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from knox.models import AuthToken
 from .serializers import UserSerializer, RegisterSerializer, LoginSerializer, ChangePasswordSerializer, \
-    InviteVerifySerializer, InviteSerializer
+    InviteVerifiedSerializer, InviteSerializer
 from django.contrib.auth import get_user_model
 from .permissions import IsAdmin
 from .models import InvitationCode
@@ -47,23 +47,40 @@ class InviteVerifyAPI(generics.GenericAPIView):
     permission_classes = [
         permissions.AllowAny
     ]
-    serializer_class = InviteVerifySerializer
+
+    def get(self, request, *args, **kwargs):
+        code = request.GET.get('code', '')
+        try:
+            signup_code = InvitationCode.objects.get(code=code)
+            # TODO: add expiration check to invitations
+            content = {'success': 'Invitation verified.'}
+            return Response(content, status=status.HTTP_200_OK)
+        except InvitationCode.DoesNotExist:
+            content = {'detail': 'Unable to verify invitation'}
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
+
+
+class InviteVerifiedAPI(generics.GenericAPIView):
+    permission_classes = [
+        permissions.AllowAny
+    ]
+    serializer_class = InviteVerifiedSerializer
 
     def post(self, request, *args, **kwargs):
-        code = request.GET.get('code', '')
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
+            code = serializer.data['code']
+            password = serializer.data['password']
             verified = InvitationCode.objects.set_user_is_verified(code)
-            print(verified)
             if verified:
                 try:
                     signup_code = InvitationCode.objects.get(code=code)
-                    signup_code.user.set_password(serializer.data['password'])
+                    signup_code.user.set_password(password)
                     signup_code.user.save()
                     signup_code.delete()
                 except InvitationCode.DoesNotExist:
                     pass
-                content = {'success': 'Email address verified'}
+                content = {'success': 'User verified and password set'}
                 return Response(content, status=status.HTTP_201_CREATED)
             else:
                 content = {'detail': 'Unable to verify user'}

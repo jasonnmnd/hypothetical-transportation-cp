@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .api import RegisterAPI, LoginAPI, UserAPI, ChangePasswordAPI, InviteAPI, InviteVerifyAPI
+from .api import RegisterAPI, LoginAPI, UserAPI, ChangePasswordAPI, InviteAPI, InviteVerifyAPI, InviteVerifiedAPI
 from knox import views as knox_views
 from authemail import views
 
@@ -7,6 +7,7 @@ urlpatterns = [
     path('api/auth', include('knox.urls')),
     path('api/auth/invite', InviteAPI.as_view()),
     path('api/auth/invite/verify', InviteVerifyAPI.as_view()),
+    path('api/auth/invite/verified', InviteVerifiedAPI.as_view()),
 
     path('api/auth/password/reset', views.PasswordReset.as_view(),
          name='authemail-password-reset'),

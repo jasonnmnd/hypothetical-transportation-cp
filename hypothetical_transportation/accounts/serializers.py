@@ -18,7 +18,8 @@ class InviteSerializer(serializers.ModelSerializer):
         fields = ('id', 'email', 'full_name', 'address', 'groups')
 
 
-class InviteVerifySerializer(serializers.Serializer):
+class InviteVerifiedSerializer(serializers.Serializer):
+    code = serializers.CharField(max_length=255)
     password = serializers.CharField(required=True, min_length=1)
 
 
