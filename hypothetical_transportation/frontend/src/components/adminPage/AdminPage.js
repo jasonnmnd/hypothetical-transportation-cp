@@ -109,7 +109,7 @@ function AdminPage( props ) {
                       <Card.Text>
                         Send an email to users.
                       </Card.Text>
-                        <Link to={`/`}>
+                        <Link to={`/admin/email`}>
                           <Button variant="yellow" size="lg">Send Email</Button>
                         </Link>
                     </Card.Body>
