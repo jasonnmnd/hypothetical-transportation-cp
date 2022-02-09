@@ -4,6 +4,7 @@ import "./searchBar.css"
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { useSearchParams } from 'react-router-dom';
+import { Form, Container, Button, Row, Col, FloatingLabel} from 'react-bootstrap';
 
 //input: a list of buttons - filter by options
 //search: takes in 2 inputs? the filter option, and the inputted text
@@ -32,54 +33,98 @@ function SearchBar(props){
         })
     }
     return(
-        <form className="search">
-            <div className="search-group">
-                {props.sortBy!==undefined && props.sortBy!==null ?
+        // <form className="search">
+        //     <div className="search-group">
+        //         {props.sortBy!==undefined && props.sortBy!==null ?
                 
-                <label>
-                    <div className="text-and-dropdown">
-                        <h3>Sort By:</h3>
-                        <select value={values.sort_by} onChange={(e) => setValue({ ...values, sort_by: e.target.value })}>
-                        <option value={""} key={"empty"}></option>
-                        {props.sortBy.map((b,i)=>{
-                            // return !b.includes("-")? <option value={b} key={i}>{(b.includes("__")? b.split("__")[0] : b )+ " Asc"}</option>:<option value={b} key={i}>{(b.includes("__")? b.split("__")[0]:b).slice(1,) + " Dsc"}</option>
-                            return <option value={b.key} key={i}>{b.text}</option>
-                        })} 
-                        </select>
-                    </div>
-                </label>
+        //         <label>
+        //             <div className="text-and-dropdown">
+        //                 <h3>Sort By:</h3>
+        //                 <select value={values.sort_by} onChange={(e) => setValue({ ...values, sort_by: e.target.value })}>
+        //                 <option value={""} key={"empty"}></option>
+        //                 {props.sortBy.map((b,i)=>{
+        //                     // return !b.includes("-")? <option value={b} key={i}>{(b.includes("__")? b.split("__")[0] : b )+ " Asc"}</option>:<option value={b} key={i}>{(b.includes("__")? b.split("__")[0]:b).slice(1,) + " Dsc"}</option>
+        //                     return <option value={b.key} key={i}>{b.text}</option>
+        //                 })} 
+        //                 </select>
+        //             </div>
+        //         </label>
                 
-                :null}
-            </div>
+        //         :null}
+        //     </div>
 
-            <div className="search-group">    
-                <label>
-                    <div className="text-and-dropdown">
-                        <h3>Filter By:</h3>
-                        <select value={values.filter_by} onChange={(e) => setValue({ ...values, filter_by: e.target.value })}>
-                        <option value={""} key={"empty"}></option>
-                        {props.buttons.map((b,i)=>{
-                            return <option value={b.key} key={i}>{b.text}</option>
-                        })}
-                    </select>
-                    </div>
-                </label>
-            </div>
+        //     <div className="search-group">    
+        //         <label>
+        //             <div className="text-and-dropdown">
+        //                 <h3>Filter By:</h3>
+        //                 <select value={values.filter_by} onChange={(e) => setValue({ ...values, filter_by: e.target.value })}>
+        //                 <option value={""} key={"empty"}></option>
+        //                 {props.buttons.map((b,i)=>{
+        //                     return <option value={b.key} key={i}>{b.text}</option>
+        //                 })}
+        //             </select>
+        //             </div>
+        //         </label>
+        //     </div>
 
-            <div className="search-group">
-                <input
-                    type="search"
-                    name="search"
-                    id="search"
-                    onChange={(e) =>
-                    setValue({ ...values, value: e.target.value })
-                    }
-                    value={values.value}
-                    placeholder="Search..."
-                />
-            </div>
-            <button onClick={searchHandler}>Search/Sort</button>
-        </form>
+        //     <div className="search-group">
+        //         <input
+        //             type="search"
+        //             name="search"
+        //             id="search"
+        //             onChange={(e) =>
+        //             setValue({ ...values, value: e.target.value })
+        //             }
+        //             value={values.value}
+        //             placeholder="Search..."
+        //         />
+        //     </div>
+        //     <button onClick={searchHandler}>Search/Sort</button>
+        // </form>
+        <Container>
+            <Form>
+                <Row className="mb-3">
+                    <Form.Group as={Col} md="3" controlId="validationCustom01">
+                        <FloatingLabel controlId="floatingSelect" label="Sort By">
+                            <Form.Select aria-label="Sort By" style={{width:"300px"}}
+                                value={values.sort_by} onChange={(e) => setValue({ ...values, sort_by: e.target.value })}>
+                                <option value={""} key={"empty"}></option>
+                                {props.sortBy.map((b,i)=>{
+                                    // return !b.includes("-")? <option value={b} key={i}>{(b.includes("__")? b.split("__")[0] : b )+ " Asc"}</option>:<option value={b} key={i}>{(b.includes("__")? b.split("__")[0]:b).slice(1,) + " Dsc"}</option>
+                                    return <option value={b.key} key={i}>{b.text}</option>
+                                })} 
+                            </Form.Select>
+                        </FloatingLabel>
+                    </Form.Group>
+
+                    <Form.Group as={Col} md="3" controlId="validationCustom01">
+                        <FloatingLabel controlId="floatingSelect" label="Filter By">
+                            <Form.Select aria-label="Filter By" style={{width:"300px"}} value={values.filter_by} onChange={(e) => setValue({ ...values, filter_by: e.target.value })}>
+                            <option value={""} key={"empty"}></option>
+                            {props.buttons.map((b,i)=>{
+                                return <option value={b.key} key={i}>{b.text}</option>
+                            })}                                
+                            </Form.Select>
+                        </FloatingLabel>
+                    </Form.Group>
+
+                    <Form.Group as={Col} md="3" controlId="validationCustom01">
+                        <FloatingLabel controlId="floatingTextarea" label="Search By..." className="mb-3">
+                            <Form.Control 
+                            placeholder="Query..." 
+                            onChange={(e) =>
+                            setValue({ ...values, value: e.target.value })}
+                            value={values.value}
+                            />
+                        </FloatingLabel>
+                    </Form.Group>
+
+                    <Form.Group as={Col} md="3" controlId="validationCustom01">
+                        <Button variant="search" onClick={searchHandler}>Search/Sort</Button>
+                    </Form.Group>
+                </Row>
+            </Form>
+        </Container>
     );
 }
 
