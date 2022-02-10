@@ -57,8 +57,7 @@ function GeneralEditSchoolForm(props) {
             }
             navigate(`/admin/schools`)
         }
-        
-
+    
         setValidated(true);
     }
 

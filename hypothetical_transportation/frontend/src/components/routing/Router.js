@@ -31,7 +31,9 @@ import Alerts from "../alerts/Alerts";
 import ForgotPasswordForm from '../loginPage/ForgotPasswordForm';
 import MapComponent from '../maps/MapComponent';
 import ExampleMapUsage from '../maps/ExampleMapUsage';
+
 import LinkBasePasswordResetForm from '../loginPage/LinkBasePasswordResetForm';
+import GeneralParentConfirmationPage from '../parentPage/pages/GeneralParentConfirmationPage';
 
 
 const Router = (props) => {
@@ -75,6 +77,9 @@ const Router = (props) => {
 
           <Route exact path="/admin/email" element={<PrivateRoute><GeneralAdminEmailPage/></PrivateRoute>}/>
           <Route exact path="/test/reset" element={<PrivateRoute><LinkBasePasswordResetForm/></PrivateRoute>}/>
+          
+          {/* When a parent logs in, do they specify the fields? */}
+          <Route exact path="/parent/make/new" element={<GeneralParentConfirmationPage/>}/>
 
           <Route exact path="/*" element={<LoginForm />}></Route>
         </Routes>
