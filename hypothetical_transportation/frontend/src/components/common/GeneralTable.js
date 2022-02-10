@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 // import "../adminPage/adminPage.css";
 import "./generalTable.css";
-import { Button, Container, Table } from 'react-bootstrap';
+import { Button, Table } from 'react-bootstrap';
 
 function GeneralTable( props ) {
 
@@ -14,11 +14,7 @@ function GeneralTable( props ) {
     return res;
   }
   
-  
-
   const addTableRow = (rowData) => {
-    
-
     return (
         <tr className={"tr-clickable"} onClick={() => props.action(rowData)} style={{backgroundColor: rowData["routes"] === null ? "rgb(255, 136, 136)": ""}}>
             {
@@ -42,11 +38,15 @@ function GeneralTable( props ) {
         return (
             <th key={col.colTitle} scope="col">
                 {col.colTitle}
-                <Button variant="sortreverse">▲</Button>
+                <Button variant="sortreverse" onClick={ () => sorting(col.colTitle)}>▲</Button>
             </th>
         );
     });
   };
+
+  const sorting = (headerName) => {
+    console.log(headerName)
+  }
 
   const overrideColumnName = (colName) => {
     switch (colName) {
@@ -87,10 +87,7 @@ function GeneralTable( props ) {
         </tbody>
       </Table>
     );
-  };
-
-
-  
+  };  
   
   return (
       <div className="gen-table" >
