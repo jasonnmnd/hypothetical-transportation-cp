@@ -157,7 +157,8 @@ const defaultColumns = {
 }
 
 const getColsFromArr = (colObj, colTitles) => {
-    return colTitles.map(col => {return {colTitle: colObj[col].colTitle, dataPath: colObj[col].dataPath}})
+    return colTitles.map(col => {return {colTitle: colObj[col].colTitle, dataPath: colObj[col].dataPath,
+        search_key: colObj[col].search_key,sortable: colObj[col].sortable}})
 }
 
 const getFiltersFromArr = (colObj, colTitles) => {

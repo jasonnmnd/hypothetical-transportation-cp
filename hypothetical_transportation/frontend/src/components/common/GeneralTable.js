@@ -40,7 +40,7 @@ function GeneralTable( props ) {
         return (
             <th key={col.colTitle} scope="col">
                 {col.colTitle}
-                <Button variant="sortreverse" onClick={ () => searchHandler(col)}>▲</Button>
+                {col.sortable? <Button variant="sortreverse" onClick={ () => searchHandler(col)}>▲</Button>:null}
             </th>
         );
     });
@@ -50,14 +50,14 @@ function GeneralTable( props ) {
   //   console.log(headerName)
   // }
 
-  const overrideColumnName = (colName) => {
-    switch (colName) {
-        case "routeDesc":
-            return "Route Description";
-        default:
-            return colName;
-    }
-  };
+  // const overrideColumnName = (colName) => {
+  //   switch (colName) {
+  //       case "routeDesc":
+  //           return "Route Description";
+  //       default:
+  //           return colName;
+  //   }
+  // };
 
   const getTableRows = (results) => {
     return (results.map((result, index) => {
@@ -92,9 +92,10 @@ function GeneralTable( props ) {
   };  
 
   const searchHandler = (col)=>{
+    console.log(col)
     setSearchParams({
         ...Object.fromEntries([...searchParams]),
-        [`ordering`]: col.dataPath,
+        [`ordering`]: col.search_key,
     })
 }
 
