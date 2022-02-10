@@ -16,6 +16,8 @@ function GeneralEditSchoolForm(props) {
     const navigate = useNavigate();
     const param = useParams();
     const [openModal, setOpenModal] = useState(false);
+    const [validated, setValidated] = useState(false);
+
     
     const [name, setName] = useState("");
     const [address, setAddress] = useState("");
@@ -34,20 +36,30 @@ function GeneralEditSchoolForm(props) {
         }
     }, []);
 
-    const submit = () => {
-        if(props.action == "edit"){
+    const handleSubmit = (event) => {
+        const form = event.currentTarget;
+        
+        if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+        else {
+            if(props.action == "edit"){
             props.updateSchool({
                 name: name,
                 address: address
             }, param.id);
+            } else {
+                props.addSchool({
+                    name: name,
+                    address: address
+                })
+            }
+            navigate(`/admin/schools`)
         }
-        else{
-            props.addSchool({
-                name: name,
-                address: address
-            })
-        }
-        navigate(`/admin/schools`)
+        
+
+        setValidated(true);
     }
 
 
@@ -65,26 +77,32 @@ function GeneralEditSchoolForm(props) {
         <div> 
             <Header></Header>
                 <Container className="container-main">
-                    <Form className="shadow-lg p-3 mb-5 bg-white rounded">
+                    <Form className="shadow-lg p-3 mb-5 bg-white rounded" noValidate validated={validated} onSubmit={handleSubmit}>
 
                         <Form.Group className="mb-3" controlId="validationCustom01">
                             <Form.Label as="h5">Name of School</Form.Label>
                             <Form.Control 
-                            required type="text"
+                            required 
+                            type="text"
                             placeholder="Enter Name..." 
                             value={name}
                             onChange={(e)=>{setName(e.target.value);}}
                             />
+                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                            <Form.Control.Feedback type="invalid">Please provide a valid name.</Form.Control.Feedback>
                         </Form.Group>
                                                 
-                        <Form.Group className="mb-3" controlId="formGridAddress1">
+                        <Form.Group className="mb-3" controlId="validationCustom02">
                             <Form.Label as="h5">Address</Form.Label>
                             <Form.Control 
-                            required type="text"
+                            required 
+                            type="text"
                             placeholder="Enter Address..." 
                             value={address}
                             onChange={(e)=> {setAddress(e.target.value)}}
                             />
+                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                            <Form.Control.Feedback type="invalid">Please provide a valid address.</Form.Control.Feedback>
                         </Form.Group>
 
                         <Form.Group className="mb-3">
@@ -92,7 +110,7 @@ function GeneralEditSchoolForm(props) {
                             <AssistedLocationMap address={address} setAddress={setAddress}></AssistedLocationMap>
                         </Form.Group>
 
-                        <Button variant="yellowsubmit" type="submit" onClick={submit}>
+                        <Button variant="yellowsubmit" type="submit">
                             Submit
                         </Button>
                     </Form>
