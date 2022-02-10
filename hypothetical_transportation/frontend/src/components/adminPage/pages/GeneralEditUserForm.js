@@ -17,6 +17,7 @@ function GeneralEditUserForm(props) {
     const navigate = useNavigate();
     const param = useParams();
     const [openModal, setOpenModal] = useState(false);
+    const [validated, setValidated] = useState(false);
     
     const [fieldValues, setFieldValues] = useState({
         full_name: "",
@@ -39,21 +40,28 @@ function GeneralEditUserForm(props) {
         }
     }, []);
 
-    const submit = () => {
+    const handleSubmit = (event) => {
         const createVals = {
             ...fieldValues,
             groups: [fieldValues.groups],
             address: address
         }
-        if(props.action == "edit"){
-            props.updateUser(createVals, param.id).then(console.log("EDITED"));
-            navigate(`/admin/users`)
+
+        const form = event.currentTarget;
+        if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+        } else {
+            if(props.action == "edit"){
+                props.updateUser(createVals, param.id).then(console.log("EDITED"));
+                navigate(`/admin/users`)
+            }
+            else{
+                props.register(createVals);
+                navigate(`/admin/new_student`)
+            }
         }
-        else{
-            props.register(createVals);
-            navigate(`/admin/new_student`)
-        }
-        
+        setValidated(true);
     }
 
     const groupTypes = [
@@ -76,19 +84,22 @@ function GeneralEditUserForm(props) {
         <div> 
             <Header></Header>
                 <Container className="container-main">
-                    <Form className="shadow-lg p-3 mb-5 bg-white rounded">
+                    <Form className="shadow-lg p-3 mb-5 bg-white rounded" noValidate validated={validated} onSubmit={handleSubmit}>
 
                         <Row className="mb-3">
                             <Form.Group as={Col} controlId="formGridAddress2">
                                 <Form.Label as="h5">Full Name</Form.Label>
                                 <Form.Control 
-                                required type="text"
+                                required 
+                                type="text"
                                 placeholder="Enter name..." 
                                 value={fieldValues.full_name}
                                 onChange={(e)=>{
                                     setFieldValues({...fieldValues, full_name: e.target.value});
                                 }}
                                 />
+                                <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                                <Form.Control.Feedback type="invalid">Please provide a valid name.</Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group as={Col}>
                                 <Form.Label as="h5">User Type</Form.Label>
@@ -119,7 +130,8 @@ function GeneralEditUserForm(props) {
                             <Form.Group as={Col} controlId="formGridEmail">
                             <Form.Label as="h5">Email</Form.Label>
                             <Form.Control 
-                            required type="email" 
+                            required 
+                            type="email" 
                             placeholder="Enter email..." 
                             value={fieldValues.email}
                             onChange={
@@ -127,6 +139,8 @@ function GeneralEditUserForm(props) {
                                 setFieldValues({...fieldValues, email: e.target.value});
                                 }
                             }/>
+                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                            <Form.Control.Feedback type="invalid">Please provide a valid email.</Form.Control.Feedback>
                             </Form.Group>
 
                             {/* <Form.Group as={Col} controlId="formGridPassword">
@@ -147,6 +161,8 @@ function GeneralEditUserForm(props) {
                         <Form.Group className="mb-3" controlId="formGridAddress1">
                             <Form.Label as="h5">Address</Form.Label>
                             <Form.Control 
+                            required
+                            type="text"
                             placeholder="Enter address..." 
                             value={address}
                             onChange={
@@ -155,6 +171,8 @@ function GeneralEditUserForm(props) {
                                 }
                             }
                             />
+                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                            <Form.Control.Feedback type="invalid">Please provide a valid address.</Form.Control.Feedback>
                         </Form.Group>
 
                         <Form.Group className="mb-3">
@@ -163,7 +181,7 @@ function GeneralEditUserForm(props) {
 
                         </Form.Group>
 
-                        <Button variant="yellowsubmit" type="submit" onClick={submit}>
+                        <Button variant="yellowsubmit" type="submit">
                             Submit
                         </Button>
                     </Form>
