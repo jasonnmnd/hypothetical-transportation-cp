@@ -11,7 +11,7 @@ from .serializers import UserSerializer, StudentSerializer, RouteSerializer, Sch
     FormatRouteSerializer, FormatUserSerializer, EditUserSerializer, StopSerializer
 from .search import DynamicSearchFilter
 from .customfilters import StudentCountShortCircuitFilter
-from .permissions import is_admin, IsAdminOrReadOnly
+from .permissions import is_admin, IsAdminOrReadOnly, IsAdmin
 
 
 def get_filter_dict(model):
@@ -90,7 +90,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
 class StopViewSet(viewsets.ModelViewSet):
     permission_classes = [
-        IsAdminOrReadOnly
+        IsAdmin
     ]
 
     def get_serializer_class(self):
@@ -138,7 +138,7 @@ class SchoolViewSet(viewsets.ModelViewSet):
     ]
     filter_backends = [DjangoFilterBackend, DynamicSearchFilter, filters.OrderingFilter]
     filterset_fields = get_filter_dict(School)
-    ordering_fields = ['name', 'id']
+    ordering_fields = ['name', 'id', 'bus_arrival_time', 'bus_departure_time']
     ordering = 'id'
 
     # search_fields = [self.request.querystring]
