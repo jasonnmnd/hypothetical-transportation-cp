@@ -13,17 +13,27 @@ function GeneralAdminEmailPage(props) {
 
     const [subject, setSubject] = useState("");
     const [body, setBody] = useState("");
+    const [currSchool, setCurrSchool] = useState("");
+    const [currRoute, setCurrRoute] = useState("");
+    const [emailSelection, setEmailSelection] = useState(1);
+    
+    const setSchool = (e) => {
+        setCurrSchool(e.target.value);
+        props.getRoutesByID(currSchool);
+    }
+    
+    const setRoute = (e) => {
+        setCurrRoute(e.target.value);
+    }
 
     const submit = () => {
-        console.log("Submit button pressed");
+        console.log("Submit button pressed with school " + currSchool + " and route " + currRoute);
     }
 
     const emailTypes = [
         {name: "School", value: 1},
         {name: "Route", value: 2}
     ]
-
-    const [emailSelection, setEmailSelection] = useState(1);
 
     useEffect(() => {
         props.getSchools();
@@ -67,14 +77,17 @@ function GeneralAdminEmailPage(props) {
                     </Form.Select>
                     : 
                     <>
-                       <Form.Select size="sm" style={{width: "300px"}}>
+                       <Form.Select size="sm" style={{width: "300px"}} onChange={setSchool}>
                             {props.schoollist!==null && props.schoollist!==undefined && props.schoollist.length!==0?props.schoollist.map((u,i)=>{
                                 return <option value={u.id} key={i}>{u.name}</option>
                             }):null}
                         </Form.Select>
 
-                        <Form.Select size="sm" style={{width: "300px"}}>
-                            <option>Routes</option>
+                        <Form.Select size="sm" style={{width: "300px"}} onChange={setRoute}>
+                            <option value={"null"} >{"-----"}</option>
+                            {props.routes!==null && props.routes!==undefined && props.routes.length!==0?props.routes.map((u,i)=>{
+                                return <option value={u.id} key={i}>{u.name}</option>
+                            }):null}
                         </Form.Select> 
                     </>
                     
