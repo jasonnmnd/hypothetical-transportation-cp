@@ -23,7 +23,6 @@ function GeneralEditUserForm(props) {
         address: "",
         email: "",
         groups: 1,
-        password: ""
     });
     const [address, setAddress] = useState("");
 
@@ -130,7 +129,7 @@ function GeneralEditUserForm(props) {
                             }/>
                             </Form.Group>
 
-                            <Form.Group as={Col} controlId="formGridPassword">
+                            {/* <Form.Group as={Col} controlId="formGridPassword">
                             <Form.Label as="h5">Password</Form.Label>
                             <Form.Control 
                             type="password" 
@@ -142,7 +141,7 @@ function GeneralEditUserForm(props) {
                                 }
                             }
                             />
-                            </Form.Group>
+                            </Form.Group> */}
                         </Row>
                                                 
                         <Form.Group className="mb-3" controlId="formGridAddress1">

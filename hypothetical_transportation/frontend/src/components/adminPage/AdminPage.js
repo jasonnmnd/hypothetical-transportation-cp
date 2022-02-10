@@ -29,7 +29,7 @@ function AdminPage( props ) {
                   <Card className="text-center" style={{ width: '35rem' }}>
                     <Card.Img variant="top" src={AdminPic} />
                     <Card.Body>
-                      <Card.Title>Users Portal</Card.Title>
+                      <Card.Title><strong>Users Portal</strong></Card.Title>
                       <Card.Text>
                         View and modify existing users.
                       </Card.Text>
@@ -43,7 +43,7 @@ function AdminPage( props ) {
                   <Card className="text-center" style={{ width: '35rem' }}>
                     <Card.Img variant="top" src={StudentsPic} />
                     <Card.Body>
-                      <Card.Title>Students Portal</Card.Title>
+                      <Card.Title><strong>Students Portal</strong></Card.Title>
                       <Card.Text>
                         View and modify existing students.
                       </Card.Text>
@@ -60,7 +60,7 @@ function AdminPage( props ) {
                   <Card className="text-center" style={{ width: '35rem' }}>
                     <Card.Img variant="top" src={SchoolPic} />
                     <Card.Body>
-                      <Card.Title>Schools Portal</Card.Title>
+                      <Card.Title><strong>Schools Portal</strong></Card.Title>
                       <Card.Text>
                         View and modify existing schools.
                       </Card.Text>
@@ -74,7 +74,7 @@ function AdminPage( props ) {
                   <Card className="text-center" style={{ width: '35rem' }}>
                     <Card.Img variant="top" src={RoutesPic} />
                     <Card.Body>
-                      <Card.Title>Routes Portal</Card.Title>
+                      <Card.Title><strong>Routes Portal</strong></Card.Title>
                       <Card.Text>
                         View and modify existing routes.
                       </Card.Text>
@@ -105,7 +105,7 @@ function AdminPage( props ) {
                   <Card className="text-center" style={{ width: '35rem' }}>
                     <Card.Img variant="top" src={EmailPic} />
                     <Card.Body>
-                      <Card.Title>Email Portal</Card.Title>
+                      <Card.Title><strong>Email Portal</strong></Card.Title>
                       <Card.Text>
                         Send an email to users.
                       </Card.Text>
