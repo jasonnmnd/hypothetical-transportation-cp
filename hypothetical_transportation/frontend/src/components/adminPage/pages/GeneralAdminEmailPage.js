@@ -42,8 +42,15 @@ function GeneralAdminEmailPage(props) {
     useEffect(() => {
         if(props.schoollist!==null && props.schoollist!==undefined && props.schoollist.length!==0){
             props.getRoutesByID(props.schoollist[0].id);
+            setCurrSchool(props.schoollist[0].id);
         }
     },[props.schoollist]);
+
+    useEffect(() => {
+        if(props.routes!==null && props.routes!==undefined && props.routes.length!==0){
+            setCurrRoute(props.routes[0].id);
+        }
+    },[props.routes]);
     
   return (
     <>
@@ -74,7 +81,7 @@ function GeneralAdminEmailPage(props) {
                 </Container>
 
                 <Container className='d-flex flex-row justify-content-center' style={{gap: "20px"}}>
-                    <Form.Select size="sm" style={{width: "300px"}}>
+                    <Form.Select size="sm" style={{width: "300px"}} onChange={setSchool}>
                             {props.schoollist!==null && props.schoollist!==undefined && props.schoollist.length!==0?props.schoollist.map((u,i)=>{
                                 return <option value={u.id} key={i}>{u.name}</option>
                             }):null}
