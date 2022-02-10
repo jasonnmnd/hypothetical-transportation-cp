@@ -115,6 +115,20 @@ const schoolColumns = {
         sortable: false,
         filterable: false
     },
+    bus_arrival_time: {
+        colTitle: "Bus Arrival Time",
+        dataPath: "",
+        search_key: "",
+        sortable: true,
+        filterable: true
+    },
+    bus_departure_time: {
+        colTitle: "Bus Departure Time",
+        dataPath: "",
+        search_key: "",
+        sortable: true,
+        filterable: true
+    }
 }
 
 
