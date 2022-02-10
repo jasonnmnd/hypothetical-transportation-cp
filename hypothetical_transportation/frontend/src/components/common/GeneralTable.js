@@ -4,8 +4,10 @@ import PropTypes from 'prop-types';
 // import "../adminPage/adminPage.css";
 import "./generalTable.css";
 import { Button, Table } from 'react-bootstrap';
+import { useSearchParams } from "react-router-dom";
 
 function GeneralTable( props ) {
+  let [searchParams, setSearchParams] = useSearchParams();
 
   const getValueFromPath = (path, obj) => {
     var res = path.split('.').reduce(function(currentObj, currentPathSection) {
@@ -38,15 +40,15 @@ function GeneralTable( props ) {
         return (
             <th key={col.colTitle} scope="col">
                 {col.colTitle}
-                <Button variant="sortreverse" onClick={ () => sorting(col.colTitle)}>▲</Button>
+                <Button variant="sortreverse" onClick={ () => searchHandler(col)}>▲</Button>
             </th>
         );
     });
   };
 
-  const sorting = (headerName) => {
-    console.log(headerName)
-  }
+  // const sorting = (headerName) => {
+  //   console.log(headerName)
+  // }
 
   const overrideColumnName = (colName) => {
     switch (colName) {
@@ -88,6 +90,14 @@ function GeneralTable( props ) {
       </Table>
     );
   };  
+
+  const searchHandler = (col)=>{
+    setSearchParams({
+        ...Object.fromEntries([...searchParams]),
+        [`ordering`]: col.dataPath,
+    })
+}
+
   
   return (
       <div className="gen-table" >
