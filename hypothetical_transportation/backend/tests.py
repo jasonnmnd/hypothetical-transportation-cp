@@ -3,7 +3,7 @@ import datetime
 
 from django.test import RequestFactory, TestCase, TransactionTestCase
 from django.test import Client
-from .models import Student, School, Route, Stop, StopRoute
+from .models import Student, School, Route, Stop
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 

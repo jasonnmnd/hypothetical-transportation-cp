@@ -16,14 +16,6 @@ class School(models.Model):
         ordering = ['id']
 
 
-class Stop(models.Model):
-    name = models.CharField(max_length=150)
-    location = models.CharField(max_length=450)
-
-    class Meta:
-        ordering = ['id']
-
-
 class Route(models.Model):
     name = models.CharField(max_length=150, validators=[MinLengthValidator(1)])
     description = models.TextField(blank=True)
@@ -31,19 +23,21 @@ class Route(models.Model):
         School, related_name='routes',
         on_delete=models.CASCADE
     )
-    stops = models.ManyToManyField(Stop, through="StopRoute")
 
     class Meta:
         ordering = ['id']
 
 
-class StopRoute(models.Model):
-    stop = models.ForeignKey(Stop, on_delete=models.CASCADE)
-    route = models.ForeignKey(Route, on_delete=models.CASCADE)
-    created = models.DateTimeField(auto_now_add=True)
+class Stop(models.Model):
+    name = models.CharField(max_length=150)
+    location = models.CharField(max_length=450)
+    latitude = models.DecimalField(max_digits=9, decimal_places=6, default=0)
+    longitude = models.DecimalField(max_digits=9, decimal_places=6, default=0)
+    route = models.ForeignKey(Route, related_name='stops', on_delete=models.CASCADE)
+    stop_number = models.PositiveIntegerField(null=False)
 
     class Meta:
-        ordering = ['created']
+        ordering = ['route', 'stop_number']
 
 
 class Student(models.Model):
