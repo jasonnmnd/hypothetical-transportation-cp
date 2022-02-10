@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -7,7 +7,7 @@ import GeneralTable from '../../../common/GeneralTable';
 import PaginationButtons from '../../../common/PaginationButtons';
 import "../../adminPage.css";
 import { getColumns, getFilterOptions, getSortOptions } from '../../../../utils/config';
-import { Container } from 'react-bootstrap';
+import { pageSize } from '../../../../actions/utils';
 
 function GeneralAdminTableView( props ) {
 
@@ -39,7 +39,7 @@ function GeneralAdminTableView( props ) {
         <div className="d-flex justify-content-space-between flex-column">
             {props.search != null && props.search != undefined ? <SearchBar buttons={getFilterOptions(props.tableType)} sortBy={getSortOptions(props.tableType)} search={props.search}></SearchBar> : null}
             <GeneralTable rows={props.values} columnNames={getColumns(props.tableType)} actionName={props.actionName?props.actionName:"View"} action={props.action? props.action:handleViewClick}/>
-            {props.pagination != null && props.pagination != undefined ? <PaginationButtons nextDisable={!props.values || props.values.length == 0} prefix={props.pagination}/> : null}
+            {props.pagination != null && props.pagination != undefined ? <PaginationButtons nextDisable={!props.values || props.values.length < pageSize} prefix={props.pagination}/> : null}
         </div>
     )
 

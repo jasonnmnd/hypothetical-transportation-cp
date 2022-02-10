@@ -53,7 +53,7 @@ function GeneralTable( props ) {
   }
 
   const getEmptyTableRows = () => {
-    return <tr><td>NO MORE RESULTS</td></tr>
+    return <tr><td colSpan={props.columnNames.length}>NO MORE RESULTS</td></tr>
   }
 
 
