@@ -24,7 +24,13 @@ function GeneralAdminEmailPage(props) {
     const allSearchParams = Object.fromEntries([...searchParams]);
     let routeSearchParams = filterObjectForKeySubstring(allSearchParams, ROUTE_PREFIX);
 
-    
+    const handleEmailSelection = (e) => {
+        setEmailSelection(e.target.value);
+        if (e.target.value == 1) {
+            setCurrRoute("");
+        }
+    }
+
     const setSchool = (e) => {
         setCurrSchool(e.target.value);
         routeSearchParams.school = e.target.value
@@ -48,20 +54,20 @@ function GeneralAdminEmailPage(props) {
         props.getSchools();
     }, []);
 
-    useEffect(() => {            
-        console.log(props.schoollist[0])
-        if(props.schoollist!==null && props.schoollist!==undefined && props.schoollist.length!==0){
-            routeSearchParams.school = props.schoollist[0].id
-            props.getRoutes(routeSearchParams);
-            setCurrSchool(props.schoollist[0].id);
-        }
-    },[props.schoollist]);
+    // useEffect(() => {            
+    //     console.log(props.schoollist[0])
+    //     if(props.schoollist!==null && props.schoollist!==undefined && props.schoollist.length!==0){
+    //         routeSearchParams.school = props.schoollist[0].id
+    //         props.getRoutes(routeSearchParams);
+    //         setCurrSchool(props.schoollist[0].id);
+    //     }
+    // },[props.schoollist]);
 
-    useEffect(() => {
-        if(props.routes!==null && props.routes!==undefined && props.routes.length!==0){
-            setCurrRoute(props.routes[0].id);
-        }
-    },[props.routes]);
+    // useEffect(() => {
+    //     if(props.routes!==null && props.routes!==undefined && props.routes.length!==0){
+    //         setCurrRoute(props.routes[0].id);
+    //     }
+    // },[props.routes]);
     
   return (
     <>
@@ -81,7 +87,7 @@ function GeneralAdminEmailPage(props) {
                                 value={radio.value}
                                 checked={emailSelection == radio.value}
                                 onChange={(e)=>{
-                                    setEmailSelection(e.target.value);
+                                    handleEmailSelection(e);
                                 }}
                             >
                                 {radio.name}
@@ -93,6 +99,7 @@ function GeneralAdminEmailPage(props) {
 
                 <Container className='d-flex flex-row justify-content-center' style={{gap: "20px"}}>
                     <Form.Select size="sm" style={{width: "300px"}} onChange={setSchool}>
+                            <option value={"null"} >{"-----"}</option>
                             {props.schoollist!==null && props.schoollist!==undefined && props.schoollist.length!==0?props.schoollist.map((u,i)=>{
                                 return <option value={u.id} key={i}>{u.name}</option>
                             }):null}
@@ -102,6 +109,7 @@ function GeneralAdminEmailPage(props) {
                     <></>
                     :
                     <Form.Select size="sm" style={{width: "300px"}} onChange={setRoute}>
+                        <option value={"null"} >{"-----"}</option>
                         {props.routes!==null && props.routes!==undefined && props.routes.length!==0?props.routes.map((u,i)=>{
                             return <option value={u.id} key={i}>{u.name}</option>
                         }):null}
