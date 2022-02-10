@@ -38,6 +38,13 @@ function GeneralAdminEmailPage(props) {
     useEffect(() => {
         props.getSchools();
     }, []);
+
+    useEffect(() => {
+        if(props.schoollist!==null && props.schoollist!==undefined && props.schoollist.length!==0){
+            props.getRoutesByID(props.schoollist[0].id);
+        }
+    },[props.schoollist]);
+    
   return (
     <>
         <Header></Header>
