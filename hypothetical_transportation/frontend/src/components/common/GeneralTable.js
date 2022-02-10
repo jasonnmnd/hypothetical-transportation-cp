@@ -1,7 +1,6 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment } from "react";
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-// import "../adminPage/adminPage.css";
 import "./generalTable.css";
 import { Button, Table } from 'react-bootstrap';
 import { useSearchParams } from "react-router-dom";
@@ -22,7 +21,6 @@ function GeneralTable( props ) {
             {
                 props.columnNames.map((columnInfo, index) => {
                     const cellData = getValueFromPath(columnInfo.dataPath, rowData)
-                    //console.log(columnInfo.dataPath)
                     return (
                         <td key={`${cellData}--${index}`}>
                             {cellData}
@@ -46,19 +44,6 @@ function GeneralTable( props ) {
     });
   };
 
-  // const sorting = (headerName) => {
-  //   console.log(headerName)
-  // }
-
-  // const overrideColumnName = (colName) => {
-  //   switch (colName) {
-  //       case "routeDesc":
-  //           return "Route Description";
-  //       default:
-  //           return colName;
-  //   }
-  // };
-
   const getTableRows = (results) => {
     return (results.map((result, index) => {
       return (<Fragment key={index}>
@@ -73,10 +58,6 @@ function GeneralTable( props ) {
 
 
   const createTable = (results) => {
-    // if(!results || results.length == 0){
-    //     return null;
-    // }
-    // mapDynamicColumns();
     return (
       <Table striped bordered hover size="sm">
         <thead>
@@ -107,7 +88,6 @@ function GeneralTable( props ) {
         [`ordering`]: key,
     })
 
-    console.log(searchParams)
 }
 
   
@@ -126,7 +106,6 @@ GeneralTable.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
-    //rows: state.table.values.results
 });
 
 export default connect(mapStateToProps)(GeneralTable)
