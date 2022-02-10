@@ -4,8 +4,10 @@ import "../NEWadminPage.css";
 import { Container, Form, Button, ButtonGroup, ToggleButton } from 'react-bootstrap'; 
 import { connect } from 'react-redux';
 import { getSchools } from '../../../actions/schools';
-import { getRoutesByID } from '../../../actions/routes';
+import { getRoutes } from '../../../actions/routes';
 import PropTypes from 'prop-types';
+import { filterObjectForKeySubstring } from '../../../utils/utils';
+import { useSearchParams } from 'react-router-dom';
 
 
 
@@ -16,10 +18,17 @@ function GeneralAdminEmailPage(props) {
     const [currSchool, setCurrSchool] = useState("");
     const [currRoute, setCurrRoute] = useState("");
     const [emailSelection, setEmailSelection] = useState(1);
+
+    const ROUTE_PREFIX = "rou";
+    let [searchParams, setSearchParams] = useSearchParams();
+    const allSearchParams = Object.fromEntries([...searchParams]);
+    let routeSearchParams = filterObjectForKeySubstring(allSearchParams, ROUTE_PREFIX);
+
     
     const setSchool = (e) => {
         setCurrSchool(e.target.value);
-        props.getRoutesByID(currSchool);
+        routeSearchParams.school = e.target.value
+        props.getRoutes(routeSearchParams);
     }
     
     const setRoute = (e) => {
@@ -39,9 +48,11 @@ function GeneralAdminEmailPage(props) {
         props.getSchools();
     }, []);
 
-    useEffect(() => {
+    useEffect(() => {            
+        console.log(props.schoollist[0])
         if(props.schoollist!==null && props.schoollist!==undefined && props.schoollist.length!==0){
-            props.getRoutesByID(props.schoollist[0].id);
+            routeSearchParams.school = props.schoollist[0].id
+            props.getRoutes(routeSearchParams);
             setCurrSchool(props.schoollist[0].id);
         }
     },[props.schoollist]);
@@ -138,7 +149,7 @@ function GeneralAdminEmailPage(props) {
 }
 
 GeneralAdminEmailPage.propTypes = {
-    getRoutesByID: PropTypes.func.isRequired,
+    getRoutes: PropTypes.func.isRequired,
     getSchools: PropTypes.func.isRequired,
 }
 
@@ -147,4 +158,4 @@ const mapStateToProps = (state) => ({
     routes: state.routes.routes.results,
 })
 
-export default connect(mapStateToProps, {getSchools, getRoutesByID}) (GeneralAdminEmailPage);
+export default connect(mapStateToProps, {getSchools, getRoutes}) (GeneralAdminEmailPage);
