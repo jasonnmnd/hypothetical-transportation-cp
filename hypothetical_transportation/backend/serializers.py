@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from rest_framework import serializers
-from .models import Route, School, Student
+from .models import Route, School, Student, Stop
 
 
 class GroupSerializer(serializers.ModelSerializer):
@@ -48,8 +48,15 @@ class RouteSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class StopSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Stop
+        fields = '__all__'
+
+
 class FormatRouteSerializer(RouteSerializer):
     school = SchoolSerializer()
+    stops = StopSerializer(many=True)
     student_count = serializers.SerializerMethodField('get_student_count')
 
     def get_student_count(self, obj):

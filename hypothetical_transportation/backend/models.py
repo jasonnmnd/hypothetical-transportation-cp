@@ -29,7 +29,7 @@ class Route(models.Model):
 
 
 class Stop(models.Model):
-    name = models.CharField(max_length=150)
+    name = models.CharField(max_length=150, blank=True)
     location = models.CharField(max_length=450)
     latitude = models.DecimalField(max_digits=9, decimal_places=6, default=0)
     longitude = models.DecimalField(max_digits=9, decimal_places=6, default=0)

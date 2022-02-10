@@ -6,9 +6,9 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import School, Route, Student
+from .models import School, Route, Student, Stop
 from .serializers import UserSerializer, StudentSerializer, RouteSerializer, SchoolSerializer, FormatStudentSerializer, \
-    FormatRouteSerializer, FormatUserSerializer, EditUserSerializer
+    FormatRouteSerializer, FormatUserSerializer, EditUserSerializer, StopSerializer
 from .search import DynamicSearchFilter
 from .customfilters import StudentCountShortCircuitFilter
 from .permissions import is_admin, IsAdminOrReadOnly
@@ -86,6 +86,18 @@ class UserViewSet(viewsets.ModelViewSet):
     def fields(self, request):
         content = parse_repr(repr(UserSerializer()))
         return Response(content)
+
+
+class StopViewSet(viewsets.ModelViewSet):
+    permission_classes = [
+        IsAdminOrReadOnly
+    ]
+
+    def get_serializer_class(self):
+        return StopSerializer
+
+    def get_queryset(self):
+        return Stop.objects.all()
 
 
 class RouteViewSet(viewsets.ModelViewSet):
