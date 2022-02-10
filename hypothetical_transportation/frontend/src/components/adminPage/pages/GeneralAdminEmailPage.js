@@ -74,29 +74,21 @@ function GeneralAdminEmailPage(props) {
                 </Container>
 
                 <Container className='d-flex flex-row justify-content-center' style={{gap: "20px"}}>
-                {
-                    emailSelection == 1 ? 
                     <Form.Select size="sm" style={{width: "300px"}}>
-                        <option value={"null"} >{"-----"}</option>
-                        {props.schoollist!==null && props.schoollist!==undefined && props.schoollist.length!==0?props.schoollist.map((u,i)=>{
-                            return <option value={u.id} key={i}>{u.name}</option>
-                        }):null}
-                    </Form.Select>
-                    : 
-                    <>
-                       <Form.Select size="sm" style={{width: "300px"}} onChange={setSchool}>
                             {props.schoollist!==null && props.schoollist!==undefined && props.schoollist.length!==0?props.schoollist.map((u,i)=>{
                                 return <option value={u.id} key={i}>{u.name}</option>
                             }):null}
-                        </Form.Select>
-
-                        <Form.Select size="sm" style={{width: "300px"}} onChange={setRoute}>
-                            <option value={"null"} >{"-----"}</option>
-                            {props.routes!==null && props.routes!==undefined && props.routes.length!==0?props.routes.map((u,i)=>{
-                                return <option value={u.id} key={i}>{u.name}</option>
-                            }):null}
-                        </Form.Select> 
-                    </>
+                    </Form.Select>
+                {
+                    emailSelection == 1 ? 
+                    <></>
+                    :
+                    <Form.Select size="sm" style={{width: "300px"}} onChange={setRoute}>
+                        {props.routes!==null && props.routes!==undefined && props.routes.length!==0?props.routes.map((u,i)=>{
+                            return <option value={u.id} key={i}>{u.name}</option>
+                        }):null}
+                    </Form.Select>  
+                    
                     
                 }
                 </Container>
