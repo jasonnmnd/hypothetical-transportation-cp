@@ -40,7 +40,7 @@ function GeneralTable( props ) {
         return (
             <th key={col.colTitle} scope="col">
                 {col.colTitle}
-                {col.sortable? <Button variant="sortreverse" onClick={ () => searchHandler(col)}>▲</Button>:null}
+                {col.sortable? <Button variant={searchParams.get("ordering")===col.search_key?"sort":"sortreverse"} onClick={ () => searchHandler(col)}>{searchParams.get("ordering")!==col.search_key && searchParams.get("ordering")!=="-"+col.search_key? "▲/▼":"▲"}</Button>:null}
             </th>
         );
     });
