@@ -34,7 +34,7 @@ function SearchBar(props){
     return(
         <Container>
             <Row className="mb-3 d-flex flex-row justify-content-center">
-                <Form.Group as={Col} md="2" controlId="validationCustom01">
+                {/* <Form.Group as={Col} md="2" controlId="validationCustom01">
                     <FloatingLabel controlId="floatingSelect" label="Sort By">
                         <Form.Select aria-label="Sort By" 
                             value={values.sort_by} onChange={(e) => setValue({ ...values, sort_by: e.target.value })}>
@@ -45,7 +45,7 @@ function SearchBar(props){
                             })} 
                         </Form.Select>
                     </FloatingLabel>
-                </Form.Group>
+                </Form.Group> */}
 
                 <Form.Group as={Col} md="2" controlId="validationCustom01">
                     <FloatingLabel controlId="floatingSelect" label="Filter By">
@@ -70,7 +70,7 @@ function SearchBar(props){
                 </Form.Group>
 
                 <Form.Group as={Col} md="2" controlId="validationCustom01">
-                    <Button variant="search" onClick={searchHandler}>Search/Sort</Button>
+                    <Button variant="search" onClick={searchHandler}>Search</Button>
                 </Form.Group>
             </Row>
         </Container>
