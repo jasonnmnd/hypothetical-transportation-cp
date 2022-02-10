@@ -109,6 +109,20 @@ function GeneralAdminSchoolDetails(props) {
         </Card>
 
         <Card>
+            <Card.Header as="h5">Bus Arrival Time </Card.Header>
+            <Card.Body>
+                <Card.Text>{}</Card.Text>
+            </Card.Body>
+        </Card>
+
+        <Card>
+            <Card.Header as="h5">Bus Departure Time </Card.Header>
+            <Card.Body>
+                <Card.Text>{}</Card.Text>
+            </Card.Body>
+        </Card>
+
+        <Card>
             <Card.Header as="h5">Associated Students </Card.Header>
                 <Card.Body>
                     <GeneralAdminTableView values={props.students} tableType='student' title='Associated Students' search={STUDENT_PREFIX} pagination={STUDENT_PREFIX}/>
