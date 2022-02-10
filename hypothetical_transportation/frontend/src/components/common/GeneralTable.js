@@ -92,11 +92,22 @@ function GeneralTable( props ) {
   };  
 
   const searchHandler = (col)=>{
-    console.log(col)
+    let key = ""
+    if(searchParams.get("ordering")===col.search_key){
+      key = "-"+col.search_key
+    }
+    else if(searchParams.get("ordering")==="-"+col.search_key){
+      key = ""
+    }
+    else{
+      key = col.search_key
+    }
     setSearchParams({
         ...Object.fromEntries([...searchParams]),
-        [`ordering`]: col.search_key,
+        [`ordering`]: key,
     })
+
+    console.log(searchParams)
 }
 
   
