@@ -14,8 +14,6 @@ function LinkBasePasswordResetForm( props ) {
     const submitHandler = (e) => {
       e.preventDefault();
       console.log(values)
-      //backend send email to submitted value
-      //if email is not associated with the user do something else?
       if(values.new===""){
         console.log("You Cannot Have a blank password")
         alert("You Cannot Have a blank password")
