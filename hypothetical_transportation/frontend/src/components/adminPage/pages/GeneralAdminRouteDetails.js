@@ -105,6 +105,12 @@ function GeneralAdminRouteDetails(props) {
                 <GeneralAdminTableView title='Associated Students' tableType='student' values={props.students} search="" />
             </Card.Body>
         </Card>
+
+        <Card>
+            <Card.Header as="h5">Associated Stops</Card.Header>
+            <Card.Body>
+            </Card.Body>
+        </Card>
         </Container>
     </div>
     );

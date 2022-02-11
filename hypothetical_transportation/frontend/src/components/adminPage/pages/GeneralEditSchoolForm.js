@@ -61,6 +61,8 @@ function GeneralEditSchoolForm(props) {
         setValidated(true);
     }
 
+    const handleSelect = async value => {};
+
 
     // const confirmation = (e)=>{
     //     e.preventDefault();
@@ -93,6 +95,10 @@ function GeneralEditSchoolForm(props) {
                                                 
                         <Form.Group className="mb-3" controlId="validationCustom02">
                             <Form.Label as="h5">Address</Form.Label>
+                            {/* <PlacesAutocomplete value={address} onChange={setAddress} onSelect={handleSelect}>
+                                {() => <div>TEST</div>}
+                            </PlacesAutocomplete> */}
+
                             <Form.Control 
                             required 
                             type="text"
