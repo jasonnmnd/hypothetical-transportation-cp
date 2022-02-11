@@ -9,13 +9,17 @@ import { getRouteInfo, deleteRoute } from '../../../actions/routes';
 import { getStudents } from '../../../actions/students';
 import GeneralAdminTableView from '../components/views/GeneralAdminTableView';
 import MapContainer from '../../maps/MapContainer';
+import { getStopByRoute } from '../../../actions/stops';
 import { Container, Card, Button, Row, Col } from 'react-bootstrap'
+import { filterObjectForKeySubstring } from '../../../utils/utils';
 
 
 function GeneralAdminRouteDetails(props) {
 
 
   const [openModal, setOpenModal] = useState(false);
+  let [searchParams, setSearchParams] = useSearchParams();
+  const STOP_PREFIX = "sto";  
 
   const handleConfirmDelete = () => {
     //Replace with API call to delete school and all its associated routes/students
@@ -26,10 +30,14 @@ function GeneralAdminRouteDetails(props) {
   
   const navigate = useNavigate();
   const param = useParams();
-  let [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
     props.getRouteInfo(param.id);
+
+    const allSearchParams = Object.fromEntries([...searchParams]);
+    let stopSearchParams = filterObjectForKeySubstring(allSearchParams, STOP_PREFIX);  
+    stopSearchParams.route = param.id
+    props.getStopByRoute(stopSearchParams);
   }, []);
 
   useEffect(() => {
@@ -105,6 +113,13 @@ function GeneralAdminRouteDetails(props) {
                 <GeneralAdminTableView title='Associated Students' tableType='student' values={props.students} search="" />
             </Card.Body>
         </Card>
+
+        <Card>
+            <Card.Header as="h5">Associated Stops</Card.Header>
+            <Card.Body>
+                <GeneralAdminTableView title='Associated Stops' tableType='stop' values={props.stops} search="" />
+            </Card.Body>
+        </Card>
         </Container>
     </div>
     );
@@ -112,6 +127,7 @@ function GeneralAdminRouteDetails(props) {
 
 GeneralAdminRouteDetails.propTypes = {
     getRouteInfo: PropTypes.func.isRequired,
+    getStopByRoute: PropTypes.func.isRequired,
     getStudents: PropTypes.func.isRequired,
     deleteRoute: PropTypes.func.isRequired
 }
@@ -120,8 +136,9 @@ const mapStateToProps = (state) => ({
   user: state.auth.user,
   token: state.auth.token,
   route: state.routes.viewedRoute, 
-  students: state.students.students.results
+  students: state.students.students.results,
+  stops:state.stop.stops.results
 });
 
-export default connect(mapStateToProps, {getRouteInfo, getStudents, deleteRoute})(GeneralAdminRouteDetails)
+export default connect(mapStateToProps, {getRouteInfo, getStudents, deleteRoute,getStopByRoute})(GeneralAdminRouteDetails)
 

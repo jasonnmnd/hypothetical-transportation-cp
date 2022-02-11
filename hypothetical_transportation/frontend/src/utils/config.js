@@ -29,6 +29,47 @@ const routeDefaultCols = [
     "num_students",
 ]
 
+const stopDefaultCOls = [
+    "name",
+    "location",
+    "drop_off",
+    "pick_up",
+]
+
+const stopColumns = {
+    name: {
+        colTitle: "Name",
+        dataPath: "name",
+        search_key: "",
+        sortable: false,
+        filterable: false
+    },
+
+    location: {
+        colTitle: "Location",
+        dataPath: "location",
+        search_key: "",
+        sortable: false,
+        filterable: false
+    },
+
+    drop_off: {
+        colTitle: "Drop Off Time",
+        dataPath: "drop_off",
+        search_key: "",
+        sortable: false,
+        filterable: false
+    },
+
+    pick_up: {
+        colTitle: "Pick Up Time",
+        dataPath: "pick_up",
+        search_key: "",
+        sortable: false,
+        filterable: false
+    }
+}
+
 const userColumns = {
     full_name: {
         colTitle: "Full Name",
@@ -160,14 +201,16 @@ const allColumns = {
     user: userColumns,
     student: studentColumns,
     school: schoolColumns,
-    route: routeColumns
+    route: routeColumns,
+    stop: stopColumns,
 }
 
 const defaultColumns = {
     user: userDefaultCols,
     student: studentDefaultCols,
     school: schoolDefaultCols,
-    route: routeDefaultCols
+    route: routeDefaultCols,
+    stop: stopDefaultCOls,
 }
 
 const getColsFromArr = (colObj, colTitles) => {
