@@ -32,6 +32,7 @@ import ForgotPasswordForm from '../loginPage/ForgotPasswordForm';
 import MapComponent from '../maps/MapComponent';
 import ExampleMapUsage from '../maps/ExampleMapUsage';
 import LinkBasePasswordResetForm from '../loginPage/LinkBasePasswordResetForm';
+import GeneralAdminStopDetails from '../adminPage/pages/GeneralAdminStopDetails';
 
 
 const Router = (props) => {
@@ -75,6 +76,7 @@ const Router = (props) => {
 
           <Route exact path="/admin/email" element={<PrivateRoute><GeneralAdminEmailPage/></PrivateRoute>}/>
           <Route exact path="/test/reset" element={<PrivateRoute><LinkBasePasswordResetForm/></PrivateRoute>}/>
+          <Route exact path="/admin/stop/:route_id/:stop_id" element={<PrivateRoute><GeneralAdminStopDetails/></PrivateRoute>}/>
 
           <Route exact path="/*" element={<LoginForm />}></Route>
         </Routes>
