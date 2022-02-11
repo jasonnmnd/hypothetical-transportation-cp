@@ -94,7 +94,7 @@ GeneralAdminStopPlanner.propTypes = {
 const mapStateToProps = (state) => ({
   route: state.routes.viewedRoute, 
   studentsInRoute:state.routeplanner.studentsInRoute.results,
-  stops: state.stops.stops.results,
+  stops: state.stop.stops.results,
 });
 
 export default connect(mapStateToProps, {getRouteInfo,getStudentsInRoute,updateStop,getStopByRoute})(GeneralAdminStopPlanner)
