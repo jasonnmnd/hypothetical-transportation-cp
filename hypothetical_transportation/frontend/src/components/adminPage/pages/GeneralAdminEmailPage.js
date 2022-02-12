@@ -149,7 +149,7 @@ function GeneralAdminEmailPage(props) {
                     </Form.Group>
                 </Container>
                 
-                {emailSelection === 1 ? 
+                {emailSelection == 1 ? 
                     <></>
                     :
                     <Container className='d-flex flex-row justify-content-center' style={{gap: "20px"}}>
@@ -160,7 +160,7 @@ function GeneralAdminEmailPage(props) {
                                 }):null}
                         </Form.Select>
                         {
-                            emailSelection === 2 ? 
+                            emailSelection == 2 ? 
                             <></>
                             :
                             <Form.Select size="sm" style={{width: "300px"}} value={currRoute} onChange={setRoute}>
