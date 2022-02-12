@@ -76,6 +76,15 @@ function GeneralAdminRouteDetails(props) {
                 </Col>
             </Row>
         </Container>
+        <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
+            <Row>
+                <Col>
+                    <Link to={`/admin/route_email/${props.route.school.id}/${props.route.id}`}>
+                        <Button variant="yellowLong" size="lg">Send Route-wide Email</Button>
+                    </Link>
+                </Col>
+            </Row>
+        </Container>
         
         <Card>
             <Card.Header as="h5">Name</Card.Header>

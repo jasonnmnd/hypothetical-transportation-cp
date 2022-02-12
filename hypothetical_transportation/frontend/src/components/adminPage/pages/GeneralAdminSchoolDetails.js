@@ -73,24 +73,36 @@ function GeneralAdminSchoolDetails(props) {
         <Container className="container-main d-flex flex-column" style={{gap: "20px"}}>
         <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
             <Row>
-                <Col>
-                    <Link to={`/admin/edit/school/${props.school.id}`}>
-                        <Button variant="yellowLong" size="lg">Edit School</Button>
-                    </Link>
-                </Col>
+              <Col>
+                <Link to={`/admin/edit/school/${props.school.id}`}>
+                  <Button variant="yellowLong" size="lg">Edit School</Button>
+                </Link>
+              </Col>
 
-                <Col>
-                    <Button variant="yellowLong" size="lg" onClick={() => {
-                      setOpenModal(true);
-                    }}>Delete School</Button>
-                </Col>
+              <Col>
+                <Button variant="yellowLong" size="lg" onClick={() => {
+                  setOpenModal(true);
+                }}>Delete School</Button>
+              </Col>
+            </Row>
+            </Container>
+            <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
+            <Row>
 
-                <Col>
-                    <Link to={`/admin/route/plan/${props.school.id}`}>
-                        <Button variant="yellowLong">New Route for this School</Button>
-                    </Link>
+              <Col>
+                <Link to={`/admin/route/plan/${props.school.id}`}>
+                  <Button variant="yellowLong">New Route for this School</Button>
+                </Link>
 
-                </Col>
+              </Col>
+
+              <Col>
+                <Link to={`/admin/school_email/${props.school.id}`}>
+                  <Button variant="yellowLong">Send School-wide Email</Button>
+                </Link>
+
+              </Col>
+                
             </Row>
         </Container>
         
