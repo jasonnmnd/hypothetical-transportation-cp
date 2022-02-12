@@ -69,7 +69,7 @@ function PaginationButtons( props ) {
                     {" "}
                     <Button variant={props.nextDisable ? 'prevnext_disabled' : 'prevnext'} onClick={handleNextClick} disabled={props.nextDisable}>Next</Button> 
 
-                    <div className='d-flex flex-row justify-content-center' style={{marginTop: "20px"}}>
+                    <div className='d-flex flex-row justify-content-center' style={{marginTop: "10px"}}>
                         <Button variant='prevnext' onClick={handleAllClick} >Show All</Button>
                     </div>
                  </div>
