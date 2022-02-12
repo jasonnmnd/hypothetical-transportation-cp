@@ -27,6 +27,11 @@ function GeneralAdminEmailPage(props) {
     const handleEmailSelection = (e) => {
         setEmailSelection(e.target.value);
         if (e.target.value == 1) {
+            setCurrSchool("");
+            setCurrRoute("");
+        } 
+        
+        else if (e.target.value == 2) {
             setCurrRoute("");
         }
     }
