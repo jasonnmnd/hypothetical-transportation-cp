@@ -42,18 +42,18 @@ function GeneralAdminTableView( props ) {
     const studentLegend = [
         {
             key: "No Route: ",
-            color: "🟥❤️    "
+            color: "🟥    "//❤️
         },
         {
             key: "No Stops in Range: ",
-            color: "🟦💙    "
+            color: "🟦    "//💙
         },
     ]
 
     const routeLegend = [
         {
             key: "Incomplete Route: ",
-            color: "🟥❤️    "
+            color: "🟥    "//❤️
         }
     ]
   

@@ -104,7 +104,7 @@ function GeneralAdminRouteDetails(props) {
             <Card.Header as="h5">School </Card.Header>
             <Card.Body>
                 <Link to={`/admin/school/${props.route.school.id}`}>
-                    <Button variant='yellow'><h3>{props.route.school.name}</h3></Button>
+                    <Button variant='yellow'><h5>{props.route.school.name}</h5></Button>
                 </Link>
             </Card.Body>
         </Card>
