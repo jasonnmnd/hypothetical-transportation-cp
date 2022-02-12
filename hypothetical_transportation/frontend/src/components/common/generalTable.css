@@ -68,3 +68,33 @@
 .btn-sortreverse {
   transform: rotate(180deg);
 }
+
+.btn-prevnext {
+  display: inline-block;
+  padding: 4px 6px;
+  border-radius: 8px;
+  background-color: #ffae07;
+  background-position: 0%;
+  transition: 0.4s;
+  color: #fff;
+  font-weight: 500;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.btn-prevnext:hover {
+  background-color: #ffdd99;
+}
+
+.btn-prevnext_disabled {
+  display: inline-block;
+  padding: 4px 6px;
+  border-radius: 8px;
+  background-color: #ffae07;
+  background-position: 0%;
+  transition: 0.4s;
+  color: #fff;
+  font-weight: 500;
+  font-size: 15px;
+  cursor: not-allowed;
+}
