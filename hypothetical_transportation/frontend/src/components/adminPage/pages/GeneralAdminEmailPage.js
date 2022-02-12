@@ -7,7 +7,7 @@ import { getSchools } from '../../../actions/schools';
 import { getRoutes } from '../../../actions/routes';
 import PropTypes from 'prop-types';
 import { filterObjectForKeySubstring } from '../../../utils/utils';
-import { useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 
 
 
@@ -24,13 +24,14 @@ function GeneralAdminEmailPage(props) {
     const allSearchParams = Object.fromEntries([...searchParams]);
     let routeSearchParams = filterObjectForKeySubstring(allSearchParams, ROUTE_PREFIX);
 
+    const param = useParams();
+
     const handleEmailSelection = (e) => {
         setEmailSelection(e.target.value);
         if (e.target.value == 1) {
             setCurrSchool("");
             setCurrRoute("");
         } 
-        
         else if (e.target.value == 2) {
             setCurrRoute("");
         }
@@ -46,7 +47,19 @@ function GeneralAdminEmailPage(props) {
         setCurrRoute(e.target.value);
     }
 
-    const submit = () => {
+    const submit = (e) => {
+        e.preventDefault();
+        if(!props.schoollist.some(v => ((''+v.id) === currSchool))){
+            alert("Something is wrong with the school you entered. The selection has been cleared; please select from the dropdown list instead.")
+            setCurrSchool("")
+            setCurrRoute("")
+        }
+        if(!props.routes.some(v => ((''+v.id) === currRoute))){
+            alert("Something is wrong with the route you entered. The selection has been cleared; please select from the dropdown list instead.")
+            setCurrSchool("")
+            setCurrRoute("")
+        }
+
         console.log("Submit button pressed with school " + currSchool + " and route " + currRoute);
     }
 
@@ -58,7 +71,37 @@ function GeneralAdminEmailPage(props) {
 
     useEffect(() => {
         props.getSchools();
+        if(param.school_id!==null && param.school_id!==undefined){
+            setCurrSchool(param.school_id);
+            routeSearchParams.school = param.school_id;
+            props.getRoutes(routeSearchParams);
+            setEmailSelection(2);
+        }
+        if(param.route_id!==null && param.route_id!==undefined){
+            setCurrRoute(param.route_id);
+            setEmailSelection(3);
+        }
     }, []);
+
+
+    useEffect(() => {
+        props.getSchools();
+        if(param.school_id!==null && param.school_id!==undefined){
+            setCurrSchool(param.school_id);
+            routeSearchParams.school = param.school_id;
+            props.getRoutes(routeSearchParams);
+            setEmailSelection(2);
+            if(param.route_id!==null && param.route_id!==undefined){
+                setCurrRoute(param.route_id);
+                setEmailSelection(3);
+            }
+        }else{
+            setCurrSchool("");
+            setCurrRoute("");
+            setEmailSelection(1);
+        }
+    }, [param]);
+
 
     // useEffect(() => {            
     //     console.log(props.schoollist[0])
@@ -103,21 +146,21 @@ function GeneralAdminEmailPage(props) {
                     </Form.Group>
                 </Container>
                 
-                {emailSelection == 1 ? 
+                {emailSelection === 1 ? 
                     <></>
                     :
                     <Container className='d-flex flex-row justify-content-center' style={{gap: "20px"}}>
-                        <Form.Select size="sm" style={{width: "300px"}} onChange={setSchool}>
+                        <Form.Select size="sm" style={{width: "300px"}} value={currSchool} onChange={setSchool}>
                                 <option value={"null"} >{"-----"}</option>
                                 {props.schoollist!==null && props.schoollist!==undefined && props.schoollist.length!==0?props.schoollist.map((u,i)=>{
                                     return <option value={u.id} key={i}>{u.name}</option>
                                 }):null}
                         </Form.Select>
                         {
-                            emailSelection == 2 ? 
+                            emailSelection === 2 ? 
                             <></>
                             :
-                            <Form.Select size="sm" style={{width: "300px"}} onChange={setRoute}>
+                            <Form.Select size="sm" style={{width: "300px"}} value={currRoute} onChange={setRoute}>
                                 <option value={"null"} >{"-----"}</option>
                                 {props.routes!==null && props.routes!==undefined && props.routes.length!==0?props.routes.map((u,i)=>{
                                     return <option value={u.id} key={i}>{u.name}</option>

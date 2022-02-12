@@ -34,7 +34,7 @@ import MapComponent from '../maps/MapComponent';
 import ExampleMapUsage from '../maps/ExampleMapUsage';
 
 import LinkBasePasswordResetForm from '../loginPage/LinkBasePasswordResetForm';
-import GeneralParentConfirmationPage from '../adminPage/pages/GeneralUserConfirmationPage';
+import GeneralUserConfirmationPage from '../adminPage/pages/GeneralUserConfirmationPage';
 
 
 const Router = (props) => {
@@ -78,11 +78,13 @@ const Router = (props) => {
           <Route exact path="/admin/route/edit/:school_id/:route_id" element={<PrivateRoute><GeneralAdminRoutePlanner action={"edit"}/></PrivateRoute>}/>
 
           <Route exact path="/admin/email" element={<PrivateRoute><GeneralAdminEmailPage/></PrivateRoute>}/>
-          <Route exact path="/test/reset" element={<PrivateRoute><LinkBasePasswordResetForm/></PrivateRoute>}/>
+          <Route exact path="/admin/school_email/:school_id" element={<PrivateRoute><GeneralAdminEmailPage/></PrivateRoute>}/>
+          <Route exact path="/admin/route_email/:school_id/:route_id" element={<PrivateRoute><GeneralAdminEmailPage/></PrivateRoute>}/>
+          {/* <Route exact path="/test/reset" element={<PrivateRoute><LinkBasePasswordResetForm/></PrivateRoute>}/> */}
           
           {/* Confirm a user's password */}
-          <Route exact path="/user/make/new" element={<GeneralParentConfirmationPage/>}/>
-          
+          <Route exact path="/user/make/new" element={<GeneralUserConfirmationPage/>}/>
+          <Route exact path="/admin/stop/:route_id/:stop_id" element={<PrivateRoute><GeneralAdminStopDetails/></PrivateRoute>}/>
 
           <Route exact path="/*" element={<LoginForm />}></Route>
         </Routes>
