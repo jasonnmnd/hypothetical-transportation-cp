@@ -48,7 +48,7 @@ function GeneralAdminStopDetails(props) {
           <Row>
               <Col>
                 <Link to={`/admin`}>
-                  <Button variant="yellowLong" size="lg">Edit Stop change link to planner</Button>
+                  <Button variant="yellowLong" size="lg">Edit Stop</Button>
                 </Link>
               </Col>
               <Col>

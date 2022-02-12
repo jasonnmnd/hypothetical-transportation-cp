@@ -17,6 +17,7 @@ import GeneralAdminUserDetails from "../adminPage/pages/GeneralAdminUserDetails"
 import GeneralAdminStudentDetails from "../adminPage/pages/GeneralAdminStudentDetails";
 import GeneralAdminSchoolDetails from "../adminPage/pages/GeneralAdminSchoolDetails";
 import GeneralAdminRouteDetails from "../adminPage/pages/GeneralAdminRouteDetails";
+import GeneralAdminStopDetails from '../adminPage/pages/GeneralAdminStopDetails';
 
 import GeneralAdminRoutePlanner from "../adminPage/pages/GeneralAdminRoutePlanner";
 import GeneralManageStudentPage from "../adminPage/pages/GeneralManageStudentPage";
@@ -34,7 +35,6 @@ import ExampleMapUsage from '../maps/ExampleMapUsage';
 
 import LinkBasePasswordResetForm from '../loginPage/LinkBasePasswordResetForm';
 import GeneralParentConfirmationPage from '../adminPage/pages/GeneralUserConfirmationPage';
-import GeneralAdminStopDetails from '../adminPage/pages/GeneralAdminStopDetails';
 
 
 const Router = (props) => {
@@ -72,6 +72,7 @@ const Router = (props) => {
           <Route exact path="/admin/student/:id" element={<PrivateRoute><GeneralAdminStudentDetails /></PrivateRoute>}/>
           <Route exact path="/admin/school/:id" element={<PrivateRoute><GeneralAdminSchoolDetails /></PrivateRoute>}/>
           <Route exact path="/admin/route/:id" element={<PrivateRoute><GeneralAdminRouteDetails /></PrivateRoute>}/>
+          <Route exact path="/admin/stop/:route_id/:stop_id" element={<PrivateRoute><GeneralAdminStopDetails/></PrivateRoute>}/>
           
           <Route exact path="/admin/route/plan/:school_id" element={<PrivateRoute><GeneralAdminRoutePlanner action={"new"}/></PrivateRoute>}/>
           <Route exact path="/admin/route/edit/:school_id/:route_id" element={<PrivateRoute><GeneralAdminRoutePlanner action={"edit"}/></PrivateRoute>}/>
@@ -81,7 +82,7 @@ const Router = (props) => {
           
           {/* Confirm a user's password */}
           <Route exact path="/user/make/new" element={<GeneralParentConfirmationPage/>}/>
-          <Route exact path="/admin/stop/:route_id/:stop_id" element={<PrivateRoute><GeneralAdminStopDetails/></PrivateRoute>}/>
+          
 
           <Route exact path="/*" element={<LoginForm />}></Route>
         </Routes>
