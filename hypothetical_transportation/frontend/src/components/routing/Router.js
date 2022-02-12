@@ -35,7 +35,6 @@ import ExampleMapUsage from '../maps/ExampleMapUsage';
 
 import LinkBasePasswordResetForm from '../loginPage/LinkBasePasswordResetForm';
 import GeneralUserConfirmationPage from '../adminPage/pages/GeneralUserConfirmationPage';
-import GeneralAdminStopDetails from '../adminPage/pages/GeneralAdminStopDetails';
 
 
 const Router = (props) => {
