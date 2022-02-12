@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import GeneralTable from '../../common/GeneralTable';
 import PaginationButtons from '../../common/PaginationButtons';
 import SearchBar from '../../adminPage/components/searchbar/SearchBar';
+import GeneralLegend from '../../common/GeneralLegend';
 
 const studentColumns = [
     {
