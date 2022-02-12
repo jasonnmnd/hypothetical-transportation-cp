@@ -17,6 +17,7 @@ function ResetPasswordPage(props){
     const navigate = useNavigate();
     const [values, setValue] = useState({ old: "", new: "", confirm:"" });
     
+    
     const saveNewPassword = () => {
         if (values.new === values.confirm) {
             
