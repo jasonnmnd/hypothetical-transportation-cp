@@ -122,6 +122,9 @@ function GeneralAdminEmailPage(props) {
     <>
         <Header></Header>
         <Container className="container-main">
+            <div className="shadow-sm p-3 mb-5 bg-white rounded d-flex flex-row justify-content-center">
+                <h1>Send Email</h1>
+            </div>
             <Form className="shadow-lg p-3 mb-5 bg-white rounded">
                 <Container className='d-flex justify-content-center'>
                     <Form.Group className="mb-3" controlId="validationCustom01">

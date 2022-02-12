@@ -84,6 +84,9 @@ function GeneralEditUserForm(props) {
         <div> 
             <Header></Header>
                 <Container className="container-main">
+                <div className="shadow-sm p-3 mb-5 bg-white rounded d-flex flex-row justify-content-center">
+                    {props.action == "edit" ? <h1>Edit User</h1> : <h1>Create User</h1>}
+                </div>
                     <Form className="shadow-lg p-3 mb-5 bg-white rounded" noValidate validated={validated} onSubmit={handleSubmit}>
 
                         <Row className="mb-3">

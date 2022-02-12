@@ -9,7 +9,7 @@ function GeneralLegend(props) {
     <>
         <Container>
             <Card>
-                <Card.Header as="h5">Legend</Card.Header>
+                {/*<Card.Header as="h5">Legend</Card.Header>*/}
                 <Card.Body>
                     <Card.Text>
                     {

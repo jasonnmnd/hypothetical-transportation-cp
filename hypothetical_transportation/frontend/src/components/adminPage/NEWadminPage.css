@@ -75,3 +75,8 @@
 .btn-yellowToggle:hover {
   background-color: #ffdd99;
 }
+
+h1 {
+  color: #333333;
+  font-family: Impact, Charcoal, sans-serif;
+}

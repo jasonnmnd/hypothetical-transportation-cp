@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -6,6 +6,8 @@ import GeneralTable from '../../common/GeneralTable';
 import PaginationButtons from '../../common/PaginationButtons';
 import SearchBar from '../../adminPage/components/searchbar/SearchBar';
 import GeneralLegend from '../../common/GeneralLegend';
+import { Button } from 'react-bootstrap';
+import { getFilterOptions } from '../../../utils/config';
 
 const studentColumns = [
     {
@@ -74,12 +76,22 @@ function GeneralParentTableView(props) {
     const getColumns = () => {
         return studentColumns;
     }
+
+    const [showSort, setSort] = useState(false);
+    const toggleSort = () => {
+        setSort(!showSort)
+    }
     
 
     return (
         <div className="d-flex justify-content-space-between flex-column" style={{gap: "20px"}}>
-            <h1>{props.title}</h1>
-            {props.search != null && props.search != undefined ? <SearchBar buttons={studentFilterBy} sortBy={studentSortBy} search={props.search}></SearchBar> : null}
+           
+            <div className="p-3 mb-5 bg-white rounded d-flex flex-row justify-content-center">
+                 <h1>Your Students</h1>
+            </div>
+
+            <Button onClick={toggleSort} variant="yellowToggle">Search Options</Button>
+            {showSort ? (props.search != null && props.search != undefined ? <SearchBar buttons={studentFilterBy} sortBy={studentSortBy} search={props.search}></SearchBar> : null) : <></>}
             <GeneralTable rows={props.values} columnNames={getColumns()} actionName={props.actionName?props.actionName:"View"} action={props.action? props.action:handleViewClick}/>
             {props.pagination != null && props.pagination != undefined ? <PaginationButtons nextDisable={!props.values || props.values.length == 0} prefix={props.pagination}/> : null}
         </div>

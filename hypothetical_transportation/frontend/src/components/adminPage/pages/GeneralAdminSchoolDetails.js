@@ -88,19 +88,17 @@ function GeneralAdminSchoolDetails(props) {
             </Container>
             <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
             <Row>
-
               <Col>
                 <Link to={`/admin/route/plan/${props.school.id}`}>
-                  <Button variant="yellowLong">New Route for this School</Button>
+                  <Button variant="yellowLong" size="lg">New Route for this School</Button>
                 </Link>
 
               </Col>
 
               <Col>
                 <Link to={`/admin/school_email/${props.school.id}`}>
-                  <Button variant="yellowLong">Send School-wide Email</Button>
+                  <Button variant="yellowLong" size="lg">Send School-wide Email</Button>
                 </Link>
-
               </Col>
                 
             </Row>

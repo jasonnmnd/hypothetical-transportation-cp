@@ -34,6 +34,9 @@ function GeneralAdminStudentsPage(props) {
     <div>
         <Header></Header>
         <Container className="container-main">
+          <div className="shadow-sm p-3 mb-5 bg-white rounded d-flex flex-row justify-content-center">
+            <h1>List of Students</h1>
+          </div>
           <div className="shadow-lg p-3 mb-5 bg-white rounded">
             <GeneralAdminTableView values={props.students} tableType={tableType} search="" title={title} />
           </div>
