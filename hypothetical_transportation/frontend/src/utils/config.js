@@ -21,6 +21,8 @@ const studentDefaultCols = [
 const schoolDefaultCols = [
     "name",
     "address",
+    "bus_arrival_time",
+    "bus_departure_time"
 ]
 
 const routeDefaultCols = [
@@ -158,17 +160,17 @@ const schoolColumns = {
     },
     bus_arrival_time: {
         colTitle: "Bus Arrival Time",
-        dataPath: "",
-        search_key: "",
+        dataPath: "bus_arrival_time",
+        search_key: "bus_arrival_time",
         sortable: true,
-        filterable: true
+        filterable: false
     },
     bus_departure_time: {
         colTitle: "Bus Departure Time",
-        dataPath: "",
-        search_key: "",
+        dataPath: "bus_departure_time",
+        search_key: "bus_departure_time",
         sortable: true,
-        filterable: true
+        filterable: false
     }
 }
 
