@@ -18,7 +18,7 @@ function GeneralEditUserForm(props) {
     const param = useParams();
     const [openModal, setOpenModal] = useState(false);
     const [validated, setValidated] = useState(false);
-    const[coord,setCoord]=useState({lat:0, lng:0});
+    const[coord,setCoord]=useState({lat:36.0016944, lng:-78.9480547});
     
     const [fieldValues, setFieldValues] = useState({
         full_name: "",
@@ -51,7 +51,6 @@ function GeneralEditUserForm(props) {
             address: address,
             longitude: coord.lng.toFixed(6),
             latitude: coord.lat.toFixed(6),
-            password: "something",
         }
         console.log(createVals)
         const form = event.currentTarget;
