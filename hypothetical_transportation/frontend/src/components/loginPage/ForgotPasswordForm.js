@@ -3,8 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import image from "../../../public/schoolbusBackground.jpg";
 import { connect } from 'react-redux';
 import PlainHeader from "../header/PlainHeader";
-import { useNavigate } from "react-router-dom"; 
-
 import { Button, Form, Col, Row, Container} from 'react-bootstrap';
 import "./login.css";
 import axios from "axios";
