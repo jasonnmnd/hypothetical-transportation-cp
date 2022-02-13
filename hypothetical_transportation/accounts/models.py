@@ -26,6 +26,8 @@ class User(EmailAbstractUser):
     full_name = models.CharField(_('full name'), max_length=150, help_text=_('Required'), blank=False, unique=False,
                                  null=False)
     address = models.CharField(_('address'), max_length=150, validators=[MinLengthValidator(1)])
+    latitude = models.DecimalField(max_digits=9, decimal_places=6, blank=False)
+    longitude = models.DecimalField(max_digits=9, decimal_places=6, blank=False)
     objects = CustomEmailUserManager()
 
     REQUIRED_FIELDS = []

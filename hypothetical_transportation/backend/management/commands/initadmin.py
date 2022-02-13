@@ -20,7 +20,9 @@ class Command(BaseCommand):
 
             admin = get_user_model().objects.create_verified_user(email=options['email'], password=options['password'],
                                                                   full_name=options['fullname'],
-                                                                  address=options['address'])
+                                                                  address=options['address'],
+                                                                  latitude=0,
+                                                                  longitude=0)
             admin.groups.add(admin_group.id)
         except IntegrityError:
             raise CommandError('Admin user with this email already exists')

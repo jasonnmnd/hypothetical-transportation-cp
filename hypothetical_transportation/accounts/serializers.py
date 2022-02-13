@@ -15,7 +15,7 @@ class GroupSerializer(serializers.ModelSerializer):
 class InviteSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = ('id', 'email', 'full_name', 'address', 'groups')
+        fields = ('id', 'email', 'full_name', 'address', 'latitude', 'longitude', 'groups')
 
 
 class InviteVerifiedSerializer(serializers.Serializer):
@@ -34,14 +34,14 @@ class ChangePasswordSerializer(serializers.Serializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = ('id', 'email', 'full_name', 'address', 'groups')
+        fields = ('id', 'email', 'full_name', 'address', 'latitude', 'longitude', 'groups')
 
 
 # Register Serializer
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = ('id', 'email', 'full_name', 'password', 'address', 'groups')
+        fields = ('id', 'email', 'full_name', 'password', 'address', 'latitude', 'longitude', 'groups')
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
@@ -50,6 +50,8 @@ class RegisterSerializer(serializers.ModelSerializer):
             validated_data['password'],
             full_name=validated_data['full_name'],
             address=validated_data['address'],
+            latitude=validated_data['latitude'],
+            longitude=validated_data['longitude'],
         )
         user.groups.add(*validated_data['groups'])
         user.is_verified = True

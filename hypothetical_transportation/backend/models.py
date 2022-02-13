@@ -9,6 +9,8 @@ import datetime
 class School(models.Model):
     name = models.CharField(max_length=150, validators=[MinLengthValidator(1)], unique=True)
     address = models.CharField(max_length=150, validators=[MinLengthValidator(1)])
+    latitude = models.DecimalField(max_digits=9, decimal_places=6, blank=False)
+    longitude = models.DecimalField(max_digits=9, decimal_places=6, blank=False)
     bus_arrival_time = models.TimeField(blank=False, default=datetime.time(9, 0, 0))
     bus_departure_time = models.TimeField(blank=False, default=datetime.time(15, 0, 0))
 
@@ -31,8 +33,8 @@ class Route(models.Model):
 class Stop(models.Model):
     name = models.CharField(max_length=150, blank=True)
     location = models.CharField(max_length=450)
-    latitude = models.DecimalField(max_digits=9, decimal_places=6, default=0)
-    longitude = models.DecimalField(max_digits=9, decimal_places=6, default=0)
+    latitude = models.DecimalField(max_digits=9, decimal_places=6, blank=False)
+    longitude = models.DecimalField(max_digits=9, decimal_places=6, blank=False)
     route = models.ForeignKey(Route, related_name='stops', on_delete=models.CASCADE)
     stop_number = models.PositiveIntegerField(null=False)
 

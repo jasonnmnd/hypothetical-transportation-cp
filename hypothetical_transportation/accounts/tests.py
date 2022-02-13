@@ -11,7 +11,8 @@ from .serializers import UserSerializer
 class AuthenticationActions(TestCase):
     def setUp(self):
         self.newuser = get_user_model().objects.create_verified_user(email='az@gmail.com', password='bassword',
-                                                                     full_name='Aziraphale', address='')
+                                                                     full_name='Aziraphale', address='', latitude=0,
+                                                                     longitude=0)
         self.factory = RequestFactory()
         self.client = Client()
         response = self.client.post('/api/auth/login',

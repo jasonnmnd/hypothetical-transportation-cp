@@ -23,13 +23,15 @@ class InviteAPI(generics.GenericAPIView):
             email = serializer.data['email']
             full_name = serializer.data['full_name']
             address = serializer.data['address']
+            latitude = serializer.data['latitude']
+            longitude = serializer.data['longitude']
             groups = serializer.data['groups']
             try:
                 user = get_user_model().objects.get(email=email)
                 content = {'detail': 'Email address already taken.'}
                 return Response(content, status=status.HTTP_201_CREATED)
             except get_user_model().DoesNotExist:
-                user = get_user_model().objects.create_user(email=email)
+                user = get_user_model().objects.create_user(email=email, latitude=latitude, longitude=longitude)
             user.set_unusable_password()
             user.address = address
             user.full_name = full_name

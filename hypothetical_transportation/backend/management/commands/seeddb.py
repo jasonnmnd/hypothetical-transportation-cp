@@ -37,13 +37,14 @@ class Command(BaseCommand):
             address = data_generator.address()
             user = get_user_model().objects.create_verified_user(email=f'{first_name}{last_name}{email_num}@gmail.com',
                                                                  password='password',
-                                                                 full_name=f'{first_name} {last_name}', address=address)
+                                                                 full_name=f'{first_name} {last_name}', address=address,
+                                                                 latitude=0, longitude=0)
             user.groups.add(guardian_group)
 
         for school_num in tqdm(range(1, num_schools + 1)):
             school_name = f'{data_generator.name()} University est. {school_num} '
             school_address = data_generator.address()
-            School.objects.create(address=school_address, name=f'{school_name}')
+            School.objects.create(address=school_address, latitude=0, longitude=0, name=f'{school_name}')
 
         for route_num in tqdm(range(1, num_routes + 1)):
             route_name = f'Route {route_num}'
