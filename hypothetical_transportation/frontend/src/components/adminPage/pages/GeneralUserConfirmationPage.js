@@ -4,7 +4,7 @@ import { Container, Form, Button } from 'react-bootstrap';
 import "../NEWadminPage.css";
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from 'axios';
 
 
@@ -12,37 +12,35 @@ function GeneralUserConfirmationPage(props) {
   const param = useParams();
   const [values, setValue] = useState({ new: "", confirm:"" });
   const [validated, setValidated] = useState(false);
-
+  const nagivate = useNavigate();
   const handleSubmit = (event) => {
     const form = event.currentTarget;
+    event.preventDefault();
     if (form.checkValidity() === false) {
-      event.preventDefault();
       event.stopPropagation();
     } else {
-      if (values.new === values.confirm) {
-            
+      if (values.new === values.confirm) {    
         const payload = {
             code: param.code,
             password: values.new
-
         }
         //Make backend call
-        if (props.action=="new") {
-          axios.post('/api/auth/invite/verified', payload)
+        if (props.action == "new") {
+        axios.post('/api/auth/invite/verified', payload)
           .then((res) => {
-            console.log("Success")
+            nagivate(`/`);
           })
           .catch((err) => {
             console.log(err)
           });
-        } else if (props.action=="reset") {
-          axios.post('/api/auth/password/reset/verified', payload)
-          .then((res) => {
-            console.log("Success")
-          })
-          .catch((err) => {
-            console.log(err)
-          });
+          } else if (props.action=="reset") {
+            axios.post('/api/auth/password/reset/verified', payload)
+            .then((res) => {
+              console.log("Success")
+            })
+            .catch((err) => {
+              console.log(err)
+            });
         }
         
 
