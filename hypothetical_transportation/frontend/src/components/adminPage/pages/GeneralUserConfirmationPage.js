@@ -5,11 +5,11 @@ import "../NEWadminPage.css";
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { useParams } from "react-router-dom";
-
+import axios from 'axios';
 
 
 function GeneralUserConfirmationPage() {
-
+  const param = useParams();
   const [values, setValue] = useState({ new: "", confirm:"" });
   const [validated, setValidated] = useState(false);
 
@@ -22,9 +22,19 @@ function GeneralUserConfirmationPage() {
       if (values.new === values.confirm) {
             
         const payload = {
-            new_password: values.new
+            code: param.code,
+            password: values.new
+
         }
         //Make backend call
+        axios
+        .post('/api/auth/invite/verified', payload)
+        .then((res) => {
+          console.log("Success")
+        })
+        .catch((err) => {
+          console.log(err)
+        });
 
       } else {
           alert("Passwords do not match. Try again.")
