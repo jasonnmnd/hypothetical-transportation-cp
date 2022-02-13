@@ -121,14 +121,14 @@ function GeneralAdminSchoolDetails(props) {
         <Card>
             <Card.Header as="h5">Bus Arrival Time </Card.Header>
             <Card.Body>
-                <Card.Text>{}</Card.Text>
+                <Card.Text>{props.school.bus_arrival_time}</Card.Text>
             </Card.Body>
         </Card>
 
         <Card>
             <Card.Header as="h5">Bus Departure Time </Card.Header>
             <Card.Body>
-                <Card.Text>{}</Card.Text>
+                <Card.Text>{props.school.bus_departure_time}</Card.Text>
             </Card.Body>
         </Card>
 
