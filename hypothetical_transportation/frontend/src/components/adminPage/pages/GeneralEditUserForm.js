@@ -18,13 +18,13 @@ function GeneralEditUserForm(props) {
     const param = useParams();
     const [openModal, setOpenModal] = useState(false);
     const [validated, setValidated] = useState(false);
-    const[coord,setCoord]=useState({lat:0, lng:0});
+    const[coord,setCoord] = useState({lat:0, lng:0});
     
     const [fieldValues, setFieldValues] = useState({
         full_name: "",
         address: "",
         email: "",
-        groups: 1,
+        groups: 2,
     });
     const [address, setAddress] = useState("");
 
