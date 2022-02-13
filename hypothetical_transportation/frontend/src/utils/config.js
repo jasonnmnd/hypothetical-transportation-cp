@@ -36,6 +36,7 @@ const stopDefaultCOls = [
     "location",
     "drop_off",
     "pick_up",
+    "stop_number"
 ]
 
 const stopColumns = {
@@ -55,9 +56,18 @@ const stopColumns = {
         filterable: false
     },
 
+
+    stop_number: {
+        colTitle: "Stop Number",
+        dataPath: "stop_number",
+        search_key: "stop_number",
+        sortable: true,
+        filterable: false
+    },
+
     drop_off: {
         colTitle: "Drop Off Time",
-        dataPath: "drop_off",
+        dataPath: "dropoff_time",
         search_key: "",
         sortable: false,
         filterable: false
@@ -65,7 +75,7 @@ const stopColumns = {
 
     pick_up: {
         colTitle: "Pick Up Time",
-        dataPath: "pick_up",
+        dataPath: "pickup_time",
         search_key: "",
         sortable: false,
         filterable: false
