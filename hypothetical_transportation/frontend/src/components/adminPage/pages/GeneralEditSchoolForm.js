@@ -7,6 +7,7 @@ import Header from "../../header/Header";
 import AssistedLocationMap from "../../maps/AssistedLocationMap";
 import { getSchool, updateSchool, addSchool } from "../../../actions/schools";
 import { Container, Form, Button, Row, Col } from 'react-bootstrap';
+import { getItemCoord } from "../../../utils/geocode";
 
 //input1: title of form
 //input2: list of fields?
@@ -17,6 +18,7 @@ function GeneralEditSchoolForm(props) {
     const param = useParams();
     const [openModal, setOpenModal] = useState(false);
     const [validated, setValidated] = useState(false);
+    const[coord,setCoord]=useState({lat:0, lng:0});
 
     
     const [name, setName] = useState("");
@@ -50,6 +52,7 @@ function GeneralEditSchoolForm(props) {
             props.getSchool(param.id);
             setName(props.curSchool.name);
             setAddress(props.curSchool.address);
+            setCoord({lat: Number(props.curSchool.latitude), lng: Number(props.curSchool.longitude)})
         }
     }, []);
 
@@ -64,12 +67,16 @@ function GeneralEditSchoolForm(props) {
             if(props.action == "edit"){
             props.updateSchool({
                 name: name,
-                address: address
+                address: address,
+                longitude: coord.lng.toFixed(6),
+                latitude: coord.lat.toFixed(6),
             }, param.id);
             } else {
                 props.addSchool({
                     name: name,
-                    address: address
+                    address: address,
+                    longitude: coord.lng.toFixed(6),
+                    latitude: coord.lat.toFixed(6),
                 })
             }
             navigate(`/admin/schools`)
@@ -78,7 +85,7 @@ function GeneralEditSchoolForm(props) {
         setValidated(true);
     }
 
-    const handleSelect = async value => {};
+    // const handleSelect = async value => {};
 
 
     // const confirmation = (e)=>{
@@ -165,7 +172,10 @@ function GeneralEditSchoolForm(props) {
                             type="text"
                             placeholder="Enter Address..." 
                             value={address}
-                            onChange={(e)=> {setAddress(e.target.value)}}
+                            onChange={(e)=> {
+                                setAddress(e.target.value)
+                                getItemCoord(e.target.value,setCoord);
+                            }}
                             />
                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                             <Form.Control.Feedback type="invalid">Please provide a valid address.</Form.Control.Feedback>
@@ -173,7 +183,7 @@ function GeneralEditSchoolForm(props) {
 
                         <Form.Group className="mb-3">
                             <Form.Label as="h5">Location Assistance</Form.Label>
-                            <AssistedLocationMap address={address} setAddress={setAddress}></AssistedLocationMap>
+                            <AssistedLocationMap address={address} coord={coord} setAddress={setAddress} setCoord={setCoord}></AssistedLocationMap>
                         </Form.Group>
 
                         <Button variant="yellowsubmit" type="submit">
