@@ -6,7 +6,7 @@ import "../NEWadminPage.css"
 import Header from "../../header/Header";
 import AssistedLocationMap from "../../maps/AssistedLocationMap";
 import { getSchool, updateSchool, addSchool } from "../../../actions/schools";
-import { Container, Form, Button } from 'react-bootstrap';
+import { Container, Form, Button, Row, Col } from 'react-bootstrap';
 
 //input1: title of form
 //input2: list of fields?
@@ -21,11 +21,28 @@ function GeneralEditSchoolForm(props) {
     
     const [name, setName] = useState("");
     const [address, setAddress] = useState("");
+    const [busArrivalTime, setBusArrivalTime] = useState({
+        hour: "00",
+        minute: "00"
+    })
+
+    const [busDepartureTime, setBusDepartureTime] = useState({
+        hour: "00",
+        minute: "00"
+    })
 
 
     const fields = [
         "name",
         "address"
+    ]
+
+    const hours = [
+        "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"
+    ]
+
+    const minutes = [
+        "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"
     ]
 
     useEffect(() => {
@@ -79,7 +96,7 @@ function GeneralEditSchoolForm(props) {
             <Header></Header>
                 <Container className="container-main">
                     <div className="shadow-sm p-3 mb-5 bg-white rounded d-flex flex-row justify-content-center">
-                        {props.action == "edit" ? <h1>Edit School</h1> : <h1>Create School</h1>}
+                        {props.action == "edit" ? <h1>Edit sssSchool</h1> : <h1>Create School</h1>}
                     </div>
                     <Form className="shadow-lg p-3 mb-5 bg-white rounded" noValidate validated={validated} onSubmit={handleSubmit}>
 
@@ -95,13 +112,54 @@ function GeneralEditSchoolForm(props) {
                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                             <Form.Control.Feedback type="invalid">Please provide a valid name.</Form.Control.Feedback>
                         </Form.Group>
+
+                        <Row className="mb-3">
+                            <Form.Group as={Col} controlId="formGridTime">
+                                <Form.Label as="h5">Bus Arrival Time</Form.Label>
+                                    <div className="d-flex flex-row">
+                                        <Form.Select size="sm" style={{width: "65px"}}>
+                                            {
+                                                hours.map((hour, i) => {
+                                                    return <option value={hour} key={i}>{hour}</option>
+                                                })
+                                            }
+                                        </Form.Select>
+                                        <Form.Text> : </Form.Text>
+                                        <Form.Select size="sm" style={{width: "65px"}}>
+                                            {
+                                                hours.map((hour, i) => {
+                                                    return <option value={hour} key={i}>{hour}</option>
+                                                })
+                                            }
+                                        </Form.Select>
+                                    </div>
+                            </Form.Group>
+
+                            <Form.Group as={Col} controlId="formGridTime">
+                            <Form.Label as="h5">Bus Departure Time</Form.Label>
+                                <div className="d-flex flex-row">
+                                    <Form.Select size="sm" style={{width: "65px"}}>
+                                        {
+                                            hours.map((hour, i) => {
+                                                return <option value={hour} key={i}>{hour}</option>
+                                            })
+                                        }
+                                    </Form.Select>
+                                    <Form.Text> : </Form.Text>
+                                    <Form.Select size="sm" style={{width: "65px"}}>
+                                        {
+                                            hours.map((hour, i) => {
+                                                return <option value={hour} key={i}>{hour}</option>
+                                            })
+                                        }
+                                    </Form.Select>
+                                </div>
+                            </Form.Group>
+
+                        </Row>
                                                 
                         <Form.Group className="mb-3" controlId="validationCustom02">
                             <Form.Label as="h5">Address</Form.Label>
-                            {/* <PlacesAutocomplete value={address} onChange={setAddress} onSelect={handleSelect}>
-                                {() => <div>TEST</div>}
-                            </PlacesAutocomplete> */}
-
                             <Form.Control 
                             required 
                             type="text"
