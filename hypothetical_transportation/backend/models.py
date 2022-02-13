@@ -25,6 +25,7 @@ class Route(models.Model):
         School, related_name='routes',
         on_delete=models.CASCADE
     )
+    is_complete = models.BooleanField(default=False, blank=True)
 
     class Meta:
         ordering = ['id']
@@ -37,6 +38,8 @@ class Stop(models.Model):
     longitude = models.DecimalField(max_digits=9, decimal_places=6, blank=False)
     route = models.ForeignKey(Route, related_name='stops', on_delete=models.CASCADE)
     stop_number = models.PositiveIntegerField(null=False)
+    pickup_time = models.TimeField(blank=True, default=datetime.time(9, 0, 0))
+    dropoff_time = models.TimeField(blank=True, default=datetime.time(15, 0, 0))
 
     class Meta:
         ordering = ['route', 'stop_number']
@@ -60,6 +63,7 @@ class Student(models.Model):
         on_delete=models.CASCADE
     )
     student_id = models.PositiveIntegerField(null=True)
+    has_inrange_stop = models.BooleanField(default=False, blank=True)
 
     class Meta:
         ordering = ['id']
