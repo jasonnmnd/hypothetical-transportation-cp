@@ -43,8 +43,7 @@ function Header( props ) {
                     </NavDropdown>
                     <NavDropdown title="Routes">
                         <NavDropdown.Item as={Link} to={`/admin/routes?pageNum=1`}><GiIcons.GiPathDistance /> View Routes</NavDropdown.Item>
-                        <NavDropdown.Divider/>
-                        <NavDropdown.Item as={Link} to={`/admin/new/route/`}><IoIcons5.IoCreate /> Create Routes</NavDropdown.Item>
+                        {/* <NavDropdown.Item as={Link} to={`/admin/new/route/`}><IoIcons5.IoCreate /> Create Routes</NavDropdown.Item> */}
                     </NavDropdown>
                     {/* <NavDropdown title="Stops">
                         <NavDropdown.Item as={Link} to={`/`}><GiIcons.GiBusStop /> View Stops</NavDropdown.Item>
