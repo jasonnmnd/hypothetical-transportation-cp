@@ -7,12 +7,13 @@ import { getSchools } from '../../../actions/schools';
 import { getRoutes } from '../../../actions/routes';
 import PropTypes from 'prop-types';
 import { filterObjectForKeySubstring } from '../../../utils/utils';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import axios from 'axios';
 
 
 
 function GeneralAdminEmailPage(props) {
-
+    const nagivate = useNavigate();
     const [subject, setSubject] = useState("");
     const [body, setBody] = useState("");
     const [currSchool, setCurrSchool] = useState("");
@@ -47,20 +48,46 @@ function GeneralAdminEmailPage(props) {
         setCurrRoute(e.target.value);
     }
 
+    const getIdType = (buttonVal) => {
+        if (buttonVal == 1) {
+            return "ALL"
+        } else if (buttonVal == 2) {
+            return "SCHOOL"
+        } else if (buttonVal == 3) {
+            return "ROUTE"
+        }
+    }
+
     const submit = (e) => {
         e.preventDefault();
-        if(!props.schoollist.some(v => ((''+v.id) === currSchool))){
-            alert("Something is wrong with the school you entered. The selection has been cleared; please select from the dropdown list instead.")
-            setCurrSchool("")
-            setCurrRoute("")
-        }
-        if(!props.routes.some(v => ((''+v.id) === currRoute))){
-            alert("Something is wrong with the route you entered. The selection has been cleared; please select from the dropdown list instead.")
-            setCurrSchool("")
-            setCurrRoute("")
-        }
+        // if(!props.schoollist.some(v => ((''+v.id) === currSchool))){
+        //     alert("Something is wrong with the school you entered. The selection has been cleared; please select from the dropdown list instead.")
+        //     setCurrSchool("")
+        //     setCurrRoute("")
+        // }
+        // if(!props.routes.some(v => ((''+v.id) === currRoute))){
+        //     alert("Something is wrong with the route you entered. The selection has been cleared; please select from the dropdown list instead.")
+        //     setCurrSchool("")
+        //     setCurrRoute("")
+        // }
 
+        //Make bakend call here
         console.log("Submit button pressed with school " + currSchool + " and route " + currRoute);
+        
+        const payload = {
+            object_id: currSchool == "" ? currRoute : currSchool,
+            id_type: getIdType(emailSelection),
+            subject: subject,
+            body: body
+        }
+        
+        axios.post('/api/send-announcement', payload)
+          .then((res) => {
+            nagivate(`/admin`);
+          })
+          .catch((err) => {
+            console.log(err)
+        });
     }
 
     const emailTypes = [
