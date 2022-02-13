@@ -8,7 +8,7 @@ import { getUser, updateUser } from "../../../actions/users";
 import { register } from "../../../actions/auth";
 import AssistedLocationMap from "../../maps/AssistedLocationMap";
 import { Form, Button, Row, Col, Container, InputGroup, ButtonGroup, ToggleButton} from 'react-bootstrap';
-
+import { getItemCoord } from "../../../utils/geocode";
 //input1: title of form
 //input2: list of fields?
 //input3: a typed object matching the fields
@@ -18,6 +18,7 @@ function GeneralEditUserForm(props) {
     const param = useParams();
     const [openModal, setOpenModal] = useState(false);
     const [validated, setValidated] = useState(false);
+    const[coord,setCoord]=useState({lat:0, lng:0});
     
     const [fieldValues, setFieldValues] = useState({
         full_name: "",
@@ -37,16 +38,22 @@ function GeneralEditUserForm(props) {
                 groups: props.curUser.groups[0].id
             });
             setAddress(props.curUser.address);
+            setCoord({lat: Number(props.curUser.latitude), lng: Number(props.curUser.longitude)})
         }
     }, []);
 
     const handleSubmit = (event) => {
+        event.preventDefault();
+        event.stopPropagation();
         const createVals = {
             ...fieldValues,
             groups: [fieldValues.groups],
-            address: address
+            address: address,
+            longitude: coord.lng.toFixed(6),
+            latitude: coord.lat.toFixed(6),
+            password: "something",
         }
-
+        console.log(createVals)
         const form = event.currentTarget;
         if (form.checkValidity() === false) {
             event.preventDefault();
@@ -171,6 +178,7 @@ function GeneralEditUserForm(props) {
                             onChange={
                               (e)=>{
                                 setAddress(e.target.value);
+                                getItemCoord(e.target.value,setCoord);
                                 }
                             }
                             />
@@ -180,7 +188,7 @@ function GeneralEditUserForm(props) {
 
                         <Form.Group className="mb-3">
                             <Form.Label as="h5">Location Assistance</Form.Label>
-                            <AssistedLocationMap address={address} setAddress={setAddress}></AssistedLocationMap>
+                            <AssistedLocationMap address={address} coord={coord} setAddress={setAddress} setCoord={setCoord}></AssistedLocationMap>
 
                         </Form.Group>
 
