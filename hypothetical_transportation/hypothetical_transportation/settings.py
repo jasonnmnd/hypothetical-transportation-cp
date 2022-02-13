@@ -37,17 +37,23 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'rest_framework',
+    'rest_framework.authtoken',
+    'knox',
+    'authemail',
+    'django_filters',
     'frontend',
     'backend',
-    'knox',
     'accounts',
-    'django_filters',
+    'communications',
 ]
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 25,
-    'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',)
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'knox.auth.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ]
 }
 
 MIDDLEWARE = [
@@ -105,9 +111,9 @@ DATABASES = {
 # User Model
 AUTH_USER_MODEL = 'accounts.User'
 
-AUTHENTICATION_BACKENDS = [
-    'accounts.backends.EmailBackend'
-]
+# AUTHENTICATION_BACKENDS = [
+#     'accounts.backends.EmailBackend'
+# ]
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -153,3 +159,20 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000'
 ]
+
+# EMAIL_FROM = 'DONOTREPLY@hypotheticaltransportation.com'
+# EMAIL_BCC = ''
+#
+# EMAIL_PORT = 1025
+# EMAIL_HOST_USER = ''
+# EMAIL_HOST_PASSWORD = ''
+# EMAIL_USE_TLS = False
+
+EMAIL_FROM = 'DONOTREPLY@hypotheticaltransportation.com'
+EMAIL_BCC = ''
+
+EMAIL_PORT = 587
+EMAIL_HOST = 'smtp.mailgun.org'
+EMAIL_HOST_USER = 'postmaster@sandbox821110f77aa448738ccef77534e2f65a.mailgun.org'
+EMAIL_HOST_PASSWORD = ''
+EMAIL_USE_TLS = True
