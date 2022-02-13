@@ -18,7 +18,7 @@ function GeneralEditSchoolForm(props) {
     const param = useParams();
     const [openModal, setOpenModal] = useState(false);
     const [validated, setValidated] = useState(false);
-    const[coord,setCoord]=useState({lat:0, lng:0});
+    const[coord,setCoord] = useState({lat:36.0016944, lng:-78.9480547});
 
     
     const [name, setName] = useState("");
@@ -53,13 +53,13 @@ function GeneralEditSchoolForm(props) {
             setName(props.curSchool.name);
             setAddress(props.curSchool.address);
             setCoord({lat: Number(props.curSchool.latitude), lng: Number(props.curSchool.longitude)})
+            setBusArrivalTime({hour: props.curSchool.bus_arrival_time.substring(0, 2), minute: props.curSchool.bus_arrival_time.substring(3, 5)});
+            setBusDepartureTime({hour: props.curSchool.bus_departure_time.substring(0, 2), minute: props.curSchool.bus_departure_time.substring(3, 5)});
         }
     }, []);
 
     const handleSubmit = (event) => {
         const form = event.currentTarget;
-        console.log(busArrivalTime);
-        console.log(busDepartureTime);
         
         if (form.checkValidity() === false) {
             event.preventDefault();
@@ -67,18 +67,22 @@ function GeneralEditSchoolForm(props) {
           }
         else {
             if(props.action == "edit"){
-            props.updateSchool({
-                name: name,
-                address: address,
-                longitude: coord.lng.toFixed(6),
-                latitude: coord.lat.toFixed(6),
-            }, param.id);
+                props.updateSchool({
+                    name: name,
+                    address: address,
+                    longitude: coord.lng.toFixed(6),
+                    latitude: coord.lat.toFixed(6),
+                    bus_arrival_time: busArrivalTime.hour + ":" + busArrivalTime.minute + ":00",
+                    bus_departure_time: busDepartureTime.hour + ":" + busDepartureTime.minute + ":00"
+                }, param.id);
             } else {
                 props.addSchool({
                     name: name,
                     address: address,
                     longitude: coord.lng.toFixed(6),
                     latitude: coord.lat.toFixed(6),
+                    bus_arrival_time: busArrivalTime.hour + ":" + busArrivalTime.minute + ":00",
+                    bus_departure_time: busDepartureTime.hour + ":" + busDepartureTime.minute + ":00"
                 })
             }
             navigate(`/admin/schools`)
@@ -126,7 +130,7 @@ function GeneralEditSchoolForm(props) {
                             <Form.Group as={Col} controlId="formGridTime">
                                 <Form.Label as="h5">Bus Arrival Time</Form.Label>
                                     <div className="d-flex flex-row">
-                                        <Form.Select size="sm" style={{width: "65px"}} onChange={setBusArrivalTime({...busArrivalTime, hour: e.target.value})}>
+                                        <Form.Select size="sm" style={{width: "65px"}} value={busArrivalTime.hour} onChange={(e) => setBusArrivalTime({...busArrivalTime, hour: e.target.value})}>
                                             {
                                                 hours.map((hour, i) => {
                                                     return <option value={hour} key={i}>{hour}</option>
@@ -134,7 +138,7 @@ function GeneralEditSchoolForm(props) {
                                             }
                                         </Form.Select>
                                         <Form.Text> : </Form.Text>
-                                        <Form.Select size="sm" style={{width: "65px"}} onChange={setBusArrivalTime({...busArrivalTime, minute: e.target.value})}>
+                                        <Form.Select size="sm" style={{width: "65px"}} value={busArrivalTime.minute} onChange={(e) => setBusArrivalTime({...busArrivalTime, minute: e.target.value})}>
                                             {
                                                 hours.map((hour, i) => {
                                                     return <option value={hour} key={i}>{hour}</option>
@@ -147,7 +151,7 @@ function GeneralEditSchoolForm(props) {
                             <Form.Group as={Col} controlId="formGridTime">
                             <Form.Label as="h5">Bus Departure Time</Form.Label>
                                 <div className="d-flex flex-row">
-                                    <Form.Select size="sm" style={{width: "65px"}} onChange={setBusDepartureTime({...busDepartureTime, hour: e.target.value})}>
+                                    <Form.Select size="sm" style={{width: "65px"}} value={busDepartureTime.hour} onChange={(e) => setBusDepartureTime({...busDepartureTime, hour: e.target.value})}>
                                         {
                                             hours.map((hour, i) => {
                                                 return <option value={hour} key={i}>{hour}</option>
@@ -155,7 +159,7 @@ function GeneralEditSchoolForm(props) {
                                         }
                                     </Form.Select>
                                     <Form.Text> : </Form.Text>
-                                    <Form.Select size="sm" style={{width: "65px"}} onChange={setBusDepartureTime({...busDepartureTime, minute: e.target.value})}>
+                                    <Form.Select size="sm" style={{width: "65px"}} value={busDepartureTime.minute} onChange={(e) => setBusDepartureTime({...busDepartureTime, minute: e.target.value})}>
                                         {
                                             hours.map((hour, i) => {
                                                 return <option value={hour} key={i}>{hour}</option>
