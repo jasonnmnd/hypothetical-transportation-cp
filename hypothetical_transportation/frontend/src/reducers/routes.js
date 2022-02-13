@@ -10,7 +10,8 @@ const initialState = {
         description: "",
         school: {
             name: "",
-            address: "Durham, NC"
+            address: "Durham, NC",
+            id: -1
         },
         schoolName: ""
     }

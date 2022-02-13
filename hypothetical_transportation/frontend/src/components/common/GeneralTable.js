@@ -1,10 +1,12 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment } from "react";
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-// import "../adminPage/adminPage.css";
 import "./generalTable.css";
+import { Button, Table } from 'react-bootstrap';
+import { useSearchParams } from "react-router-dom";
 
 function GeneralTable( props ) {
+  let [searchParams, setSearchParams] = useSearchParams();
 
   const getValueFromPath = (path, obj) => {
     var res = path.split('.').reduce(function(currentObj, currentPathSection) {
@@ -13,17 +15,12 @@ function GeneralTable( props ) {
     return res;
   }
   
-  
-
   const addTableRow = (rowData) => {
-    
-
     return (
-        <tr className={rowData["routes"] === null ? "tr-red" : "tr-gray"} >
+        <tr className={"tr-clickable"} onClick={() => props.action(rowData)} style={{backgroundColor: rowData["routes"] === null ? "rgb(255, 136, 136)": ""}}>
             {
                 props.columnNames.map((columnInfo, index) => {
                     const cellData = getValueFromPath(columnInfo.dataPath, rowData)
-                    //console.log(columnInfo.dataPath)
                     return (
                         <td key={`${cellData}--${index}`}>
                             {cellData}
@@ -31,9 +28,6 @@ function GeneralTable( props ) {
                     );
                 })
             }
-            <td>
-                <button className="button" onClick={() => props.action(rowData)}>{props.actionName}</button>
-            </td>
         </tr>
     )
   };
@@ -44,18 +38,10 @@ function GeneralTable( props ) {
         return (
             <th key={col.colTitle} scope="col">
                 {col.colTitle}
+                {col.sortable? <Button variant={searchParams.get("ordering")===col.search_key?"sort":"sortreverse"} onClick={ () => searchHandler(col)}>{searchParams.get("ordering")!==col.search_key && searchParams.get("ordering")!=="-"+col.search_key? "▲/▼":"▲"}</Button>:null}
             </th>
         );
     });
-  };
-
-  const overrideColumnName = (colName) => {
-    switch (colName) {
-        case "routeDesc":
-            return "Route Description";
-        default:
-            return colName;
-    }
   };
 
   const getTableRows = (results) => {
@@ -67,33 +53,43 @@ function GeneralTable( props ) {
   }
 
   const getEmptyTableRows = () => {
-    return <tr><td>NO MORE RESULTS</td></tr>
+    return <tr><td colSpan={props.columnNames.length}>NO MORE RESULTS</td></tr>
   }
 
 
   const createTable = (results) => {
-    // if(!results || results.length == 0){
-    //     return null;
-    // }
-    // mapDynamicColumns();
     return (
-      <table className='center'>
+      <Table striped bordered hover size="sm">
         <thead>
-          <tr>
-              {mapTableColumns()}
-              <th>actions</th>
-            </tr>
-          
+          <tr className="table-header-rows">
+            {mapTableColumns()}
+          </tr>
         </thead>
         <tbody>
           {!results || results.length == 0 ?  getEmptyTableRows() : getTableRows(results)}
         </tbody>
-      </table>
+      </Table>
     );
-  };
+  };  
 
+  const searchHandler = (col)=>{
+    let key = ""
+    if(searchParams.get("ordering")===col.search_key){
+      key = "-"+col.search_key
+    }
+    else if(searchParams.get("ordering")==="-"+col.search_key){
+      key = ""
+    }
+    else{
+      key = col.search_key
+    }
+    setSearchParams({
+        ...Object.fromEntries([...searchParams]),
+        [`ordering`]: key,
+    })
 
-  
+}
+
   
   return (
       <div className="gen-table" >
@@ -110,7 +106,6 @@ GeneralTable.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
-    //rows: state.table.values.results
 });
 
 export default connect(mapStateToProps)(GeneralTable)

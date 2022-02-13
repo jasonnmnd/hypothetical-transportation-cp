@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-// import "../../adminPage.css"
 import "./searchBar.css"
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { useSearchParams } from 'react-router-dom';
+import { Form, Container, Button, Row, Col, FloatingLabel} from 'react-bootstrap';
 
 //input: a list of buttons - filter by options
 //search: takes in 2 inputs? the filter option, and the inputted text
@@ -32,54 +32,48 @@ function SearchBar(props){
         })
     }
     return(
-        <form className="search">
-            <div className="search-group">
-                {props.sortBy!==undefined && props.sortBy!==null ?
-                
-                <label>
-                    <div className="text-and-dropdown">
-                        <h3>Sort By:</h3>
-                        <select value={values.sort_by} onChange={(e) => setValue({ ...values, sort_by: e.target.value })}>
-                        <option value={""} key={"empty"}></option>
-                        {props.sortBy.map((b,i)=>{
-                            // return !b.includes("-")? <option value={b} key={i}>{(b.includes("__")? b.split("__")[0] : b )+ " Asc"}</option>:<option value={b} key={i}>{(b.includes("__")? b.split("__")[0]:b).slice(1,) + " Dsc"}</option>
-                            return <option value={b.key} key={i}>{b.text}</option>
-                        })} 
-                        </select>
-                    </div>
-                </label>
-                
-                :null}
-            </div>
+        <Container>
+            <Row className="mb-3 d-flex flex-row justify-content-center">
+                {/* <Form.Group as={Col} md="2" controlId="validationCustom01">
+                    <FloatingLabel controlId="floatingSelect" label="Sort By">
+                        <Form.Select aria-label="Sort By" 
+                            value={values.sort_by} onChange={(e) => setValue({ ...values, sort_by: e.target.value })}>
+                            <option value={""} key={"empty"}></option>
+                            {props.sortBy.map((b,i)=>{
+                                // return !b.includes("-")? <option value={b} key={i}>{(b.includes("__")? b.split("__")[0] : b )+ " Asc"}</option>:<option value={b} key={i}>{(b.includes("__")? b.split("__")[0]:b).slice(1,) + " Dsc"}</option>
+                                return <option value={b.key} key={i}>{b.text}</option>
+                            })} 
+                        </Form.Select>
+                    </FloatingLabel>
+                </Form.Group> */}
 
-            <div className="search-group">    
-                <label>
-                    <div className="text-and-dropdown">
-                        <h3>Filter By:</h3>
-                        <select value={values.filter_by} onChange={(e) => setValue({ ...values, filter_by: e.target.value })}>
+                <Form.Group as={Col} md="2" controlId="validationCustom01">
+                    <FloatingLabel controlId="floatingSelect" label="Filter By">
+                        <Form.Select aria-label="Filter By" value={values.filter_by} onChange={(e) => setValue({ ...values, filter_by: e.target.value })}>
                         <option value={""} key={"empty"}></option>
                         {props.buttons.map((b,i)=>{
                             return <option value={b.key} key={i}>{b.text}</option>
-                        })}
-                    </select>
-                    </div>
-                </label>
-            </div>
+                        })}                                
+                        </Form.Select>
+                    </FloatingLabel>
+                </Form.Group>
 
-            <div className="search-group">
-                <input
-                    type="search"
-                    name="search"
-                    id="search"
-                    onChange={(e) =>
-                    setValue({ ...values, value: e.target.value })
-                    }
-                    value={values.value}
-                    placeholder="Search..."
-                />
-            </div>
-            <button onClick={searchHandler}>Search/Sort</button>
-        </form>
+                <Form.Group as={Col} md="2" controlId="validationCustom01">
+                    <FloatingLabel controlId="floatingTextarea" label="Search By..." className="mb-3">
+                        <Form.Control 
+                        placeholder="Query..." 
+                        onChange={(e) =>
+                        setValue({ ...values, value: e.target.value })}
+                        value={values.value}
+                        />
+                    </FloatingLabel>
+                </Form.Group>
+
+                <Form.Group as={Col} md="2" controlId="validationCustom01">
+                    <Button variant="search" onClick={searchHandler}>Search</Button>
+                </Form.Group>
+            </Row>
+        </Container>
     );
 }
 

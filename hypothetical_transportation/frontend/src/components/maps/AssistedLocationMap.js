@@ -27,7 +27,6 @@ function TestMap(props) {
     const [location, setLocation] = useState(defaultCenter);
 
     const getLongLatFromAddress = (address) => {
-      console.log("Called");
       Geocode.fromAddress(address).then(
           (response) => {
               // console.log(response.results[0].geometry.location);
@@ -35,7 +34,6 @@ function TestMap(props) {
               setLocation({lat, lng});
           },
           (error) => {
-              console.log(error);
       });
     }
 
@@ -55,11 +53,15 @@ function TestMap(props) {
         const lat = e.latLng.lat();
         const lng = e.latLng.lng();
         setLocation({ lat, lng});
+        // console.log({lat,lng});
+        props.setCoord({ lat:lat, lng:lng});
         getAddressFromLongLat({lat, lng});
     };
 
     useEffect(() => {
-        getLongLatFromAddress(props.address);
+        // getLongLatFromAddress(props.address);
+        setLocation(props.coord)
+        console.log(props.coord)
     }, [props]);
 
   return (
@@ -79,7 +81,9 @@ function TestMap(props) {
 
 TestMap.propTypes = {
     address: PropTypes.string,
-    setAddress: PropTypes.func
+    coord: PropTypes.object,
+    setAddress: PropTypes.func,
+    setCoord: PropTypes.func,
 }
 
 const mapStateToProps = (state) => ({

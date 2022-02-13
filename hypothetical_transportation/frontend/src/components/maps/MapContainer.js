@@ -47,7 +47,6 @@ function MapContainer(props) {
               })
           },
           (error) => {
-              console.log(error);
       });
     }
 
@@ -65,7 +64,6 @@ function MapContainer(props) {
               setStudentAdd(studentAddress)
           },
           (error) => {
-              console.log(error);
       });
     }
 
@@ -90,7 +88,6 @@ function MapContainer(props) {
 
     useEffect(() => {
       // console.log(props.studentData)
-      console.log(props)
       getSchoolCoord(props.schoolData);
       if(props.studentData!==null && props.studentData!==undefined){
         props.studentData.map(stu=>{

@@ -14,7 +14,7 @@ export const getUsers = (parameters) => (dispatch, getState) => {
     config.params = getParameters(parameters);
   }
 
-  axios
+  return axios
     .get('/api/user/', config)
     .then((res) => {
       dispatch({
@@ -28,19 +28,19 @@ export const getUsers = (parameters) => (dispatch, getState) => {
 
 
 export const deleteUser = (id) => (dispatch, getState) => {
-    axios.delete(`/api/user/${id}/`, tokenConfig(getState))
+    return axios.delete(`/api/user/${id}/`, tokenConfig(getState))
     .then(res => {
       dispatch(createMessage({ user: 'User Deleted' }));
         dispatch({
             type: DELETE_USER,
             payload: parseInt(id)
           });
-    }).catch(err => {console.log("FAIL");console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
+    }).catch(err => {console.log("FAIL");/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});
 }
 
 export const addUser = (user) => (dispatch, getState) => {
-    axios
-    .post(`/api/auth/register`, user, tokenConfig(getState))
+    return axios
+    .post(`/api/auth/invite`, user, tokenConfig(getState))
     .then(res =>{
       dispatch(createMessage({ user: 'User Created' }));
         dispatch({
@@ -51,47 +51,20 @@ export const addUser = (user) => (dispatch, getState) => {
     }).catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
 };
 
-export const searchUsers = (i1, i2, i3) => (dispatch, getState) => {
-  let url=`/api/user/`
-  if(i1==="" || i2==="" || i1===undefined || i2===undefined){
-    if(i3!==""&& i3!==undefined){
-      url=`/api/user/?ordering=${i3}`
-    }
-  }
-  else{
-    if(i3!=="" && i3!==undefined){
-      url=`/api/user/?search=${i2}&search_fields=${i1}&ordering=${i3}`
-    }
-    else{
-      url=`/api/user/?search=${i2}&search_fields=${i1}`
-    }
-  }
-  
-  axios.get(url, tokenConfig(getState))
-        .then(res => {
-            dispatch({
-                type: GET_USERS,
-                payload: res.data,
-              });
-        }).catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
-};
-
-
-
 
 export const getUser = (id) => (dispatch, getState) => {
-  axios.get(`/api/user/${id}/`, tokenConfig(getState))
+  return axios.get(`/api/user/${id}/`, tokenConfig(getState))
       .then(res => {
         dispatch({
           type: GET_USER,
           payload: res.data
         })
         //res.data.groups.includes(1)?setColumn("admin_user"):setColumn("parent_user")
-      }).catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
+      }).catch(err => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});
   }
 
   export const updateUser = (user, id) => (dispatch, getState) => {
-    axios
+    return axios
             .put(`/api/user/${id}/`,user, tokenConfig(getState))
             .then(res =>{
               dispatch(createMessage({ user: 'User Updated' }));
@@ -99,13 +72,13 @@ export const getUser = (id) => (dispatch, getState) => {
                 type: DELETE_USER,
                 payload: parseInt(id)
               })
-              console.log(res.data);
+              //console.log(res.data);
               dispatch({
                 type: ADD_USER,
                 payload: res.data
               })
                 
-            }).catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
+            }).catch(err => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});
   }
   
 

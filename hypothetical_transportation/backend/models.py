@@ -3,11 +3,16 @@ from django.contrib.auth.models import User
 from django.core.validators import MinLengthValidator
 # Create your models here.
 from django.conf import settings
+import datetime
 
 
 class School(models.Model):
-    name = models.CharField(max_length=150, validators=[MinLengthValidator(1)])
+    name = models.CharField(max_length=150, validators=[MinLengthValidator(1)], unique=True)
     address = models.CharField(max_length=150, validators=[MinLengthValidator(1)])
+    latitude = models.DecimalField(max_digits=9, decimal_places=6, blank=False)
+    longitude = models.DecimalField(max_digits=9, decimal_places=6, blank=False)
+    bus_arrival_time = models.TimeField(blank=False, default=datetime.time(9, 0, 0))
+    bus_departure_time = models.TimeField(blank=False, default=datetime.time(15, 0, 0))
 
     class Meta:
         ordering = ['id']
@@ -20,9 +25,24 @@ class Route(models.Model):
         School, related_name='routes',
         on_delete=models.CASCADE
     )
+    is_complete = models.BooleanField(default=False, blank=True)
 
     class Meta:
         ordering = ['id']
+
+
+class Stop(models.Model):
+    name = models.CharField(max_length=150, blank=True)
+    location = models.CharField(max_length=450)
+    latitude = models.DecimalField(max_digits=9, decimal_places=6, blank=False)
+    longitude = models.DecimalField(max_digits=9, decimal_places=6, blank=False)
+    route = models.ForeignKey(Route, related_name='stops', on_delete=models.CASCADE)
+    stop_number = models.PositiveIntegerField(null=False)
+    pickup_time = models.TimeField(blank=True, default=datetime.time(9, 0, 0))
+    dropoff_time = models.TimeField(blank=True, default=datetime.time(15, 0, 0))
+
+    class Meta:
+        ordering = ['route', 'stop_number']
 
 
 class Student(models.Model):
@@ -43,6 +63,7 @@ class Student(models.Model):
         on_delete=models.CASCADE
     )
     student_id = models.PositiveIntegerField(null=True)
+    has_inrange_stop = models.BooleanField(default=False, blank=True)
 
     class Meta:
         ordering = ['id']

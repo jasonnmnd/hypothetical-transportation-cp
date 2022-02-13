@@ -69,7 +69,7 @@ export const getRoutesByID = (idObj) => (dispatch, getState) => {
           payload: res.data,
         });
       }).catch(err => {
-        console.log(err);
+        /*console.log(err);*/
         //dispatch(returnErrors(err.response.data, err.response.status));
         dispatch({
           type: GET_ROUTES,
@@ -88,7 +88,7 @@ export const getRouteInfo = (routeID) => (dispatch, getState) => {
             type: GET_ROUTE,
             payload: res.data,
           });
-  }).catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
+  }).catch(err => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});
 }
 
 export const deleteRoute = (routeID) => (dispatch, getState) => {
@@ -101,5 +101,5 @@ export const deleteRoute = (routeID) => (dispatch, getState) => {
         payload: parseInt(id)
       });
     })
-    .catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
+    .catch(err => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});
 }

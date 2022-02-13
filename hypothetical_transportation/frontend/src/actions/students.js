@@ -58,7 +58,7 @@ export const deleteStudent = (id) => (dispatch, getState) => {
         payload: parseInt(id)
       });
     })
-    .catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
+    .catch(err => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});
 }
 
 // ADD STUDENT
@@ -72,7 +72,7 @@ export const addStudent = (student) => (dispatch, getState) => {
         payload: res.data,
       });
     })
-    .catch((err) => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
+    .catch((err) => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});
 };
 
 export const updateStudent = (student, id) => (dispatch, getState) => {
@@ -84,13 +84,13 @@ export const updateStudent = (student, id) => (dispatch, getState) => {
               type: DELETE_STUDENT,
               payload: parseInt(id)
             })
-            console.log(res.data);
+            //console.log(res.data);
             dispatch({
               type: ADD_STUDENT,
               payload: res.data
             })
               
-          }).catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
+          }).catch(err => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});
 }
 
 
@@ -125,7 +125,7 @@ export const getStudentsByID = (idObj) => (dispatch, getState) => {
           type: GET_STUDENTS,
           payload: res.data,
         });
-      }).catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
+      }).catch(err => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});
 };
 
 export const getStudentInfo = (studentID) => (dispatch, getState) => {
@@ -135,7 +135,7 @@ export const getStudentInfo = (studentID) => (dispatch, getState) => {
         type: GET_STUDENT,
         payload: res.data,
       });     
-  }).catch(err => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
+  }).catch(err => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});
 }
 
 export const getStudent = (studentID) => (dispatch, getState) => {
