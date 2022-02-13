@@ -20,6 +20,7 @@ function GeneralAdminRouteDetails(props) {
   const [openModal, setOpenModal] = useState(false);
   let [searchParams, setSearchParams] = useSearchParams();
   const STOP_PREFIX = "sto";  
+  const [extra, setExtra] = useState({});
 
   const handleConfirmDelete = () => {
     //Replace with API call to delete school and all its associated routes/students
@@ -34,13 +35,15 @@ function GeneralAdminRouteDetails(props) {
   useEffect(() => {
     props.getRouteInfo(param.id);
 
-    const allSearchParams = Object.fromEntries([...searchParams]);
-    let stopSearchParams = filterObjectForKeySubstring(allSearchParams, STOP_PREFIX);  
-    stopSearchParams.route = param.id
-    props.getStopByRoute(stopSearchParams);
+    // const allSearchParams = Object.fromEntries([...searchParams]);
+    // let stopSearchParams = filterObjectForKeySubstring(allSearchParams, STOP_PREFIX);  
+    // stopSearchParams.route = param.id
+    // console.log(stopSearchParams)
+    props.getStopByRoute(param.id);
   }, []);
 
   useEffect(() => {
+      console.log("?")
     if(searchParams.get(`pageNum`) != null){
       let paramsToSend = Object.fromEntries([...searchParams]);
       paramsToSend.routes = param.id;
@@ -52,6 +55,10 @@ function GeneralAdminRouteDetails(props) {
       })
     }
   }, [searchParams]);
+
+  useEffect(()=>{
+    setExtra({id: props.route.school.id,name: props.route.school.name, dropoff_time: props.route.school.bus_arrival_time, pickup_time: props.route.school.bus_departure_time, stop_number: 0})
+  },[props.route]);
 
 
 
@@ -126,7 +133,7 @@ function GeneralAdminRouteDetails(props) {
         <Card>
             <Card.Header as="h5">Associated Stops</Card.Header>
             <Card.Body>
-                <GeneralAdminTableView title='Associated Stops' tableType='stop' values={props.stops} search="" />
+                <GeneralAdminTableView title='Associated Stops' tableType='stop' values={props.stops} search="" extraRow={extra}/>
             </Card.Body>
         </Card>
         </Container>

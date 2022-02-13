@@ -33,7 +33,6 @@ const routeDefaultCols = [
 
 const stopDefaultCOls = [
     "name",
-    "location",
     "drop_off",
     "pick_up",
     "stop_number"

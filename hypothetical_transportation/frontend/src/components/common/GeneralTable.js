@@ -15,9 +15,9 @@ function GeneralTable( props ) {
     return res;
   }
   
-  const addTableRow = (rowData) => {
+  const addTableRow = (rowData, extra) => {
     return (
-        <tr className={"tr-clickable"} onClick={() => props.action(rowData)} style={{backgroundColor: rowData["routes"] === null ? "rgb(255, 136, 136)": ""}}>
+        <tr className={"tr-clickable"} onClick={() => extra===true?props.extraAction(rowData):props.action(rowData)} style={{backgroundColor: rowData["routes"] === null ? "rgb(255, 136, 136)": ""}}>
             {
                 props.columnNames.map((columnInfo, index) => {
                     const cellData = getValueFromPath(columnInfo.dataPath, rowData)
@@ -66,6 +66,9 @@ function GeneralTable( props ) {
           </tr>
         </thead>
         <tbody>
+          {props.extraRow && props.extraRow!==null && props.extraRow!==undefined ?<Fragment>
+            {addTableRow(props.extraRow, true)}
+          </Fragment> : <></>}
           {!results || results.length == 0 ?  getEmptyTableRows() : getTableRows(results)}
         </tbody>
       </Table>
@@ -102,7 +105,9 @@ GeneralTable.propTypes = {
     rows: PropTypes.array,
     actionName: PropTypes.string,
     action: PropTypes.func,
-    columnNames: PropTypes.arrayOf(PropTypes.object)
+    columnNames: PropTypes.arrayOf(PropTypes.object),
+    extraRow: PropTypes.object,
+    extraAction: PropTypes.func,
 }
 
 const mapStateToProps = (state) => ({
