@@ -4,6 +4,8 @@ import { Container, Form, Button } from 'react-bootstrap';
 import "../NEWadminPage.css";
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { useParams } from "react-router-dom";
+
 
 
 function GeneralUserConfirmationPage() {
