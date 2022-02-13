@@ -5,16 +5,15 @@ Geocode.setRegion("us");
 Geocode.setLocationType("ROOFTOP");
 Geocode.enableDebug();
 
-export const getItemCoord = (address) => {
+export const getItemCoord = (address, setAdd) => {
     Geocode.fromAddress(address).then(
         (response) => {
             const { lat, lng } = response.results[0].geometry.location;
+            // console.log({lat,lng})
+            setAdd({ lat:lat, lng:lng })
             return({
-              info_text: address,
-              location: {
                 lat:lat, 
                 lng:lng
-              }
             })
         },
         (error) => {
