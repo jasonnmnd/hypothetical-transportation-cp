@@ -1,0 +1,82 @@
+.container-adminPage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px 20px;
+  margin-left: 100px;
+}
+
+.btn-yellow {
+  display: inline-block;
+  padding: 10px 15px;
+  border-radius: 8px;
+  background-color: #ffae07;
+  background-size: 200%;
+  background-position: 0%;
+  transition: 0.4s;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-yellow:hover {
+  background-color: #ffdd99;
+}
+
+.btn-yellowsubmit {
+  display: inline-block;
+  padding: 10px 15px;
+  background-color: #ffae07;
+  transition: 0.4s;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-yellowsubmit:hover {
+  background-color: #ffdd99;
+}
+
+.container-main {
+  margin-top: 20px;
+}
+
+.btn-yellowLong {
+  display: inline-block;
+  padding: 10px 15px;
+  border-radius: 8px;
+  background-color: #ffae07;
+  background-size: 200%;
+  background-position: 0%;
+  transition: 0.4s;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  width: 300px;
+}
+
+.btn-yellowLong:hover {
+  background-color: #ffdd99;
+}
+
+.btn-yellowToggle {
+  display: inline-block;
+  border-radius: 8px;
+  background-color: #ffae07;
+  background-position: 0%;
+  transition: 0.4s;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  width: 150px;
+  height: 35px;
+}
+
+.btn-yellowToggle:hover {
+  background-color: #ffdd99;
+}
+
+h1 {
+  color: #333333;
+  font-family: Impact, Charcoal, sans-serif;
+}

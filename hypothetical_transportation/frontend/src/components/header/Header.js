@@ -1,57 +1,71 @@
-import React from "react";
-import Logo from '../assets/headerLogo.png';
-import './header.css';
-import PropTypes from 'prop-types';
+import React from 'react';
+import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
+import logo from '../assets/headerLogo.png';
+import { Link } from 'react-router-dom';
+import "./header.css";
+import * as FaIcons from "react-icons/fa";
+import * as AiIcons from "react-icons/ai";
+import * as IoIcons from "react-icons/io";
+import * as IoIcons5 from "react-icons/io5";
+import * as GiIcons from "react-icons/gi";
+import { logout } from '../../actions/auth';
 import { connect } from 'react-redux';
-import { logout } from "../../actions/auth";
-import { Link, useNavigate } from "react-router-dom";
-import isAdmin from "../../utils/user";
 
-function Header(props){
 
-    return(
-        <div className = "header">
-            <div className="header-logo">
-                <Link to={props.isAuthenticated ? (isAdmin(props.user) ? "/admin" : "/parent") : "/"}>
-                    <img src={Logo} className="logo" alt={"The logo is here"}></img>
-                </Link>
-            </div>
-
-            {props.shouldShowOptions && <div className="divider50px"></div>}
-
-            <div className="header-text">
-                <h1>{props.textToDisplay}</h1>
-            </div>
+function Header( props ) {
+  return (
+      <div className='Header'>
+          <Navbar bg="dark" variant="dark" sticky="top" expand="sm" collapseOnSelect>
+            <Nav.Link as={Link} to={`/`}> 
+                <Navbar.Brand>
+                    <img src={logo} alt="Hypothetical Transportation Logo" width="60" height="50"></img>
+                        Hypothetical Transportation
+                </Navbar.Brand>
+            </Nav.Link>
+            <Navbar.Toggle/>
             
-            {props.shouldShowOptions &&
-            <div className="header-button">
-                <Link to={"/account"}>
-                  <button>Account</button> 
-                </Link>
-            </div>  
-            }
-            <div className="divider15px"></div>
-            {props.shouldShowOptions &&
-            <div className="header-button">
-                <button onClick={props.logout}>Logout</button>
-            </div> 
-            }
-
-            
-        </div>
-            
-    )
+            <Navbar.Collapse>
+                <Nav>
+                    <NavDropdown title="Users" href='/admin/users?pageNum=1'>
+                        <NavDropdown.Item as={Link} to={`/admin/users?pageNum=1`}><IoIcons.IoIosWoman /> View Users</NavDropdown.Item>
+                        <NavDropdown.Divider/>
+                        <NavDropdown.Item as={Link} to={`/admin/new/user/`}><IoIcons5.IoCreate /> Create Users</NavDropdown.Item>
+                    </NavDropdown>
+                    <NavDropdown title="Students">
+                        <NavDropdown.Item as={Link} to={`/admin/students?pageNum=1`}><IoIcons.IoIosBody /> View Students</NavDropdown.Item>
+                        <NavDropdown.Divider/>
+                        <NavDropdown.Item as={Link} to={`/admin/new_student/`}><IoIcons5.IoCreate /> Create Students</NavDropdown.Item>
+                    </NavDropdown>
+                    <NavDropdown title="Schools">
+                        <NavDropdown.Item as={Link} to={`/admin/schools?pageNum=1`}><FaIcons.FaSchool /> View Schools</NavDropdown.Item>
+                        <NavDropdown.Divider/>
+                        <NavDropdown.Item as={Link} to={`/admin/new/school/`}><IoIcons5.IoCreate /> Create Schools</NavDropdown.Item>
+                    </NavDropdown>
+                    <NavDropdown title="Routes">
+                        <NavDropdown.Item as={Link} to={`/admin/routes?pageNum=1`}><GiIcons.GiPathDistance /> View Routes</NavDropdown.Item>
+                        <NavDropdown.Divider/>
+                        <NavDropdown.Item as={Link} to={`/admin/new/route/`}><IoIcons5.IoCreate /> Create Routes</NavDropdown.Item>
+                    </NavDropdown>
+                    {/* <NavDropdown title="Stops">
+                        <NavDropdown.Item as={Link} to={`/`}><GiIcons.GiBusStop /> View Stops</NavDropdown.Item>
+                        <NavDropdown.Divider/>
+                        <NavDropdown.Item as={Link} to={`/`}><IoIcons5.IoCreate /> Create Stops</NavDropdown.Item>
+                    </NavDropdown> */}
+                    <Nav.Link as={Link} to={`/admin/email`}> Send Email</Nav.Link>
+                    <Nav.Link as={Link} to={`/parent?pageNum=1`}> Your Parent Portal</Nav.Link>
+                        <Navbar.Brand width="200" height="50">
+                        </Navbar.Brand>
+                    <Nav.Link as={Link} to={`/account`}> Account</Nav.Link>
+                    <Nav.Link  onClick={props.logout}> Logout</Nav.Link>
+                    
+                </Nav>
+            </Navbar.Collapse>
+          </Navbar>
+      </div>
+  );
 }
 
-Header.propTypes = {
-    textToDisplay: PropTypes.string,
-    shouldShowOptions: PropTypes.bool
-}
-
-const mapStateToProps = (state) => ({
-    isAuthenticated: state.auth.isAuthenticated,
-    user: state.auth.user
+const mapStateToProps = state => ({
 });
 
-
-export default connect(mapStateToProps, { logout })(Header);
+export default connect(mapStateToProps, {logout})(Header);
