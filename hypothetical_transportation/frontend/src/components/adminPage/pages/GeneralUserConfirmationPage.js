@@ -8,7 +8,7 @@ import { useParams } from "react-router-dom";
 import axios from 'axios';
 
 
-function GeneralUserConfirmationPage() {
+function GeneralUserConfirmationPage(props) {
   const param = useParams();
   const [values, setValue] = useState({ new: "", confirm:"" });
   const [validated, setValidated] = useState(false);
@@ -27,14 +27,24 @@ function GeneralUserConfirmationPage() {
 
         }
         //Make backend call
-        axios
-        .post('/api/auth/invite/verified', payload)
-        .then((res) => {
-          console.log("Success")
-        })
-        .catch((err) => {
-          console.log(err)
-        });
+        if (props.action=="new") {
+          axios.post('/api/auth/invite/verified', payload)
+          .then((res) => {
+            console.log("Success")
+          })
+          .catch((err) => {
+            console.log(err)
+          });
+        } else if (props.action=="reset") {
+          axios.post('/api/auth/password/reset/verified', payload)
+          .then((res) => {
+            console.log("Success")
+          })
+          .catch((err) => {
+            console.log(err)
+          });
+        }
+        
 
       } else {
           alert("Passwords do not match. Try again.")
@@ -81,7 +91,7 @@ function GeneralUserConfirmationPage() {
 }
 
 GeneralUserConfirmationPage.propTypes = {
-
+  action: PropTypes.string
 }
 
 const mapStateToProps = (state) => ({

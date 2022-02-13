@@ -83,7 +83,11 @@ const Router = (props) => {
           {/* <Route exact path="/test/reset" element={<PrivateRoute><LinkBasePasswordResetForm/></PrivateRoute>}/> */}
           
           {/* Confirm a user's password */}
-          <Route exact path="/user/make/new/:code" element={<GeneralUserConfirmationPage/>}/>
+          <Route exact path="/user/make/new/:code" element={<GeneralUserConfirmationPage action='new'/>}/>
+
+          {/* Reset a user's password */}
+          <Route exact path="/user/make/new/:code" element={<GeneralUserConfirmationPage action='reset'/>}/>
+
           <Route exact path="/admin/stop/:route_id/:stop_id" element={<PrivateRoute><GeneralAdminStopDetails/></PrivateRoute>}/>
 
           <Route exact path="/*" element={<LoginForm />}></Route>
