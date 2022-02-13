@@ -55,6 +55,8 @@ function GeneralEditSchoolForm(props) {
 
     const handleSubmit = (event) => {
         const form = event.currentTarget;
+        console.log(busArrivalTime);
+        console.log(busDepartureTime);
         
         if (form.checkValidity() === false) {
             event.preventDefault();
@@ -78,8 +80,6 @@ function GeneralEditSchoolForm(props) {
         setValidated(true);
     }
 
-    const handleSelect = async value => {};
-
 
     // const confirmation = (e)=>{
     //     e.preventDefault();
@@ -96,7 +96,7 @@ function GeneralEditSchoolForm(props) {
             <Header></Header>
                 <Container className="container-main">
                     <div className="shadow-sm p-3 mb-5 bg-white rounded d-flex flex-row justify-content-center">
-                        {props.action == "edit" ? <h1>Edit sssSchool</h1> : <h1>Create School</h1>}
+                        {props.action == "edit" ? <h1>Edit School</h1> : <h1>Create School</h1>}
                     </div>
                     <Form className="shadow-lg p-3 mb-5 bg-white rounded" noValidate validated={validated} onSubmit={handleSubmit}>
 
@@ -117,7 +117,7 @@ function GeneralEditSchoolForm(props) {
                             <Form.Group as={Col} controlId="formGridTime">
                                 <Form.Label as="h5">Bus Arrival Time</Form.Label>
                                     <div className="d-flex flex-row">
-                                        <Form.Select size="sm" style={{width: "65px"}}>
+                                        <Form.Select size="sm" style={{width: "65px"}} onChange={setBusArrivalTime({...busArrivalTime, hour: e.target.value})}>
                                             {
                                                 hours.map((hour, i) => {
                                                     return <option value={hour} key={i}>{hour}</option>
@@ -125,7 +125,7 @@ function GeneralEditSchoolForm(props) {
                                             }
                                         </Form.Select>
                                         <Form.Text> : </Form.Text>
-                                        <Form.Select size="sm" style={{width: "65px"}}>
+                                        <Form.Select size="sm" style={{width: "65px"}} onChange={setBusArrivalTime({...busArrivalTime, minute: e.target.value})}>
                                             {
                                                 hours.map((hour, i) => {
                                                     return <option value={hour} key={i}>{hour}</option>
@@ -138,7 +138,7 @@ function GeneralEditSchoolForm(props) {
                             <Form.Group as={Col} controlId="formGridTime">
                             <Form.Label as="h5">Bus Departure Time</Form.Label>
                                 <div className="d-flex flex-row">
-                                    <Form.Select size="sm" style={{width: "65px"}}>
+                                    <Form.Select size="sm" style={{width: "65px"}} onChange={setBusDepartureTime({...busDepartureTime, hour: e.target.value})}>
                                         {
                                             hours.map((hour, i) => {
                                                 return <option value={hour} key={i}>{hour}</option>
@@ -146,7 +146,7 @@ function GeneralEditSchoolForm(props) {
                                         }
                                     </Form.Select>
                                     <Form.Text> : </Form.Text>
-                                    <Form.Select size="sm" style={{width: "65px"}}>
+                                    <Form.Select size="sm" style={{width: "65px"}} onChange={setBusDepartureTime({...busDepartureTime, minute: e.target.value})}>
                                         {
                                             hours.map((hour, i) => {
                                                 return <option value={hour} key={i}>{hour}</option>
