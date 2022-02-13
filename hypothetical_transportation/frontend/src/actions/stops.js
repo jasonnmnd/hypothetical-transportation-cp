@@ -29,7 +29,7 @@ export const getStopByRoute = (parameters) => (dispatch, getState) => {
 
 export const getStopInfo = (stopID) => (dispatch, getState) => {
       axios
-      .get(`/api/stop/${stopID}`, tokenConfig(getState))
+      .get(`/api/stop/${stopID}/`, tokenConfig(getState))
       .then((res) => {
           dispatch({
               type: GET_STOP,

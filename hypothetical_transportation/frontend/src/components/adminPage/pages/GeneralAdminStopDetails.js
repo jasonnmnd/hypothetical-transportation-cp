@@ -10,7 +10,6 @@ import { getStopInfo, deleteStop } from '../../../actions/stops';
 import { getStudents } from '../../../actions/students';
 import { Container, Card, Button, Row, Col } from 'react-bootstrap'
 
-
 function GeneralAdminStopDetails(props) {
 
 
@@ -22,18 +21,20 @@ function GeneralAdminStopDetails(props) {
 
   const handleConfirmDelete = () => {
     props.deleteStop(parseInt(param.stop_id));
-    navigate(`/admin/route/${param.route_id}`);
+    navigate(`/admin/route/${props.stop.route}`);
   }
   
   //things that need to be on the map: this stop, students in the route (and complete or not)
   useEffect(() => {
-    props.getRouteInfo(param.route_id);
     props.getStopInfo(param.stop_id);
-    let paramsToSend = Object.fromEntries([...searchParams]);
-    paramsToSend.routes = param.route_id;
-    props.getStudents(paramsToSend);
-
   }, []);
+
+  useEffect(()=>{
+    props.getRouteInfo(props.stop.route);
+    let paramsToSend = Object.fromEntries([...searchParams]);
+    paramsToSend.routes = props.stop.route;
+    props.getStudents(paramsToSend);
+  },[props.stop]);
 
 
   //info fields: name, location, which route it belongs to?
@@ -76,7 +77,7 @@ function GeneralAdminStopDetails(props) {
       <Card>
           <Card.Header as="h5">Pickup Time </Card.Header>
           <Card.Body>
-              <Card.Text>{props.stop!==null && props.stop!==undefined && props.stop.pick_up!==null && props.stop.pick_up!==undefined  ? props.stop.pick_up : "Crack of Dawn"}</Card.Text>
+              <Card.Text>{props.stop!==null && props.stop!==undefined && props.stop.pickup_time!==null && props.stop.pickup_time!==undefined  ? props.stop.pickup_time : "Crack of Dawn"}</Card.Text>
           </Card.Body>
       </Card>
 
@@ -84,7 +85,7 @@ function GeneralAdminStopDetails(props) {
       <Card>
           <Card.Header as="h5">Dropoff Time </Card.Header>
           <Card.Body>
-              <Card.Text>{props.stop!==null && props.stop!==undefined && props.stop.drop_off!==null && props.stop.drop_off!==undefined ? props.stop.drop_off : "The End of World"}</Card.Text>
+              <Card.Text>{props.stop!==null && props.stop!==undefined && props.stop.dropoff_time!==null && props.stop.dropoff_time!==undefined ? props.stop.dropoff_time : "The End of World"}</Card.Text>
           </Card.Body>
       </Card>
 
@@ -92,7 +93,7 @@ function GeneralAdminStopDetails(props) {
       <Card>
           <Card.Header as="h5">Associated Route </Card.Header>
           <Card.Body>
-              <Link to={`/admin/route/${param.route_id}`}>
+              <Link to={`/admin/route/${props.stop.route}`}>
                 <Button variant='yellow'><h5>{props.viewedRoute!==null && props.viewedRoute!==undefined && props.viewedRoute.name!==null && props.viewedRoute.name!==undefined&& props.viewedRoute.name!=="" ? props.viewedRoute.name: "The Hogwarts Express"}</h5></Button>
               </Link>
           </Card.Body>

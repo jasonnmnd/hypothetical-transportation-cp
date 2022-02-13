@@ -32,6 +32,10 @@ function GeneralAdminTableView( props ) {
         else if (props.tableType == 'route') {
             nav(`/admin/route/${d.id}`);
         }
+
+        else if (props.tableType == 'stop') {
+            nav(`/admin/stop/${d.id}`);
+        }
     };
 
     const [showSort, setSort] = useState(false);
