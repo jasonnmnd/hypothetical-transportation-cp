@@ -62,7 +62,7 @@ export const login = (email, password) => (dispatch) => {
 // REGISTER USER
 export const register = (user) => (dispatch, getState) => {
     axios
-      .post('/api/auth/register', user, tokenConfig(getState))
+      .post('/api/auth/invite', user, tokenConfig(getState))
       .then((res) => {
         dispatch(createMessage({ user: 'User Created' }));
         dispatch({

@@ -40,7 +40,7 @@ export const deleteUser = (id) => (dispatch, getState) => {
 
 export const addUser = (user) => (dispatch, getState) => {
     return axios
-    .post(`/api/auth/register`, user, tokenConfig(getState))
+    .post(`/api/auth/invite`, user, tokenConfig(getState))
     .then(res =>{
       dispatch(createMessage({ user: 'User Created' }));
         dispatch({
