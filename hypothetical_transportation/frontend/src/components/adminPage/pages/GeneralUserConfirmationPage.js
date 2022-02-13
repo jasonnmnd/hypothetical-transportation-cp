@@ -36,7 +36,7 @@ function GeneralUserConfirmationPage(props) {
           } else if (props.action=="reset") {
             axios.post('/api/auth/password/reset/verified', payload)
             .then((res) => {
-              console.log("Success")
+              nagivate(`/`);
             })
             .catch((err) => {
               console.log(err)
