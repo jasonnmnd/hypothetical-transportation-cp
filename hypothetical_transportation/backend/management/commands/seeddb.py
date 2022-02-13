@@ -35,9 +35,9 @@ class Command(BaseCommand):
             first_name = data_generator.first_name()
             last_name = data_generator.last_name()
             address = data_generator.address()
-            user = get_user_model().objects.create_user(email=f'{first_name}{last_name}{email_num}@gmail.com',
-                                                        password='password',
-                                                        full_name=f'{first_name} {last_name}', address=address)
+            user = get_user_model().objects.create_verified_user(email=f'{first_name}{last_name}{email_num}@gmail.com',
+                                                                 password='password',
+                                                                 full_name=f'{first_name} {last_name}', address=address)
             user.groups.add(guardian_group)
 
         for school_num in tqdm(range(1, num_schools + 1)):
