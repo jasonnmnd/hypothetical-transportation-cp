@@ -61,15 +61,16 @@
 
 .btn-yellowToggle {
   display: inline-block;
-  border-radius: 8px;
+  border-radius: 4px;
   background-color: #ffae07;
   background-position: 0%;
   transition: 0.4s;
   color: #fff;
-  font-weight: 700;
+  font-weight: 600;
   cursor: pointer;
-  width: 150px;
-  height: 35px;
+  width: 140px;
+  height: 30px;
+  font-size: 12px;
 }
 
 .btn-yellowToggle:hover {
@@ -79,4 +80,8 @@
 h1 {
   color: #333333;
   font-family: Impact, Charcoal, sans-serif;
+}
+
+.reverseArrow {
+  transform: rotate(180deg);
 }

@@ -69,7 +69,7 @@ function GeneralAdminTableView( props ) {
 
     return (
         <div className="d-flex justify-content-space-between flex-column" style={{gap: "10px"}}>
-            <Button onClick={toggleSort} variant="yellowToggle">Search Options</Button>
+            <Button onClick={toggleSort} variant="yellowToggle">Search Options {showSort ? "▲" : "▼"}</Button>
             {showSort ? (props.search != null && props.search != undefined ? <SearchBar buttons={getFilterOptions(props.tableType)} sortBy={getSortOptions(props.tableType)} search={props.search}></SearchBar> : null) : <></>}
             {props.tableType == 'student' ? <GeneralLegend legend={studentLegend}></GeneralLegend> : <></>}
             {props.tableType == 'route' ? <GeneralLegend legend={routeLegend}></GeneralLegend> : <></>}
