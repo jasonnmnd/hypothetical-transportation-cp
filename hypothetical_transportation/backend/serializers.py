@@ -43,12 +43,18 @@ class SchoolSerializer(serializers.ModelSerializer):
 
 
 class RouteSerializer(serializers.ModelSerializer):
+    is_complete = serializers.BooleanField(read_only=True)
+
     class Meta:
         model = Route
         fields = '__all__'
+        # fields = ['id', 'is_complete', 'school', 'student_count', 'name', 'description']
 
 
 class StopSerializer(serializers.ModelSerializer):
+    pickup_time = serializers.TimeField(read_only=True)
+    dropoff_time = serializers.TimeField(read_only=True)
+
     class Meta:
         model = Stop
         fields = '__all__'
@@ -64,6 +70,8 @@ class FormatRouteSerializer(RouteSerializer):
 
 
 class StudentSerializer(serializers.ModelSerializer):
+    has_inrange_stop = serializers.BooleanField(read_only=True)
+
     class Meta:
         model = Student
         fields = '__all__'
