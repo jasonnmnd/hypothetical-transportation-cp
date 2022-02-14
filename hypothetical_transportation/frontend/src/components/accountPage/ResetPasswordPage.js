@@ -16,6 +16,8 @@ import "../adminPage/NEWadminPage.css"
 function ResetPasswordPage(props){
     const navigate = useNavigate();
     const [values, setValue] = useState({ old: "", new: "", confirm:"" });
+    const [validated, setValidated] = useState(false);
+
     
     const saveNewPassword = () => {
         if (values.new === values.confirm) {
@@ -33,14 +35,18 @@ function ResetPasswordPage(props){
         }
     }
 
-    const resetHandler = (e) => {
-        e.preventDefault();
-        //console.log(values)
-        saveNewPassword(values);
+    const resetHandler = (event) => {
+        const form = event.currentTarget;
+        if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+        } else {
+            saveNewPassword(values);
+        }
+
+        setValidated(true);
+        
       };
-
-      const message = "";
-
 
     return(
         <div>
@@ -48,35 +54,44 @@ function ResetPasswordPage(props){
                 isAdmin(props.user) ?  <Header></Header> : <PlainHeader></PlainHeader>
             }
             
-            <Form className="shadow-lg p-3 mb-5 bg-white rounded">
+            <Form className="shadow-lg p-3 mb-5 bg-white rounded" noValidate validated={validated} onSubmit={resetHandler}>
                 <Form.Group className="mb-3" controlId="formGridAddress1">
                     <Form.Label as="h5">Old Password</Form.Label>
                     <Form.Control
+                    required
                     type="password"
                     placeholder="Enter old password..." 
                     value={values.old}
                     onChange={(e) => setValue({ ...values, old: e.target.value })}/>
+                    <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                    <Form.Control.Feedback type="invalid">Please provide a valid password.</Form.Control.Feedback>
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="formGridAddress1">
                     <Form.Label as="h5">New Password</Form.Label>
                     <Form.Control
+                    required
                     type="password"
                     placeholder="Enter new password..." 
                     value={values.new}
                     onChange={(e) => setValue({ ...values, new: e.target.value })}/>
+                    <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                    <Form.Control.Feedback type="invalid">Please provide a valid password.</Form.Control.Feedback>
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="formGridAddress1">
                     <Form.Label as="h5">Confirm New Password</Form.Label>
                     <Form.Control
+                    required
                     type="password"
                     placeholder="Confirm new password..." 
                     value={values.confirm}
                     onChange={(e) => setValue({ ...values, confirm: e.target.value })}/>
+                    <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                    <Form.Control.Feedback type="invalid">Please provide a valid password.</Form.Control.Feedback>
                 </Form.Group>
 
-                <Button onClick={resetHandler}>Confirm</Button>
+                <Button type="submit">Confirm</Button>
             </Form>
         </div>
     );

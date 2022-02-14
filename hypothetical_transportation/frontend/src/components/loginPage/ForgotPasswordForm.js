@@ -1,20 +1,38 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import image from "../../../public/schoolbusBackground.jpg";
 import { connect } from 'react-redux';
 import PlainHeader from "../header/PlainHeader";
-
 import { Button, Form, Col, Row, Container} from 'react-bootstrap';
 import "./login.css";
+import axios from "axios";
 
 function ForgotPasswordForm( props ) {
+    const navigate = useNavigate();
     const [details, setDetails] = useState({ email: ""});
+    const [validated, setValidated] = useState(false);
   
-    const submitHandler = (e) => {
-      e.preventDefault();
-      console.log(details)
-      //backend send email to submitted value
-      //if email is not associated with the user do something else?
+    const handleSubmit = (event) => {
+
+        const form = event.currentTarget;
+        if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+        } else {
+            event.preventDefault();
+            console.log(details);
+        }
+
+        setValidated(true);
+        //backend send email to submitted value
+        //if email is not associated with the user do something else?
+        axios.post('/api/auth/password/reset', details)
+          .then((res) => {
+            navigate(`/`);
+          })
+          .catch((err) => {
+            console.log(err)
+          });
     };
   
     
@@ -27,21 +45,25 @@ function ForgotPasswordForm( props ) {
             backgroundRepeat: 'no-repeat',
             backgroundSize: "cover"
             }}>
-            <Form className="rounded p-4 p-sm3">
+            <Form className="rounded p-4 p-sm3" noValidate validated={validated} onSubmit={handleSubmit}>
                 <h2>Please Enter the Email Address associated with your account:</h2>
 
                 <Form.Group as={Col} className="mb-3" controlId="formBasicEmail">
                     <Form.Label>Email Address</Form.Label>
-                    <Form.Control type="email"
+                    <Form.Control 
+                    required
+                    type="email"
                     placeholder="Enter Email" size="lg" 
                     onChange={(e) => setDetails({ ...details, email: e.target.value })}
                     value={details.email}/>
+                    <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                    <Form.Control.Feedback type="invalid">Please enter an email.</Form.Control.Feedback>
                 </Form.Group>
 
                 <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
                     <Row>
                         <Col>
-                            <Button variant="yellow" type="submit" onClick={submitHandler}>
+                            <Button variant="yellow" type="submit">
                                 Submit
                             </Button>
                         </Col>

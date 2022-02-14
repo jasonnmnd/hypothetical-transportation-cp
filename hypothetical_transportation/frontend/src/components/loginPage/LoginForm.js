@@ -9,7 +9,7 @@ import PlainHeader from "../header/PlainHeader";
 import { Button, Form, Col } from 'react-bootstrap';
 import "./login.css";
 
-function TESTLoginForm( props ) {
+function LoginForm( props ) {
     const [details, setDetails] = useState({ email: "", password: "" });
   
     const submitHandler = (e) => {
@@ -67,7 +67,7 @@ function TESTLoginForm( props ) {
     );
   }
   
-  TESTLoginForm.propTypes = {
+  LoginForm.propTypes = {
       isAuthenticated: PropTypes.bool,
       login: PropTypes.func.isRequired
   }
@@ -77,4 +77,4 @@ function TESTLoginForm( props ) {
       user: state.auth.user
   });
   
-  export default connect(mapStateToProps, { login })(TESTLoginForm)
+  export default connect(mapStateToProps, { login })(LoginForm)

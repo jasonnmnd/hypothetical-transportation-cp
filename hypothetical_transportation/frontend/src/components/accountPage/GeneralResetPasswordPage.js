@@ -15,7 +15,11 @@ function GeneralResetPasswordPage(props){
     const [values, setValue] = useState({ old: "", new: "", confirm:"" });
     
     const saveNewPassword = () => {
-        if (values.new === values.confirm) {
+        if(values.new===""){
+            console.log("You Cannot Have a blank password")
+            alert("You Cannot Have a blank password")
+          }
+          else if (values.new === values.confirm) {
             props.resetPassword(values.old, values.new);
             
 

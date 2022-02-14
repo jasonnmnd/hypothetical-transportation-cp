@@ -17,6 +17,7 @@ function GeneralManageStudentPage(props) {
     const navigate = useNavigate();
 
     const [openModal, setOpenModal] = useState(false);
+    const [validated, setValidated] = useState(false);
 
     const emptyStudent={
       student_id: "",
@@ -38,15 +39,23 @@ function GeneralManageStudentPage(props) {
   }
 
 
-  const submit = () => {
-    if(props.action==="new"){
-      props.addStudent(obj)
-      navigate(`/admin/students/`)
+  const handleSubmit = (event) => {
+    const form = event.currentTarget;
+    if (form.checkValidity() === false) {
+      event.preventDefault();
+      event.stopPropagation();
+    } else {
+      if(props.action==="new"){
+        props.addStudent(obj)
+        navigate(`/admin/students/`)
+      }
+      else{
+        props.updateStudent(obj,param.id);
+        navigate(`/admin/students/`)
+      }
     }
-    else{
-      props.updateStudent(obj,param.id);
-      navigate(`/admin/students/`)
-    }
+    setValidated(true);
+
   }
 
   const changeSchool = (e)=>{
@@ -143,9 +152,9 @@ function GeneralManageStudentPage(props) {
             </form>
         </div> */}
         <Container className="container-main">
-          <Form className="shadow-lg p-3 mb-5 bg-white rounded">
+          <Form className="shadow-lg p-3 mb-5 bg-white rounded" noValidate validated={validated} onSubmit={handleSubmit}>
           <Row className="mb-3">
-            <Form.Group as={Col} controlId="formGridName">
+            <Form.Group as={Col} controlId="formGridName" >
                 <Form.Label as="h5">Full Name</Form.Label>
                 <Form.Control 
                 required type="text"
@@ -155,6 +164,8 @@ function GeneralManageStudentPage(props) {
                   setObj({...obj, ["full_name"]: e.target.value})
                 }}
                 />
+                <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                <Form.Control.Feedback type="invalid">Please provide a valid name.</Form.Control.Feedback>
             </Form.Group>
 
             <Form.Group as={Col} controlId="formGridID">
@@ -165,12 +176,14 @@ function GeneralManageStudentPage(props) {
                 value={obj.student_id}
                 onChange={(e)=>{setObj({...obj, ["student_id"]: e.target.value})}}
                 />
+                <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                <Form.Control.Feedback type="invalid">Please provide a valid ID.</Form.Control.Feedback>
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="">
                 <Form.Label as="h5">Parent</Form.Label>
                 <Form.Select size="sm" value={obj.guardian} onChange={setParent}>
-                <option value={""}>{"-----"}</option>:
+                {/* <option value={""}>{"-----"}</option>: */}
                 {props.users!==null && props.users!==undefined && props.users.length!==0?props.users.map((u,i)=>{
                     return <option value={u.id} key={i}>{u.email}</option>
                 }):null}
@@ -180,14 +193,14 @@ function GeneralManageStudentPage(props) {
             <Form.Group className="mb-3" controlId="">
                 <Form.Label as="h5">School</Form.Label>
                 <Form.Select size="sm" value={obj.school} onChange={changeSchool}>
-                  <option value={"null"} >{"-----"}</option>
+                  {/* <option value={"null"} >{"-----"}</option> */}
                     {props.schoollist!==null && props.schoollist!==undefined && props.schoollist.length!==0?props.schoollist.map((u,i)=>{
                         return <option value={u.id} key={i}>{u.name}</option>
                     }):null}
                 </Form.Select>
             </Form.Group>
 
-            <Button variant="yellowsubmit" type="submit" onClick={submit}>
+            <Button variant="yellowsubmit" type="submit">
                 Submit
             </Button>
 

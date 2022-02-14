@@ -8,7 +8,7 @@ import { getUser, updateUser } from "../../../actions/users";
 import { register } from "../../../actions/auth";
 import AssistedLocationMap from "../../maps/AssistedLocationMap";
 import { Form, Button, Row, Col, Container, InputGroup, ButtonGroup, ToggleButton} from 'react-bootstrap';
-
+import { getItemCoord } from "../../../utils/geocode";
 //input1: title of form
 //input2: list of fields?
 //input3: a typed object matching the fields
@@ -17,13 +17,14 @@ function GeneralEditUserForm(props) {
     const navigate = useNavigate();
     const param = useParams();
     const [openModal, setOpenModal] = useState(false);
+    const [validated, setValidated] = useState(false);
+    const[coord,setCoord]=useState({lat:36.0016944, lng:-78.9480547});
     
     const [fieldValues, setFieldValues] = useState({
         full_name: "",
         address: "",
         email: "",
-        groups: 1,
-        password: ""
+        groups: 2,
     });
     const [address, setAddress] = useState("");
 
@@ -37,24 +38,36 @@ function GeneralEditUserForm(props) {
                 groups: props.curUser.groups[0].id
             });
             setAddress(props.curUser.address);
+            setCoord({lat: Number(props.curUser.latitude), lng: Number(props.curUser.longitude)})
         }
     }, []);
 
-    const submit = () => {
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        event.stopPropagation();
         const createVals = {
             ...fieldValues,
             groups: [fieldValues.groups],
-            address: address
+            address: address,
+            longitude: coord.lng.toFixed(6),
+            latitude: coord.lat.toFixed(6),
         }
-        if(props.action == "edit"){
-            props.updateUser(createVals, param.id).then(console.log("EDITED"));
-            navigate(`/admin/users`)
+        console.log(createVals)
+        const form = event.currentTarget;
+        if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+        } else {
+            if(props.action == "edit"){
+                props.updateUser(createVals, param.id).then(console.log("EDITED"));
+                navigate(`/admin/users`)
+            }
+            else{
+                props.register(createVals);
+                navigate(`/admin/new_student`)
+            }
         }
-        else{
-            props.register(createVals);
-            navigate(`/admin/new_student`)
-        }
-        
+        setValidated(true);
     }
 
     const groupTypes = [
@@ -77,19 +90,25 @@ function GeneralEditUserForm(props) {
         <div> 
             <Header></Header>
                 <Container className="container-main">
-                    <Form className="shadow-lg p-3 mb-5 bg-white rounded">
+                <div className="shadow-sm p-3 mb-5 bg-white rounded d-flex flex-row justify-content-center">
+                    {props.action == "edit" ? <h1>Edit User</h1> : <h1>Create User</h1>}
+                </div>
+                    <Form className="shadow-lg p-3 mb-5 bg-white rounded" noValidate validated={validated} onSubmit={handleSubmit}>
 
                         <Row className="mb-3">
                             <Form.Group as={Col} controlId="formGridAddress2">
                                 <Form.Label as="h5">Full Name</Form.Label>
                                 <Form.Control 
-                                required type="text"
+                                required 
+                                type="text"
                                 placeholder="Enter name..." 
                                 value={fieldValues.full_name}
                                 onChange={(e)=>{
                                     setFieldValues({...fieldValues, full_name: e.target.value});
                                 }}
                                 />
+                                <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                                <Form.Control.Feedback type="invalid">Please provide a valid name.</Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group as={Col}>
                                 <Form.Label as="h5">User Type</Form.Label>
@@ -120,7 +139,8 @@ function GeneralEditUserForm(props) {
                             <Form.Group as={Col} controlId="formGridEmail">
                             <Form.Label as="h5">Email</Form.Label>
                             <Form.Control 
-                            required type="email" 
+                            required 
+                            type="email" 
                             placeholder="Enter email..." 
                             value={fieldValues.email}
                             onChange={
@@ -128,9 +148,11 @@ function GeneralEditUserForm(props) {
                                 setFieldValues({...fieldValues, email: e.target.value});
                                 }
                             }/>
+                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                            <Form.Control.Feedback type="invalid">Please provide a valid email.</Form.Control.Feedback>
                             </Form.Group>
 
-                            <Form.Group as={Col} controlId="formGridPassword">
+                            {/* <Form.Group as={Col} controlId="formGridPassword">
                             <Form.Label as="h5">Password</Form.Label>
                             <Form.Control 
                             type="password" 
@@ -142,29 +164,34 @@ function GeneralEditUserForm(props) {
                                 }
                             }
                             />
-                            </Form.Group>
+                            </Form.Group> */}
                         </Row>
                                                 
                         <Form.Group className="mb-3" controlId="formGridAddress1">
                             <Form.Label as="h5">Address</Form.Label>
                             <Form.Control 
+                            required
+                            type="text"
                             placeholder="Enter address..." 
                             value={address}
                             onChange={
                               (e)=>{
                                 setAddress(e.target.value);
+                                getItemCoord(e.target.value,setCoord);
                                 }
                             }
                             />
+                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                            <Form.Control.Feedback type="invalid">Please provide a valid address.</Form.Control.Feedback>
                         </Form.Group>
 
                         <Form.Group className="mb-3">
                             <Form.Label as="h5">Location Assistance</Form.Label>
-                            <AssistedLocationMap address={address} setAddress={setAddress}></AssistedLocationMap>
+                            <AssistedLocationMap address={address} coord={coord} setAddress={setAddress} setCoord={setCoord}></AssistedLocationMap>
 
                         </Form.Group>
 
-                        <Button variant="yellowsubmit" type="submit" onClick={submit}>
+                        <Button variant="yellowsubmit" type="submit">
                             Submit
                         </Button>
                     </Form>

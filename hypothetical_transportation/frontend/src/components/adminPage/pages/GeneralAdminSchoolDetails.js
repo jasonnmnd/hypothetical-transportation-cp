@@ -73,24 +73,34 @@ function GeneralAdminSchoolDetails(props) {
         <Container className="container-main d-flex flex-column" style={{gap: "20px"}}>
         <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
             <Row>
-                <Col>
-                    <Link to={`/admin/edit/school/${props.school.id}`}>
-                        <Button variant="yellowLong" size="lg">Edit School</Button>
-                    </Link>
-                </Col>
+              <Col>
+                <Link to={`/admin/edit/school/${props.school.id}`}>
+                  <Button variant="yellowLong" size="lg">Edit School</Button>
+                </Link>
+              </Col>
 
-                <Col>
-                    <Button variant="yellowLong" size="lg" onClick={() => {
-                      setOpenModal(true);
-                    }}>Delete School</Button>
-                </Col>
+              <Col>
+                <Button variant="yellowLong" size="lg" onClick={() => {
+                  setOpenModal(true);
+                }}>Delete School</Button>
+              </Col>
+            </Row>
+            </Container>
+            <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
+            <Row>
+              <Col>
+                <Link to={`/admin/route/plan/${props.school.id}`}>
+                  <Button variant="yellowLong" size="lg">New Route for this School</Button>
+                </Link>
 
-                <Col>
-                    <Link to={`/admin/route/plan/${props.school.id}`}>
-                        <Button variant="yellowLong">New Route for this School</Button>
-                    </Link>
+              </Col>
 
-                </Col>
+              <Col>
+                <Link to={`/admin/school_email/${props.school.id}`}>
+                  <Button variant="yellowLong" size="lg">Send School-wide Email</Button>
+                </Link>
+              </Col>
+                
             </Row>
         </Container>
         
@@ -105,6 +115,20 @@ function GeneralAdminSchoolDetails(props) {
             <Card.Header as="h5">Address </Card.Header>
             <Card.Body>
                 <Card.Text>{props.school.address}</Card.Text>
+            </Card.Body>
+        </Card>
+
+        <Card>
+            <Card.Header as="h5">Bus Arrival Time </Card.Header>
+            <Card.Body>
+                <Card.Text>{props.school.bus_arrival_time}</Card.Text>
+            </Card.Body>
+        </Card>
+
+        <Card>
+            <Card.Header as="h5">Bus Departure Time </Card.Header>
+            <Card.Body>
+                <Card.Text>{props.school.bus_departure_time}</Card.Text>
             </Card.Body>
         </Card>
 

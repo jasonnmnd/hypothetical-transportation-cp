@@ -70,7 +70,7 @@ function GeneralAdminStudentDetails(props) {
             <Card.Header as="h5">School </Card.Header>
             <Card.Body>
                 <Link to={`/admin/school/${student.school.id}`}>
-                    <Button variant='yellow'><h3>{student.school.name}</h3></Button>
+                    <Button variant='yellow'><h5>{student.school.name}</h5></Button>
                 </Link>
             </Card.Body>
         </Card>
@@ -79,7 +79,7 @@ function GeneralAdminStudentDetails(props) {
             <Card.Header as="h5">Parent </Card.Header>
             <Card.Body>
                 <Link to={`/admin/user/${student.guardian.id}`}>
-                    <Button variant='yellow'><h3>{student.guardian.full_name}</h3></Button>
+                    <Button variant='yellow'><h5>{student.guardian.full_name}</h5></Button>
                 </Link>
             </Card.Body>
         </Card>
@@ -89,9 +89,9 @@ function GeneralAdminStudentDetails(props) {
             <Card.Body>
                 {(student.routes!==undefined && student.routes!==null) ?
                     <Link to={`/admin/route/${student.routes.id}`}>
-                        <Button variant='yellow'><h3>{student.routes.name}</h3></Button>
+                        <Button variant='yellow'><h5>{student.routes.name}</h5></Button>
                     </Link>:
-                    <h3>No Route for this student</h3>
+                    <h5>No Route for this student</h5>
                 }
             </Card.Body>
         </Card>

@@ -17,6 +17,7 @@ import GeneralAdminUserDetails from "../adminPage/pages/GeneralAdminUserDetails"
 import GeneralAdminStudentDetails from "../adminPage/pages/GeneralAdminStudentDetails";
 import GeneralAdminSchoolDetails from "../adminPage/pages/GeneralAdminSchoolDetails";
 import GeneralAdminRouteDetails from "../adminPage/pages/GeneralAdminRouteDetails";
+import GeneralAdminStopDetails from '../adminPage/pages/GeneralAdminStopDetails';
 
 import GeneralAdminRoutePlanner from "../adminPage/pages/GeneralAdminRoutePlanner";
 import GeneralManageStudentPage from "../adminPage/pages/GeneralManageStudentPage";
@@ -32,6 +33,9 @@ import ForgotPasswordForm from '../loginPage/ForgotPasswordForm';
 import MapComponent from '../maps/MapComponent';
 import ExampleMapUsage from '../maps/ExampleMapUsage';
 import AdminSchoolRoutesPlanner from '../adminPage/pages/AdminSchoolRoutesPlanner';
+
+import LinkBasePasswordResetForm from '../loginPage/LinkBasePasswordResetForm';
+import GeneralUserConfirmationPage from '../adminPage/pages/GeneralUserConfirmationPage';
 
 
 const Router = (props) => {
@@ -69,12 +73,25 @@ const Router = (props) => {
           <Route exact path="/admin/student/:id" element={<PrivateRoute><GeneralAdminStudentDetails /></PrivateRoute>}/>
           <Route exact path="/admin/school/:id" element={<PrivateRoute><GeneralAdminSchoolDetails /></PrivateRoute>}/>
           <Route exact path="/admin/route/:id" element={<PrivateRoute><GeneralAdminRouteDetails /></PrivateRoute>}/>
+          <Route exact path="/admin/stop/:route_id/:stop_id" element={<PrivateRoute><GeneralAdminStopDetails/></PrivateRoute>}/>
           
           {/* <Route exact path="/admin/route/plan/:school_id" element={<PrivateRoute><GeneralAdminRoutePlanner action={"new"}/></PrivateRoute>}/> */}
           <Route exact path="/admin/route/plan/:school_id" element={<PrivateRoute><AdminSchoolRoutesPlanner/></PrivateRoute>}/>
           <Route exact path="/admin/route/edit/:school_id/:route_id" element={<PrivateRoute><GeneralAdminRoutePlanner action={"edit"}/></PrivateRoute>}/>
 
           <Route exact path="/admin/email" element={<PrivateRoute><GeneralAdminEmailPage/></PrivateRoute>}/>
+          <Route exact path="/admin/school_email/:school_id" element={<PrivateRoute><GeneralAdminEmailPage/></PrivateRoute>}/>
+          <Route exact path="/admin/route_email/:school_id/:route_id" element={<PrivateRoute><GeneralAdminEmailPage/></PrivateRoute>}/>
+          {/* <Route exact path="/test/reset" element={<PrivateRoute><LinkBasePasswordResetForm/></PrivateRoute>}/> */}
+          
+          {/* Confirm a user's password */}
+          <Route exact path="/user/make/new/:code" element={<GeneralUserConfirmationPage action='new'/>}/>
+
+          {/* Reset a user's password */}
+          <Route exact path="/user/reset/:code" element={<GeneralUserConfirmationPage action='reset'/>}/>
+
+          <Route exact path="/admin/stop/:stop_id" element={<PrivateRoute><GeneralAdminStopDetails/></PrivateRoute>}/>
+
           <Route exact path="/*" element={<LoginForm />}></Route>
         </Routes>
       </BrowserRouter>

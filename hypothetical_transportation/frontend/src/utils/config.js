@@ -21,6 +21,8 @@ const studentDefaultCols = [
 const schoolDefaultCols = [
     "name",
     "address",
+    "bus_arrival_time",
+    "bus_departure_time"
 ]
 
 const routeDefaultCols = [
@@ -28,6 +30,56 @@ const routeDefaultCols = [
     "school_name",
     "num_students",
 ]
+
+const stopDefaultCOls = [
+    "name",
+    "drop_off",
+    "pick_up",
+    "stop_number"
+]
+
+const stopColumns = {
+    name: {
+        colTitle: "Name",
+        dataPath: "name",
+        search_key: "",
+        sortable: false,
+        filterable: false
+    },
+
+    location: {
+        colTitle: "Location",
+        dataPath: "location",
+        search_key: "",
+        sortable: false,
+        filterable: false
+    },
+
+
+    stop_number: {
+        colTitle: "Stop Number",
+        dataPath: "stop_number",
+        search_key: "stop_number",
+        sortable: true,
+        filterable: false
+    },
+
+    drop_off: {
+        colTitle: "Drop Off Time",
+        dataPath: "dropoff_time",
+        search_key: "",
+        sortable: false,
+        filterable: false
+    },
+
+    pick_up: {
+        colTitle: "Pick Up Time",
+        dataPath: "pickup_time",
+        search_key: "",
+        sortable: false,
+        filterable: false
+    }
+}
 
 const userColumns = {
     full_name: {
@@ -115,6 +167,20 @@ const schoolColumns = {
         sortable: false,
         filterable: false
     },
+    bus_arrival_time: {
+        colTitle: "Bus Arrival Time",
+        dataPath: "bus_arrival_time",
+        search_key: "bus_arrival_time",
+        sortable: true,
+        filterable: false
+    },
+    bus_departure_time: {
+        colTitle: "Bus Departure Time",
+        dataPath: "bus_departure_time",
+        search_key: "bus_departure_time",
+        sortable: true,
+        filterable: false
+    }
 }
 
 
@@ -146,18 +212,21 @@ const allColumns = {
     user: userColumns,
     student: studentColumns,
     school: schoolColumns,
-    route: routeColumns
+    route: routeColumns,
+    stop: stopColumns,
 }
 
 const defaultColumns = {
     user: userDefaultCols,
     student: studentDefaultCols,
     school: schoolDefaultCols,
-    route: routeDefaultCols
+    route: routeDefaultCols,
+    stop: stopDefaultCOls,
 }
 
 const getColsFromArr = (colObj, colTitles) => {
-    return colTitles.map(col => {return {colTitle: colObj[col].colTitle, dataPath: colObj[col].dataPath}})
+    return colTitles.map(col => {return {colTitle: colObj[col].colTitle, dataPath: colObj[col].dataPath,
+        search_key: colObj[col].search_key,sortable: colObj[col].sortable}})
 }
 
 const getFiltersFromArr = (colObj, colTitles) => {

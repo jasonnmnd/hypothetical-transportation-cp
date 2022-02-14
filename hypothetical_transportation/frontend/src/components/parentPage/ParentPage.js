@@ -57,10 +57,10 @@ function ParentPage(props) {
           {
             isAdmin(props.user) ? <Header></Header> : <ParentHeader></ParentHeader>
           }
-          <Container className="d-flex flex-column justify-content-center align-items-center" style={{gap: "20px"}}>
-              <Row>
-                <Col><h1>Welcome, <span>{props.user.full_name}</span></h1></Col>
-              </Row>
+          <Container>
+              <div className="shadow-sm p-3 mb-5 bg-white rounded d-flex flex-row justify-content-center">
+                <h1>Welcome, <span>{props.user.full_name}</span></h1>
+              </div>
 
               <div className="shadow-lg p-3 mb-5 bg-white rounded">
                 <GeneralParentTableView values={props.students} title={title} tableType={tableType} />

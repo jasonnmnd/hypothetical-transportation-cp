@@ -12,7 +12,7 @@ function GeneralEditRouteForm() {
         description: "",
         // school: param.school_id,
     }
-    const [obj, setObj] = useState(emptyRoute)
+    const [obj, setObj] = useState(emptyRoute);
     
   return (
       <div>

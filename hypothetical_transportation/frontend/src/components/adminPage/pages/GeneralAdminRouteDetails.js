@@ -9,13 +9,18 @@ import { getRouteInfo, deleteRoute } from '../../../actions/routes';
 import { getStudents } from '../../../actions/students';
 import GeneralAdminTableView from '../components/views/GeneralAdminTableView';
 import MapContainer from '../../maps/MapContainer';
+import { getStopByRoute } from '../../../actions/stops';
 import { Container, Card, Button, Row, Col } from 'react-bootstrap'
+import { filterObjectForKeySubstring } from '../../../utils/utils';
 
 
 function GeneralAdminRouteDetails(props) {
 
 
   const [openModal, setOpenModal] = useState(false);
+  let [searchParams, setSearchParams] = useSearchParams();
+  const STOP_PREFIX = "sto";  
+  const [extra, setExtra] = useState({});
 
   const handleConfirmDelete = () => {
     //Replace with API call to delete school and all its associated routes/students
@@ -26,13 +31,19 @@ function GeneralAdminRouteDetails(props) {
   
   const navigate = useNavigate();
   const param = useParams();
-  let [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
     props.getRouteInfo(param.id);
+
+    // const allSearchParams = Object.fromEntries([...searchParams]);
+    // let stopSearchParams = filterObjectForKeySubstring(allSearchParams, STOP_PREFIX);  
+    // stopSearchParams.route = param.id
+    // console.log(stopSearchParams)
+    props.getStopByRoute(param.id);
   }, []);
 
   useEffect(() => {
+      console.log("?")
     if(searchParams.get(`pageNum`) != null){
       let paramsToSend = Object.fromEntries([...searchParams]);
       paramsToSend.routes = param.id;
@@ -44,6 +55,10 @@ function GeneralAdminRouteDetails(props) {
       })
     }
   }, [searchParams]);
+
+  useEffect(()=>{
+    setExtra({id: props.route.school.id,name: props.route.school.name, dropoff_time: props.route.school.bus_arrival_time, pickup_time: props.route.school.bus_departure_time, stop_number: 0})
+  },[props.route]);
 
 
 
@@ -68,6 +83,15 @@ function GeneralAdminRouteDetails(props) {
                 </Col>
             </Row>
         </Container>
+        <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
+            <Row>
+                <Col>
+                    <Link to={`/admin/route_email/${props.route.school.id}/${props.route.id}`}>
+                        <Button variant="yellowLong" size="lg">Send Route-wide Email</Button>
+                    </Link>
+                </Col>
+            </Row>
+        </Container>
         
         <Card>
             <Card.Header as="h5">Name</Card.Header>
@@ -87,7 +111,7 @@ function GeneralAdminRouteDetails(props) {
             <Card.Header as="h5">School </Card.Header>
             <Card.Body>
                 <Link to={`/admin/school/${props.route.school.id}`}>
-                    <Button variant='yellow'><h3>{props.route.school.name}</h3></Button>
+                    <Button variant='yellow'><h5>{props.route.school.name}</h5></Button>
                 </Link>
             </Card.Body>
         </Card>
@@ -105,6 +129,13 @@ function GeneralAdminRouteDetails(props) {
                 <GeneralAdminTableView title='Associated Students' tableType='student' values={props.students} search="" />
             </Card.Body>
         </Card>
+
+        <Card>
+            <Card.Header as="h5">Associated Stops</Card.Header>
+            <Card.Body>
+                <GeneralAdminTableView title='Associated Stops' tableType='stop' values={props.stops} search="" extraRow={extra}/>
+            </Card.Body>
+        </Card>
         </Container>
     </div>
     );
@@ -112,6 +143,7 @@ function GeneralAdminRouteDetails(props) {
 
 GeneralAdminRouteDetails.propTypes = {
     getRouteInfo: PropTypes.func.isRequired,
+    getStopByRoute: PropTypes.func.isRequired,
     getStudents: PropTypes.func.isRequired,
     deleteRoute: PropTypes.func.isRequired
 }
@@ -120,8 +152,9 @@ const mapStateToProps = (state) => ({
   user: state.auth.user,
   token: state.auth.token,
   route: state.routes.viewedRoute, 
-  students: state.students.students.results
+  students: state.students.students.results,
+  stops:state.stop.stops.results
 });
 
-export default connect(mapStateToProps, {getRouteInfo, getStudents, deleteRoute})(GeneralAdminRouteDetails)
+export default connect(mapStateToProps, {getRouteInfo, getStudents, deleteRoute,getStopByRoute})(GeneralAdminRouteDetails)
 
