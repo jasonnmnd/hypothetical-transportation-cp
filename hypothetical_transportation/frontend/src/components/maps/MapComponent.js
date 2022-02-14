@@ -46,8 +46,9 @@ function MapComponent(props) {
 
 
     useEffect(() => {
+        console.log(props.pinData)
         initializePins(props.pinData)
-      }, []);
+      }, [props.pinData]);
 
 
 

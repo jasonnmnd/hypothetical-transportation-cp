@@ -1,151 +1,111 @@
 import React, { useEffect, useState } from 'react';
 import Header from '../../header/Header';
-import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import MapContainer from '../../maps/MapContainer';
+import { Link, Route, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes, { string } from 'prop-types';
-import { getRouteInfo } from '../../../actions/routes';
-import {getStudentsInRoute, getStudentsWithoutRoute,addStudentToRoute, removeStudentFromRoute, addRoute, updateRoute} from '../../../actions/routeplanner';
-import GeneralAdminTableView from '../components/views/GeneralAdminTableView';
-import { getSchool } from '../../../actions/schools';
-import { filterObjectForKeySubstring } from '../../../utils/utils';
 import { Container, Card, Button, Form } from 'react-bootstrap';
 import '../NEWadminPage.css';
 import MapComponent from '../../maps/MapComponent';
+import ModifyRouteInfo from '../components/forms/ModifyRouteInfo';
+import { getRouteInfo, getRoutes, resetViewedRoute } from '../../../actions/routes';
+import { updateRoute, createRoute } from '../../../actions/routeplanner';
+import { getSchool } from '../../../actions/schools';
+import { getStudents } from '../../../actions/students';
+import RoutePlannerMap from './RoutePlannerMap';
+
 
 function AdminSchoolRoutesPlanner(props) {
-  const STUDENTS_IN_ROUTE_PREFIX = "STINROUPREF";
-  const STUDENTS_WO_ROUTE_PREFIX = "STWORTPREF";
-
   const param = useParams();
   const navigate = useNavigate();
-  const emptySchool = {
-    id: 0,
-    name: "",
-    address: "",
-  }
-  const emptyStudent = {
-    student_id: "",
-    full_name:"",
-    address: "",
-  }
-
-  const emptyRoute = {
-    id: 0,
-    name: "",
-    description: "",
-    school: param.school_id,
-  }
-
-  const studentObject = [{
-    id: 0,
-    student_id: "",
-    full_name:"",
-    address: "",
-    guardian: 0,
-    routes: 0,
-    school: 0,
-  }]
-
-  const [obj, setObj] = useState(emptyRoute)
-  const [tobeadded, setAdd] = useState([])
-  const [toberemoved, setRemove] = useState([])
-
   let [searchParams, setSearchParams] = useSearchParams();
 
 
-
+  //const [currentRoute, setCurrentRoute] = useState(null)
   
-  useEffect(() => {
-    if(searchParams.get(`${STUDENTS_IN_ROUTE_PREFIX}pageNum`) != null && searchParams.get(`${STUDENTS_WO_ROUTE_PREFIX}pageNum`) != null){
-      const allSearchParams = Object.fromEntries([...searchParams]);
+  const isCreate = () => {
+    return searchParams.get(`route`) == 'new'
+  }
 
-      let inRouteSearchParams = filterObjectForKeySubstring(allSearchParams, STUDENTS_IN_ROUTE_PREFIX);
-      inRouteSearchParams.routes = param.route_id;
-      let woRouteSearchParams = filterObjectForKeySubstring(allSearchParams, STUDENTS_WO_ROUTE_PREFIX);
-      woRouteSearchParams.school = param.school_id;
-      //woRouteSearchParams.routes__isnull = true;
-      
-      if(props.action==="edit"){
-        props.getStudentsInRoute(inRouteSearchParams)
-      }
-      props.getStudentsWithoutRoute(woRouteSearchParams)
+  useEffect(() => {
+    props.getRoutes({school: param.school_id});
+    if(searchParams.get(`route`) != null && !isCreate()){
+      props.getRouteInfo(searchParams.get('route'))
+    } else {
+      props.resetViewedRoute()
     }
-    else{
+  }, [param, searchParams]);
+
+  useEffect(() => {
+    props.getSchool(param.school_id);
+    props.getStudents({school: param.school_id})
+    if(searchParams.get(`route`) == null){
       setSearchParams({
-        [`${STUDENTS_WO_ROUTE_PREFIX}pageNum`]: 1,
-        [`${STUDENTS_IN_ROUTE_PREFIX}pageNum`]: 1
+        [`route`]: 'new',
       })
     }
-    
-
-  }, [searchParams]);
-
-  useEffect(() => {
-    if(props.action==="edit"){
-      props.getRouteInfo(param.route_id);
-      setObj({...props.route, ["school"]:props.route.school.id,})
-    }
-    props.getSchool(param.school_id)
   }, []);
 
-    
-  const addToRoute =  (i)=>{
-    const list = tobeadded.concat(i)
-    setAdd(list)
-  }
-
-  const removeFromADD =  (i)=>{
-    setAdd(tobeadded.filter(item=>item.id!==i.id))
-  }
-
-
-  const removeFromREMOVE =  (i)=>{
-    setRemove(toberemoved.filter(item=>item.id!==i.id))
-  }
-
-  const removeFromRoute =  (i)=>{
-    const list = toberemoved.concat(i)
-    setRemove(list)
-  }
-
-  const submit = (e)=>{
-    e.preventDefault();
-    if(props.action==="new"){
-        props.addRoute(obj,tobeadded);
-    }
-    else{
-        props.updateRoute(obj, obj.id);
-        if(tobeadded.length>0){
-            tobeadded.map((stu)=>{
-                props.addStudentToRoute(stu,obj.id)
-            })
-        }
-        if(toberemoved.length>0){
-            toberemoved.map((stu)=>{
-                props.removeStudentFromRoute(stu)
-            })
-        }
-    }
-    navigate(`/admin/routes`);
-    
-}
-
-const getRouteMatches = (i) => {
-  if(i.routes != null && i.routes != undefined){
-    return i.routes.id != props.route.id
-  }
-  return true;
   
-}
+  
+  const onInfoSubmit = (e) => {
+    const routeInfo = {
+        name: e.routeName,
+        description: e.routeDescription,
+        school: param.school_id
+    }
+    if(isCreate()){
+      props.createRoute(routeInfo)
+    } else {
+      props.updateRoute(routeInfo, searchParams.get('route'))
+    }
+  }
+
+  const getInfoTitle = () => {
+    if(isCreate()){
+      return 'New Route'
+    } else {
+      return 'Modify Route'
+    }
+  }
+
+  const getRouteOptions = () => {
+    return props.routes.map(route => {
+      return <option key={route.id} value={route.id}>{route.name}</option>
+    })
+  }
+
+  const onDropdownChange = (e) => {
+    setSearchParams({
+      [`route`]: e.target.value,
+    })
+  }
+
+  const getRouteFromSearchParams = () => {
+    if(searchParams.get('route') == null){
+      return "new"
+    }
+    return searchParams.get('route');
+  }
+
+
+
 
 
   return (
     
     <>
       <Header textToDisplay={"Route Planner"} shouldShowOptions={true}></Header>
-      <Container className="container-main d-flex flex-column" style={{gap: "20px"}}>
-        <MapComponent/>
+      <Container className="container-main d-flex flex-column" style={{gap: "10px"}}>
+        <h1>{`${props.school.name} Route Planner`}</h1>
+        <Form.Select size="sm" value={getRouteFromSearchParams()} onChange={onDropdownChange}>
+                <option value={"new"} key={"new"}>{"Create New Route"}</option>
+                {getRouteOptions()}
+        </Form.Select>
+        <Container className="container-main d-flex flex-row" style={{gap: "10px"}}>
+            {isCreate() || searchParams.get('route') == null ? null : <RoutePlannerMap students={props.students} school={props.school} />}
+          <ModifyRouteInfo title={getInfoTitle()} routeName={props.currentRoute.name} routeDescription={props.currentRoute.description} onSubmitFunc={onInfoSubmit}/>
+        </Container>
+        <Button variant='yellow'><h3>Save</h3></Button>
       </Container>
     </>
 
@@ -153,14 +113,21 @@ const getRouteMatches = (i) => {
 }
 
 AdminSchoolRoutesPlanner.propTypes = {
-    getStudentsInRoute: PropTypes.func.isRequired,
-    getStudentsWithoutRoute: PropTypes.func.isRequired,
+    getRouteInfo: PropTypes.func.isRequired,
+    updateRoute: PropTypes.func.isRequired,
+    getSchool: PropTypes.func.isRequired,
+    createRoute: PropTypes.func.isRequired,
+    getRoutes: PropTypes.func.isRequired,
+    getStudents: PropTypes.func.isRequired,
+    resetViewedRoute: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => ({
+  students: state.students.students.results,
   routes: state.routes.routes.results, 
+  currentRoute: state.routes.viewedRoute,
   school: state.schools.viewedSchool,
   studentsInSchool: state.students.students.results,
 });
 
-export default connect(mapStateToProps, {getRouteInfo,getStudentsInRoute,getStudentsWithoutRoute, getSchool, addStudentToRoute, removeStudentFromRoute, addRoute, updateRoute})(AdminSchoolRoutesPlanner)
+export default connect(mapStateToProps, {getRouteInfo, updateRoute, getSchool, createRoute, getRoutes, getStudents, resetViewedRoute})(AdminSchoolRoutesPlanner)
