@@ -6,7 +6,7 @@ import DeleteModal from '../components/modals/DeleteModal';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { getStudentInfo, deleteStudent } from '../../../actions/students';
-import { Container, Card, Button, Row, Col } from 'react-bootstrap'
+import { Container, Card, Button, Row, Col, Alert } from 'react-bootstrap'
 
 function GeneralAdminStudentDetails(props) {
   const navigate = useNavigate();
@@ -91,7 +91,31 @@ function GeneralAdminStudentDetails(props) {
                     <Link to={`/admin/route/${student.routes.id}`}>
                         <Button variant='yellow'><h5>{student.routes.name}</h5></Button>
                     </Link>:
-                    <h5>No Route for this student</h5>
+                    <Alert variant="danger">
+                        <Alert.Heading>No Route for this Student</Alert.Heading>
+                        <p>
+                        This student has not been assigned a route. Please use the route planner to assign an appropriate route.
+                        </p>
+                        <hr />
+                        <Link to={`/admin/routes?pageNum=1`}>
+                            <Button variant='yellow'>View Routes</Button>
+                        </Link>
+                    </Alert>
+                }
+
+                {
+                    (student.has_inrange_stop ? <></> : 
+                    <Alert variant="danger">
+                        <Alert.Heading>No In-range Stop for this Student</Alert.Heading>
+                        <p>
+                        This student has no stop that is in range. Please use the stop planner to assign an appropriate stop.
+                        </p>
+                        <hr />
+                        <Link to={`/`}>
+                            <Button variant='yellow'>Plan a Stop</Button>
+                        </Link>
+                    </Alert>
+                    )
                 }
             </Card.Body>
         </Card>
