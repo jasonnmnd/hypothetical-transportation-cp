@@ -21,7 +21,9 @@ function RoutePlannerMap(props){
     }
 
     const onStudentClick = (pinStuff, position) => {
-        createInfoWindow(position, <h1>{pinStuff.full_name}</h1>)
+        createInfoWindow(position, 
+            <><h3>{pinStuff.full_name}</h3><h4>{pinStuff.routes && pinStuff.routes.name}</h4></>
+        )
     }
 
     const onSchoolClick = (pinStuff, position) => {
@@ -30,45 +32,48 @@ function RoutePlannerMap(props){
 
     useEffect(() => {
        setPinData(getPinData())
-      }, [props.school, props.students]);
+      }, [props]);
 
-    const getStudentGroups = () => {
-        let studentGroups = {
-            noRoute: []
-        };
-        props.students.forEach(student => {
-            if(student.routes == null){
-                studentGroups.noRoute.push(student);
-            } else {
-                if(studentGroups[student.routes.id] == null){
-                    studentGroups[student.routes.id] = []
-                }
-                studentGroups[student.routes.id].push(student);
-
-            }
-        });
-        return studentGroups;
+    const getStudentsWORoute = () => {
+        return props.students.filter(student => student.routes == null);
     }
 
-    const getGroupColor = (routeID) => {
-        const routeString = routeID.toString();
-        const routeHash = sha256(routeString);
-        const color = `#${routeHash.toString().substring(0, 6)}`
-        return color
+    const getStudentsWCurrentRoute = () => {
+        return props.students.filter(student => student.routes != null && student.routes.id == props.currentRoute);
+    }
+    
+    const getStudentsWOtherRoute = () => {
+        return props.students.filter(student => student.routes != null && student.routes.id != props.currentRoute);
     }
 
     const getStudentGroupsPinData = () => {
-        const studentGroups = getStudentGroups();
-        return Object.keys(studentGroups).map(routeKey => {
-            return {
-                iconColor: getGroupColor(routeKey),
+        
+        return [
+            {
+                iconColor: "green",
                 iconType: "student",
                 markerProps: {
                     onClick: onStudentClick
                 },
-                pins: studentGroups[routeKey].map(student => {return {...student, address: student.guardian.address}})
-            }
-        })
+                pins: getStudentsWCurrentRoute().map(student => {return {...student, address: student.guardian.address}})
+            },
+            {
+                iconColor: "red",
+                iconType: "student",
+                markerProps: {
+                    onClick: onStudentClick
+                },
+                pins: getStudentsWORoute().map(student => {return {...student, address: student.guardian.address}})
+            },
+            {
+                iconColor: "grey",
+                iconType: "student",
+                markerProps: {
+                    onClick: onStudentClick
+                },
+                pins: getStudentsWOtherRoute().map(student => {return {...student, address: student.guardian.address}})
+            },
+        ]
     }
     
     const getPinData = () => {
@@ -92,7 +97,13 @@ function RoutePlannerMap(props){
 
 RoutePlannerMap.propTypes = {
     students: PropTypes.array,
-    school: PropTypes.object
+    school: PropTypes.object,
+    currentRoute: PropTypes.number
+}
+
+RoutePlannerMap.defaultProps = {
+    students: [],
+    currentRoute: -1
 }
 
 const mapStateToProps = (state) => ({

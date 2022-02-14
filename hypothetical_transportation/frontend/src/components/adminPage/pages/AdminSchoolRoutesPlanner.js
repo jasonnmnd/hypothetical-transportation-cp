@@ -102,7 +102,7 @@ function AdminSchoolRoutesPlanner(props) {
                 {getRouteOptions()}
         </Form.Select>
         <Container className="container-main d-flex flex-row" style={{gap: "10px"}}>
-            {isCreate() || searchParams.get('route') == null ? null : <RoutePlannerMap students={props.students} school={props.school} />}
+            {isCreate() || searchParams.get('route') == null ? null : <RoutePlannerMap students={props.students} school={props.school} currentRoute={getRouteFromSearchParams()} />}
           <ModifyRouteInfo title={getInfoTitle()} routeName={props.currentRoute.name} routeDescription={props.currentRoute.description} onSubmitFunc={onInfoSubmit}/>
         </Container>
         <Button variant='yellow'><h3>Save</h3></Button>

@@ -142,7 +142,7 @@ MapComponent.propTypes = {
 MapComponent.defaultProps = {
     pinData: [],
     center: {
-        lat: 36.0016944, lng: -78.9480547
+        lat: 40.586744, lng: -74.596304
     },
     zoom: 13,
     otherMapComponents: null
