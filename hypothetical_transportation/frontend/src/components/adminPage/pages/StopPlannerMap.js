@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import MapComponent from "../../maps/MapComponent";
 import PropTypes, { string } from 'prop-types';
 import { useSearchParams } from 'react-router-dom';
-import sha256 from 'crypto-js/sha256';
 import { NO_ROUTE } from '../../../utils/utils';
 import { getStudentPin, addSchoolPin } from '../../../utils/planner_maps';
 
