@@ -5,6 +5,7 @@ import MapComponent from "../../maps/MapComponent";
 import PropTypes, { string } from 'prop-types';
 import { useSearchParams } from 'react-router-dom';
 import sha256 from 'crypto-js/sha256';
+import { NO_ROUTE } from '../../../utils/utils';
 
 
 
@@ -31,19 +32,50 @@ function RoutePlannerMap(props){
     }
 
     useEffect(() => {
+        console.log(props.studentChanges)
        setPinData(getPinData())
-      }, [props]);
+    }, [props]);
+
+    
+    const getCurRouteFromStudent = (student) => {
+        if(props.studentChanges[student.id] != null){
+            return props.studentChanges[student.id];
+        }
+        if(student.routes == null){
+            return null;
+        }
+        return student.routes.id;
+    }
+    
 
     const getStudentsWORoute = () => {
-        return props.students.filter(student => student.routes == null);
+        return props.students.filter(student => {
+            const curRoute = getCurRouteFromStudent(student)
+            return curRoute == null || curRoute == NO_ROUTE;
+        });
     }
 
     const getStudentsWCurrentRoute = () => {
-        return props.students.filter(student => student.routes != null && student.routes.id == props.currentRoute);
+        return props.students.filter(student => {
+            const curRoute = getCurRouteFromStudent(student)
+            return curRoute != null && curRoute == props.currentRoute;
+        });
     }
     
     const getStudentsWOtherRoute = () => {
-        return props.students.filter(student => student.routes != null && student.routes.id != props.currentRoute);
+        return props.students.filter(student => {
+            const curRoute = getCurRouteFromStudent(student)
+            return curRoute != null && curRoute != props.currentRoute
+        });
+    }
+
+    const getStudentPin = (student) => {
+        return {
+            ...student, 
+            address: student.guardian.address, 
+            latitude: student.guardian.latitude, 
+            longitude: student.guardian.longitude
+        }
     }
 
     const getStudentGroupsPinData = () => {
@@ -53,25 +85,28 @@ function RoutePlannerMap(props){
                 iconColor: "green",
                 iconType: "student",
                 markerProps: {
-                    onClick: onStudentClick
+                    onClick: onStudentClick,
+                    onRightClick: props.changeStudentRoute
                 },
-                pins: getStudentsWCurrentRoute().map(student => {return {...student, address: student.guardian.address}})
+                pins: getStudentsWCurrentRoute().map(student => {return getStudentPin(student)})
             },
             {
                 iconColor: "red",
                 iconType: "student",
                 markerProps: {
-                    onClick: onStudentClick
+                    onClick: onStudentClick,
+                    onRightClick: props.changeStudentRoute
                 },
-                pins: getStudentsWORoute().map(student => {return {...student, address: student.guardian.address}})
+                pins: getStudentsWORoute().map(student => {return getStudentPin(student)})
             },
             {
                 iconColor: "grey",
                 iconType: "student",
                 markerProps: {
-                    onClick: onStudentClick
+                    onClick: onStudentClick,
+                    onRightClick: props.changeStudentRoute
                 },
-                pins: getStudentsWOtherRoute().map(student => {return {...student, address: student.guardian.address}})
+                pins: getStudentsWOtherRoute().map(student => {return getStudentPin(student)})
             },
         ]
     }
@@ -98,12 +133,15 @@ function RoutePlannerMap(props){
 RoutePlannerMap.propTypes = {
     students: PropTypes.array,
     school: PropTypes.object,
-    currentRoute: PropTypes.number
+    currentRoute: PropTypes.number,
+    changeStudentRoute: PropTypes.func,
+    studentChanges: PropTypes.object
 }
 
 RoutePlannerMap.defaultProps = {
     students: [],
-    currentRoute: -1
+    currentRoute: -1,
+    studentChanges: {}
 }
 
 const mapStateToProps = (state) => ({

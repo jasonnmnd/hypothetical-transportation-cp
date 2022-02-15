@@ -12,6 +12,7 @@ import { updateRoute, createRoute } from '../../../actions/routeplanner';
 import { getSchool } from '../../../actions/schools';
 import { getStudents } from '../../../actions/students';
 import RoutePlannerMap from './RoutePlannerMap';
+import { NO_ROUTE } from '../../../utils/utils';
 
 
 function AdminSchoolRoutesPlanner(props) {
@@ -19,11 +20,13 @@ function AdminSchoolRoutesPlanner(props) {
   const navigate = useNavigate();
   let [searchParams, setSearchParams] = useSearchParams();
 
+  const [studentChanges, setStudentChanges] = useState({})
+
 
   //const [currentRoute, setCurrentRoute] = useState(null)
   
   const isCreate = () => {
-    return searchParams.get(`route`) == 'new'
+    return searchParams.get(`route`) == 'new';
   }
 
   useEffect(() => {
@@ -87,6 +90,14 @@ function AdminSchoolRoutesPlanner(props) {
     return searchParams.get('route');
   }
 
+  const changeStudentRoute = (pinStuff, position) => {
+    console.log(pinStuff);
+    setStudentChanges({
+      ...studentChanges,
+      [pinStuff.id]: searchParams.get('route')
+    })
+  }
+
 
 
 
@@ -100,10 +111,17 @@ function AdminSchoolRoutesPlanner(props) {
         <Form.Select size="sm" value={getRouteFromSearchParams()} onChange={onDropdownChange}>
                 <option value={"new"} key={"new"}>{"Create New Route"}</option>
                 {getRouteOptions()}
+                <option value={NO_ROUTE} key={NO_ROUTE}>{"Remove Students from all Routes"}</option>
         </Form.Select>
         <Container className="container-main d-flex flex-row" style={{gap: "10px"}}>
-            {isCreate() || searchParams.get('route') == null ? null : <RoutePlannerMap students={props.students} school={props.school} currentRoute={getRouteFromSearchParams()} />}
-          <ModifyRouteInfo title={getInfoTitle()} routeName={props.currentRoute.name} routeDescription={props.currentRoute.description} onSubmitFunc={onInfoSubmit}/>
+            {isCreate() || searchParams.get('route') == null ? null : <RoutePlannerMap 
+                                                                          students={props.students} 
+                                                                          school={props.school} 
+                                                                          currentRoute={getRouteFromSearchParams()} 
+                                                                          changeStudentRoute={changeStudentRoute}
+                                                                          studentChanges={studentChanges}
+                                                                      />}
+          {searchParams.get(`route`) == NO_ROUTE || searchParams.get('route') == null ? null : <ModifyRouteInfo title={getInfoTitle()} routeName={props.currentRoute.name} routeDescription={props.currentRoute.description} onSubmitFunc={onInfoSubmit}/>}
         </Container>
         <Button variant='yellow'><h3>Save</h3></Button>
       </Container>
