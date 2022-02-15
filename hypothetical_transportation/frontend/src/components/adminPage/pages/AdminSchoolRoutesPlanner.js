@@ -109,8 +109,9 @@ function AdminSchoolRoutesPlanner(props) {
   }
 
   const submit = () => {
-    const routeVal = studentChanges[student] == NO_ROUTE ? null : studentChanges[student]
+    
     Object.keys(studentChanges).forEach(student => {
+      const routeVal = studentChanges[student] == NO_ROUTE ? null : studentChanges[student]
       props.patchStudent({
         routes: routeVal
       }, student);

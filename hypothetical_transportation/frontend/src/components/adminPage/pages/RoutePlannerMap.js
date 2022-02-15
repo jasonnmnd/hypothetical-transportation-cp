@@ -5,6 +5,7 @@ import MapComponent from "../../maps/MapComponent";
 import PropTypes, { string } from 'prop-types';
 import { useSearchParams } from 'react-router-dom';
 import { NO_ROUTE } from '../../../utils/utils';
+import { getStudentPin, addSchoolPin } from '../../../utils/planner_maps';
 
 
 
@@ -83,15 +84,6 @@ function RoutePlannerMap(props){
         });
     }
 
-    const getStudentPin = (student) => {
-        return {
-            ...student, 
-            address: student.guardian.address, 
-            latitude: student.guardian.latitude, 
-            longitude: student.guardian.longitude
-        }
-    }
-
     const getStudentGroupsPinData = () => {
         
         return [
@@ -127,16 +119,7 @@ function RoutePlannerMap(props){
     
     const getPinData = () => {
         let pinData = getStudentGroupsPinData();
-        pinData.push({
-            iconColor: "black",
-            iconType: "school",
-            markerProps: {
-                onClick: onSchoolClick
-            },
-            pins: [
-                props.school
-            ]
-        })
+        addSchoolPin(pinData, props.school, onSchoolClick)
         return pinData;
     }
 
