@@ -8,7 +8,7 @@ import '../NEWadminPage.css';
 import MapComponent from '../../maps/MapComponent';
 import ModifyRouteInfo from '../components/forms/ModifyRouteInfo';
 import { getRouteInfo, getRoutes, resetViewedRoute } from '../../../actions/routes';
-import { updateRoute, createRoute } from '../../../actions/routeplanner';
+import { updateRoute, createRoute,resetPosted } from '../../../actions/routeplanner';
 import { getSchool } from '../../../actions/schools';
 import { getStudents, patchStudent } from '../../../actions/students';
 import RoutePlannerMap from './RoutePlannerMap';
@@ -47,6 +47,15 @@ function AdminSchoolRoutesPlanner(props) {
       })
     }
   }, []);
+
+  useEffect(()=>{
+    if(props.postedRoute.id!==0){
+      setSearchParams({
+        [`route`]: props.postedRoute.id,
+      })
+      props.resetPosted();
+    }
+  },[props.postedRoute])
 
   
   
@@ -155,7 +164,8 @@ AdminSchoolRoutesPlanner.propTypes = {
     getRoutes: PropTypes.func.isRequired,
     getStudents: PropTypes.func.isRequired,
     resetViewedRoute: PropTypes.func.isRequired,
-    patchStudent: PropTypes.func.isRequired
+    patchStudent: PropTypes.func.isRequired,
+    resetPosted: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => ({
@@ -164,6 +174,7 @@ const mapStateToProps = (state) => ({
   currentRoute: state.routes.viewedRoute,
   school: state.schools.viewedSchool,
   studentsInSchool: state.students.students.results,
+  postedRoute: state.routeplanner.postedRoute,
 });
 
-export default connect(mapStateToProps, {patchStudent, getRouteInfo, updateRoute, getSchool, createRoute, getRoutes, getStudents, resetViewedRoute})(AdminSchoolRoutesPlanner)
+export default connect(mapStateToProps, {resetPosted, patchStudent, getRouteInfo, updateRoute, getSchool, createRoute, getRoutes, getStudents, resetViewedRoute})(AdminSchoolRoutesPlanner)

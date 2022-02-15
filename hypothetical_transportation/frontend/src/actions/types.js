@@ -38,6 +38,7 @@ export const ADD_ROUTE = "ADD_ROUTE"
 export const UPDATE_ROUTE = "UPDATE_ROUTE"
 export const GET_ROUTE = "GET_ROUTE"
 export const RESET_VIEWED_ROUTE = "RESET_VIEWED_ROUTE"
+export const RESET_POSTED = "RESET_POSTED"
 
 export const GET_STOPS = "GET_STOPS"
 export const GET_STOP = "GET_STOP"

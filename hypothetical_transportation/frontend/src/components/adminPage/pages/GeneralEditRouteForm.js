@@ -23,7 +23,7 @@ function GeneralEditRouteForm() {
             <Alert.Heading>Make a New Route</Alert.Heading>
             <p>
                 To make a new route, first choose a school and plan a route for that school. You will be able to make 
-                new routes, edit existing routes, modify stops for routes, and assign students within each route.
+                new routes, edit existing routes, and assign students within each route.
             </p>
             <hr />
             <Link to={`/admin/schools?pageNum=1`}>

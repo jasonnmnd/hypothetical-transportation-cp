@@ -71,7 +71,7 @@ function GeneralAdminRouteDetails(props) {
         <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
             <Row>
                 <Col>
-                    <Link to={`/admin/route/edit/${props.route.school.id}/${props.route.id}`}>
+                    <Link to={`/admin/route/plan/${props.route.school.id}?route=${props.route.id}`}>
                         <Button variant="yellowLong" size="lg">Edit Route</Button>
                     </Link>
                 </Col>
@@ -85,6 +85,11 @@ function GeneralAdminRouteDetails(props) {
         </Container>
         <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
             <Row>
+                <Col>
+                    <Link to={`/admin/route/edit/${props.route.school.id}/${props.route.id}`}>
+                        <Button variant="yellowLong" size="lg">Stop Planner for This Route</Button>
+                    </Link>
+                </Col>
                 <Col>
                     <Link to={`/admin/route_email/${props.route.school.id}/${props.route.id}`}>
                         <Button variant="yellowLong" size="lg">Send Route-wide Email</Button>
