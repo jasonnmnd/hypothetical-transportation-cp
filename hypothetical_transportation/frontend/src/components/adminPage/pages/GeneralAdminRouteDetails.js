@@ -71,7 +71,7 @@ function GeneralAdminRouteDetails(props) {
         <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
             <Row>
                 <Col>
-                    <Link to={`/admin/route/plan/${props.route.school.id}?route=${props.route.id}`}>
+                    <Link to={`/admin/stop/plan/${props.route.school.id}/${props.route.id}`}>
                         <Button variant="yellowLong" size="lg">Edit Route</Button>
                     </Link>
                 </Col>
