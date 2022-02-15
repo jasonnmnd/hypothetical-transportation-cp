@@ -6,7 +6,7 @@ import PropTypes, { string } from 'prop-types';
 import { useSearchParams } from 'react-router-dom';
 import sha256 from 'crypto-js/sha256';
 import { NO_ROUTE } from '../../../utils/utils';
-
+import { getStudentPin, addSchoolPin } from '../../../utils/planner_maps';
 
 
 
@@ -22,27 +22,15 @@ function StopPlannerMap(props){
     }
 
     const onStudentClick = (pinStuff, position) => {
-        const routeId = props.studentChanges[pinStuff.id];
-        let routeName = '';
-        if(routeId == null){
-            if(pinStuff.routes == null){
-                routeName = "NO ROUTE"
-            } else {
-                routeName = pinStuff.routes.name
-            }
-        } else if(routeId == NO_ROUTE) {
-            routeName = "NO ROUTE";
-        } else {
-            routeName = props.allRoutes.find(route => route.id == routeId).name
-            //should never be undefined
-        }
-        createInfoWindow(position, 
-            <><h4>{pinStuff.full_name}</h4><h6>Route: {routeName}</h6></>
-        )
+        createInfoWindow(position, <h4>{pinStuff.full_name}</h4>)
     }
 
     const onSchoolClick = (pinStuff, position) => {
         createInfoWindow(position, <h1>{pinStuff.name}</h1>)
+    }
+
+    const onStopClick = (pinStuff, position) => {
+        createInfoWindow(position, <h1>{pinStuff.stop_number}</h1>)
     }
 
     useEffect(() => {
@@ -51,46 +39,17 @@ function StopPlannerMap(props){
     }, [props]);
 
     
-    const getCurRouteFromStudent = (student) => {
-        if(props.studentChanges[student.id] != null){
-            return props.studentChanges[student.id];
-        }
-        if(student.routes == null){
-            return null;
-        }
-        return student.routes.id;
-    }
+
     
 
-    const getStudentsWORoute = () => {
-        return props.students.filter(student => {
-            const curRoute = getCurRouteFromStudent(student)
-            return curRoute == null || curRoute == NO_ROUTE;
-        });
+    const getStudentsWStop = () => {
+        return props.students.filter(student => student.has_inrange_stop == true);
     }
 
-    const getStudentsWCurrentRoute = () => {
-        return props.students.filter(student => {
-            const curRoute = getCurRouteFromStudent(student)
-            return curRoute != null && curRoute != NO_ROUTE && curRoute == props.currentRoute;
-        });
-    }
-    
-    const getStudentsWOtherRoute = () => {
-        return props.students.filter(student => {
-            const curRoute = getCurRouteFromStudent(student)
-            return curRoute != null && curRoute != NO_ROUTE && curRoute != props.currentRoute
-        });
+    const getStudentsWOStop = () => {
+        return props.students.filter(student => !student.has_inrange_stop);
     }
 
-    const getStudentPin = (student) => {
-        return {
-            ...student, 
-            address: student.guardian.address, 
-            latitude: student.guardian.latitude, 
-            longitude: student.guardian.longitude
-        }
-    }
 
     const getStudentGroupsPinData = () => {
         
@@ -100,43 +59,38 @@ function StopPlannerMap(props){
                 iconType: "student",
                 markerProps: {
                     onClick: onStudentClick,
-                    onRightClick: props.changeStudentRoute
                 },
-                pins: getStudentsWCurrentRoute().map(student => {return getStudentPin(student)})
+                pins: getStudentsWStop().map(student => {return getStudentPin(student)})
             },
             {
                 iconColor: "red",
                 iconType: "student",
                 markerProps: {
                     onClick: onStudentClick,
-                    onRightClick: props.changeStudentRoute
                 },
-                pins: getStudentsWORoute().map(student => {return getStudentPin(student)})
+                pins: getStudentsWOStop().map(student => {return getStudentPin(student)})
             },
+        ]
+    }
+
+    const getStopPinData = () => {
+        return [
             {
-                iconColor: "grey",
-                iconType: "student",
+                iconColor: "blue",
+                iconType: "stop",
                 markerProps: {
-                    onClick: onStudentClick,
-                    onRightClick: props.changeStudentRoute
+                    onClick: onStopClick,
+                    draggable: true
                 },
-                pins: getStudentsWOtherRoute().map(student => {return getStudentPin(student)})
+                pins: getStudentsWStop().map(student => {return getStudentPin(student)})
             },
         ]
     }
     
     const getPinData = () => {
         let pinData = getStudentGroupsPinData();
-        pinData.push({
-            iconColor: "black",
-            iconType: "school",
-            markerProps: {
-                onClick: onSchoolClick
-            },
-            pins: [
-                props.school
-            ]
-        })
+        pinData = pinData.concat(getStopPinData());
+        addSchoolPin(pinData, props.school, onSchoolClick)
         return pinData;
     }
 

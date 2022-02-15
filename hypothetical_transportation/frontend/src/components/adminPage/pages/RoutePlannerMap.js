@@ -84,15 +84,6 @@ function RoutePlannerMap(props){
         });
     }
 
-    // const getStudentPin = (student) => {
-    //     return {
-    //         ...student, 
-    //         address: student.guardian.address, 
-    //         latitude: student.guardian.latitude, 
-    //         longitude: student.guardian.longitude
-    //     }
-    // }
-
     const getStudentGroupsPinData = () => {
         
         return [
