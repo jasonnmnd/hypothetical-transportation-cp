@@ -22,8 +22,22 @@ function RoutePlannerMap(props){
     }
 
     const onStudentClick = (pinStuff, position) => {
+        const routeId = props.studentChanges[pinStuff.id];
+        let routeName = '';
+        if(routeId == null){
+            if(pinStuff.routes == null){
+                routeName = "NO ROUTE"
+            } else {
+                routeName = pinStuff.routes.name
+            }
+        } else if(routeId == NO_ROUTE) {
+            routeName = "NO ROUTE";
+        } else {
+            routeName = props.allRoutes.find(route => route.id == routeId).name
+            //should never be undefined
+        }
         createInfoWindow(position, 
-            <><h3>{pinStuff.full_name}</h3><h4>{pinStuff.routes && pinStuff.routes.name}</h4></>
+            <><h4>{pinStuff.full_name}</h4><h6>Route: {routeName}</h6></>
         )
     }
 
@@ -58,14 +72,14 @@ function RoutePlannerMap(props){
     const getStudentsWCurrentRoute = () => {
         return props.students.filter(student => {
             const curRoute = getCurRouteFromStudent(student)
-            return curRoute != null && curRoute == props.currentRoute;
+            return curRoute != null && curRoute != NO_ROUTE && curRoute == props.currentRoute;
         });
     }
     
     const getStudentsWOtherRoute = () => {
         return props.students.filter(student => {
             const curRoute = getCurRouteFromStudent(student)
-            return curRoute != null && curRoute != props.currentRoute
+            return curRoute != null && curRoute != NO_ROUTE && curRoute != props.currentRoute
         });
     }
 
@@ -135,7 +149,8 @@ RoutePlannerMap.propTypes = {
     school: PropTypes.object,
     currentRoute: PropTypes.number,
     changeStudentRoute: PropTypes.func,
-    studentChanges: PropTypes.object
+    studentChanges: PropTypes.object,
+    allRoutes: PropTypes.array
 }
 
 RoutePlannerMap.defaultProps = {

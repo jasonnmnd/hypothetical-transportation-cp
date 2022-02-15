@@ -135,6 +135,7 @@ function AdminSchoolRoutesPlanner(props) {
                                                                           currentRoute={getRouteFromSearchParams()} 
                                                                           changeStudentRoute={changeStudentRoute}
                                                                           studentChanges={studentChanges}
+                                                                          allRoutes={props.routes}
                                                                       />}
           {searchParams.get(`route`) == NO_ROUTE || searchParams.get('route') == null ? null : <ModifyRouteInfo title={getInfoTitle()} routeName={props.currentRoute.name} routeDescription={props.currentRoute.description} onSubmitFunc={onInfoSubmit}/>}
         </Container>
