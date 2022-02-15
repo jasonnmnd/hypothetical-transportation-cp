@@ -36,6 +36,7 @@ import AdminSchoolRoutesPlanner from '../adminPage/pages/AdminSchoolRoutesPlanne
 
 import LinkBasePasswordResetForm from '../loginPage/LinkBasePasswordResetForm';
 import GeneralUserConfirmationPage from '../adminPage/pages/GeneralUserConfirmationPage';
+import AdminRouteStopsPlanner from '../adminPage/pages/AdminRouteStopsPlanner';
 
 
 const Router = (props) => {
@@ -78,6 +79,7 @@ const Router = (props) => {
           
           {/* <Route exact path="/admin/route/plan/:school_id" element={<PrivateRoute><GeneralAdminRoutePlanner action={"new"}/></PrivateRoute>}/> */}
           <Route exact path="/admin/route/plan/:school_id" element={<PrivateRoute><AdminSchoolRoutesPlanner/></PrivateRoute>}/>
+          <Route exact path="/admin/stop/plan/:school_id/:route_id" element={<PrivateRoute><AdminRouteStopsPlanner/></PrivateRoute>}/>
           <Route exact path="/admin/route/edit/:school_id/:route_id" element={<PrivateRoute><GeneralAdminRoutePlanner action={"edit"}/></PrivateRoute>}/>
 
           <Route exact path="/admin/email" element={<PrivateRoute><GeneralAdminEmailPage/></PrivateRoute>}/>
