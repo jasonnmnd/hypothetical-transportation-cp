@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters
+from rest_framework import filters, status
 from rest_framework import viewsets, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -12,6 +12,8 @@ from .serializers import UserSerializer, StudentSerializer, RouteSerializer, Sch
 from .search import DynamicSearchFilter
 from .customfilters import StudentCountShortCircuitFilter
 from .permissions import is_admin, IsAdminOrReadOnly, IsAdmin
+from django.shortcuts import get_object_or_404
+from .geo_utils import get_straightline_distance, LEN_OF_MILE
 
 
 def get_filter_dict(model):
@@ -92,6 +94,8 @@ class StopViewSet(viewsets.ModelViewSet):
     permission_classes = [
         IsAdmin
     ]
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    filterset_fields = ['route']
 
     def get_serializer_class(self):
         return StopSerializer
@@ -182,6 +186,20 @@ class StudentViewSet(viewsets.ModelViewSet):
 
     # def perform_create(self, serializer):
     #     serializer.save()
+
+    @action(detail=True, methods=['get'], permission_classes=[IsAdminOrReadOnly])
+    def inrange_stops(self, request, pk=None):
+        student = get_object_or_404(self.get_queryset(), pk=pk)
+        if student.routes is None:
+            content = {'detail': 'This student does not yet have a route configured.'}
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
+        if is_admin(self.request.user):
+            return Response(StopSerializer(student.routes.stops, many=True).data)
+        student_inrange_stops = [stop for stop in student.routes.stops.all() if
+                                 get_straightline_distance(student.guardian.latitude, student.guardian.longitude,
+                                                           stop.latitude,
+                                                           stop.longitude) < 0.75 * LEN_OF_MILE]
+        return Response(StopSerializer(student_inrange_stops, many=True).data)
 
     @action(detail=False, permission_classes=[permissions.AllowAny])
     def fields(self, request):

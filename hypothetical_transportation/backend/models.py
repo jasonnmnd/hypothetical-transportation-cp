@@ -6,7 +6,7 @@ from django.core.validators import MinLengthValidator
 # Create your models here.
 from django.conf import settings
 import datetime
-from .geo_utils import get_distance_between, get_time_between, add_time_with_delta, LEN_OF_MILE
+from .geo_utils import get_straightline_distance, get_time_between, add_time_with_delta, LEN_OF_MILE
 
 
 class School(models.Model):
@@ -116,7 +116,7 @@ class Student(models.Model):
         student_address = decimal.Decimal(self.guardian.latitude), decimal.Decimal(self.guardian.longitude)
         for stop in self.routes.stops.all():
             stop_address = stop.latitude, stop.longitude
-            if get_distance_between(*student_address, *stop_address) < 2.0 * LEN_OF_MILE:
+            if get_straightline_distance(*student_address, *stop_address) < 2.0 * LEN_OF_MILE:
                 return True
         return False
 
