@@ -10,7 +10,7 @@ import ModifyRouteInfo from '../components/forms/ModifyRouteInfo';
 import { getRouteInfo, getRoutes, resetViewedRoute } from '../../../actions/routes';
 import { updateRoute, createRoute } from '../../../actions/routeplanner';
 import { getSchool } from '../../../actions/schools';
-import { getStudents } from '../../../actions/students';
+import { getStudents, patchStudent } from '../../../actions/students';
 import RoutePlannerMap from './RoutePlannerMap';
 import { NO_ROUTE } from '../../../utils/utils';
 
@@ -61,6 +61,7 @@ function AdminSchoolRoutesPlanner(props) {
     } else {
       props.updateRoute(routeInfo, searchParams.get('route'))
     }
+
   }
 
   const getInfoTitle = () => {
@@ -98,6 +99,20 @@ function AdminSchoolRoutesPlanner(props) {
     })
   }
 
+  const submit = () => {
+    const routeVal = studentChanges[student] == NO_ROUTE ? null : studentChanges[student]
+    Object.keys(studentChanges).forEach(student => {
+      props.patchStudent({
+        routes: routeVal
+      }, student);
+    });
+    navigate(`/admin/routes/`);
+  }
+
+  const resetStudentChanges = () => {
+    setStudentChanges({})
+  }
+
 
 
 
@@ -123,7 +138,8 @@ function AdminSchoolRoutesPlanner(props) {
                                                                       />}
           {searchParams.get(`route`) == NO_ROUTE || searchParams.get('route') == null ? null : <ModifyRouteInfo title={getInfoTitle()} routeName={props.currentRoute.name} routeDescription={props.currentRoute.description} onSubmitFunc={onInfoSubmit}/>}
         </Container>
-        <Button variant='yellow'><h3>Save</h3></Button>
+        <Button variant='yellow' onClick={submit}><h3>Save</h3></Button>
+        <Button variant='yellow' onClick={resetStudentChanges}><h3>Reset</h3></Button>
       </Container>
     </>
 
@@ -137,7 +153,8 @@ AdminSchoolRoutesPlanner.propTypes = {
     createRoute: PropTypes.func.isRequired,
     getRoutes: PropTypes.func.isRequired,
     getStudents: PropTypes.func.isRequired,
-    resetViewedRoute: PropTypes.func.isRequired
+    resetViewedRoute: PropTypes.func.isRequired,
+    patchStudent: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => ({
@@ -148,4 +165,4 @@ const mapStateToProps = (state) => ({
   studentsInSchool: state.students.students.results,
 });
 
-export default connect(mapStateToProps, {getRouteInfo, updateRoute, getSchool, createRoute, getRoutes, getStudents, resetViewedRoute})(AdminSchoolRoutesPlanner)
+export default connect(mapStateToProps, {patchStudent, getRouteInfo, updateRoute, getSchool, createRoute, getRoutes, getStudents, resetViewedRoute})(AdminSchoolRoutesPlanner)
