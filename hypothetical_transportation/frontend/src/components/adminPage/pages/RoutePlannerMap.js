@@ -46,7 +46,8 @@ function RoutePlannerMap(props){
     }
 
     useEffect(() => {
-        console.log(props.studentChanges)
+        // console.log(props.studentChanges)
+        // console.log(props.school)
        setPinData(getPinData())
     }, [props]);
 
@@ -123,7 +124,7 @@ function RoutePlannerMap(props){
     }
 
 
-    return <MapComponent pinData={pinData} otherMapComponents={extraComponents} />
+    return <MapComponent pinData={pinData} otherMapComponents={extraComponents} center={{lng: Number(props.school.longitude),lat: Number(props.school.latitude)}} />
 }
 
 RoutePlannerMap.propTypes = {
