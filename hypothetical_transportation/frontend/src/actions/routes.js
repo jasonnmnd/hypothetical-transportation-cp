@@ -1,5 +1,5 @@
 import axios from "axios";
-import { DELETE_ROUTE, GET_ROUTE, GET_ROUTES, POPULATE_TABLE, DELETE_ITEM } from "./types"; 
+import { DELETE_ROUTE, GET_ROUTE, GET_ROUTES, POPULATE_TABLE, DELETE_ITEM, RESET_VIEWED_ROUTE } from "./types"; 
 import { tokenConfig } from './auth';
 
 import { createMessage, returnErrors } from './messages';
@@ -24,6 +24,12 @@ export const getRoutes = (parameters) => (dispatch, getState) => {
     })
     .catch((err) => dispatch(returnErrors(err.response.data, err.response.status)));
 
+}
+
+export const resetViewedRoute = () => (dispatch) => {
+  dispatch({
+    type: RESET_VIEWED_ROUTE
+  })
 }
 
 export const searchRoutes = (i1, i2, i3) => (dispatch, getState) => {

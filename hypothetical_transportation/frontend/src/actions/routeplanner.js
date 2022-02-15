@@ -75,6 +75,19 @@ export const getStudentsWithoutRoute = (parameters) => (dispatch, getState) => {
       .catch((err) => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});
   };
 
+  export const createRoute = (route) => (dispatch, getState) => {
+    axios
+      .post('/api/route/', route, tokenConfig(getState))
+      .then((res) => {
+        dispatch({
+          type: ADD_ROUTE,
+          payload: res.data,
+        });
+        dispatch(createMessage({ route: 'Route Created' }));
+      })
+      .catch((err) => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});
+  };
+
 
   export const updateRoute = (route, id) => (dispatch, getState) => {
     axios

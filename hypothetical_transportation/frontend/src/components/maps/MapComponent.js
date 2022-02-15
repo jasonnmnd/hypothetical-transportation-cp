@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import Geocode from "react-geocode";
 import { SCHOOL_MARKER, STOP_MARKER, STUDENT_MARKER } from './static/markers';
 
-const CLICK_FUNCTIONS = ["onClick", "onDblClick"]
+const CLICK_FUNCTIONS = ["onClick", "onRightClick"]
 
 function MapComponent(props) {
     const mapStyles = {        
@@ -37,8 +37,8 @@ function MapComponent(props) {
     let pinInfo = [];
 
     const getColoredIcon = (color, icon) => {
-        let iconData = ICONS[icon];
-        iconData.fillColor = color
+        let iconData = {...ICONS[icon]};
+        iconData.fillColor = color;
         return iconData;
     }
 
@@ -46,48 +46,59 @@ function MapComponent(props) {
 
 
     useEffect(() => {
+        //console.log(props.pinData)
         initializePins(props.pinData)
-      }, []);
+      }, [props.pinData]);
 
 
 
     
-    const setClickFunc = (pinObj, markerInfo, propName) => {
+    const setClickFunc = (pinObj, position, markerInfo, propName) => {
         if(markerInfo[propName]){
             const tempFunc = markerInfo[propName];
-            markerInfo[propName] = () => {tempFunc(pinObj)}
+            markerInfo[propName] = () => {tempFunc(pinObj, position)}
         }
     }
 
     
-    const setPinClickFunctions = (pinObj, markerInfo) => {
+    const setPinClickFunctions = (pinObj, position, markerInfo) => {
         CLICK_FUNCTIONS.forEach(funcName => {
-            setClickFunc(pinObj, markerInfo, funcName)
+            setClickFunc(pinObj, position, markerInfo, funcName)
         })
+    }
+
+    const addMarkerFromPin = (lat, lng, pinGroup, pin) => {
+        const temp = {
+            position: {
+                lat: lat,
+                lng: lng
+            },
+            icon: getColoredIcon(pinGroup.iconColor, pinGroup.iconType),
+            id: pin.id,
+            ...pinGroup.markerProps
+        }
+        setPinClickFunctions(pin, {lat: lat, lng: lng}, temp)
+        pinInfo = pinInfo.concat(temp);
+        setPins(pinInfo)
     }
     
     const initializePins = (inPinData) => {
         inPinData.forEach((pinGroup) => {
             pinGroup.pins.forEach((pin) => {
-                Geocode.fromAddress(pin.address)
-                .then((response) => {  
-                      
-                    const { lat, lng } = response.results[0].geometry.location;
-                    const temp = {
-                        position: {
-                            lat: lat,
-                            lng: lng
-                        },
-                        icon: getColoredIcon(pinGroup.iconColor, pinGroup.iconType),
-                        id: pin.id,
-                        ...pinGroup.markerProps
-                    }
-                    setPinClickFunctions(pin, temp)
-                    pinInfo = pinInfo.concat(temp);
-                    setPins(pinInfo)
-                    
-                })
-                .catch(err => console.log(err));
+                if(pin.latitude == null || pin.longitude == null){
+                    Geocode.fromAddress(pin.address)
+                    .then((response) => {  
+                        
+                        const { lat, lng } = response.results[0].geometry.location;
+                        addMarkerFromPin(lat, lng, pinGroup, pin)
+                        
+                    })
+                    .catch(err => console.log(err));
+                }
+                else {
+                    addMarkerFromPin(parseFloat(pin.latitude), parseFloat(pin.longitude), pinGroup, pin)
+                }
+                
             })
         });
         
@@ -96,6 +107,7 @@ function MapComponent(props) {
 
     const getMarkers = (inPins) => {
         return inPins.map((pin, pinInd) => {
+            //console.log(pin)
                 return <Marker {...pin} key={pinInd} />
         })
     }
@@ -108,6 +120,7 @@ function MapComponent(props) {
             center={props.center}
         >
             {getMarkers(pins)}
+            {props.otherMapComponents}
         </GoogleMap>
         )
 
@@ -132,15 +145,17 @@ MapComponent.propTypes = {
     center: PropTypes.shape({
         lng: PropTypes.number,
         lat: PropTypes.number
-    })
+    }),
+    otherMapComponents: PropTypes.element
 }
 
 MapComponent.defaultProps = {
     pinData: [],
     center: {
-        lat: 36.0016944, lng: -78.9480547
+        lat: 40.586744, lng: -74.596304
     },
-    zoom: 13
+    zoom: 13,
+    otherMapComponents: null
 }
 
 const mapStateToProps = (state) => ({

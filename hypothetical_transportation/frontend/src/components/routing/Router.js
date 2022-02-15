@@ -32,6 +32,7 @@ import Alerts from "../alerts/Alerts";
 import ForgotPasswordForm from '../loginPage/ForgotPasswordForm';
 import MapComponent from '../maps/MapComponent';
 import ExampleMapUsage from '../maps/ExampleMapUsage';
+import AdminSchoolRoutesPlanner from '../adminPage/pages/AdminSchoolRoutesPlanner';
 
 import LinkBasePasswordResetForm from '../loginPage/LinkBasePasswordResetForm';
 import GeneralUserConfirmationPage from '../adminPage/pages/GeneralUserConfirmationPage';
@@ -42,6 +43,7 @@ const Router = (props) => {
         <BrowserRouter>
         <Alerts/>
         <Routes>
+        <Route exact path="/testingMap" element={<ExampleMapUsage/>}></Route>
           <Route exact path="/" element={<LoginForm />}></Route>
           <Route exact path="/forgot_password" element={<ForgotPasswordForm />}></Route>
           <Route exact path="/testingMap" element={<ExampleMapUsage />}></Route>
@@ -74,8 +76,9 @@ const Router = (props) => {
           <Route exact path="/admin/route/:id" element={<PrivateRoute><GeneralAdminRouteDetails /></PrivateRoute>}/>
           <Route exact path="/admin/stop/:route_id/:stop_id" element={<PrivateRoute><GeneralAdminStopDetails/></PrivateRoute>}/>
           
-          {/* <Route exact path="/admin/route/plan/:school_id" element={<PrivateRoute><GeneralAdminRoutePlanner action={"new"}/></PrivateRoute>}/>
-          <Route exact path="/admin/route/edit/:school_id/:route_id" element={<PrivateRoute><GeneralAdminRoutePlanner action={"edit"}/></PrivateRoute>}/> */}
+          {/* <Route exact path="/admin/route/plan/:school_id" element={<PrivateRoute><GeneralAdminRoutePlanner action={"new"}/></PrivateRoute>}/> */}
+          <Route exact path="/admin/route/plan/:school_id" element={<PrivateRoute><AdminSchoolRoutesPlanner/></PrivateRoute>}/>
+          <Route exact path="/admin/route/edit/:school_id/:route_id" element={<PrivateRoute><GeneralAdminRoutePlanner action={"edit"}/></PrivateRoute>}/>
 
           <Route exact path="/admin/email" element={<PrivateRoute><GeneralAdminEmailPage/></PrivateRoute>}/>
           <Route exact path="/admin/school_email/:school_id" element={<PrivateRoute><GeneralAdminEmailPage/></PrivateRoute>}/>

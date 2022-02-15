@@ -1,10 +1,9 @@
 import MapComponent from "./MapComponent";
-import React from 'react';
+import React, { useState } from 'react';
+import {InfoWindow} from '@react-google-maps/api';
 
 
-const onSchoolClick = (pinStuff) => {
-    console.log(pinStuff);
-}
+
 
 const school = {
     id: 2,
@@ -148,50 +147,63 @@ const stop2 = {
     address: "714 Ninth Street, Durham, NC"
 }
 
-const pinData = [
-    {
-        iconColor: "green",
-        iconType: "student",
-        markerProps: {
-            draggable: true
-        },
-        pins: getStudentsWRoute().map(student => {return {address: student.guardian.address, id: student.id}})
-    },
-    {
-        iconColor: "red",
-        iconType: "student",
-        markerProps: {
-            draggable: false
-        },
-        pins: getStudentsWORoute().map(student => {return {address: student.guardian.address, id: student.id}})
-    },
-    {
-        iconColor: "black",
-        iconType: "school",
-        markerProps: {
-            draggable: false,
-            onDblClick: onSchoolClick
-        },
-        pins: [
-            school
-        ]
-    },
-    {
-        iconColor: "orange",
-        iconType: "stop",
-        markerProps: {
-            draggable: false
-        },
-        pins: [
-            stop1,
-            stop2
-        ]
-    },
-]
+
+
+const getInfoWindow = () => {
+    return <InfoWindow position={{lat: 36.0016944, lng: -78.9480547}}><h1>HELLOOOO</h1></InfoWindow>
+}
 
 
 function ExampleMapUsage(){
-    return <MapComponent pinData={pinData}/>
+    const [comps, setComps] = useState(null);
+    const onSchoolClick = (pinStuff, position) => {
+        console.log(pinStuff);
+        console.log(position);
+        setComps(<InfoWindow position={position} onCloseClick={setComps(null)}><h1>{pinStuff.name}</h1></InfoWindow>)
+    }
+
+    const pinData = [
+        {
+            iconColor: "green",
+            iconType: "student",
+            markerProps: {
+                draggable: true
+            },
+            pins: getStudentsWRoute().map(student => {return {address: student.guardian.address, id: student.id}})
+        },
+        {
+            iconColor: "red",
+            iconType: "student",
+            markerProps: {
+                draggable: false
+            },
+            pins: getStudentsWORoute().map(student => {return {address: student.guardian.address, id: student.id}})
+        },
+        {
+            iconColor: "black",
+            iconType: "school",
+            markerProps: {
+                draggable: false,
+                onDblClick: onSchoolClick
+            },
+            pins: [
+                school
+            ]
+        },
+        {
+            iconColor: "orange",
+            iconType: "stop",
+            markerProps: {
+                draggable: false
+            },
+            pins: [
+                stop1,
+                stop2
+            ]
+        },
+    ]
+    
+    return <MapComponent pinData={pinData} otherMapComponents={comps}/>
 }
 
 export default ExampleMapUsage;
