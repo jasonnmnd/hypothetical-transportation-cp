@@ -77,7 +77,7 @@ class StudentSerializer(serializers.ModelSerializer):
         # if self.partial:
         #     # Handles patch to avoid breaking things
         #     return data
-        if 'school' and 'routes' in data:
+        if 'school' in data and 'routes' in data:
             if not data['school'] or not data['routes']:
                 # No consistency to enforce
                 return data
