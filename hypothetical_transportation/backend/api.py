@@ -193,8 +193,6 @@ class StudentViewSet(viewsets.ModelViewSet):
         if student.routes is None:
             content = {'detail': 'This student does not yet have a route configured.'}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
-        if is_admin(self.request.user):
-            return Response(StopSerializer(student.routes.stops, many=True).data)
         student_inrange_stops = [stop for stop in student.routes.stops.all() if
                                  get_straightline_distance(student.guardian.latitude, student.guardian.longitude,
                                                            stop.latitude,

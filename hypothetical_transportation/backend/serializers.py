@@ -62,7 +62,7 @@ class StopSerializer(serializers.ModelSerializer):
 
 class FormatRouteSerializer(RouteSerializer):
     school = SchoolSerializer()
-    stops = StopSerializer(many=True)
+    # stops = StopSerializer(many=True)
     student_count = serializers.SerializerMethodField('get_student_count')
 
     def get_student_count(self, obj):
