@@ -85,7 +85,7 @@ class StudentSerializer(serializers.ModelSerializer):
         # if self.partial:
         #     # Handles patch to avoid breaking things
         #     return data
-        if 'school' and 'routes' in data:
+        if 'school' in data and 'routes' in data:
             if not data['school'] or not data['routes']:
                 # No consistency to enforce
                 return data
@@ -103,3 +103,21 @@ class FormatStudentSerializer(StudentSerializer):
     school = SchoolSerializer()
     routes = RouteSerializer()
     guardian = FormatUserSerializer()
+
+
+class StopLocationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Stop
+        fields = ['latitude', 'longitude']
+
+
+class StudentLocationSerializer(serializers.Serializer):
+    id = serializers.IntegerField(required=True)
+    latitude = serializers.DecimalField(max_digits=9, decimal_places=6, required=True)
+    longitude = serializers.DecimalField(max_digits=9, decimal_places=6, required=True)
+
+
+class CheckInrangeSerializer(serializers.Serializer):
+    stops = StopLocationSerializer(many=True)
+    students = StudentLocationSerializer(many=True)
+    route_id = serializers.IntegerField(required=True)

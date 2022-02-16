@@ -1,14 +1,14 @@
 from django.contrib.auth import get_user_model
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, status
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, generics
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import School, Route, Student, Stop
 from .serializers import UserSerializer, StudentSerializer, RouteSerializer, SchoolSerializer, FormatStudentSerializer, \
-    FormatRouteSerializer, FormatUserSerializer, EditUserSerializer, StopSerializer
+    FormatRouteSerializer, FormatUserSerializer, EditUserSerializer, StopSerializer, CheckInrangeSerializer
 from .search import DynamicSearchFilter
 from .customfilters import StudentCountShortCircuitFilter
 from .permissions import is_admin, IsAdminOrReadOnly, IsAdmin
@@ -53,12 +53,29 @@ def parse_repr(repr_str: str) -> dict:
     return repr_fields
 
 
-class MapsAPI(APIView):
-    def get(self, request, format=None):
-        return Response("Hello, World!")
+class StopPlannerAPI(generics.GenericAPIView):
+    serializer_class = CheckInrangeSerializer
+    permission_classes = [
+        permissions.AllowAny
+    ]
 
-    def post(self, request, format=None):
-        return Response("Hello, World!")
+    def get(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            students_response = []
+            students = serializer.validated_data['students']
+            stops = serializer.validated_data['stops']
+            for student in students:
+                has_inrange_stop = False
+                student_coord = student['latitude'], student['longitude']
+                for stop in stops:
+                    stop_coord = stop['latitude'], stop['longitude']
+                    if get_straightline_distance(*student_coord, *stop_coord) < 0.75 * LEN_OF_MILE:
+                        has_inrange_stop = True
+                        break
+                students_response.append({"id": student['id'], "has_inrange_stop": has_inrange_stop})
+            return Response(students_response, status.HTTP_200_OK)
+        return Response(serializer.errors)
 
 
 class UserViewSet(viewsets.ModelViewSet):
