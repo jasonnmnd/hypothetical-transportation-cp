@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 
 function Alerts(props) {
     
-    const { error, alert, message } = props;
+    const { error, al, message } = props;
 
 
     const mounted = useRef();
@@ -20,14 +20,14 @@ function Alerts(props) {
       } else {
         // do componentDidUpdate logic
         if (error !== prevErrorRef.current) {
-            if (error.msg.name) alert.error(`Name: ${error.msg.name.join()}`);
-            if (error.msg.non_field_errors) alert.error(`${error.msg.non_field_errors.join()}`);
-            if (error.msg.password) alert.error(`Password: ${error.msg.password.join()}`);
-            if (error.msg.email) alert.error(`Email: ${error.msg.email.join()}`);
-            if (error.msg.full_name) alert.error(`Name: ${error.msg.full_name.join()}`);
-            if (error.msg.student_id) alert.error(`Student ID: ${error.msg.student_id.join()}`);
-            if (error.msg.address) alert.error(`Parent/Address: ${error.msg.address.join()}`);
-            if (error.msg.school) alert.error(`School: ${error.msg.school.join()}`);
+            if (error.msg.name) alert(`Name: ${error.msg.name.join()}`);
+            if (error.msg.non_field_errors) alert(`${error.msg.non_field_errors.join()}`);
+            if (error.msg.password) alert(`Password: ${error.msg.password.join()}`);
+            if (error.msg.email) alert(`Email: ${error.msg.email.join()}`);
+            if (error.msg.full_name) alert(`Name: ${error.msg.full_name.join()}`);
+            if (error.msg.student_id) alert(`Student ID: ${error.msg.student_id.join()}`);
+            if (error.msg.address) alert(`Parent/Address: ${error.msg.address.join()}`);
+            if (error.msg.school) alert(`School: ${error.msg.school.join()}`);
             // if (error.msg.message) alert.error(`Message: ${error.msg.message.join()}`);
             // if (error.msg.non_field_errors) alert.error(error.msg.non_field_errors.join());
             // if (error.msg.username) alert.error(error.msg.username.join());
@@ -35,11 +35,11 @@ function Alerts(props) {
         }
 
         if (message !== prevMessageRef.current) {
-          if (message.student) alert.success(message.student);
-          if (message.user) alert.success(message.user);
-          if (message.school) alert.success(message.school);
-          if (message.route) alert.success(message.route);
-          if (message.passwordNotMatch) alert.error(message.passwordNotMatch);
+          if (message.student) alert(message.student);
+          if (message.user) alert(message.user);
+          if (message.school) alert(message.school);
+          if (message.route) alert(message.route);
+          if (message.passwordNotMatch) alert(message.passwordNotMatch);
           prevMessageRef.current = props.message;
         }
       }
