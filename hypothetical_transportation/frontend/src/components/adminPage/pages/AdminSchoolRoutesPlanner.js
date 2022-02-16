@@ -202,7 +202,7 @@ function AdminSchoolRoutesPlanner(props) {
           <Card.Body>
             <Form.Group className="mb-3">
               <Form.Label as="h5">Select an Existing Route to Edit</Form.Label>
-              <Form.Select size="sm" value={getRouteFromSearchParams()} onChange={onDropdownChange}>
+              <Form.Select size="sm" value={getRouteFromSearchParams()} onChange={onDropdownChange} style={{width: "200px"}}>
                       {getRouteOptions()}
               </Form.Select>
             </Form.Group>
