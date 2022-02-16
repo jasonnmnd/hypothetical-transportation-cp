@@ -8,7 +8,7 @@
 
 .btn-yellow {
   display: inline-block;
-  padding: 10px 15px;
+  padding: 8px 6px;
   border-radius: 8px;
   background-color: #ffae07;
   background-size: 200%;
@@ -17,6 +17,7 @@
   color: #fff;
   font-weight: 700;
   cursor: pointer;
+  width: 300px;
 }
 
 .btn-yellow:hover {
@@ -52,7 +53,7 @@
   color: #fff;
   font-weight: 700;
   cursor: pointer;
-  width: 300px;
+  width: 350px;
 }
 
 .btn-yellowLong:hover {

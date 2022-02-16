@@ -40,6 +40,7 @@ function GeneralManageStudentPage(props) {
 
 
   const handleSubmit = (event) => {
+    console.log(obj)
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
       event.preventDefault();
@@ -171,7 +172,7 @@ function GeneralManageStudentPage(props) {
             <Form.Group as={Col} controlId="formGridID">
                 <Form.Label as="h5">Student ID</Form.Label>
                 <Form.Control 
-                required type="text"
+                type="text"
                 placeholder="Enter name..." 
                 value={obj.student_id}
                 onChange={(e)=>{setObj({...obj, ["student_id"]: e.target.value})}}
@@ -183,7 +184,7 @@ function GeneralManageStudentPage(props) {
             <Form.Group className="mb-3" controlId="">
                 <Form.Label as="h5">Parent</Form.Label>
                 <Form.Select size="sm" value={obj.guardian} onChange={setParent}>
-                {/* <option value={""}>{"-----"}</option>: */}
+                <option value={""}>{"-----"}</option>:
                 {props.users!==null && props.users!==undefined && props.users.length!==0?props.users.map((u,i)=>{
                     return <option value={u.id} key={i}>{u.email}</option>
                 }):null}
@@ -193,7 +194,7 @@ function GeneralManageStudentPage(props) {
             <Form.Group className="mb-3" controlId="">
                 <Form.Label as="h5">School</Form.Label>
                 <Form.Select size="sm" value={obj.school} onChange={changeSchool}>
-                  {/* <option value={"null"} >{"-----"}</option> */}
+                  <option value={"null"} >{"-----"}</option>
                     {props.schoollist!==null && props.schoollist!==undefined && props.schoollist.length!==0?props.schoollist.map((u,i)=>{
                         return <option value={u.id} key={i}>{u.name}</option>
                     }):null}

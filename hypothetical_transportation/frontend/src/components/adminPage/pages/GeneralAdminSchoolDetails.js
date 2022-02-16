@@ -90,7 +90,7 @@ function GeneralAdminSchoolDetails(props) {
             <Row>
               <Col>
                 <Link to={`/admin/route/plan/${props.school.id}`}>
-                  <Button variant="yellowLong" size="lg">New Route for this School</Button>
+                  <Button variant="yellowLong" size="lg">New/Edit Route for this School</Button>
                 </Link>
 
               </Col>

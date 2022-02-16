@@ -87,6 +87,7 @@ function GeneralAdminStudentDetails(props) {
             <Card>
                 <Card.Header as="h5">Route</Card.Header>
                 <Card.Body>
+                    <Container className='d-flex flex-column' style={{gap: "20px"}}>
                     {(student.routes!==undefined && student.routes!==null) ?
                         <Link to={`/admin/route/${student.routes.id}`}>
                             <Button variant='yellow'><h5>{student.routes.name}</h5></Button>
@@ -117,6 +118,7 @@ function GeneralAdminStudentDetails(props) {
                         </Alert>
                         )
                     }
+                    </Container>
                 </Card.Body>
             </Card>
         </Container>
