@@ -12,7 +12,7 @@ import { getSchool } from '../../../actions/schools';
 import { getStudents, patchStudent } from '../../../actions/students';
 import RoutePlannerMap from './RoutePlannerMap';
 import { NO_ROUTE } from '../../../utils/utils';
-import { Container, ButtonGroup, ToggleButton, Card, Button, Form } from 'react-bootstrap';
+import { Container, ButtonGroup, ToggleButton, Card, Button, Form, Collapse } from 'react-bootstrap';
 
 
 function AdminSchoolRoutesPlanner(props) {
@@ -146,6 +146,8 @@ function AdminSchoolRoutesPlanner(props) {
       
   }
 
+  const [openInstruc, setOpenInstruc] = useState(false);
+
   return (
     
     <>
@@ -154,6 +156,27 @@ function AdminSchoolRoutesPlanner(props) {
         <div className="shadow-sm p-3 mb-5 bg-white rounded d-flex flex-row justify-content-center">
           <h1>{`${props.school.name} List of Routes`}</h1>
         </div>
+
+        <div className='d-flex flex-row justify-content-center'>
+          <Button
+          onClick={() => setOpenInstruc(!openInstruc)}
+          aria-controls="example-collapse-text"
+          aria-expanded={openInstruc}
+          variant="instrucToggle"
+          >
+            Route Planner Instructions {openInstruc ? "▲" : "▼"}
+          </Button>
+        </div>
+        
+        <Collapse in={openInstruc}>
+          <Card>
+            <Card.Body>
+              <div id="example-collapse-text">
+                Instructions on how to use route planner will be here
+              </div>
+            </Card.Body>
+          </Card>
+        </Collapse>
 
         <ButtonGroup>
         {routePlannerTypes.map((radio, idx) => (
@@ -191,17 +214,22 @@ function AdminSchoolRoutesPlanner(props) {
 
         <Container className="container-main d-flex flex-row" style={{gap: "10px"}}>
             {isCreate() || searchParams.get('route') == null ? null : <RoutePlannerMap 
-                                                                          students={props.students} 
-                                                                          school={props.school} 
-                                                                          currentRoute={getRouteFromSearchParams()} 
-                                                                          changeStudentRoute={changeStudentRoute}
-                                                                          studentChanges={studentChanges}
-                                                                          allRoutes={props.routes}
-                                                                      />}
+                students={props.students} 
+                school={props.school} 
+                currentRoute={getRouteFromSearchParams()} 
+                changeStudentRoute={changeStudentRoute}
+                studentChanges={studentChanges}
+                allRoutes={props.routes}
+            />}
           {searchParams.get(`route`) == NO_ROUTE || searchParams.get('route') == null ? null : <ModifyRouteInfo title={getInfoTitle()} routeName={props.currentRoute.name} routeDescription={props.currentRoute.description} onSubmitFunc={onInfoSubmit}/>}
         </Container>
-        <Button variant='yellow' onClick={submit}><h3>Save</h3></Button>
-        <Button variant='yellow' onClick={resetStudentChanges}><h3>Reset</h3></Button>
+
+        <Container className="d-flex flex-row justify-content-center" style={{gap: "20px"}}>
+          <Button variant='yellowsubmit' onClick={submit}>Save Changes</Button>
+          <Button variant='yellowsubmit' onClick={resetStudentChanges}>Reset Changes</Button>
+        </Container>
+        
+      
       </Container>
     </>
 
