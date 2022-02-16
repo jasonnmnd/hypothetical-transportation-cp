@@ -82,6 +82,7 @@ export const getStudentsWithoutRoute = (parameters) => (dispatch, getState) => {
   };
 
   export const createRoute = (route) => (dispatch, getState) => {
+    console.log(route);
     axios
       .post('/api/route/', route, tokenConfig(getState))
       .then((res) => {
