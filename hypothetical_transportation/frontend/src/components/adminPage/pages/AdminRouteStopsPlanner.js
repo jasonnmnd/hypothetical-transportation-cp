@@ -15,7 +15,7 @@ import RoutePlannerMap from './RoutePlannerMap';
 import { NO_ROUTE } from '../../../utils/utils';
 import { getStopByRoute } from '../../../actions/stops';
 import StopPlannerMap from './StopPlannerMap';
-import ModifyStopTable from '../components/forms/ModifyStopTable';
+import ModifyStops from '../components/forms/ModifyStops';
 
 
 function AdminRouteStopsPlanner(props) {
@@ -25,6 +25,7 @@ function AdminRouteStopsPlanner(props) {
 
   const [studentChanges, setStudentChanges] = useState({})
 
+  const [stops, setStops] = useState(props.stops)
 
   //const [currentRoute, setCurrentRoute] = useState(null)
   
@@ -132,14 +133,14 @@ function AdminRouteStopsPlanner(props) {
         <h1>{`${props.currentRoute.name} Stop Planner`}</h1>
         <Container className="container-main d-flex flex-row" style={{gap: "10px"}}>
             <StopPlannerMap 
-                // students={props.students} 
-                // school={props.school} 
+                students={props.students} 
+                school={props.school} 
                 // currentRoute={getRouteFromSearchParams()} 
                 // changeStudentRoute={changeStudentRoute}
                 // studentChanges={studentChanges}
                 // allRoutes={props.routes}
             />
-            {/* <ModifyStopTable title={getInfoTitle()} routeName={props.currentRoute.name} routeDescription={props.currentRoute.description} onSubmitFunc={onInfoSubmit}/> */}
+            <ModifyStops stops={stops} setStops={setStops}/>
         </Container>
         <Button variant='yellow' onClick={submit}><h3>Save</h3></Button>
         <Button variant='yellow' onClick={resetStudentChanges}><h3>Reset</h3></Button>
@@ -167,7 +168,22 @@ const mapStateToProps = (state) => ({
   currentRoute: state.routes.viewedRoute,
   school: state.schools.viewedSchool,
   studentsInSchool: state.students.students.results,
-  stops: state.stops.stops.results
+  //stops: state.stops.stops.results
 });
+
+AdminRouteStopsPlanner.defaultProps = {
+    stops: [
+        {
+            address: "68 Walters Brook Drive, Bridgewater, NJ",
+            name: "Stop 1",
+            id: 1
+        },
+        {
+            address: "90 Walters Brook Drive, Bridgewater, NJ",
+            name: "Stop 2",
+            id: 2
+        }
+    ],
+}
 
 export default connect(mapStateToProps, {getStopByRoute, getRouteInfo, updateRoute, getSchool, createRoute, getRoutes, getStudents, resetViewedRoute})(AdminRouteStopsPlanner)

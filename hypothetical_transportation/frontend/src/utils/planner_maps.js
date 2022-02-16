@@ -22,3 +22,9 @@ export const getStudentPin = (student) => {
         longitude: student.guardian.longitude
     }
 }
+
+export const getStopPin = (stop) => {
+    return {
+        ...stop, 
+    }
+}

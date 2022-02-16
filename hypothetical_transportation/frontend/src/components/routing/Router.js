@@ -37,6 +37,7 @@ import AdminSchoolRoutesPlanner from '../adminPage/pages/AdminSchoolRoutesPlanne
 import LinkBasePasswordResetForm from '../loginPage/LinkBasePasswordResetForm';
 import GeneralUserConfirmationPage from '../adminPage/pages/GeneralUserConfirmationPage';
 import AdminRouteStopsPlanner from '../adminPage/pages/AdminRouteStopsPlanner';
+import StopPlannerMap from '../adminPage/pages/StopPlannerMap';
 
 
 const Router = (props) => {
@@ -44,7 +45,7 @@ const Router = (props) => {
         <BrowserRouter>
         <Alerts/>
         <Routes>
-        <Route exact path="/testingMap" element={<ExampleMapUsage/>}></Route>
+        <Route exact path="/testingMap" element={<StopPlannerMap/>}></Route>
           <Route exact path="/" element={<LoginForm />}></Route>
           <Route exact path="/forgot_password" element={<ForgotPasswordForm />}></Route>
           <Route exact path="/testingMap" element={<ExampleMapUsage />}></Route>
