@@ -130,7 +130,7 @@ function RoutePlannerMap(props){
 RoutePlannerMap.propTypes = {
     students: PropTypes.array,
     school: PropTypes.object,
-    currentRoute: PropTypes.number,
+    currentRoute: PropTypes.string,
     changeStudentRoute: PropTypes.func,
     studentChanges: PropTypes.object,
     allRoutes: PropTypes.array

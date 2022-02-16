@@ -37,13 +37,18 @@ function AdminSchoolRoutesPlanner(props) {
 
   useEffect(() => {
     props.getRoutes({school: param.school_id});
+
+    if (isCreate()) { //This is to make sure the button sets to create/edit/delete
+      setRouteSelection(1); 
+    } else if (isDelete()) {
+      setRouteSelection(3);
+    } else {
+      setRouteSelection(2);
+    }
+
     if(searchParams.get(`route`) != null && !isCreate()){
       props.getRouteInfo(searchParams.get('route'))
-      if (isCreate()) {
-        setRouteSelection(2); //This is to make sure the button sets to edit/delete
-      } else if (isDelete()) {
-        setRouteSelection(3);
-      }
+
       
     } else {
       props.resetViewedRoute()
@@ -214,6 +219,7 @@ function AdminSchoolRoutesPlanner(props) {
                 name="radio"
                 value={radio.value}
                 checked={routeSelect == radio.value}
+                disabled={radio.value == 2 && props.routes.length == 0}
                 onChange={(e)=>{
                     handleRouteSelection(e);
                 }}
