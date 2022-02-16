@@ -120,4 +120,3 @@ class StudentLocationSerializer(serializers.Serializer):
 class CheckInrangeSerializer(serializers.Serializer):
     stops = StopLocationSerializer(many=True)
     students = StudentLocationSerializer(many=True)
-    route_id = serializers.IntegerField(required=True)

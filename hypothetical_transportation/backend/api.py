@@ -59,7 +59,7 @@ class StopPlannerAPI(generics.GenericAPIView):
         permissions.AllowAny
     ]
 
-    def get(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             students_response = []
