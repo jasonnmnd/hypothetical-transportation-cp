@@ -13,11 +13,13 @@ import { getStudents, patchStudent } from '../../../actions/students';
 import RoutePlannerMap from './RoutePlannerMap';
 import { NO_ROUTE } from '../../../utils/utils';
 import { Container, ButtonGroup, ToggleButton, Card, Button, Form, Collapse } from 'react-bootstrap';
+import PageNavigateModal from '../components/modals/PageNavigateModal';
 
 
 function AdminSchoolRoutesPlanner(props) {
   const param = useParams();
   const navigate = useNavigate();
+  const [openModal, setOpenModal] = useState(false);
   let [searchParams, setSearchParams] = useSearchParams();
 
   const [studentChanges, setStudentChanges] = useState({})
@@ -116,7 +118,7 @@ function AdminSchoolRoutesPlanner(props) {
         routes: routeVal
       }, student);
     });
-    navigate(`/admin/routes/`);
+    setOpenModal(true);
   }
 
   const resetStudentChanges = () => {
@@ -146,12 +148,21 @@ function AdminSchoolRoutesPlanner(props) {
       
   }
 
+  const navToRoutes = ()=>{
+    navigate(`/admin/routes/`);
+  }
+
+  const navToStopper = ()=>{
+    navigate(`/admin/stop/plan/${param.school_id}/${props.currentRoute.id}`);
+  }
+
   const [openInstruc, setOpenInstruc] = useState(false);
 
   return (
     
     <>
       <Header shouldShowOptions={true}></Header>
+      <div>{openModal && <PageNavigateModal closeModal={setOpenModal} yesFunc={navToStopper} noFunc={navToRoutes} message={`You have saved your changes for the routes!`} question={`Would you like to navigate to the stop planner for the route you were viewing?`}/>}</div>
       <Container className="container-main d-flex flex-column" style={{gap: "10px"}}>
         <div className="shadow-sm p-3 mb-5 bg-white rounded d-flex flex-row justify-content-center">
           <h1>{`${props.school.name} List of Routes`}</h1>
