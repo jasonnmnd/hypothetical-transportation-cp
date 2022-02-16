@@ -21,15 +21,10 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class EditUserSerializer(serializers.ModelSerializer):
-    def update(self, instance, validated_data):
-        updated_instance = super().update(instance, validated_data)
-        updated_instance.set_password(validated_data['password'])
-        updated_instance.save()
-        return updated_instance
 
     class Meta:
         model = get_user_model()
-        fields = ('id', 'email', 'full_name', 'password', 'address', 'latitude', 'longitude', 'groups')
+        fields = ('id', 'email', 'full_name', 'address', 'latitude', 'longitude', 'groups')
 
 
 class FormatUserSerializer(UserSerializer):
