@@ -151,9 +151,11 @@ function AdminSchoolRoutesPlanner(props) {
       })
     } 
     else if (e.target.value == 2) {
-      setSearchParams({
-        [`route`]: "edit"
-      })
+      if(props.routes!==null && props.routes!==undefined && props.routes.length>0){
+        setSearchParams({     
+          [`route`]: props.routes[0].id
+        })
+      }
     }
     else if (e.target.value == 3) {
       setSearchParams({
