@@ -1,17 +1,19 @@
 from django.contrib.auth import get_user_model
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters
-from rest_framework import viewsets, permissions
+from rest_framework import filters, status
+from rest_framework import viewsets, permissions, generics
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import School, Route, Student, Stop
 from .serializers import UserSerializer, StudentSerializer, RouteSerializer, SchoolSerializer, FormatStudentSerializer, \
-    FormatRouteSerializer, FormatUserSerializer, EditUserSerializer, StopSerializer
+    FormatRouteSerializer, FormatUserSerializer, EditUserSerializer, StopSerializer, CheckInrangeSerializer
 from .search import DynamicSearchFilter
 from .customfilters import StudentCountShortCircuitFilter
 from .permissions import is_admin, IsAdminOrReadOnly, IsAdmin
+from django.shortcuts import get_object_or_404
+from .geo_utils import get_straightline_distance, LEN_OF_MILE
 
 
 def get_filter_dict(model):
@@ -51,12 +53,29 @@ def parse_repr(repr_str: str) -> dict:
     return repr_fields
 
 
-class MapsAPI(APIView):
-    def get(self, request, format=None):
-        return Response("Hello, World!")
+class StopPlannerAPI(generics.GenericAPIView):
+    serializer_class = CheckInrangeSerializer
+    permission_classes = [
+        permissions.AllowAny
+    ]
 
-    def post(self, request, format=None):
-        return Response("Hello, World!")
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            students_response = []
+            students = serializer.validated_data['students']
+            stops = serializer.validated_data['stops']
+            for student in students:
+                has_inrange_stop = False
+                student_coord = student['latitude'], student['longitude']
+                for stop in stops:
+                    stop_coord = stop['latitude'], stop['longitude']
+                    if get_straightline_distance(*student_coord, *stop_coord) < 0.75 * LEN_OF_MILE:
+                        has_inrange_stop = True
+                        break
+                students_response.append({"id": student['id'], "has_inrange_stop": has_inrange_stop})
+            return Response(students_response, status.HTTP_200_OK)
+        return Response(serializer.errors)
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -92,6 +111,8 @@ class StopViewSet(viewsets.ModelViewSet):
     permission_classes = [
         IsAdmin
     ]
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    filterset_fields = ['route']
 
     def get_serializer_class(self):
         return StopSerializer
@@ -182,6 +203,18 @@ class StudentViewSet(viewsets.ModelViewSet):
 
     # def perform_create(self, serializer):
     #     serializer.save()
+
+    @action(detail=True, methods=['get'], permission_classes=[IsAdminOrReadOnly])
+    def inrange_stops(self, request, pk=None):
+        student = get_object_or_404(self.get_queryset(), pk=pk)
+        if student.routes is None:
+            content = {'detail': 'This student does not yet have a route configured.'}
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
+        student_inrange_stops = [stop for stop in student.routes.stops.all() if
+                                 get_straightline_distance(student.guardian.latitude, student.guardian.longitude,
+                                                           stop.latitude,
+                                                           stop.longitude) < 0.75 * LEN_OF_MILE]
+        return Response(StopSerializer(student_inrange_stops, many=True).data)
 
     @action(detail=False, permission_classes=[permissions.AllowAny])
     def fields(self, request):

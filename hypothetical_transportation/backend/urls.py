@@ -1,6 +1,6 @@
 from rest_framework import routers
 from django.urls import path
-from .api import UserViewSet, StudentViewSet, RouteViewSet, SchoolViewSet, MapsAPI, StopViewSet
+from .api import UserViewSet, StudentViewSet, RouteViewSet, SchoolViewSet, StopPlannerAPI, StopViewSet
 from rest_framework.urlpatterns import format_suffix_patterns
 
 router = routers.DefaultRouter()
@@ -11,7 +11,7 @@ router.register('school', SchoolViewSet, 'school')
 router.register('student', StudentViewSet, 'student')
 
 additional_patterns = [
-    path('maps/', MapsAPI.as_view())
+    path('stopplanner/inrangecheck', StopPlannerAPI.as_view())
 ]
 
 

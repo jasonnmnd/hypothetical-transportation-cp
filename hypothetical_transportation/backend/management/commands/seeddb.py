@@ -9,6 +9,7 @@ from tqdm import tqdm
 School = apps.get_model('backend', 'School')
 Route = apps.get_model('backend', 'Route')
 Student = apps.get_model('backend', 'Student')
+Stop = apps.get_model('backend', 'Stop')
 
 
 class Command(BaseCommand):
@@ -19,10 +20,12 @@ class Command(BaseCommand):
         parser.add_argument('--numroutes', nargs='?', type=int, default=400)
         parser.add_argument('--numschools', nargs='?', type=int, default=400)
         parser.add_argument('--numstudents', nargs='?', type=int, default=1000)
+        parser.add_argument('--stopsinroute', nargs='?', type=int, default=15)
 
     def handle(self, *args, **options):
         num_users = options['numusers']
         num_routes = options['numroutes']
+        stops_in_route = options['stopsinroute']
         num_schools = options['numschools']
         num_students = options['numstudents']
 
@@ -50,8 +53,16 @@ class Command(BaseCommand):
             route_name = f'Route {route_num}'
             description = f'1. {data_generator.address()} \n2. {data_generator.address()} \n3. {data_generator.address()}\n'
             school_id = random.randint(1, num_schools)
-            Route.objects.create(name=route_name, description=description,
-                                 school=School.objects.get(id=school_id))
+            route = Route.objects.create(name=route_name, description=description,
+                                         school=School.objects.get(id=school_id))
+
+            for stop_num in range(1, stops_in_route + 1):
+                stop_name = f'Stop {stop_num}'
+                latitude = random.randint(-5, 5)
+                longitude = random.randint(-5, 5)
+                Stop.objects.create(name=stop_name, location='', latitude=latitude, longitude=longitude,
+                                    route=route,
+                                    stop_number=stop_num)
 
         for _ in tqdm(range(num_students)):
             first_name = data_generator.first_name()

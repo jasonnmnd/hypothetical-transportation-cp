@@ -9,6 +9,42 @@ from django.contrib.auth.models import Group
 
 
 # Create your tests here.
+class StopConsistency(TestCase):
+    def setUp(self):
+        self.parent1 = get_user_model().objects.create_verified_user(email='user1@example.com',
+                                                                     password='password',
+                                                                     full_name='user', address='example address',
+                                                                     latitude=3.0, longitude=-0.8)
+        self.parent2 = get_user_model().objects.create_verified_user(email='user2@example.com',
+                                                                     password='password',
+                                                                     full_name='user', address='example address',
+                                                                     latitude=4.0, longitude=-2.0)
+        self.school = School.objects.create(address='origin', longitude=0, latitude=0, name='example school')
+        self.route1 = Route.objects.create(name='route 1', description='', school=self.school)
+        self.stop4 = Stop.objects.create(name='', location='', latitude=1, longitude=0, route=self.route1,
+                                         stop_number=4)
+        self.stop3 = Stop.objects.create(name='', location='', latitude=2, longitude=0, route=self.route1,
+                                         stop_number=3)
+        self.stop2 = Stop.objects.create(name='', location='', latitude=3, longitude=0, route=self.route1,
+                                         stop_number=2)
+        self.stop1 = Stop.objects.create(name='', location='', latitude=4, longitude=0, route=self.route1,
+                                         stop_number=1)
+        self.student1 = Student.objects.create(full_name='student 1', active=True,
+                                               school=self.school, routes=self.route1, guardian=self.parent1,
+                                               student_id=1)
+
+    # def test_closest_stop(self):
+    #     print(self.stop4.pickup_time)
+    #     print(self.stop3.pickup_time)
+    #     print(self.stop2.pickup_time)
+    #     print(self.stop1.pickup_time)
+    #     print(self.stop4.dropoff_time)
+    #     print(self.stop3.dropoff_time)
+    #     print(self.stop2.dropoff_time)
+    #     print(self.stop1.dropoff_time)
+    #     print(self.student1.has_inrange_stop)
+
+
 class AuthenticationObjectConsistency(TestCase):
     def setUp(self):
         admin_group = Group.objects.create(name='Administrator')
