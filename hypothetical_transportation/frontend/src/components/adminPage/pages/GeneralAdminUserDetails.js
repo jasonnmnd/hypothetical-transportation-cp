@@ -44,10 +44,10 @@ function AdminUserDetails(props) {
   }, []);
 
   return (
-    <div>  
-        <Header></Header>
-        <div>{openModal && <DeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}</div>
-        <Container className="container-main d-flex flex-column" style={{gap: "20px"}}>
+    <div>        
+      <div>{openModal && <DeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}</div>
+      <Header></Header>
+      <Container className="container-main d-flex flex-column" style={{gap: "20px"}}>
         <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
             <Row>
                 <Col>
@@ -98,7 +98,7 @@ function AdminUserDetails(props) {
                 <GeneralAdminTableView values={props.students} tableType='student' title='Students' search={null} />
             </Card.Body>
         </Card>
-        </Container>
+      </Container>
     </div>
   );
 }
