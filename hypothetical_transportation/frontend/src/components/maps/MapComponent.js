@@ -9,8 +9,8 @@ const CLICK_FUNCTIONS = ["onClick", "onRightClick"]
 
 function MapComponent(props) {
     const mapStyles = {        
-        height: "50vh",
-        width: "50%"};  
+        height: "60vh",
+        width: "100%"};  
     //Geocode for location decoding
     //https://www.npmjs.com/package/react-geocode
     Geocode.setApiKey("AIzaSyA6nIh9bWUWFOD_y7hEZ7UQh_KmPn5Sq58");

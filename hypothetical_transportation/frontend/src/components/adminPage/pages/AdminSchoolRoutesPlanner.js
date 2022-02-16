@@ -31,10 +31,20 @@ function AdminSchoolRoutesPlanner(props) {
     return searchParams.get(`route`) == 'new';
   }
 
+  const isDelete = () => {
+    return searchParams.get(`route`) == 'none';
+  }
+
   useEffect(() => {
     props.getRoutes({school: param.school_id});
     if(searchParams.get(`route`) != null && !isCreate()){
       props.getRouteInfo(searchParams.get('route'))
+      if (isCreate()) {
+        setRouteSelection(2); //This is to make sure the button sets to edit/delete
+      } else if (isDelete()) {
+        setRouteSelection(3);
+      }
+      
     } else {
       props.resetViewedRoute()
     }
@@ -140,6 +150,11 @@ function AdminSchoolRoutesPlanner(props) {
         [`route`]: "new"
       })
     } 
+    else if (e.target.value == 2) {
+      setSearchParams({
+        [`route`]: "edit"
+      })
+    }
     else if (e.target.value == 3) {
       setSearchParams({
         [`route`]: "none"
@@ -213,7 +228,7 @@ function AdminSchoolRoutesPlanner(props) {
           <Card.Body>
             <Form.Group className="mb-3">
               <Form.Label as="h5">Select an Existing Route to Edit</Form.Label>
-              <Form.Select size="sm" value={getRouteFromSearchParams()} onChange={onDropdownChange} style={{width: "200px"}}>
+              <Form.Select size="sm" value={getRouteFromSearchParams()} onChange={onDropdownChange} style={{width: "800px"}}>
                       {getRouteOptions()}
               </Form.Select>
             </Form.Group>

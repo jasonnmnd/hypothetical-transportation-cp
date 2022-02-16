@@ -94,8 +94,8 @@ function ModifyRouteInfo(props) {
                   />
               </Form.Group>
 
-              <Button variant="yellowLong" type="submit">
-                Save Name and Description Information
+              <Button variant="yellow" type="submit">
+                Save
               </Button>
 
             </Form>
