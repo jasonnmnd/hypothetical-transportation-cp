@@ -1,27 +1,15 @@
-import React, { Component, useState, useEffect } from 'react';
+import React, { Component, useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import { useSearchParams } from 'react-router-dom';
 
 
 
 function ModifyStopTable(props) {
 
-    const COLUMNS = [
-        {
-            key: "name",
-            dataKey: "name",
-            width: 250,
-            title: "Stop Name"
-        },
-        {
-            key: "address",
-            dataKey: "address",
-            width: 500,
-            title: "Address"
-        },
-    ]
-
+    
+    const [inputField, setInputField] = useState(null);
 
     const handleDragEnd = (e) => {
         if (!e.destination) return;
@@ -31,6 +19,40 @@ function ModifyStopTable(props) {
         console.log(tempData)
         props.setStops(tempData);
     };
+
+    const setInputOnClick = (stop) => {
+        setInputField(stop.id);
+    }
+
+    const onNameInputChange = (e) => {
+        let tempData = Array.from(props.stops);
+        let changingElementIndex = tempData.findIndex(stop => stop.id == e.target.id);
+        tempData[changingElementIndex].name = e.target.value
+        props.setStops(tempData);
+    }
+
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+          setInputField(null);
+        }
+    }
+
+    const getInputComponent = (stop) => {
+        return <input 
+                    type="text"
+                    name="stopName"
+                    onChange={onNameInputChange}
+                    value={stop.name}
+                    id={stop.id}
+                    onKeyDown={handleKeyDown}
+        ></input>
+    }
+
+    
+
+    
+
+
 
     return (
         <div className="App mt-4">
@@ -58,9 +80,11 @@ function ModifyStopTable(props) {
                         index={index}
                     >
                         {(provider) => (
-                        <tr {...provider.draggableProps} ref={provider.innerRef}  >
+                        <tr {...provider.draggableProps} ref={provider.innerRef} >
                             <td {...provider.dragHandleProps}> = </td>
-                            <td>{stop.name}</td>
+                            <td onClick={() => setInputOnClick(stop)}>
+                                {inputField == stop.id ? getInputComponent(stop) : stop.name}
+                            </td>
                             <td>{stop.address}</td>
                             <td>{stop.id}</td>
                         </tr>
