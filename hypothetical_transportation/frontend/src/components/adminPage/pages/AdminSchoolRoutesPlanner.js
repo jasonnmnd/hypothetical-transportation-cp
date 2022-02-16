@@ -156,9 +156,11 @@ function AdminSchoolRoutesPlanner(props) {
       })
     } 
     else if (e.target.value == 2) {
-      setSearchParams({
-        [`route`]: "edit"
-      })
+      if(props.routes!==null && props.routes!==undefined && props.routes.length>0){
+        setSearchParams({     
+          [`route`]: props.routes[0].id
+        })
+      }
     }
     else if (e.target.value == 3) {
       setSearchParams({
@@ -180,9 +182,9 @@ function AdminSchoolRoutesPlanner(props) {
 
   return (
     
-    <>
-      <Header shouldShowOptions={true}></Header>
+    <>      
       <div>{openModal && <PageNavigateModal closeModal={setOpenModal} yesFunc={navToStopper} noFunc={navToRoutes} message={`You have saved your changes for the routes!`} question={`Would you like to navigate to the stop planner for the route you were viewing?`}/>}</div>
+      <Header shouldShowOptions={true}></Header>
       <Container className="container-main d-flex flex-column" style={{gap: "10px"}}>
         <div className="shadow-sm p-3 mb-5 bg-white rounded d-flex flex-row justify-content-center">
           <h1>{`${props.school.name} List of Routes`}</h1>

@@ -64,9 +64,9 @@ function GeneralAdminRouteDetails(props) {
 
 
   return (
-    <div>  
-        <Header></Header>
+    <div>          
         <div>{openModal && <DeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}</div>
+        <Header></Header>
         <Container className="container-main d-flex flex-column" style={{gap: "20px"}}>
         <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
             <Row>
