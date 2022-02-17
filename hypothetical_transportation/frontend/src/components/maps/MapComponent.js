@@ -163,20 +163,42 @@ function MapComponent(props) {
         var latFraction = (latRad(ne.lat()) - latRad(sw.lat())) / Math.PI;
         var lngDiff = ne.lng() - sw.lng();
         var lngFraction = ((lngDiff < 0) ? (lngDiff + 360) : lngDiff) / 360;
-        var latZoom = zoom(WORLD_DIM.height, WORLD_DIM.height, latFraction);
-        var lngZoom = zoom(WORLD_DIM.width, WORLD_DIM.width, lngFraction);
-        console.log({latZoom, lngZoom, ZOOM_MAX},Math.min(latZoom, lngZoom, ZOOM_MAX))
+        var latZoom = zoom(427, WORLD_DIM.height, latFraction);
+        var lngZoom = zoom(517, WORLD_DIM.width, lngFraction);
+        // console.log({latZoom, lngZoom, ZOOM_MAX},Math.min(latZoom, lngZoom, ZOOM_MAX))
         setZ( !isNaN(Math.min(latZoom, lngZoom, ZOOM_MAX))? Math.min(latZoom, lngZoom, ZOOM_MAX):z)
         console.log(z)
     },[bounds])
 
+    const mapRef = useRef(null);
+    const handleLoad = (map)=>{
+        console.log(pos)
+        mapRef.current=map;
+    }
+    const [pos, setPos]= useState({lat:0,lng:0})
+    const [set,setSet] = useState(false)
+    useEffect(()=>{
+        if(!isNaN(props.center.lat) && !isNaN(props.center.lng) && pos.lng!==props.center.lng && !set){
+            setPos(props.center)
+            setSet(true)
+        }
+    },[props.center])
 
+    const handleCenter = ()=>{
+        if(!mapRef.current) return;
+        const newPost = mapRef.current.getCenter().toJSON();
+        if(pos.lat!==newPost.lat && pos.lng!==newPost.lng){
+            setPos(newPost)
+        }
+    }
     
     return (
         <GoogleMap
             mapContainerStyle={mapStyles}
             zoom={z}
-            center={props.center}
+            center={pos}
+            onLoad={handleLoad}
+            onCenterChanged={handleCenter}
         >
             {/* <Spiderfy> */}
                 {getMarkers(pins)}
