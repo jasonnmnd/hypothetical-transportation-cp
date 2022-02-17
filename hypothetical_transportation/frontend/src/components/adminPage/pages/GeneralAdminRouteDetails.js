@@ -123,9 +123,9 @@ function GeneralAdminRouteDetails(props) {
                     <Form.Control 
                     required type="text"
                     as="textarea"
-                    style={{ height: '500px' }}
                     value={props.route.description}
-                    style={{pointerEvents: "none"}}
+                    style={{height: '200px',pointerEvents: "none"}}
+                    disabled
                   />
               </Form.Group>
             </Card.Body>
