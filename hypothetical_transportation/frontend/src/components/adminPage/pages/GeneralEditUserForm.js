@@ -9,6 +9,8 @@ import { register } from "../../../actions/auth";
 import AssistedLocationMap from "../../maps/AssistedLocationMap";
 import { Form, Button, Row, Col, Container, InputGroup, ButtonGroup, ToggleButton} from 'react-bootstrap';
 import { getItemCoord } from "../../../utils/geocode";
+import PageNavigateModal from "../components/modals/PageNavigateModal";
+import { resetPostedUser } from "../../../actions/users";
 //input1: title of form
 //input2: list of fields?
 //input3: a typed object matching the fields
@@ -60,11 +62,13 @@ function GeneralEditUserForm(props) {
         } else {
             if(props.action == "edit"){
                 props.updateUser(createVals, param.id).then(console.log("EDITED"));
+                // setOpenModal(true)
                 navigate(`/admin/users`)
             }
             else{
                 props.register(createVals);
-                navigate(`/admin/new_student`)
+                // navigate(`/admin/new_student`)
+                setOpenModal(true)
             }
         }
         setValidated(true);
@@ -85,9 +89,19 @@ function GeneralEditUserForm(props) {
     //     console.log("Address confirmed")
     //     submit()
     //   }
+
+    const navToNewStudent = ()=>{
+        navigate(`/admin/new_student`);
+    }
+
+    const navToUsers = ()=>{
+        resetPostedUser();
+        navigate(`/admin/users`);
+    }
     
     return (
         <div> 
+            <div>{openModal && <PageNavigateModal closeModal={setOpenModal} yesFunc={navToNewStudent} noFunc={navToUsers} message={`You have created a new User!`} question={`Would you like to navigate to the create a new student for them?`}/>}</div>
             <Header></Header>
                 <Container className="container-main">
                 <div className="shadow-sm p-3 mb-5 bg-white rounded d-flex flex-row justify-content-center">

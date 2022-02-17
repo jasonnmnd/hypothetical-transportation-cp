@@ -1,7 +1,7 @@
 import axios from "axios";
 import { tokenConfig } from "./auth";
 import { returnErrors, createMessage } from "./messages";
-import { GET_STUDENTS_IN_ROUTE, GET_STUDENTS_WITHOUT_ROUTE, ADD_ROUTE, DELETE_ROUTE } from './types';
+import { GET_STUDENTS_IN_ROUTE, GET_STUDENTS_WITHOUT_ROUTE, ADD_ROUTE, DELETE_ROUTE, RESET_POSTED } from './types';
 import { getParameters } from "./utils";
 
 //GET STUDENTS CURRENTLY IN THE ROUTE
@@ -43,6 +43,12 @@ export const getStudentsWithoutRoute = (parameters) => (dispatch, getState) => {
       .catch((err) => {/*console.log(err);*/returnErrors(err.response.data, err.response.status)});
   };
 
+  export const resetPosted = ()=>(dispatch)=>{
+    dispatch({
+      type: RESET_POSTED,
+    });
+  }
+
 
   export const addRoute = (route, students) => (dispatch, getState) => {
     axios
@@ -76,6 +82,7 @@ export const getStudentsWithoutRoute = (parameters) => (dispatch, getState) => {
   };
 
   export const createRoute = (route) => (dispatch, getState) => {
+    console.log(route);
     axios
       .post('/api/route/', route, tokenConfig(getState))
       .then((res) => {

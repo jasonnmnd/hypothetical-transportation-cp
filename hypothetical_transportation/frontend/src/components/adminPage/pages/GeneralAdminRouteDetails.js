@@ -10,7 +10,7 @@ import { getStudents } from '../../../actions/students';
 import GeneralAdminTableView from '../components/views/GeneralAdminTableView';
 import MapContainer from '../../maps/MapContainer';
 import { getStopByRoute } from '../../../actions/stops';
-import { Container, Card, Button, Row, Col } from 'react-bootstrap'
+import { Container, Card, Button, Row, Col, Alert } from 'react-bootstrap'
 import { filterObjectForKeySubstring } from '../../../utils/utils';
 
 
@@ -64,15 +64,15 @@ function GeneralAdminRouteDetails(props) {
 
 
   return (
-    <div>  
-        <Header></Header>
+    <div>          
         <div>{openModal && <DeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}</div>
+        <Header></Header>
         <Container className="container-main d-flex flex-column" style={{gap: "20px"}}>
         <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
             <Row>
                 <Col>
                     <Link to={`/admin/stop/plan/${props.route.school.id}/${props.route.id}`}>
-                        <Button variant="yellowLong" size="lg">Edit Route</Button>
+                        <Button variant="yellowLong" size="lg">Stop Planner</Button>
                     </Link>
                 </Col>
 
@@ -86,6 +86,11 @@ function GeneralAdminRouteDetails(props) {
         <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
             <Row>
                 <Col>
+                    <Link to={`/admin/route/plan/${props.route.school.id}?route=${props.route.id}`}>
+                        <Button variant="yellowLong" size="lg">Edit Students in Route</Button>
+                    </Link>
+                </Col>
+                <Col>
                     <Link to={`/admin/route_email/${props.route.school.id}/${props.route.id}`}>
                         <Button variant="yellowLong" size="lg">Send Route-wide Email</Button>
                     </Link>
@@ -97,6 +102,17 @@ function GeneralAdminRouteDetails(props) {
             <Card.Header as="h5">Name</Card.Header>
             <Card.Body>
                 <Card.Text>{props.route.name}</Card.Text>
+                { props.route.is_complete ?
+                <></>
+                :
+                <Alert variant="danger">
+                {/* <Alert.Heading>Warning: This route is incomplete!</Alert.Heading> */}
+                <p>
+                    Warning: This route is incomplete! There are students on this route who currently do not have an in-range stop.
+                    Use the Stop Planner to plan stops for these student(s).
+                </p>
+                </Alert>
+                }
             </Card.Body>
         </Card>
 
@@ -119,7 +135,7 @@ function GeneralAdminRouteDetails(props) {
         <Card>
             <Card.Header as="h5">Map View </Card.Header>
             <Card.Body>
-                <MapContainer schoolData={props.route.school} routeStudentData={props.students}/>
+                {/* <MapContainer schoolData={props.route.school} routeStudentData={props.students}/> */}
             </Card.Body>
         </Card>
 

@@ -42,69 +42,68 @@ function GeneralAdminStopDetails(props) {
   //delete stop button
   return (
     <div>  
-      <Header></Header>
       <div>{openModal && <DeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}</div>
+      <Header></Header>
       <Container className="container-main d-flex flex-column" style={{gap: "20px"}}>
-      <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
-          <Row>
-              <Col>
-                <Link to={`/admin`}>
-                  <Button variant="yellowLong" size="lg">Edit Stop</Button>
+        <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
+            <Row>
+                <Col>
+                  <Link to={`/admin`}>
+                    <Button variant="yellowLong" size="lg">Edit Stop</Button>
+                  </Link>
+                </Col>
+                <Col>
+                    <Button variant="yellowLong" size="lg" onClick={() => {
+                    setOpenModal(true);
+                    }}>Delete Stop</Button>
+                </Col>
+            </Row>
+        </Container>
+        
+        <Card>
+            <Card.Header as="h5">Name</Card.Header>
+            <Card.Body>
+                <Card.Text>{props.stop!==null && props.stop!==undefined && props.stop.name!==null && props.stop.name!==undefined  ? props.stop.name:"Falling Star"}</Card.Text>
+            </Card.Body>
+        </Card>
+
+        <Card>
+            <Card.Header as="h5">Location </Card.Header>
+            <Card.Body>
+                <Card.Text>{props.stop!==null && props.stop!==undefined && props.stop.name!==null && props.stop.name!==undefined ? props.stop.location : "On the Other Side of Moon"}</Card.Text>
+            </Card.Body>
+        </Card>
+
+        <Card>
+            <Card.Header as="h5">Pickup Time </Card.Header>
+            <Card.Body>
+                <Card.Text>{props.stop!==null && props.stop!==undefined && props.stop.pickup_time!==null && props.stop.pickup_time!==undefined  ? props.stop.pickup_time : "Crack of Dawn"}</Card.Text>
+            </Card.Body>
+        </Card>
+
+
+        <Card>
+            <Card.Header as="h5">Dropoff Time </Card.Header>
+            <Card.Body>
+                <Card.Text>{props.stop!==null && props.stop!==undefined && props.stop.dropoff_time!==null && props.stop.dropoff_time!==undefined ? props.stop.dropoff_time : "The End of World"}</Card.Text>
+            </Card.Body>
+        </Card>
+
+
+        <Card>
+            <Card.Header as="h5">Associated Route </Card.Header>
+            <Card.Body>
+                <Link to={`/admin/route/${props.stop.route}`}>
+                  <Button variant='yellow'><h5>{props.viewedRoute!==null && props.viewedRoute!==undefined && props.viewedRoute.name!==null && props.viewedRoute.name!==undefined&& props.viewedRoute.name!=="" ? props.viewedRoute.name: "The Hogwarts Express"}</h5></Button>
                 </Link>
-              </Col>
-              <Col>
-                  <Button variant="yellowLong" size="lg" onClick={() => {
-                  setOpenModal(true);
-                  }}>Delete Stop</Button>
-              </Col>
-          </Row>
-      </Container>
-      
-      <Card>
-          <Card.Header as="h5">Name</Card.Header>
-          <Card.Body>
-              <Card.Text>{props.stop!==null && props.stop!==undefined && props.stop.name!==null && props.stop.name!==undefined  ? props.stop.name:"Falling Star"}</Card.Text>
-          </Card.Body>
-      </Card>
+            </Card.Body>
+        </Card>
 
-      <Card>
-          <Card.Header as="h5">Location </Card.Header>
-          <Card.Body>
-              <Card.Text>{props.stop!==null && props.stop!==undefined && props.stop.name!==null && props.stop.name!==undefined ? props.stop.location : "On the Other Side of Moon"}</Card.Text>
-          </Card.Body>
-      </Card>
-
-      <Card>
-          <Card.Header as="h5">Pickup Time </Card.Header>
-          <Card.Body>
-              <Card.Text>{props.stop!==null && props.stop!==undefined && props.stop.pickup_time!==null && props.stop.pickup_time!==undefined  ? props.stop.pickup_time : "Crack of Dawn"}</Card.Text>
-          </Card.Body>
-      </Card>
-
-
-      <Card>
-          <Card.Header as="h5">Dropoff Time </Card.Header>
-          <Card.Body>
-              <Card.Text>{props.stop!==null && props.stop!==undefined && props.stop.dropoff_time!==null && props.stop.dropoff_time!==undefined ? props.stop.dropoff_time : "The End of World"}</Card.Text>
-          </Card.Body>
-      </Card>
-
-
-      <Card>
-          <Card.Header as="h5">Associated Route </Card.Header>
-          <Card.Body>
-              <Link to={`/admin/route/${props.stop.route}`}>
-                <Button variant='yellow'><h5>{props.viewedRoute!==null && props.viewedRoute!==undefined && props.viewedRoute.name!==null && props.viewedRoute.name!==undefined&& props.viewedRoute.name!=="" ? props.viewedRoute.name: "The Hogwarts Express"}</h5></Button>
-              </Link>
-          </Card.Body>
-      </Card>
-
-      <Card>
-          <Card.Header as="h5">Map Of Stop and All Students In The Route Related To The Stop </Card.Header>
-          <Card.Body>
-          </Card.Body>
-      </Card>
-
+        <Card>
+            <Card.Header as="h5">Map Of Stop and All Students In The Route Related To The Stop </Card.Header>
+            <Card.Body>
+            </Card.Body>
+        </Card>
       </Container>
   </div>
 

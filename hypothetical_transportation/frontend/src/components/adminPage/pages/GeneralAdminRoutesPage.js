@@ -36,7 +36,7 @@ function AdminRoutesPage(props) {
         <Header></Header>
         <Container className="container-main">
           <div className="shadow-sm p-3 mb-5 bg-white rounded d-flex flex-row justify-content-center">
-            <h1>List of Routesssss</h1>
+            <h1>List of Routes</h1>
           </div>
           <div className="shadow-lg p-3 mb-5 bg-white rounded">
             <GeneralAdminTableView values={props.routes} tableType={tableType} search="" title={title} />

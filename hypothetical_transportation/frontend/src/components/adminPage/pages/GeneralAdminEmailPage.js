@@ -84,6 +84,7 @@ function GeneralAdminEmailPage(props) {
         axios.post('/api/send-announcement', payload)
           .then((res) => {
             nagivate(`/admin`);
+            alert('Email Successfully Sent!');
           })
           .catch((err) => {
             console.log(err)

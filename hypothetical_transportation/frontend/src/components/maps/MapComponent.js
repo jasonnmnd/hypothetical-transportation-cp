@@ -1,9 +1,10 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import { GoogleMap, LoadScript, Marker, InfoWindow, useJsApiLoader } from '@react-google-maps/api';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Geocode from "react-geocode";
 import { SCHOOL_MARKER, STOP_MARKER, STUDENT_MARKER } from './static/markers';
+import Spiderfy from "./Spiderfy.js";
 
 const CLICK_FUNCTIONS = ["onClick", "onRightClick"]
 const DRAG_FUNCTIONS = ["onDragEnd"]
@@ -11,8 +12,8 @@ const DRAG_FUNCTIONS = ["onDragEnd"]
 
 function MapComponent(props) {
     const mapStyles = {        
-        height: "50vh",
-        width: "50%"};  
+        height: "60vh",
+        width: "100%"};  
     //Geocode for location decoding
     //https://www.npmjs.com/package/react-geocode
     Geocode.setApiKey("AIzaSyA6nIh9bWUWFOD_y7hEZ7UQh_KmPn5Sq58");
@@ -123,23 +124,65 @@ function MapComponent(props) {
         
     }
 
-
+    var bounds = new google.maps.LatLngBounds();
+    // const mapRef = useRef(null)
+    const [z,setZ] = useState(21)
     const getMarkers = (inPins) => {
-        return inPins.map((pin, pinInd) => {
-            //console.log(pin)
-                return <Marker {...pin} key={pinInd} />
-        })
+        var v = inPins.map((pin, pinInd) => {
+            return <Marker {...pin} key={pinInd} />
+        });
+        return v;
     }
 
+    const getBound = (inPins) => {
+        inPins.map((pin) => {
+            bounds.extend(new google.maps.LatLng(pin.position.lat, pin.position.lng));
+        });
+    }
 
+    useEffect(()=>{
+        getBound(pins);
+    },[pins])
+
+    const WORLD_DIM = { height: 256, width: 256 };
+    const ZOOM_MAX = 21;
+
+    const latRad = (lat) => {
+        var sin = Math.sin(lat * Math.PI / 180);
+        var radX2 = Math.log((1 + sin) / (1 - sin)) / 2;
+        return Math.max(Math.min(radX2, Math.PI), -Math.PI) / 2;
+    }
+
+    const zoom = (mapPx, worldPx, fraction) => {
+        return Math.floor(Math.log(mapPx / worldPx / fraction) / Math.LN2);
+    }
+
+    useEffect(()=>{
+        var ne = bounds.getNorthEast();
+        var sw = bounds.getSouthWest();       
+        var latFraction = (latRad(ne.lat()) - latRad(sw.lat())) / Math.PI;
+        var lngDiff = ne.lng() - sw.lng();
+        var lngFraction = ((lngDiff < 0) ? (lngDiff + 360) : lngDiff) / 360;
+        var latZoom = zoom(WORLD_DIM.height, WORLD_DIM.height, latFraction);
+        var lngZoom = zoom(WORLD_DIM.width, WORLD_DIM.width, lngFraction);
+        console.log({latZoom, lngZoom, ZOOM_MAX},Math.min(latZoom, lngZoom, ZOOM_MAX))
+        setZ( !isNaN(Math.min(latZoom, lngZoom, ZOOM_MAX))? Math.min(latZoom, lngZoom, ZOOM_MAX):z)
+        console.log(z)
+    },[bounds])
+
+
+    
     return (
         <GoogleMap
             mapContainerStyle={mapStyles}
-            zoom={props.zoom}
+            zoom={z}
             center={props.center}
         >
-            {getMarkers(pins)}
-            {props.otherMapComponents}
+            {/* <Spiderfy> */}
+                {getMarkers(pins)}
+                {props.otherMapComponents}
+            {/* </Spiderfy> */}
+            
         </GoogleMap>
         )
 

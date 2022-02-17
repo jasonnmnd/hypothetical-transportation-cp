@@ -33,7 +33,7 @@ function LoginForm( props ) {
             backgroundRepeat: 'no-repeat',
             backgroundSize: "cover"
             }}>
-            <Form className="rounded p-4 p-sm3">
+            <Form className="rounded p-4 p-sm3" onSubmit={submitHandler}>
                 <h2>Enter Your Login Credentials:</h2>
 
                 <Form.Group as={Col} className="mb-3" controlId="formBasicEmail">
@@ -54,7 +54,7 @@ function LoginForm( props ) {
                 </Form.Group>
 
                 <div className="d-flex justify-content-center align-items-center">
-                    <Button className="login-buttons" type="submit" onClick={submitHandler}>
+                    <Button variant="login" type="submit">
                         Submit
                     </Button>
                 </div>

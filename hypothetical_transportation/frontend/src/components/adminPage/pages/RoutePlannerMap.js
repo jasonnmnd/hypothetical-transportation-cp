@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import MapComponent from "../../maps/MapComponent";
 import PropTypes, { string } from 'prop-types';
 import { useSearchParams } from 'react-router-dom';
-import sha256 from 'crypto-js/sha256';
 import { NO_ROUTE } from '../../../utils/utils';
 import { getStudentPin, addSchoolPin } from '../../../utils/planner_maps';
 
@@ -47,7 +46,8 @@ function RoutePlannerMap(props){
     }
 
     useEffect(() => {
-        console.log(props.studentChanges)
+        // console.log(props.studentChanges)
+        // console.log(props.school)
        setPinData(getPinData())
     }, [props]);
 
@@ -124,13 +124,13 @@ function RoutePlannerMap(props){
     }
 
 
-    return <MapComponent pinData={pinData} otherMapComponents={extraComponents} />
+    return <MapComponent pinData={pinData} otherMapComponents={extraComponents} center={{lng: Number(props.school.longitude),lat: Number(props.school.latitude)}} />
 }
 
 RoutePlannerMap.propTypes = {
     students: PropTypes.array,
     school: PropTypes.object,
-    currentRoute: PropTypes.number,
+    currentRoute: PropTypes.string,
     changeStudentRoute: PropTypes.func,
     studentChanges: PropTypes.object,
     allRoutes: PropTypes.array

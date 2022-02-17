@@ -1,23 +1,25 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Fragment } from 'react';
 import Header from '../../header/Header';
 import { Link, Route, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes, { string } from 'prop-types';
-import { Container, Card, Button, Form } from 'react-bootstrap';
 import '../NEWadminPage.css';
 import MapComponent from '../../maps/MapComponent';
 import ModifyRouteInfo from '../components/forms/ModifyRouteInfo';
 import { getRouteInfo, getRoutes, resetViewedRoute } from '../../../actions/routes';
-import { updateRoute, createRoute } from '../../../actions/routeplanner';
+import { updateRoute, createRoute,resetPosted } from '../../../actions/routeplanner';
 import { getSchool } from '../../../actions/schools';
 import { getStudents, patchStudent } from '../../../actions/students';
 import RoutePlannerMap from './RoutePlannerMap';
 import { NO_ROUTE } from '../../../utils/utils';
+import { Container, ButtonGroup, ToggleButton, Card, Button, Form, Collapse } from 'react-bootstrap';
+import PageNavigateModal from '../components/modals/PageNavigateModal';
 
 
 function AdminSchoolRoutesPlanner(props) {
   const param = useParams();
   const navigate = useNavigate();
+  const [openModal, setOpenModal] = useState(false);
   let [searchParams, setSearchParams] = useSearchParams();
 
   const [studentChanges, setStudentChanges] = useState({})
@@ -29,10 +31,25 @@ function AdminSchoolRoutesPlanner(props) {
     return searchParams.get(`route`) == 'new';
   }
 
+  const isDelete = () => {
+    return searchParams.get(`route`) == 'none';
+  }
+
   useEffect(() => {
     props.getRoutes({school: param.school_id});
+
+    if (isCreate()) { //This is to make sure the button sets to create/edit/delete
+      setRouteSelection(1); 
+    } else if (isDelete()) {
+      setRouteSelection(3);
+    } else {
+      setRouteSelection(2);
+    }
+
     if(searchParams.get(`route`) != null && !isCreate()){
       props.getRouteInfo(searchParams.get('route'))
+
+      
     } else {
       props.resetViewedRoute()
     }
@@ -47,6 +64,15 @@ function AdminSchoolRoutesPlanner(props) {
       })
     }
   }, []);
+
+  useEffect(()=>{
+    if(props.postedRoute.id!==0){
+      setSearchParams({
+        [`route`]: props.postedRoute.id,
+      })
+      props.resetPosted();
+    }
+  },[props.postedRoute])
 
   
   
@@ -107,41 +133,183 @@ function AdminSchoolRoutesPlanner(props) {
         routes: routeVal
       }, student);
     });
-    navigate(`/admin/routes/`);
+    setOpenModal(true);
   }
 
   const resetStudentChanges = () => {
     setStudentChanges({})
   }
 
+  const routePlannerTypes = [
+    {name: "Create New Route", value: 1},
+    {name: "Edit Existing Route", value: 2},
+    {name: "Remove Students from Routes", value: 3},
+  ]
 
+  const [routeSelect, setRouteSelection] = useState(1);
 
+  const handleRouteSelection = (e) => {
+    setRouteSelection(e.target.value);
+    if (e.target.value == 1) {
+      setSearchParams({
+        [`route`]: "new"
+      })
+    } 
+    else if (e.target.value == 2) {
+      if(props.routes!==null && props.routes!==undefined && props.routes.length>0){
+        setSearchParams({     
+          [`route`]: props.routes[0].id
+        })
+      }
+    }
+    else if (e.target.value == 3) {
+      setSearchParams({
+        [`route`]: "none"
+      })
+    }
+      
+  }
 
+  const navToRoutes = ()=>{
+    navigate(`/admin/routes/`);
+  }
+
+  const navToStopper = ()=>{
+    navigate(`/admin/stop/plan/${param.school_id}/${props.currentRoute.id}`);
+  }
+
+  const [openInstruc, setOpenInstruc] = useState(false);
+
+  const routePlannerLegend = [
+    {
+        key: "In This Route: ",
+        color: "🟥    "//❤️
+    },
+    {
+        key: "No Route: ",
+        color: "🟩    "//💙
+    },
+    {
+      key: "Not In This Route: ",
+      color: "⬜    "//💙
+    },
+  ]
 
   return (
     
-    <>
-      <Header textToDisplay={"Route Planner"} shouldShowOptions={true}></Header>
+    <>      
+      <div>{openModal && <PageNavigateModal closeModal={setOpenModal} yesFunc={navToStopper} noFunc={navToRoutes} message={`You have saved your changes for the routes!`} question={`Would you like to navigate to the stop planner for the route you were viewing?`}/>}</div>
+      <Header shouldShowOptions={true}></Header>
       <Container className="container-main d-flex flex-column" style={{gap: "10px"}}>
-        <h1>{`${props.school.name} Route Planner`}</h1>
-        <Form.Select size="sm" value={getRouteFromSearchParams()} onChange={onDropdownChange}>
-                <option value={"new"} key={"new"}>{"Create New Route"}</option>
-                {getRouteOptions()}
-                <option value={NO_ROUTE} key={NO_ROUTE}>{"Remove Students from all Routes"}</option>
-        </Form.Select>
-        <Container className="container-main d-flex flex-row" style={{gap: "10px"}}>
-            {isCreate() || searchParams.get('route') == null ? null : <RoutePlannerMap 
-                                                                          students={props.students} 
-                                                                          school={props.school} 
-                                                                          currentRoute={getRouteFromSearchParams()} 
-                                                                          changeStudentRoute={changeStudentRoute}
-                                                                          studentChanges={studentChanges}
-                                                                          allRoutes={props.routes}
-                                                                      />}
+        <div className="shadow-sm p-3 mb-5 bg-white rounded d-flex flex-row justify-content-center">
+          <h1>{`${props.school.name} List of Routes`}</h1>
+        </div>
+
+        <div className='d-flex flex-row justify-content-center'>
+          <Button
+          onClick={() => setOpenInstruc(!openInstruc)}
+          aria-controls="example-collapse-text"
+          aria-expanded={openInstruc}
+          variant="instrucToggle"
+          >
+            Route Planner Instructions {openInstruc ? "▲" : "▼"}
+          </Button>
+        </div>
+        
+        <Collapse in={openInstruc}>
+          <Card>
+            <Card.Body>
+              <div id="example-collapse-text">
+                <div className='d-flex flex-row justify-content-center'>
+                  <strong>Welcome to the route planner interface.</strong>
+                </div>
+                  <p>Within this interface, you can interactively modify and create routes. Students are shown with the student pin, and the school is shown with the school pin.</p>
+                  <ul>
+                    <li>Select "Create New Route" to make a new route with name. When creating a new route, first give it a name and route description. After submission you will have the ability to add students to this route.  </li>
+                    <li>Select "Edit Existing Route" to add any student to the currently selected route from the dropdown. Left click to see information on the school or student. Right click to assign the student to this route. If a student is in another route, they will be removed and put in this route. </li>
+                    <li>Select "Remove Students from Routes" to remove any student from their existing route. Right click to remove any student from their current route.</li>
+                  </ul>
+                  <p>In edit mode, you can update a route's name and description and click "Save" to finalize those changes. To finalize any edits for students on the map, click "Save Changes". To clear current edits, click "Reset Changes".</p>
+              </div>
+            </Card.Body>
+          </Card>
+        </Collapse>
+
+        <br></br>
+
+        <ButtonGroup>
+        {routePlannerTypes.map((radio, idx) => (
+            <ToggleButton
+                key={idx}
+                id={`radio-${idx}`}
+                type="radio"
+                variant={'outline-success'}
+                name="radio"
+                value={radio.value}
+                checked={routeSelect == radio.value}
+                disabled={radio.value == 2 && props.routes.length == 0}
+                onChange={(e)=>{
+                    handleRouteSelection(e);
+                }}
+            >
+                {radio.name}
+            </ToggleButton>
+        ))}
+        </ButtonGroup>
+
+          {routeSelect == 2 ?
+          <Card>
+            <Card.Body>
+              <Form.Group className="mb-3">
+                <Form.Label as="h5">Select an Existing Route to Edit</Form.Label>
+                <Form.Select size="sm" value={getRouteFromSearchParams()} onChange={onDropdownChange} style={{width: "800px"}}>
+                        {getRouteOptions()}
+                </Form.Select>
+              </Form.Group>
+            </Card.Body>
+          </Card>
+          :
+          <></>
+          }
+
+          <Container className="container-main d-flex flex-row" style={{gap: "10px"}}>
+            {isCreate() || searchParams.get('route') == null ? null : 
+            
+            <Container className='d-flex flex-column'>
+              <Card>
+                <Card.Header as="h5">Map Legend</Card.Header>
+                <Card.Body>
+                  {
+                        routePlannerLegend.map((result, index) => {
+                        return (
+                            <Fragment key={index}>
+                                {result.key}
+                                {result.color}
+                            </Fragment>
+                        )})
+                    }
+                </Card.Body>
+              </Card>
+              <RoutePlannerMap 
+                students={props.students} 
+                school={props.school} 
+                currentRoute={getRouteFromSearchParams()} 
+                changeStudentRoute={changeStudentRoute}
+                studentChanges={studentChanges}
+                allRoutes={props.routes}/>
+            
+            </Container>
+            }
+            
           {searchParams.get(`route`) == NO_ROUTE || searchParams.get('route') == null ? null : <ModifyRouteInfo title={getInfoTitle()} routeName={props.currentRoute.name} routeDescription={props.currentRoute.description} onSubmitFunc={onInfoSubmit}/>}
         </Container>
-        <Button variant='yellow' onClick={submit}><h3>Save</h3></Button>
-        <Button variant='yellow' onClick={resetStudentChanges}><h3>Reset</h3></Button>
+
+        <br></br>
+
+        <Container className="d-flex flex-row justify-content-center" style={{gap: "20px"}}>
+          <Button variant='yellowsubmit' onClick={submit}>Save Changes</Button>
+          <Button variant='yellowsubmit' onClick={resetStudentChanges}>Reset Changes</Button>
+        </Container>
       </Container>
     </>
 
@@ -156,7 +324,8 @@ AdminSchoolRoutesPlanner.propTypes = {
     getRoutes: PropTypes.func.isRequired,
     getStudents: PropTypes.func.isRequired,
     resetViewedRoute: PropTypes.func.isRequired,
-    patchStudent: PropTypes.func.isRequired
+    patchStudent: PropTypes.func.isRequired,
+    resetPosted: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => ({
@@ -165,6 +334,7 @@ const mapStateToProps = (state) => ({
   currentRoute: state.routes.viewedRoute,
   school: state.schools.viewedSchool,
   studentsInSchool: state.students.students.results,
+  postedRoute: state.routeplanner.postedRoute,
 });
 
-export default connect(mapStateToProps, {patchStudent, getRouteInfo, updateRoute, getSchool, createRoute, getRoutes, getStudents, resetViewedRoute})(AdminSchoolRoutesPlanner)
+export default connect(mapStateToProps, {resetPosted, patchStudent, getRouteInfo, updateRoute, getSchool, createRoute, getRoutes, getStudents, resetViewedRoute})(AdminSchoolRoutesPlanner)

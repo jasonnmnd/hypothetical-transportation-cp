@@ -67,10 +67,10 @@ function GeneralAdminSchoolDetails(props) {
 
 
   return (
-    <>  
-        <Header></Header>
-        {openModal && <FormDeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}
-        <Container className="container-main d-flex flex-column" style={{gap: "20px"}}>
+    <>          
+      {openModal && <FormDeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}
+      <Header></Header>
+      <Container className="container-main d-flex flex-column" style={{gap: "20px"}}>
         <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
             <Row>
               <Col>
@@ -90,7 +90,7 @@ function GeneralAdminSchoolDetails(props) {
             <Row>
               <Col>
                 <Link to={`/admin/route/plan/${props.school.id}`}>
-                  <Button variant="yellowLong" size="lg">New Route for this School</Button>
+                  <Button variant="yellowLong" size="lg">New/Edit Route for this School</Button>
                 </Link>
 
               </Col>
@@ -145,7 +145,7 @@ function GeneralAdminSchoolDetails(props) {
                 <GeneralAdminTableView values={props.routes} tableType='route' title='Associated Routes' search={ROUTE_PREFIX} pagination={ROUTE_PREFIX}/>
             </Card.Body>
         </Card>
-        </Container>
+      </Container>
     </>
   );
 }

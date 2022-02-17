@@ -19,7 +19,7 @@ form {
   gap: 10px;
 }
 
-.login-buttons {
+.btn-login {
   display: inline-block;
   padding: 10px 15px;
   border-radius: 8px;
@@ -33,7 +33,7 @@ form {
   border-color: #ffae07;
 }
 
-.login-buttons:hover {
+.login:hover {
   background-color: #ffdd99;
 }
 

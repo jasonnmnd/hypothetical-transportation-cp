@@ -1,7 +1,8 @@
 import React, { Component, useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-
+import "../../NEWadminPage.css";
+import {Card, Form, Button, Container} from 'react-bootstrap';
 
 function ModifyRouteInfo(props) {
 
@@ -31,7 +32,8 @@ function ModifyRouteInfo(props) {
     }
   
     return (
-      <div className="card card-body mt-4 mb-4">
+      <>
+      {/* <div className="card card-body mt-4 mb-4">
         <h2>{props.title}</h2>
         <form onSubmit={onSubmit}>
           <div className="form-group">
@@ -56,11 +58,52 @@ function ModifyRouteInfo(props) {
           </div>
           <div className="form-group">
             <button type="submit" className="btn btn-primary">
-              Save
+              Save Name and Description Information
             </button>
           </div>
         </form>
-      </div>
+      </div> */}
+
+      <Container>
+        <Card style={{height: "550px"}}>
+          <Card.Header as="h5">{props.title}</Card.Header>
+          <Card.Body>
+            <Form className="shadow-none p-3 mb-5 bg-white rounded" onSubmit={onSubmit}>
+              <Form.Group className="mb-3" controlId="formGridName">
+                <Form.Control 
+                  required
+                  type="text"
+                  placeholder="Enter route name..." 
+                  value={fieldValues.routeName}
+                  onChange={(e) => setFieldValues({
+                    ...fieldValues, routeName : e.target.value
+                })}
+                  />
+              </Form.Group>
+
+              <Form.Group className="mb-3" controlId="formGridDescription">
+                <Form.Control 
+                  required type="text"
+                  as="textarea"
+                  placeholder="Enter route description..." 
+                  style={{ height: '100px' }}
+                  value={fieldValues.routeDescription}
+                  onChange={(e) => setFieldValues({
+                      ...fieldValues, routeDescription : e.target.value
+                  })}
+                  />
+              </Form.Group>
+
+              <Button variant="yellow" type="submit">
+                Save
+              </Button>
+
+            </Form>
+          </Card.Body>
+        </Card>
+      </Container>
+      
+      </>
     );
 }
 
