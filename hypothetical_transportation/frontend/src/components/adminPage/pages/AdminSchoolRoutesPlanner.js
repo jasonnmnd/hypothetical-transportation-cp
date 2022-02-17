@@ -304,6 +304,8 @@ function AdminSchoolRoutesPlanner(props) {
           {searchParams.get(`route`) == NO_ROUTE || searchParams.get('route') == null ? null : <ModifyRouteInfo title={getInfoTitle()} routeName={props.currentRoute.name} routeDescription={props.currentRoute.description} onSubmitFunc={onInfoSubmit}/>}
         </Container>
 
+        <br></br>
+
         <Container className="d-flex flex-row justify-content-center" style={{gap: "20px"}}>
           <Button variant='yellowsubmit' onClick={submit}>Save Changes</Button>
           <Button variant='yellowsubmit' onClick={resetStudentChanges}>Reset Changes</Button>
