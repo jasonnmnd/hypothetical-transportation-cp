@@ -104,3 +104,8 @@ h1 {
 .btn-instrucToggle:hover {
   background-color: #ffdd99;
 }
+
+.default {
+  border-color: #e7e7e7;
+  color: black;
+}

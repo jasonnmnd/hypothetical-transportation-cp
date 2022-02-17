@@ -228,7 +228,7 @@ function GeneralAdminEmailPage(props) {
                         />
                 </Form.Group>
 
-                <Button variant="yellowToggle" type="submit" onClick={submit}>
+                <Button variant="yellowsubmit" type="submit" onClick={submit}>
                     Submit
                 </Button>
 
