@@ -10,7 +10,7 @@ import { getUsers, getUser } from '../../../actions/users';
 import { getStudent, addStudent, updateStudent } from '../../../actions/students';
 import { getRoutesByID } from '../../../actions/routes';
 import { Form, Button, Row, Col, Container, InputGroup, ButtonGroup, ToggleButton} from 'react-bootstrap';
-
+import { resetPostedUser } from '../../../actions/users';
 
 function GeneralManageStudentPage(props) {
     const param = useParams()
@@ -77,6 +77,10 @@ function GeneralManageStudentPage(props) {
       props.getStudent(param.id);
       setObj({...props.student, ["guardian"]:props.student.guardian.id,["school"]:props.student.school.id,["routes"]:props.student.routes?props.student.routes.id:null})
       // props.getRoutesByID({school: props.student.school.id}) // Normal to get an api request error on first load
+    }
+    if(props.selectedUser!==null && props.selectedUser.id!==0){
+      setObj({ ...obj, ["guardian"]: props.selectedUser.id});
+      resetPostedUser();
     }
     // else{
     //   props.getRoutesByID({school: obj.school})
@@ -231,7 +235,7 @@ const mapStateToProps = (state) => ({
   users: state.users.users.results,
   student: state.students.viewedStudent,
   routes: state.routes.routes.results,
-  selectedUser: state.users.viewedUser
+  selectedUser: state.users.postedUser
 });
 
 export default connect(mapStateToProps, {getSchools, getUsers, getStudent, getRoutesByID, getUser, addStudent, updateStudent})(GeneralManageStudentPage)

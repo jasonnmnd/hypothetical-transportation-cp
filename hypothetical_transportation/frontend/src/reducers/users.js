@@ -1,4 +1,4 @@
-import { GET_USERS, DELETE_USER, ADD_USER, GET_USER} from '../actions/types.js';
+import { GET_USERS, DELETE_USER, ADD_USER, GET_USER,RESET_POSTED_USER} from '../actions/types.js';
 
 const initialState = {
   users: {
@@ -11,7 +11,14 @@ const initialState = {
         email: "",
         address: "",
         groups: [],
-  }
+  },
+  postedUser:{
+    id: 0,
+    full_name: "",
+    email: "",
+    address: "",
+    groups: [],
+},
 };
 
 export default function (state = initialState, action) {
@@ -33,8 +40,20 @@ export default function (state = initialState, action) {
             ...state,
             users: {
               results: [...state.users.results, action.payload]
-            }
+            },
+            postedUser: action.payload
         };
+    case RESET_POSTED_USER:
+      return{
+        ...state,
+        postedUser:{
+          id: 0,
+          full_name: "",
+          email: "",
+          address: "",
+          groups: [],
+      },
+    }
     case GET_USER:
       return {
         ...state,

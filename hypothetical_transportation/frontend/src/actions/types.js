@@ -28,6 +28,7 @@ export const DELETE_USER = "DELETE_USER"
 export const ADD_USER = "ADD_USER"
 export const SEARCH_USER = "SEARCH_USER"
 export const GET_USER = "GET_USER"
+export const RESET_POSTED_USER = "RESET_POSTED_USER"
 
 export const POPULATE_TABLE = "POPULATE_TABLE";
 export const DELETE_ITEM = "DELETE_ITEM"
