@@ -135,7 +135,7 @@ function GeneralAdminRouteDetails(props) {
         <Card>
             <Card.Header as="h5">Map View </Card.Header>
             <Card.Body>
-                <MapContainer schoolData={props.route.school} routeStudentData={props.students}/>
+                {/* <MapContainer schoolData={props.route.school} routeStudentData={props.students}/> */}
             </Card.Body>
         </Card>
 
