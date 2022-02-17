@@ -121,11 +121,12 @@ function GeneralAdminRouteDetails(props) {
             <Card.Body>
                 <Form.Group className="mb-3" controlId="formGridDescription">
                     <Form.Control 
-                    required type="text"
+                    type="text"
                     as="textarea"
                     style={{ height: '500px' }}
                     value={props.route.description}
                     style={{pointerEvents: "none"}}
+                    readOnly
                   />
               </Form.Group>
             </Card.Body>
