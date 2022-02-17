@@ -26,9 +26,11 @@ function ForgotPasswordForm( props ) {
         setValidated(true);
         //backend send email to submitted value
         //if email is not associated with the user do something else?
+        console.log(details);
         axios.post('/api/auth/password/reset', details)
           .then((res) => {
             navigate(`/`);
+            alert('Password reset submitted. Check your email for more instructions!');
           })
           .catch((err) => {
             console.log(err)

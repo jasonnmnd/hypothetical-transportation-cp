@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Fragment } from 'react';
 import Header from '../../header/Header';
 import { Link, Route, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -180,6 +180,21 @@ function AdminSchoolRoutesPlanner(props) {
 
   const [openInstruc, setOpenInstruc] = useState(false);
 
+  const routePlannerLegend = [
+    {
+        key: "In This Route: ",
+        color: "🟥    "//❤️
+    },
+    {
+        key: "No Route: ",
+        color: "🟩    "//💙
+    },
+    {
+      key: "Not In This Route: ",
+      color: "⬜    "//💙
+    },
+  ]
+
   return (
     
     <>      
@@ -208,16 +223,19 @@ function AdminSchoolRoutesPlanner(props) {
                 <div className='d-flex flex-row justify-content-center'>
                   <strong>Welcome to the route planner interface.</strong>
                 </div>
-                  <p>Within this interface, you can interactively modify and create routes</p>
+                  <p>Within this interface, you can interactively modify and create routes. Students are shown with the student pin, and the school is shown with the school pin.</p>
                   <ul>
-                    <li>Select "Create New Route" to make a new route with name </li>
-                    <li>Select "Edit Existing Route" to add any student to the currently selected route </li>
-                    <li>Select "Remove Students from Routes" to remove any student from their existing route</li>
+                    <li>Select "Create New Route" to make a new route with name. When creating a new route, first give it a name and route description. After submission you will have the ability to add students to this route.  </li>
+                    <li>Select "Edit Existing Route" to add any student to the currently selected route from the dropdown. Left click to see information on the school or student. Right click to assign the student to this route. If a student is in another route, they will be removed and put in this route. </li>
+                    <li>Select "Remove Students from Routes" to remove any student from their existing route. Right click to remove any student from their current route.</li>
                   </ul>
+                  <p>In edit mode, you can update a route's name and description and click "Save" to finalize those changes. To finalize any edits for students on the map, click "Save Changes". To clear current edits, click "Reset Changes".</p>
               </div>
             </Card.Body>
           </Card>
         </Collapse>
+
+        <br></br>
 
         <ButtonGroup>
         {routePlannerTypes.map((radio, idx) => (
@@ -239,39 +257,59 @@ function AdminSchoolRoutesPlanner(props) {
         ))}
         </ButtonGroup>
 
-        {routeSelect == 2 ?
-        <Card>
-          <Card.Body>
-            <Form.Group className="mb-3">
-              <Form.Label as="h5">Select an Existing Route to Edit</Form.Label>
-              <Form.Select size="sm" value={getRouteFromSearchParams()} onChange={onDropdownChange} style={{width: "800px"}}>
-                      {getRouteOptions()}
-              </Form.Select>
-            </Form.Group>
-          </Card.Body>
-        </Card>
-        :
-        <></>
-        }
+          {routeSelect == 2 ?
+          <Card>
+            <Card.Body>
+              <Form.Group className="mb-3">
+                <Form.Label as="h5">Select an Existing Route to Edit</Form.Label>
+                <Form.Select size="sm" value={getRouteFromSearchParams()} onChange={onDropdownChange} style={{width: "800px"}}>
+                        {getRouteOptions()}
+                </Form.Select>
+              </Form.Group>
+            </Card.Body>
+          </Card>
+          :
+          <></>
+          }
 
-        <Container className="container-main d-flex flex-row" style={{gap: "10px"}}>
-            {isCreate() || searchParams.get('route') == null ? null : <RoutePlannerMap 
+          <Container className="container-main d-flex flex-row" style={{gap: "10px"}}>
+            {isCreate() || searchParams.get('route') == null ? null : 
+            
+            <Container className='d-flex flex-column'>
+              <Card>
+                <Card.Header as="h5">Map Legend</Card.Header>
+                <Card.Body>
+                  {
+                        routePlannerLegend.map((result, index) => {
+                        return (
+                            <Fragment key={index}>
+                                {result.key}
+                                {result.color}
+                            </Fragment>
+                        )})
+                    }
+                </Card.Body>
+              </Card>
+              <RoutePlannerMap 
                 students={props.students} 
                 school={props.school} 
                 currentRoute={getRouteFromSearchParams()} 
                 changeStudentRoute={changeStudentRoute}
                 studentChanges={studentChanges}
-                allRoutes={props.routes}
-            />}
+                allRoutes={props.routes}/>
+            
+            </Container>
+            }
+            
           {searchParams.get(`route`) == NO_ROUTE || searchParams.get('route') == null ? null : <ModifyRouteInfo title={getInfoTitle()} routeName={props.currentRoute.name} routeDescription={props.currentRoute.description} onSubmitFunc={onInfoSubmit}/>}
         </Container>
+
+        <br></br>
 
         <Container className="d-flex flex-row justify-content-center" style={{gap: "20px"}}>
           <Button variant='yellowsubmit' onClick={submit}>Save Changes</Button>
           <Button variant='yellowsubmit' onClick={resetStudentChanges}>Reset Changes</Button>
         </Container>
-        
-      
       </Container>
     </>
 

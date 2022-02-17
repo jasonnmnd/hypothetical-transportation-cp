@@ -33,7 +33,7 @@ function StopPlannerMap(props){
     }
 
     useEffect(() => {
-        //console.log(props.studentChanges)
+        console.log(props.stops)
        setPinData(getPinData())
     }, [props]);
 
@@ -79,7 +79,8 @@ function StopPlannerMap(props){
                 iconType: "stop",
                 markerProps: {
                     onClick: onStopClick,
-                    draggable: true
+                    draggable: true,
+                    onDragEnd: props.onStopDragEnd
                 },
                 pins: props.stops.map(stop => getStopPin(stop))
             },
@@ -101,7 +102,7 @@ StopPlannerMap.propTypes = {
     students: PropTypes.array,
     school: PropTypes.object,
     stops: PropTypes.array,
-    onStopChange: PropTypes.func,
+    onStopDragEnd: PropTypes.func,
 }
 
 // StopPlannerMap.defaultProps = {
@@ -113,14 +114,14 @@ StopPlannerMap.propTypes = {
 StopPlannerMap.defaultProps = {
     school: {},
     students: [],
-    stops: [
-        {
-            address: "68 Walters Brook Drive, Bridgewater, NJ"
-        },
-        {
-            address: "90 Walters Brook Drive, Bridgewater, NJ"
-        }
-    ],
+    // stops: [
+    //     {
+    //         address: "68 Walters Brook Drive, Bridgewater, NJ"
+    //     },
+    //     {
+    //         address: "90 Walters Brook Drive, Bridgewater, NJ"
+    //     }
+    // ],
 }
 
 const mapStateToProps = (state) => ({
