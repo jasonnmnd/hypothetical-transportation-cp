@@ -25,11 +25,11 @@ function StopPlannerMap(props){
     }
 
     const onSchoolClick = (pinStuff, position) => {
-        createInfoWindow(position, <h1>{pinStuff.name}</h1>)
+        createInfoWindow(position, <h4>{pinStuff.name}</h4>)
     }
 
     const onStopClick = (pinStuff, position) => {
-        createInfoWindow(position, <h1>{pinStuff.stop_number}</h1>)
+        createInfoWindow(position, <h4>{pinStuff.name}</h4>)
     }
 
     useEffect(() => {
@@ -89,8 +89,8 @@ function StopPlannerMap(props){
     
     const getPinData = () => {
         let pinData = getStudentGroupsPinData();
-        pinData = pinData.concat(getStopPinData());
         addSchoolPin(pinData, props.school, onSchoolClick)
+        pinData = pinData.concat(getStopPinData());
         return pinData;
     }
 
