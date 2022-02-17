@@ -10,7 +10,7 @@ import { getStudents } from '../../../actions/students';
 import GeneralAdminTableView from '../components/views/GeneralAdminTableView';
 import MapContainer from '../../maps/MapContainer';
 import { getStopByRoute } from '../../../actions/stops';
-import { Container, Card, Button, Row, Col } from 'react-bootstrap'
+import { Container, Card, Button, Row, Col, Alert } from 'react-bootstrap'
 import { filterObjectForKeySubstring } from '../../../utils/utils';
 
 
@@ -102,6 +102,17 @@ function GeneralAdminRouteDetails(props) {
             <Card.Header as="h5">Name</Card.Header>
             <Card.Body>
                 <Card.Text>{props.route.name}</Card.Text>
+                { props.route.is_complete ?
+                <></>
+                :
+                <Alert variant="danger">
+                {/* <Alert.Heading>Warning: This route is incomplete!</Alert.Heading> */}
+                <p>
+                    Warning: This route is incomplete! There are students on this route who currently do not have an in-range stop.
+                    Use the Stop Planner to plan stops for these student(s).
+                </p>
+                </Alert>
+                }
             </Card.Body>
         </Card>
 

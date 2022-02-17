@@ -205,7 +205,15 @@ function AdminSchoolRoutesPlanner(props) {
           <Card>
             <Card.Body>
               <div id="example-collapse-text">
-                Instructions on how to use route planner will be here
+                <div className='d-flex flex-row justify-content-center'>
+                  <strong>Welcome to the route planner interface.</strong>
+                </div>
+                  <p>Within this interface, you can interactively modify and create routes</p>
+                  <ul>
+                    <li>Select "Create New Route" to make a new route with name </li>
+                    <li>Select "Edit Existing Route" to add any student to the currently selected route </li>
+                    <li>Select "Remove Students from Routes" to remove any student from their existing route</li>
+                  </ul>
               </div>
             </Card.Body>
           </Card>
