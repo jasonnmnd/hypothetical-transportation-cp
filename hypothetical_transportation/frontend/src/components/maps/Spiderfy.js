@@ -3,11 +3,12 @@ import { GoogleMap } from "@react-google-maps/api";
 
 class Spiderfy extends React.Component {
   constructor(props) {
+    console.log(props);
     super(props);
     const oms = require(`npm-overlapping-marker-spiderfier/lib/oms.min`);
 
     this.oms = new oms.OverlappingMarkerSpiderfier(
-      GoogleMap().MapContext._currentValue, // 1*
+       GoogleMap().MapContext._currentValue, // 1*
       {}
     );
 
