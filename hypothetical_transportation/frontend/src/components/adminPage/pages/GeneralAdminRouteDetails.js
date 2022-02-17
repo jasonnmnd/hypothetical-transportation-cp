@@ -10,7 +10,7 @@ import { getStudents } from '../../../actions/students';
 import GeneralAdminTableView from '../components/views/GeneralAdminTableView';
 import MapContainer from '../../maps/MapContainer';
 import { getStopByRoute } from '../../../actions/stops';
-import { Container, Card, Button, Row, Col, Alert } from 'react-bootstrap'
+import { Container, Card, Button, Row, Col, Alert, Form } from 'react-bootstrap'
 import { filterObjectForKeySubstring } from '../../../utils/utils';
 
 
@@ -119,7 +119,15 @@ function GeneralAdminRouteDetails(props) {
         <Card>
             <Card.Header as="h5">Description </Card.Header>
             <Card.Body>
-                <Card.Text>{props.route.description}</Card.Text>
+                <Form.Group className="mb-3" controlId="formGridDescription">
+                    <Form.Control 
+                    type="text"
+                    as="textarea"
+                    value={props.route.description}
+                    style={{height: '200px',pointerEvents: "none"}}
+                    readOnly
+                  />
+              </Form.Group>
             </Card.Body>
         </Card>
 
@@ -135,7 +143,7 @@ function GeneralAdminRouteDetails(props) {
         <Card>
             <Card.Header as="h5">Map View </Card.Header>
             <Card.Body>
-                <MapContainer schoolData={props.route.school} routeStudentData={props.students}/>
+                {/* <MapContainer schoolData={props.route.school} routeStudentData={props.students}/> */}
             </Card.Body>
         </Card>
 

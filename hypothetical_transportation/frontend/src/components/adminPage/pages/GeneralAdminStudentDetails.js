@@ -6,7 +6,7 @@ import DeleteModal from '../components/modals/DeleteModal';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { getStudentInfo, deleteStudent } from '../../../actions/students';
-import { Container, Card, Button, Row, Col, Alert } from 'react-bootstrap'
+import { Container, Card, Button, Row, Col, Alert, ButtonGroup } from 'react-bootstrap'
 
 function GeneralAdminStudentDetails(props) {
   const navigate = useNavigate();
@@ -44,6 +44,8 @@ function GeneralAdminStudentDetails(props) {
                     </Col>
                 </Row>
             </Container>
+
+            
             
             <Card>
                 <Card.Header as="h5">Name</Card.Header>

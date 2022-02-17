@@ -109,8 +109,10 @@ function AdminRouteStopsPlanner(props) {
                 <div className='d-flex flex-row justify-content-center'>
                   <strong>Welcome to the stop planner interface.</strong>
                 </div>
-                  <p>Within this interface, you can interactively create, modify, and reorganize stops. Students are shown with the student pin and routes are shown with the route pin.</p>
-                  <p>Use the table to drag and drop "=" to reorganize stops. Finalize changes by clicking on "Save". Revert changes made by clicking on "Reset".</p>
+                  <p>Within this interface, you can interactively create, modify, and reorganize stops. Students are shown with the student pin and routes are shown with the bus pin.</p>
+                  <p>Left click on the bus pin to view the stop, and you can drag bus pins around to move stops and make sure students are in range.</p>
+                  <p>Use the table to drag and drop "=" to reorganize stops. Double click on the stop name to change its name.</p>
+                  <p>Finalize all changes by clicking on "Save". Revert changes made by clicking on "Reset".</p>
               </div>
             </Card.Body>
           </Card>

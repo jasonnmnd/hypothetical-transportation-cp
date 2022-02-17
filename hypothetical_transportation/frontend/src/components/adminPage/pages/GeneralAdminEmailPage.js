@@ -84,9 +84,10 @@ function GeneralAdminEmailPage(props) {
         axios.post('/api/send-announcement', payload)
           .then((res) => {
             nagivate(`/admin`);
+            alert('Email Successfully Sent!');
           })
           .catch((err) => {
-            console.log(err)
+            alert('Email was not sent. Please try again.')
         });
     }
 
@@ -228,7 +229,7 @@ function GeneralAdminEmailPage(props) {
                         />
                 </Form.Group>
 
-                <Button variant="yellowToggle" type="submit" onClick={submit}>
+                <Button variant="yellowsubmit" type="submit" onClick={submit}>
                     Submit
                 </Button>
 
