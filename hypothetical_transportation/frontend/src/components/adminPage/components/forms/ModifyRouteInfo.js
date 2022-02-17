@@ -86,7 +86,7 @@ function ModifyRouteInfo(props) {
                   required type="text"
                   as="textarea"
                   placeholder="Enter route description..." 
-                  style={{ height: '300px' }}
+                  style={{ height: '100px', maxHeight: "300px" }}
                   value={fieldValues.routeDescription}
                   onChange={(e) => setFieldValues({
                       ...fieldValues, routeDescription : e.target.value

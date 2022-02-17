@@ -5,6 +5,7 @@ from .serializers import SendAnnouncementSerializer
 from django.contrib.auth import get_user_model
 from backend.models import School, Route
 from django.core import mail
+from django.shortcuts import get_object_or_404
 
 
 class SendAnnouncementAPI(generics.GenericAPIView):
@@ -24,11 +25,15 @@ class SendAnnouncementAPI(generics.GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         recipients = list()
+        email_context = ''
+
         id_type = serializer.data.get("id_type")
         object_id = serializer.data.get("object_id")
         if id_type == "ROUTE":
             try:
-                students_queryset = Route.objects.get(pk=object_id).students
+                route = Route.objects.get(pk=object_id)
+                email_context = f"You are being sent this email because your child is a member of {route.name}\n"
+                students_queryset = route.students
             except Route.DoesNotExist:
                 return Response({'object_id': ['Route with this ID does not exist']},
                                 status=status.HTTP_400_BAD_REQUEST)
@@ -37,7 +42,9 @@ class SendAnnouncementAPI(generics.GenericAPIView):
 
         elif id_type == "SCHOOL":
             try:
-                students_queryset = School.objects.get(pk=object_id).students
+                school = School.objects.get(pk=object_id)
+                email_context = f"You are being sent this email because your child is a member of {school.name}\n"
+                students_queryset = school.students
             except School.DoesNotExist:
                 return Response({'object_id': ['School with this ID does not exist']},
                                 status=status.HTTP_400_BAD_REQUEST)
@@ -45,12 +52,13 @@ class SendAnnouncementAPI(generics.GenericAPIView):
             recipients.extend(user_queryset.values_list('email', flat=True))
 
         elif id_type == "ALL":
+            email_context = f"You are being sent this email because you are an administrator of this system\n"
             recipients.extend(get_user_model().objects.values_list('email', flat=True))
 
         with mail.get_connection() as connection:
             mail.EmailMessage(
                 subject=serializer.data.get('subject'),
-                body=serializer.data.get('body'),
+                body=f"{email_context}{serializer.data.get('body')}",
                 from_email='DONOTREPLYEXAMPLE@example.com',
                 bcc=recipients,
                 connection=connection,
