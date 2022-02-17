@@ -104,7 +104,7 @@ function MapComponent(props) {
     const initializePins = (inPinData) => {
         inPinData.forEach((pinGroup) => {
             pinGroup.pins.forEach((pin) => {
-                console.log(pin)
+                // console.log(pin)
                 if(pin.latitude == null || pin.longitude == null){
                     Geocode.fromAddress(pin.address)
                     .then((response) => {  
@@ -167,12 +167,12 @@ function MapComponent(props) {
         var lngZoom = zoom(517, WORLD_DIM.width, lngFraction);
         // console.log({latZoom, lngZoom, ZOOM_MAX},Math.min(latZoom, lngZoom, ZOOM_MAX))
         setZ( !isNaN(Math.min(latZoom, lngZoom, ZOOM_MAX))? Math.min(latZoom, lngZoom, ZOOM_MAX):z)
-        console.log(z)
+        // console.log(z)
     },[bounds])
 
     const mapRef = useRef(null);
     const handleLoad = (map)=>{
-        console.log(pos)
+        // console.log(pos)
         mapRef.current=map;
     }
     const [pos, setPos]= useState({lat:0,lng:0})
