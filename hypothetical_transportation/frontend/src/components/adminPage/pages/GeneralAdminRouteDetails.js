@@ -123,9 +123,8 @@ function GeneralAdminRouteDetails(props) {
                     <Form.Control 
                     type="text"
                     as="textarea"
-                    style={{ height: '500px' }}
                     value={props.route.description}
-                    style={{pointerEvents: "none"}}
+                    style={{height: '200px',pointerEvents: "none"}}
                     readOnly
                   />
               </Form.Group>
