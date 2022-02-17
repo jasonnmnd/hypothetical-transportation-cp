@@ -6,6 +6,8 @@ import Geocode from "react-geocode";
 import { SCHOOL_MARKER, STOP_MARKER, STUDENT_MARKER } from './static/markers';
 
 const CLICK_FUNCTIONS = ["onClick", "onRightClick"]
+const DRAG_FUNCTIONS = ["onDragEnd"]
+
 
 function MapComponent(props) {
     const mapStyles = {        
@@ -59,13 +61,28 @@ function MapComponent(props) {
             markerInfo[propName] = () => {tempFunc(pinObj, position)}
         }
     }
-
     
     const setPinClickFunctions = (pinObj, position, markerInfo) => {
         CLICK_FUNCTIONS.forEach(funcName => {
             setClickFunc(pinObj, position, markerInfo, funcName)
         })
     }
+
+    const setDragFunc = (pinObj, markerInfo, propName) => {
+        if(markerInfo[propName]){
+            const tempFunc = markerInfo[propName];
+            markerInfo[propName] = (e) => {tempFunc(pinObj, e)}
+        }
+    }
+
+    const setPinDragFunctions = (pinObj, markerInfo) => {
+        DRAG_FUNCTIONS.forEach(funcName => {
+            setDragFunc(pinObj, markerInfo, funcName)
+        })
+    }
+
+
+
 
     const addMarkerFromPin = (lat, lng, pinGroup, pin) => {
         const temp = {
@@ -78,6 +95,7 @@ function MapComponent(props) {
             ...pinGroup.markerProps
         }
         setPinClickFunctions(pin, {lat: lat, lng: lng}, temp)
+        setPinDragFunctions(pin, temp)
         pinInfo = pinInfo.concat(temp);
         setPins(pinInfo)
     }
@@ -85,6 +103,7 @@ function MapComponent(props) {
     const initializePins = (inPinData) => {
         inPinData.forEach((pinGroup) => {
             pinGroup.pins.forEach((pin) => {
+                console.log(pin)
                 if(pin.latitude == null || pin.longitude == null){
                     Geocode.fromAddress(pin.address)
                     .then((response) => {  
