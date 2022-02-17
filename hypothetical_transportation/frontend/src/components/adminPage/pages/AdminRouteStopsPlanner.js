@@ -21,6 +21,8 @@ function AdminRouteStopsPlanner(props) {
 
   const [stops, setStops] = useState(props.stops)
 
+  const [newStopID, setNewStopID] = useState(-1);
+
 
 
   useEffect(() => {
@@ -48,10 +50,18 @@ function AdminRouteStopsPlanner(props) {
 
   const addNewStop = () => {
       console.log("ADDING STOP")
+      setStops([...stops, {
+        address: props.school.address,
+        latitude: props.school.latitude,
+        longitude: props.school.longitude,
+        name: `Stop ${stops.length + 1}`,
+        id: newStopID
+      }]);
+      setNewStopID(newStopID - 1);
   }
 
   const onStopDragEnd = (pinInfo, e) => {
-    let tempData = Array.from(props.stops);
+    let tempData = Array.from(stops);
     let changingElementIndex = tempData.findIndex(stop => stop.id == pinInfo.id);
     tempData[changingElementIndex].latitude = e.latLng.lat()
     tempData[changingElementIndex].longitude = e.latLng.lng()
