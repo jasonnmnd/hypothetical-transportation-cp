@@ -99,7 +99,7 @@ export const patchStudent = (student, id) => (dispatch, getState) => {
   axios
           .patch(`/api/student/${id}/`,student, tokenConfig(getState))
           .then(res =>{
-            dispatch(createMessage({ student: 'Student Updated' }));
+            // dispatch(createMessage({ student: 'Student Updated' }));
             dispatch({
               type: DELETE_STUDENT,
               payload: parseInt(id)
