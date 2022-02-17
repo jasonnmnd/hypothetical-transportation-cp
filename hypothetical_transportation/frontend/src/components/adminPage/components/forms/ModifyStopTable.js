@@ -63,7 +63,8 @@ function ModifyStopTable(props) {
                 <th />
                 <th>Name</th>
                 <th>Address</th>
-                <th>ID</th>
+                <th>Latitude</th>
+                <th>Longitude</th>
                 </tr>
             </thead>
             <Droppable droppableId="droppable-1">
@@ -86,7 +87,8 @@ function ModifyStopTable(props) {
                                 {inputField == stop.id ? getInputComponent(stop) : stop.name}
                             </td>
                             <td>{stop.address}</td>
-                            <td>{stop.id}</td>
+                            <td>{stop.latitude}</td>
+                            <td>{stop.longitude}</td>
                         </tr>
                         )}
                     </Draggable>

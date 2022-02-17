@@ -28,6 +28,9 @@ function AdminRouteStopsPlanner(props) {
   }, [param]);
 
   useEffect(() => {
+    console.log(props.stops)
+    console.log("HELLOO")
+    setStops(props.stops)
     props.getSchool(param.school_id);
     props.getStudents({routes: param.route_id})
   }, []);
@@ -43,17 +46,20 @@ function AdminRouteStopsPlanner(props) {
     navigate(`/admin/routes/`);
   }
 
-  const resetStudentChanges = () => {
-    setStudentChanges({})
-  }
-
   const addNewStop = () => {
       console.log("ADDING STOP")
   }
 
-  const onStopDragEnd = (pinInfo, position) => {
-    console.log(pinInfo)
-    console.log(position)
+  const onStopDragEnd = (pinInfo, e) => {
+    let tempData = Array.from(props.stops);
+    let changingElementIndex = tempData.findIndex(stop => stop.id == pinInfo.id);
+    tempData[changingElementIndex].latitude = e.latLng.lat()
+    tempData[changingElementIndex].longitude = e.latLng.lng()
+    setStops(tempData)
+  }
+
+  const resetStopChanges = () => {
+    setStops(props.stops);
   }
 
 
@@ -70,15 +76,13 @@ function AdminRouteStopsPlanner(props) {
             <StopPlannerMap 
                 students={props.students} 
                 school={props.school} 
-                // currentRoute={getRouteFromSearchParams()} 
-                // changeStudentRoute={changeStudentRoute}
-                // studentChanges={studentChanges}
-                // allRoutes={props.routes}
+                onStopDragEnd={onStopDragEnd}
+                stops={stops}
             />
             <ModifyStopTable stops={stops} setStops={setStops}/>
         </Container>
         <Button variant='yellow' onClick={submit}><h3>Save</h3></Button>
-        <Button variant='yellow' onClick={resetStudentChanges}><h3>Reset</h3></Button>
+        <Button variant='yellow' onClick={resetStopChanges}><h3>Reset</h3></Button>
         <Button variant='yellow' onClick={addNewStop}><h3>Add New Stop</h3></Button>
       </Container>
     </>
@@ -94,7 +98,8 @@ AdminRouteStopsPlanner.propTypes = {
     getRoutes: PropTypes.func.isRequired,
     getStudents: PropTypes.func.isRequired,
     resetViewedRoute: PropTypes.func.isRequired,
-    getStopByRoute: PropTypes.func.isRequired
+    getStopByRoute: PropTypes.func.isRequired,
+    stops: PropTypes.array
 }
 
 const mapStateToProps = (state) => ({
@@ -110,11 +115,15 @@ AdminRouteStopsPlanner.defaultProps = {
     stops: [
         {
             address: "68 Walters Brook Drive, Bridgewater, NJ",
+            latitude: 40.58885594887111,
+            longitude: -74.60416028632812,
             name: "Stop 1",
             id: 1
         },
         {
             address: "90 Walters Brook Drive, Bridgewater, NJ",
+            latitude: 40.58770627689465,
+            longitude: -74.66309603862304,
             name: "Stop 2",
             id: 2
         }
