@@ -223,7 +223,7 @@ function AdminSchoolRoutesPlanner(props) {
                 <div className='d-flex flex-row justify-content-center'>
                   <strong>Welcome to the route planner interface.</strong>
                 </div>
-                  <p>Within this interface, you can interactively modify and create routes</p>
+                  <p>Within this interface, you can interactively modify and create routes. Students are shown with the student pin, and the school is shown with the school pin.</p>
                   <ul>
                     <li>Select "Create New Route" to make a new route with name. When creating a new route, first give it a name and route description. After submission you will have the ability to add students to this route.  </li>
                     <li>Select "Edit Existing Route" to add any student to the currently selected route from the dropdown. Left click to see information on the school or student. Right click to assign the student to this route. If a student is in another route, they will be removed and put in this route. </li>
