@@ -87,7 +87,7 @@ function GeneralAdminEmailPage(props) {
             alert('Email Successfully Sent!');
           })
           .catch((err) => {
-            console.log(err)
+            alert('Email was not sent. Please try again.')
         });
     }
 

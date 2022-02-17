@@ -108,10 +108,10 @@ export const resetPassword = (old_password, new_password) => (dispatch, getState
               });
             })
             .catch((err) => {
+              dispatch(alert("Old password entered was incorrect. Try again."));
               dispatch(returnErrors(err.response.data, err.response.status));
               dispatch({
                 type: RESET_PASSWORD_FAIL,
-
               });
             });
 }
