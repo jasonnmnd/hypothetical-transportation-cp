@@ -107,7 +107,7 @@ class Student(models.Model):
         settings.AUTH_USER_MODEL, related_name='students',
         on_delete=models.CASCADE
     )
-    student_id = models.PositiveIntegerField(null=True, blank=True)
+    student_id = models.PositiveIntegerField(null=True)
 
     # has_inrange_stop = models.BooleanField(default=False, blank=True)
 
