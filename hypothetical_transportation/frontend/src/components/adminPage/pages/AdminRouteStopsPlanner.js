@@ -3,7 +3,7 @@ import Header from '../../header/Header';
 import { Link, Route, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes, { string } from 'prop-types';
-import { Container, Card, Button, Form, Collapse } from 'react-bootstrap';
+import { Container, Card, Button, Form, Collapse, Alert } from 'react-bootstrap';
 import '../NEWadminPage.css';
 import { getRouteInfo, getRoutes, resetViewedRoute } from '../../../actions/routes';
 import { updateRoute, createRoute } from '../../../actions/routeplanner';
@@ -74,6 +74,23 @@ function AdminRouteStopsPlanner(props) {
           <h1>{`${props.currentRoute.name} Stop Planner`}</h1>
         </div>
 
+        { props.currentRoute.is_complete ?
+        <Alert variant="success">
+        <Alert.Heading>Success: This route is complete!</Alert.Heading>
+        <p>
+            All students have in-range stops.
+        </p>
+        </Alert>
+        :
+        <Alert variant="danger">
+        <Alert.Heading>Warning: This route is incomplete!</Alert.Heading>
+        <p>
+            There are students on this route who currently do not have an in-range stop.
+            Use the interface to plan stops for these student(s).
+        </p>
+        </Alert>
+        }
+
         <div className='d-flex flex-row justify-content-center'>
           <Button
           onClick={() => setOpenInstruc(!openInstruc)}
@@ -93,7 +110,7 @@ function AdminRouteStopsPlanner(props) {
                   <strong>Welcome to the stop planner interface.</strong>
                 </div>
                   <p>Within this interface, you can interactively create, modify, and reorganize stops. Students are shown with the student pin and routes are shown with the route pin.</p>
-                  <p>Use the table to drag and drop to reorganize stops. Finalize changes by clicking on "Save". Revert changes made by clicking on "Reset".</p>
+                  <p>Use the table to drag and drop "=" to reorganize stops. Finalize changes by clicking on "Save". Revert changes made by clicking on "Reset".</p>
               </div>
             </Card.Body>
           </Card>
