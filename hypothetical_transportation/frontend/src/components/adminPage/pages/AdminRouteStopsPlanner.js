@@ -61,6 +61,17 @@ function AdminRouteStopsPlanner(props) {
   }
 
   const onStopDragEnd = (pinInfo, e) => {
+    // const curLat = e.latLng.lat();
+    // const curLong = e.latLng.lng();
+    // Geocode.fromLatLng(curLat, coord.lng).then(
+    //   (response) => {
+    //     const address = response.results[0].formatted_address;
+    //     props.setAddress(address);
+    //   },
+    //   (error) => {
+    //     console.error(error);
+    //   }
+    // );
     let tempData = Array.from(stops);
     let changingElementIndex = tempData.findIndex(stop => stop.id == pinInfo.id);
     tempData[changingElementIndex].latitude = e.latLng.lat()
