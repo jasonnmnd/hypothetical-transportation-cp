@@ -385,8 +385,7 @@ class PermissionViews(TransactionTestCase):
         response = self.client.put(f'/api/user/{self.normal_user2.id}/',
                                    json.dumps(
                                        {'email': 'user2@gmail.com',
-                                        'full_name': 'First Last',
-                                        'password': 'wordpass6',
+                                        'full_name': 'Correct Name',
                                         'address': 'address',
                                         'latitude': 0,
                                         'longitude': 0,
@@ -398,8 +397,7 @@ class PermissionViews(TransactionTestCase):
         response = self.client.put(f'/api/user/{self.normal_user2.id}/',
                                    json.dumps(
                                        {'email': 'user2@gmail.com',
-                                        'full_name': 'First Last',
-                                        'password': 'wordpass',
+                                        'full_name': 'Should not be set',
                                         'address': 'address',
                                         'longitude': 0,
                                         'latitude': 0,
@@ -409,11 +407,8 @@ class PermissionViews(TransactionTestCase):
                                    HTTP_AUTHORIZATION=f'Token {self.user1_token}')
         self.assertEqual(response.status_code, 403)
 
-        login_response = self.client.post('/api/auth/login',
-                                          json.dumps(
-                                              {'email': 'user2@gmail.com', 'password': 'wordpass6'}),
-                                          content_type='application/json')
-        self.assertEqual(login_response.status_code, 200)
+        response = self.client.get(f'/api/user/{self.normal_user2.id}/', HTTP_AUTHORIZATION=f'Token {self.admin_token}')
+        self.assertEqual(response.data['full_name'], 'Correct Name')
 
     def test_student_routes_guardian_optional(self):
         response = self.client.post('/api/student/',
