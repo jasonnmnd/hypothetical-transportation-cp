@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import ParentHeader from "../header/ParentHeader";
 import Header from "../header/Header";
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { logout } from "../../actions/auth";
@@ -9,6 +9,7 @@ import isAdmin from "../../utils/user";
 import { getStudents } from '../../actions/students';
 import GeneralParentTableView from "./views/GeneralParentTableView";
 import { Container, Row, Col } from 'react-bootstrap';
+import GeneralAdminTableView from "../adminPage/components/views/GeneralAdminTableView";
 
 function ParentPage(props) {
 
@@ -31,6 +32,13 @@ function ParentPage(props) {
     }
     
   }, [searchParams]);
+
+  const nav=useNavigate()
+  const handleViewClick = (student) => {
+    //route to /props.title?somethingid=id => props.title determins routing to student, route, school, user
+    //console.log(d)
+      nav(`/parent/student/${student.school.id}/${student.id}`);
+  }
 
 
     return (
@@ -63,7 +71,7 @@ function ParentPage(props) {
               </div>
 
               <div className="shadow-lg p-3 mb-5 bg-white rounded">
-                <GeneralParentTableView values={props.students} title={title} tableType={tableType} />
+                <GeneralAdminTableView values={props.students} title={title} tableType={tableType} action={handleViewClick} />
               </div>
 
           </Container>

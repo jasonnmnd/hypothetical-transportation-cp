@@ -5,8 +5,11 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import axios from "axios";
 import config from "../../../utils/config";
-import { getStudentInfo } from '../../../actions/students';
-import { Container, Card, Button, Row, Col } from 'react-bootstrap'
+import { getStudentInfo,getInRangeStop } from '../../../actions/students';
+import { Container, Card, Button, Row, Col } from 'react-bootstrap';
+import GeneralAdminTableView from "../../adminPage/components/views/GeneralAdminTableView";
+import isAdmin from "../../../utils/user";
+import Header from "../../header/Header";
 
 function ParentStudentDetails(props){
     const param = useParams();
@@ -14,7 +17,12 @@ function ParentStudentDetails(props){
 
     useEffect(() => {
         props.getStudentInfo(param.id);
+        props.getInRangeStop(param.id);
     }, []);
+
+    const doNothing = ()=>{
+
+    }
 
     return(
         // <>
@@ -48,7 +56,9 @@ function ParentStudentDetails(props){
         // </>
 
         <div>  
-        <ParentHeader></ParentHeader>
+        {
+            isAdmin(props.user) ? <Header></Header> : <ParentHeader></ParentHeader>
+        }        
         <Container className="container-main d-flex flex-column" style={{gap: "20px"}}>
         
         <Card>
@@ -86,6 +96,7 @@ function ParentStudentDetails(props){
               </Form.Group>
             </Card.Body>
         </Card>
+
         </Container>
     </div>
 
@@ -93,14 +104,16 @@ function ParentStudentDetails(props){
 }
 
 ParentStudentDetails.propTypes = {
-    getStudentInfo: PropTypes.func.isRequired
+    getStudentInfo: PropTypes.func.isRequired,
+    getInRangeStop: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => ({
     isAuthenticated: state.auth.isAuthenticated,
     user: state.auth.user,
     token: state.auth.token,
-    student: state.students.viewedStudent
+    student: state.students.viewedStudent,
+    stops: state.students.inRangeStops,
 });
 
-export default connect(mapStateToProps, {getStudentInfo})(ParentStudentDetails)
+export default connect(mapStateToProps, {getStudentInfo,getInRangeStop})(ParentStudentDetails)
