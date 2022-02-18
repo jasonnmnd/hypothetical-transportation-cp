@@ -10,7 +10,7 @@ import { updateRoute, createRoute } from '../../../actions/routeplanner';
 import { getSchool } from '../../../actions/schools';
 import { getStudents, patchStudent } from '../../../actions/students';
 import { NO_ROUTE } from '../../../utils/utils';
-import { getStopByRoute } from '../../../actions/stops';
+import { getStopByRoute, deleteStop, createStop, updateStop } from '../../../actions/stops';
 import StopPlannerMap from './StopPlannerMap';
 import ModifyStopTable from '../components/forms/ModifyStopTable';
 import Geocode from "react-geocode";
@@ -41,6 +41,9 @@ function AdminRouteStopsPlanner(props) {
 
   useEffect(() => {
     setStops(props.stops)
+  }, [props.stops]);
+
+  useEffect(() => {
     props.getSchool(param.school_id);
     props.getStudents({routes: param.route_id})
   }, []);
@@ -56,13 +59,26 @@ function AdminRouteStopsPlanner(props) {
 
 
   const submit = () => {
-    const routeVal = studentChanges[student] == NO_ROUTE ? null : studentChanges[student]
-    Object.keys(studentChanges).forEach(student => {
-      props.patchStudent({
-        routes: routeVal
-      }, student);
-    });
-    navigate(`/admin/routes/`);
+    const stopsToUpdate = stops.filter(stop => stop.id > -1);
+    let stopsToCreate = stops.filter(stop => stop.id < 0);
+    const stopsToDelete = deletedStops.filter(stop => stop.id > -1);
+    console.log(stopsToCreate)
+    stopsToDelete.forEach(stop => {
+      props.deleteStop(stop.id)
+    })
+
+    stopsToCreate.forEach(stop => {
+      let {id, ...tempStop} = stop;
+      tempStop.pickup_time = "9,0,0";
+      tempStop.dropoff_time = "15,0,0";
+      console.log(tempStop)
+      props.createStop(tempStop)
+    })
+
+    stopsToUpdate.forEach(stop => {
+      props.updateStop(stop, stop.id)
+    })
+
   }
 
   const addNewStop = () => {
@@ -71,7 +87,8 @@ function AdminRouteStopsPlanner(props) {
         latitude: props.school.latitude,
         longitude: props.school.longitude,
         name: `Stop ${stops.length + 1}`,
-        id: newStopID
+        id: newStopID,
+        route: param.route_id
       }]);
       setNewStopID(newStopID - 1);
   }
@@ -97,7 +114,7 @@ function AdminRouteStopsPlanner(props) {
     
   }
 
-  const deleteStop = (pinInfo, position) => {
+  const deleteStopFromTable = (pinInfo, position) => {
     setStops(stops.filter(stop => stop.id != pinInfo.id));
     setDeletedStops([...deletedStops, pinInfo])
   }
@@ -109,6 +126,7 @@ function AdminRouteStopsPlanner(props) {
 
   const resetStopChanges = () => {
     setStops(props.stops);
+    setStudents(props.students);
   }
 
   const [openInstruc, setOpenInstruc] = useState(false);
@@ -173,7 +191,7 @@ function AdminRouteStopsPlanner(props) {
                 school={props.school} 
                 onStopDragEnd={onStopDragEnd}
                 stops={stops}
-                deleteStop={deleteStop}
+                deleteStop={deleteStopFromTable}
             />
 
           <Card>
@@ -200,14 +218,13 @@ function AdminRouteStopsPlanner(props) {
 
 AdminRouteStopsPlanner.propTypes = {
     getRouteInfo: PropTypes.func.isRequired,
-    updateRoute: PropTypes.func.isRequired,
     getSchool: PropTypes.func.isRequired,
-    createRoute: PropTypes.func.isRequired,
-    getRoutes: PropTypes.func.isRequired,
     getStudents: PropTypes.func.isRequired,
-    resetViewedRoute: PropTypes.func.isRequired,
     getStopByRoute: PropTypes.func.isRequired,
-    stops: PropTypes.array
+    deleteStop: PropTypes.func.isRequired,
+    createStop: PropTypes.func.isRequired,
+    updateStop: PropTypes.func.isRequired,
+    stops: PropTypes.array,
 }
 
 const mapStateToProps = (state) => ({
@@ -216,7 +233,7 @@ const mapStateToProps = (state) => ({
   currentRoute: state.routes.viewedRoute,
   school: state.schools.viewedSchool,
   studentsInSchool: state.students.students.results,
-  //stops: state.stops.stops.results
+  stops: state.stop.stops.results
 });
 
 AdminRouteStopsPlanner.defaultProps = {
@@ -242,4 +259,4 @@ AdminRouteStopsPlanner.defaultProps = {
     ],
 }
 
-export default connect(mapStateToProps, {getStopByRoute, getRouteInfo, updateRoute, getSchool, createRoute, getRoutes, getStudents, resetViewedRoute})(AdminRouteStopsPlanner)
+export default connect(mapStateToProps, {updateStop, getStopByRoute, getRouteInfo, getSchool, getStudents, deleteStop, createStop})(AdminRouteStopsPlanner)
