@@ -96,7 +96,8 @@ function MapComponent(props) {
             ...pinGroup.markerProps
         }
         setPinClickFunctions(pin, {lat: lat, lng: lng}, temp)
-        setPinDragFunctions(pin, temp)
+        setPinDragFunctions(pin, temp);
+        bounds.extend(new google.maps.LatLng(temp.position.lat, temp.position.lng));
         pinInfo = pinInfo.concat(temp);
         setPins(pinInfo)
     }
@@ -111,7 +112,6 @@ function MapComponent(props) {
                         
                         const { lat, lng } = response.results[0].geometry.location;
                         addMarkerFromPin(lat, lng, pinGroup, pin)
-                        
                     })
                     .catch(err => console.log(err));
                 }
@@ -134,16 +134,6 @@ function MapComponent(props) {
         return v;
     }
 
-    const getBound = (inPins) => {
-        inPins.map((pin) => {
-            bounds.extend(new google.maps.LatLng(pin.position.lat, pin.position.lng));
-        });
-    }
-
-    useEffect(()=>{
-        getBound(pins);
-    },[pins])
-
     const WORLD_DIM = { height: 256, width: 256 };
     const ZOOM_MAX = 21;
 
@@ -163,12 +153,13 @@ function MapComponent(props) {
         var latFraction = (latRad(ne.lat()) - latRad(sw.lat())) / Math.PI;
         var lngDiff = ne.lng() - sw.lng();
         var lngFraction = ((lngDiff < 0) ? (lngDiff + 360) : lngDiff) / 360;
-        var latZoom = zoom(427, WORLD_DIM.height, latFraction);
-        var lngZoom = zoom(517, WORLD_DIM.width, lngFraction);
+        var latZoom = zoom(mapRef.current? mapRef.current.getDiv().clientHeight:427, WORLD_DIM.height, latFraction);
+        var lngZoom = zoom(mapRef.current? mapRef.current.getDiv().clientWidth:517, WORLD_DIM.width, lngFraction);
         // console.log({latZoom, lngZoom, ZOOM_MAX},Math.min(latZoom, lngZoom, ZOOM_MAX))
-        setZ( !isNaN(Math.min(latZoom, lngZoom, ZOOM_MAX))? Math.min(latZoom, lngZoom, ZOOM_MAX):z)
+        setZ( !isNaN(Math.min(latZoom, lngZoom, ZOOM_MAX))&&curZoom===0? Math.min(latZoom, lngZoom, ZOOM_MAX):z)
         // console.log(z)
     },[bounds])
+
 
     const mapRef = useRef(null);
     const handleLoad = (map)=>{
@@ -177,6 +168,7 @@ function MapComponent(props) {
     }
     const [pos, setPos]= useState({lat:0,lng:0})
     const [set,setSet] = useState(false)
+    const [curZoom, setCurZoom]= useState(0)
     useEffect(()=>{
         if(!isNaN(props.center.lat) && !isNaN(props.center.lng) && pos.lng!==props.center.lng && !set){
             setPos(props.center)
@@ -191,6 +183,15 @@ function MapComponent(props) {
             setPos(newPost)
         }
     }
+
+    const handleZoom = ()=>{
+        if(!mapRef.current) return;
+        const newZoom = mapRef.current.getZoom();
+        if(z!==newZoom){
+            setCurZoom(newZoom)
+            setZ(newZoom)
+        }
+    }
     
     return (
         <GoogleMap
@@ -199,6 +200,7 @@ function MapComponent(props) {
             center={pos}
             onLoad={handleLoad}
             onCenterChanged={handleCenter}
+            onZoomChanged={handleZoom}
         >
             {/* <Spiderfy> */}
                 {getMarkers(pins)}
