@@ -20,7 +20,7 @@ function GeneralManageStudentPage(props) {
     const [validated, setValidated] = useState(false);
 
     const emptyStudent={
-      student_id: "",
+      student_id: null,
       full_name: "",
       guardian: "",
       routes: "",

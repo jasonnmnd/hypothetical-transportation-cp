@@ -2,6 +2,7 @@ import React, { useRef, Fragment, useEffect } from 'react';
 import { withAlert } from 'react-alert';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
 
 
 function Alerts(props) {
@@ -12,6 +13,7 @@ function Alerts(props) {
     const mounted = useRef();
     const prevErrorRef = useRef(props.error)
     const prevMessageRef = useRef(props.message)
+    const navigate = useNavigate();
 
     useEffect(() => {
       if (!mounted.current) {
@@ -36,7 +38,17 @@ function Alerts(props) {
 
         if (message !== prevMessageRef.current) {
           if (message.student) alert(message.student);
-          if (message.user) alert(message.user);
+          if (message.user && message.user.includes("Create")){
+            if(confirm(message.user + " Would you like to navigate to create a new student for them?")){
+              navigate(`/admin/new_student`)
+            }
+            else{
+              navigate(`/admin/users`)
+            }
+          }
+          if (message.user && message.user.includes("Update")){
+            alert(message.user);
+          }
           if (message.school) alert(message.school);
           if (message.route) alert(message.route);
           if (message.passwordNotMatch) alert(message.passwordNotMatch);

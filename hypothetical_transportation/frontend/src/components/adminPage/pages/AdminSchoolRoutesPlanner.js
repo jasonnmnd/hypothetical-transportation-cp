@@ -182,11 +182,11 @@ function AdminSchoolRoutesPlanner(props) {
 
   const routePlannerLegend = [
     {
-        key: "In This Route: ",
+        key: "No Route: ",
         color: "🟥    "//❤️
     },
     {
-        key: "No Route: ",
+        key: "In This Route: ",
         color: "🟩    "//💙
     },
     {

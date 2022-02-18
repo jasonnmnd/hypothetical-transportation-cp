@@ -101,7 +101,7 @@ function GeneralEditUserForm(props) {
     
     return (
         <div> 
-            <div>{openModal && <PageNavigateModal closeModal={setOpenModal} yesFunc={navToNewStudent} noFunc={navToUsers} message={`You have created a new User!`} question={`Would you like to navigate to the create a new student for them?`}/>}</div>
+            {/* <div>{openModal && <PageNavigateModal closeModal={setOpenModal} yesFunc={navToNewStudent} noFunc={navToUsers} message={`You have created a new User!`} question={`Would you like to navigate to the create a new student for them?`}/>}</div> */}
             <Header></Header>
                 <Container className="container-main">
                 <div className="shadow-sm p-3 mb-5 bg-white rounded d-flex flex-row justify-content-center">

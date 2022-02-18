@@ -3,7 +3,7 @@ import Header from '../../header/Header';
 import { Link, Route, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes, { string } from 'prop-types';
-import { Container, Card, Button, Form, Collapse, Alert } from 'react-bootstrap';
+import { Container, Card, Button, Collapse, Alert } from 'react-bootstrap';
 import '../NEWadminPage.css';
 import { getRouteInfo, getRoutes, resetViewedRoute } from '../../../actions/routes';
 import { updateRoute, createRoute } from '../../../actions/routeplanner';
@@ -176,8 +176,11 @@ function AdminRouteStopsPlanner(props) {
                 <div className='d-flex flex-row justify-content-center'>
                   <strong>Welcome to the stop planner interface.</strong>
                 </div>
-                  <p>Within this interface, you can interactively create, modify, and reorganize stops. Students are shown with the student pin and routes are shown with the route pin.</p>
-                  <p>Use the table to drag and drop "=" to reorganize stops. Finalize changes by clicking on "Save". Revert changes made by clicking on "Reset".</p>
+                  <p>Within this interface, you can interactively create, modify, and reorganize stops. Students are shown with the student pin and routes are shown with the bus pin.</p>
+                  <p>Left click on the bus pin to view the stop, and you can drag bus pins around to move stops and make sure students are in range.</p>
+                  <p>Right click on the bus pin to delete the stop. You can add this stop back by using the table and clicking on "+".</p>
+                  <p>Use the table to drag and drop "=" to reorganize stops. Double click on the stop name to change its name.</p>
+                  <p>Finalize all changes by clicking on "Save". Revert changes made by clicking on "Reset".</p>
               </div>
             </Card.Body>
           </Card>
@@ -186,6 +189,12 @@ function AdminRouteStopsPlanner(props) {
         <br></br>
 
         <Container className="d-flex flex-column justify-content-center" style={{gap: "30px"}}>
+              <Card>
+                <Card.Header as="h5">Map Legend</Card.Header>
+                <Card.Body>
+                  Legend Here
+                </Card.Body>
+              </Card>
             <StopPlannerMap 
                 students={students} 
                 school={props.school} 

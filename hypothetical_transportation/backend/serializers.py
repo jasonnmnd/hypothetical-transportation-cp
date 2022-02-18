@@ -21,7 +21,6 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class EditUserSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = get_user_model()
         fields = ('id', 'email', 'full_name', 'address', 'latitude', 'longitude', 'groups')
@@ -108,8 +107,8 @@ class StopLocationSerializer(serializers.ModelSerializer):
 
 class StudentLocationSerializer(serializers.Serializer):
     id = serializers.IntegerField(required=True)
-    latitude = serializers.DecimalField(max_digits=9, decimal_places=6, required=True)
-    longitude = serializers.DecimalField(max_digits=9, decimal_places=6, required=True)
+    latitude = serializers.FloatField(required=True)
+    longitude = serializers.FloatField(required=True)
 
 
 class CheckInrangeSerializer(serializers.Serializer):

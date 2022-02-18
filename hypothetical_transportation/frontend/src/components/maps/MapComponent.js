@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Geocode from "react-geocode";
 import { SCHOOL_MARKER, STOP_MARKER, STUDENT_MARKER } from './static/markers';
-import Spiderfy from "./Spiderfy.js";
 
 const CLICK_FUNCTIONS = ["onClick", "onRightClick"]
 const DRAG_FUNCTIONS = ["onDragEnd"]
@@ -49,7 +48,7 @@ function MapComponent(props) {
 
 
     useEffect(() => {
-        //console.log(props.pinData)
+        // console.log("props.pinData")
         initializePins(props.pinData)
       }, [props.pinData]);
 
@@ -96,7 +95,25 @@ function MapComponent(props) {
             ...pinGroup.markerProps
         }
         setPinClickFunctions(pin, {lat: lat, lng: lng}, temp)
-        setPinDragFunctions(pin, temp)
+        setPinDragFunctions(pin, temp);
+        // console.log(temp.position)
+        bounds.extend(new google.maps.LatLng(temp.position.lat, temp.position.lng));
+        var lt = props.center.lat - (temp.position.lat-props.center.lat)
+        while(lt>180){
+            lt=lt-360
+        }
+        while(lt<-180){
+            lt=lt+360
+        }
+        var ln = props.center.lng - (temp.position.lng-props.center.lng)
+        while(ln>180){
+            ln=ln-360
+        }
+        while(ln<-180){
+            ln=ln+360
+        }
+        // console.log(lt,ln)
+        bounds.extend(new google.maps.LatLng(lt, ln));
         pinInfo = pinInfo.concat(temp);
         setPins(pinInfo)
     }
@@ -104,17 +121,18 @@ function MapComponent(props) {
     const initializePins = (inPinData) => {
         inPinData.forEach((pinGroup) => {
             pinGroup.pins.forEach((pin) => {
+                // console.log(pin)
                 if(pin.latitude == null || pin.longitude == null){
                     Geocode.fromAddress(pin.address)
                     .then((response) => {  
                         
                         const { lat, lng } = response.results[0].geometry.location;
                         addMarkerFromPin(lat, lng, pinGroup, pin)
-                        
                     })
                     .catch(err => console.log(err));
                 }
                 else {
+                    // console.log("addmarker")
                     addMarkerFromPin(parseFloat(pin.latitude), parseFloat(pin.longitude), pinGroup, pin)
                 }
                 
@@ -133,16 +151,6 @@ function MapComponent(props) {
         return v;
     }
 
-    const getBound = (inPins) => {
-        inPins.map((pin) => {
-            bounds.extend(new google.maps.LatLng(pin.position.lat, pin.position.lng));
-        });
-    }
-
-    useEffect(()=>{
-        getBound(pins);
-    },[pins])
-
     const WORLD_DIM = { height: 256, width: 256 };
     const ZOOM_MAX = 21;
 
@@ -158,24 +166,59 @@ function MapComponent(props) {
 
     useEffect(()=>{
         var ne = bounds.getNorthEast();
-        var sw = bounds.getSouthWest();       
+        var sw = bounds.getSouthWest();   
+        // console.log(ne.lat(), ne.lng(), sw.lat(),sw.lng())    
         var latFraction = (latRad(ne.lat()) - latRad(sw.lat())) / Math.PI;
         var lngDiff = ne.lng() - sw.lng();
         var lngFraction = ((lngDiff < 0) ? (lngDiff + 360) : lngDiff) / 360;
-        var latZoom = zoom(WORLD_DIM.height, WORLD_DIM.height, latFraction);
-        var lngZoom = zoom(WORLD_DIM.width, WORLD_DIM.width, lngFraction);
-        //console.log({latZoom, lngZoom, ZOOM_MAX},Math.min(latZoom, lngZoom, ZOOM_MAX))
-        setZ( !isNaN(Math.min(latZoom, lngZoom, ZOOM_MAX))? Math.min(latZoom, lngZoom, ZOOM_MAX):z)
-        //console.log(z)
+        var latZoom = zoom(mapRef.current? mapRef.current.getDiv().clientHeight:427, WORLD_DIM.height, latFraction);
+        var lngZoom = zoom(mapRef.current? mapRef.current.getDiv().clientWidth:517, WORLD_DIM.width, lngFraction);
+        // console.log({latZoom, lngZoom, ZOOM_MAX},Math.min(latZoom, lngZoom, ZOOM_MAX))
+        setZ( !isNaN(Math.min(latZoom, lngZoom, ZOOM_MAX))&&curZoom===0? Math.min(latZoom, lngZoom, ZOOM_MAX):z)
+        // console.log(z)
     },[bounds])
 
 
+    const mapRef = useRef(null);
+    const handleLoad = (map)=>{
+        // console.log(pos)
+        mapRef.current=map;
+    }
+    const [pos, setPos]= useState({lat:0,lng:0})
+    const [set,setSet] = useState(false)
+    const [curZoom, setCurZoom]= useState(0)
+    useEffect(()=>{
+        if(!isNaN(props.center.lat) && !isNaN(props.center.lng) && pos.lng!==props.center.lng && !set){
+            setPos(props.center)
+            setSet(true)
+        }
+    },[props.center])
+
+    const handleCenter = ()=>{
+        if(!mapRef.current) return;
+        const newPost = mapRef.current.getCenter().toJSON();
+        if(pos.lat!==newPost.lat && pos.lng!==newPost.lng){
+            setPos(newPost)
+        }
+    }
+
+    const handleZoom = ()=>{
+        if(!mapRef.current) return;
+        const newZoom = mapRef.current.getZoom();
+        if(z!==newZoom){
+            setCurZoom(newZoom)
+            setZ(newZoom)
+        }
+    }
     
     return (
         <GoogleMap
             mapContainerStyle={mapStyles}
             zoom={z}
-            center={props.center}
+            center={pos}
+            onLoad={handleLoad}
+            onCenterChanged={handleCenter}
+            onZoomChanged={handleZoom}
         >
             {/* <Spiderfy> */}
                 {getMarkers(pins)}
