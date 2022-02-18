@@ -49,3 +49,22 @@ axios
     })
     .catch(err => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});
 }
+
+  
+  export const createStop = (stop) => (dispatch, getState) => {
+    axios
+      .post('/api/stop/', stop, tokenConfig(getState))
+      .then((res) => {
+        dispatch(createMessage({ student: 'Stop Created' }));
+      })
+      .catch((err) => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
+  };
+
+  export const updateStop = (stop, id) => (dispatch, getState) => {
+    axios
+            .put(`/api/stop/${id}/`,stop, tokenConfig(getState))
+            .then(res =>{
+              dispatch(createMessage({ student: 'Stop Updated' }));
+                
+            }).catch(err => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});
+  }

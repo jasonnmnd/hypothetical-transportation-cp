@@ -10,18 +10,21 @@ import { updateRoute, createRoute } from '../../../actions/routeplanner';
 import { getSchool } from '../../../actions/schools';
 import { getStudents, patchStudent } from '../../../actions/students';
 import { NO_ROUTE } from '../../../utils/utils';
-import { getStopByRoute } from '../../../actions/stops';
+import { getStopByRoute, deleteStop, createStop, updateStop } from '../../../actions/stops';
 import StopPlannerMap from './StopPlannerMap';
 import ModifyStopTable from '../components/forms/ModifyStopTable';
 import Geocode from "react-geocode";
 import IconLegend from '../../common/IconLegend';
+import { isStudentWithinRange } from '../../../utils/geocode';
 
 
 function AdminRouteStopsPlanner(props) {
   const param = useParams();
   const navigate = useNavigate();
 
-  const [stops, setStops] = useState(props.stops);
+  const [stops, setStopsWithProperInds] = useState(props.stops);
+
+  const [students, setStudents] = useState(props.students);
 
   const [deletedStops, setDeletedStops] = useState([]);
 
@@ -34,30 +37,59 @@ function AdminRouteStopsPlanner(props) {
   }, [param]);
 
   useEffect(() => {
+    setStudents(props.students)
+  }, [props.students]);
+
+  useEffect(() => {
     setStops(props.stops)
+  }, [props.stops]);
+
+  useEffect(() => {
     props.getSchool(param.school_id);
     props.getStudents({routes: param.route_id})
   }, []);
 
+  const setStops = (newStops) => {
+    let tempStopsData = Array.from(newStops);
+    tempStopsData.forEach((stop, index) => stop.stop_number = index+1)
+    setStopsWithProperInds(tempStopsData);
+    let tempStudentData = Array.from(students);
+    tempStudentData.forEach(student => student.has_inrange_stop = isStudentWithinRange(student, tempStopsData));
+    setStudents(tempStudentData);
+  }
+
 
   const submit = () => {
-    const routeVal = studentChanges[student] == NO_ROUTE ? null : studentChanges[student]
-    Object.keys(studentChanges).forEach(student => {
-      props.patchStudent({
-        routes: routeVal
-      }, student);
-    });
-    navigate(`/admin/routes/`);
+    const stopsToUpdate = stops.filter(stop => stop.id > -1);
+    let stopsToCreate = stops.filter(stop => stop.id < 0);
+    const stopsToDelete = deletedStops.filter(stop => stop.id > -1);
+    console.log(stopsToCreate)
+    stopsToDelete.forEach(stop => {
+      props.deleteStop(stop.id)
+    })
+
+    stopsToCreate.forEach(stop => {
+      let {id, ...tempStop} = stop;
+      tempStop.pickup_time = "9,0,0";
+      tempStop.dropoff_time = "15,0,0";
+      console.log(tempStop)
+      props.createStop(tempStop)
+    })
+
+    stopsToUpdate.forEach(stop => {
+      props.updateStop(stop, stop.id)
+    })
+
   }
 
   const addNewStop = () => {
-      console.log("ADDING STOP")
       setStops([...stops, {
-        address: props.school.address,
+        location: props.school.address,
         latitude: props.school.latitude,
         longitude: props.school.longitude,
         name: `Stop ${stops.length + 1}`,
-        id: newStopID
+        id: newStopID,
+        route: param.route_id
       }]);
       setNewStopID(newStopID - 1);
   }
@@ -72,18 +104,18 @@ function AdminRouteStopsPlanner(props) {
     Geocode.fromLatLng(curLat, curLng).then(
       (response) => {
         const address = response.results[0].formatted_address;
-        tempData[changingElementIndex].address = address
+        tempData[changingElementIndex].location = address
         setStops(tempData)
       },
       (error) => {
-        tempData[changingElementIndex].address = `${curLat}, ${curLng}`
+        tempData[changingElementIndex].location = `${curLat}, ${curLng}`
         setStops(tempData)
       }
     );
     
   }
 
-  const deleteStop = (pinInfo, position) => {
+  const deleteStopFromTable = (pinInfo, position) => {
     setStops(stops.filter(stop => stop.id != pinInfo.id));
     setDeletedStops([...deletedStops, pinInfo])
   }
@@ -95,6 +127,7 @@ function AdminRouteStopsPlanner(props) {
 
   const resetStopChanges = () => {
     setStops(props.stops);
+    setStudents(props.students);
   }
 
   const [openInstruc, setOpenInstruc] = useState(false);
@@ -159,17 +192,17 @@ function AdminRouteStopsPlanner(props) {
         <Container className="d-flex flex-column justify-content-center" style={{gap: "30px"}}>
             <IconLegend legendType='stopPlanner'></IconLegend>
             <StopPlannerMap 
-                students={props.students} 
+                students={students} 
                 school={props.school} 
                 onStopDragEnd={onStopDragEnd}
                 stops={stops}
-                deleteStop={deleteStop}
+                deleteStop={deleteStopFromTable}
             />
 
           <Card>
             <Card.Header as="h5">Reorganize Stops</Card.Header>
             <Card.Body>
-              <ModifyStopTable stops={stops} setStops={setStops} deletedStops={deletedStops} readdStop={readdStop} />
+              <ModifyStopTable stops={stops} setStops={setStops} setStopsWithProperInds={setStopsWithProperInds} deletedStops={deletedStops} readdStop={readdStop} />
             </Card.Body>
           </Card>
         </Container>        
@@ -190,14 +223,13 @@ function AdminRouteStopsPlanner(props) {
 
 AdminRouteStopsPlanner.propTypes = {
     getRouteInfo: PropTypes.func.isRequired,
-    updateRoute: PropTypes.func.isRequired,
     getSchool: PropTypes.func.isRequired,
-    createRoute: PropTypes.func.isRequired,
-    getRoutes: PropTypes.func.isRequired,
     getStudents: PropTypes.func.isRequired,
-    resetViewedRoute: PropTypes.func.isRequired,
     getStopByRoute: PropTypes.func.isRequired,
-    stops: PropTypes.array
+    deleteStop: PropTypes.func.isRequired,
+    createStop: PropTypes.func.isRequired,
+    updateStop: PropTypes.func.isRequired,
+    stops: PropTypes.array,
 }
 
 const mapStateToProps = (state) => ({
@@ -206,26 +238,30 @@ const mapStateToProps = (state) => ({
   currentRoute: state.routes.viewedRoute,
   school: state.schools.viewedSchool,
   studentsInSchool: state.students.students.results,
-  //stops: state.stops.stops.results
+  stops: state.stop.stops.results
 });
 
 AdminRouteStopsPlanner.defaultProps = {
     stops: [
         {
-            address: "68 Walters Brook Drive, Bridgewater, NJ",
+            location: "68 Walters Brook Drive, Bridgewater, NJ",
             latitude: 40.58885594887111,
             longitude: -74.60416028632812,
             name: "Stop 1",
-            id: 1
+            route: 402,
+            id: 19,
+            stop_number: 1
         },
         {
-            address: "90 Walters Brook Drive, Bridgewater, NJ",
+            location: "90 Walters Brook Drive, Bridgewater, NJ",
             latitude: 40.58770627689465,
             longitude: -74.66309603862304,
             name: "Stop 2",
-            id: 2
+            route: 402,
+            id: 20,
+            stop_number: 2
         }
     ],
 }
 
-export default connect(mapStateToProps, {getStopByRoute, getRouteInfo, updateRoute, getSchool, createRoute, getRoutes, getStudents, resetViewedRoute})(AdminRouteStopsPlanner)
+export default connect(mapStateToProps, {updateStop, getStopByRoute, getRouteInfo, getSchool, getStudents, deleteStop, createStop})(AdminRouteStopsPlanner)

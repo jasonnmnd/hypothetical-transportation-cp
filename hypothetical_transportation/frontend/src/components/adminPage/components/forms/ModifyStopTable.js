@@ -17,7 +17,7 @@ function ModifyStopTable(props) {
         let tempData = Array.from(props.stops);
         let [source_data] = tempData.splice(e.source.index, 1);
         tempData.splice(e.destination.index, 0, source_data);
-        console.log(tempData)
+        // tempData.forEach((stop, index) => stop.stop_number = index+1)
         props.setStops(tempData);
     };
 
@@ -29,7 +29,7 @@ function ModifyStopTable(props) {
         let tempData = Array.from(props.stops);
         let changingElementIndex = tempData.findIndex(stop => stop.id == e.target.id);
         tempData[changingElementIndex].name = e.target.value
-        props.setStops(tempData);
+        props.setStopsWithProperInds(tempData);
     }
 
     const handleKeyDown = (e) => {
@@ -48,7 +48,58 @@ function ModifyStopTable(props) {
                     onKeyDown={handleKeyDown}
         ></input>
     }
+    const getStopsInMapTableBody = () => {
+        let tempData = Array.from(props.stops);
+        tempData.sort((a, b) => a.stop_num - b.stop_num);
+        return tempData.map((stop, index) => (
+            <Draggable
+                key={stop.id}
+                draggableId={stop.id.toString()}
+                index={index}
+            >
+                {(provider) => (
+                <tr {...provider.draggableProps} ref={provider.innerRef} >
+                    <td {...provider.dragHandleProps}> = </td>
+                    <td>{stop.stop_number}</td>
+                    <td onClick={() => setInputOnClick(stop)}>
+                        {inputField == stop.id ? getInputComponent(stop) : stop.name}
+                    </td>
+                    <td>{stop.location}</td>
+                </tr>
+                )}
+            </Draggable>
+        ))
+    }
 
+    const getStopsDeletedTableBody = () => {
+        return props.deletedStops.map((stop) => (
+            <tr className='grayed-out-tr'> 
+                <td>
+                    <Button variant="delete_add" onClick={() => props.readdStop(stop)}>+</Button>
+                </td>
+                <td className='delete_td'>{stop.name}</td>
+                <td className='delete_td'>{stop.location}</td>
+            </tr>
+            ))
+    }
+
+    const getDeletedTable = () => {
+        return (<table className="table borderd">
+        <thead>
+            <tr className='tr-header-delete'>
+                <th colSpan="3">Deleted Stops</th>
+            </tr>
+            <tr>
+            <th />
+            <th>Name</th>
+            <th>Location</th>
+            </tr>
+        </thead>
+            <tbody>
+                {getStopsDeletedTableBody()}  
+            </tbody>
+    </table>)
+    }
     
 
     
@@ -61,16 +112,16 @@ function ModifyStopTable(props) {
             <table className="table borderd">
             <thead>
                 <tr className='tr-header'>
+                    <th colSpan="4">Stops in Route</th>
+                </tr>
+                <tr>
                 <th />
+                <th>Stop Number</th>
                 <th>Name</th>
-                <th>Address</th>
-                <th>Latitude</th>
-                <th>Longitude</th>
+                <th>Location</th>
                 </tr>
             </thead>
-                <tr className=''>
-                    <th colspan="5">Stops in Route</th>
-                </tr>
+                
                 <Droppable droppableId="droppable-1">
                     {(provider) => (
                     <tbody
@@ -78,48 +129,14 @@ function ModifyStopTable(props) {
                         ref={provider.innerRef}
                         {...provider.droppableProps}
                     >
-                        {props.stops?.map((stop, index) => (
-                        <Draggable
-                            key={stop.id}
-                            draggableId={stop.id.toString()}
-                            index={index}
-                        >
-                            {(provider) => (
-                            <tr {...provider.draggableProps} ref={provider.innerRef} >
-                                <td {...provider.dragHandleProps}> = </td>
-                                <td onClick={() => setInputOnClick(stop)}>
-                                    {inputField == stop.id ? getInputComponent(stop) : stop.name}
-                                </td>
-                                <td>{stop.address}</td>
-                                <td>{stop.latitude}</td>
-                                <td>{stop.longitude}</td>
-                            </tr>
-                            )}
-                        </Draggable>
-                        ))}
+                        {getStopsInMapTableBody()}
                         {provider.placeholder}
                     </tbody>
                     )}
                 </Droppable>
-                <tbody>
-                    <tr className='tr-header-delete'>
-                        <th colspan="5">Deleted Stops</th>
-                    </tr>
-                    {props.deletedStops.map((stop) => (
-                    <tr className='grayed-out-tr'>
-                        {/* <td onClick={() => props.readdStop(stop)} >+</td> */}
-                        <td>
-                            <Button variant="delete_add" onClick={() => props.readdStop(stop)}>+</Button>
-                        </td>
-                        <td className='delete_td'>{stop.name}</td>
-                        <td className='delete_td'>{stop.address}</td>
-                        <td className='delete_td'>{stop.latitude}</td>
-                        <td className='delete_td'>{stop.longitude}</td>
-                    </tr>
-                    ))}  
-                </tbody>
             </table>
         </DragDropContext>
+        {props.deletedStops == null || props.deletedStops.length ==0 ? null : getDeletedTable()}
         </div>
     );
 }
@@ -129,7 +146,8 @@ ModifyStopTable.propTypes = {
     title: PropTypes.string,
     setStops: PropTypes.func,
     deletedStops: PropTypes.array,
-    readdStop: PropTypes.func
+    readdStop: PropTypes.func, 
+    setStopsWithProperInds: PropTypes.func
 }
 
 ModifyStopTable.defaultProps = {
