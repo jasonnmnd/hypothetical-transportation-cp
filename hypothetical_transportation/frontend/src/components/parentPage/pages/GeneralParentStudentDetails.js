@@ -20,6 +20,10 @@ function ParentStudentDetails(props){
         props.getInRangeStop(param.id);
     }, []);
 
+    const doNothing = ()=>{
+
+    }
+
     return(
         // <>
         // <Header textToDisplay={"Student Details"} shouldShowOptions={true}></Header>
@@ -87,9 +91,9 @@ function ParentStudentDetails(props){
         </Card>
 
         <Card>
-            <Card.Header as="h5">Associated Stops</Card.Header>
+            <Card.Header as="h5">In Range Stops</Card.Header>
             <Card.Body>
-                <GeneralAdminTableView title='Associated Stops' tableType='stop' values={props.stops} search=""/>
+                <GeneralAdminTableView title='In Range Stops' tableType='stop' values={props.stops} search="" action={doNothing}/>
             </Card.Body>
         </Card>
 
