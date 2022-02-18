@@ -33,7 +33,7 @@ function StopPlannerMap(props){
     }
 
     useEffect(() => {
-        console.log(props.stops)
+        // console.log(props.stops)
        setPinData(getPinData())
     }, [props]);
 

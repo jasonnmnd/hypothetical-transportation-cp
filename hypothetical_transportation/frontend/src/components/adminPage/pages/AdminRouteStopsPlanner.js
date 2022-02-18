@@ -14,13 +14,16 @@ import { getStopByRoute } from '../../../actions/stops';
 import StopPlannerMap from './StopPlannerMap';
 import ModifyStopTable from '../components/forms/ModifyStopTable';
 import Geocode from "react-geocode";
+import { isStudentWithinRange } from '../../../utils/geocode';
 
 
 function AdminRouteStopsPlanner(props) {
   const param = useParams();
   const navigate = useNavigate();
 
-  const [stops, setStops] = useState(props.stops);
+  const [stops, setStopsWithProperInds] = useState(props.stops);
+
+  const [students, setStudents] = useState(props.students);
 
   const [deletedStops, setDeletedStops] = useState([]);
 
@@ -33,10 +36,23 @@ function AdminRouteStopsPlanner(props) {
   }, [param]);
 
   useEffect(() => {
+    setStudents(props.students)
+  }, [props.students]);
+
+  useEffect(() => {
     setStops(props.stops)
     props.getSchool(param.school_id);
     props.getStudents({routes: param.route_id})
   }, []);
+
+  const setStops = (newStops) => {
+    let tempStopsData = Array.from(newStops);
+    tempStopsData.forEach((stop, index) => stop.stop_number = index+1)
+    setStopsWithProperInds(tempStopsData);
+    let tempStudentData = Array.from(students);
+    tempStudentData.forEach(student => student.has_inrange_stop = isStudentWithinRange(student, tempStopsData));
+    setStudents(tempStudentData);
+  }
 
 
   const submit = () => {
@@ -50,9 +66,8 @@ function AdminRouteStopsPlanner(props) {
   }
 
   const addNewStop = () => {
-      console.log("ADDING STOP")
       setStops([...stops, {
-        address: props.school.address,
+        location: props.school.address,
         latitude: props.school.latitude,
         longitude: props.school.longitude,
         name: `Stop ${stops.length + 1}`,
@@ -71,11 +86,11 @@ function AdminRouteStopsPlanner(props) {
     Geocode.fromLatLng(curLat, curLng).then(
       (response) => {
         const address = response.results[0].formatted_address;
-        tempData[changingElementIndex].address = address
+        tempData[changingElementIndex].location = address
         setStops(tempData)
       },
       (error) => {
-        tempData[changingElementIndex].address = `${curLat}, ${curLng}`
+        tempData[changingElementIndex].location = `${curLat}, ${curLng}`
         setStops(tempData)
       }
     );
@@ -154,7 +169,7 @@ function AdminRouteStopsPlanner(props) {
 
         <Container className="d-flex flex-column justify-content-center" style={{gap: "30px"}}>
             <StopPlannerMap 
-                students={props.students} 
+                students={students} 
                 school={props.school} 
                 onStopDragEnd={onStopDragEnd}
                 stops={stops}
@@ -164,7 +179,7 @@ function AdminRouteStopsPlanner(props) {
           <Card>
             <Card.Header as="h5">Reorganize Stops</Card.Header>
             <Card.Body>
-              <ModifyStopTable stops={stops} setStops={setStops} deletedStops={deletedStops} readdStop={readdStop} />
+              <ModifyStopTable stops={stops} setStops={setStops} setStopsWithProperInds={setStopsWithProperInds} deletedStops={deletedStops} readdStop={readdStop} />
             </Card.Body>
           </Card>
         </Container>        
@@ -207,18 +222,22 @@ const mapStateToProps = (state) => ({
 AdminRouteStopsPlanner.defaultProps = {
     stops: [
         {
-            address: "68 Walters Brook Drive, Bridgewater, NJ",
+            location: "68 Walters Brook Drive, Bridgewater, NJ",
             latitude: 40.58885594887111,
             longitude: -74.60416028632812,
             name: "Stop 1",
-            id: 1
+            route: 402,
+            id: 19,
+            stop_number: 1
         },
         {
-            address: "90 Walters Brook Drive, Bridgewater, NJ",
+            location: "90 Walters Brook Drive, Bridgewater, NJ",
             latitude: 40.58770627689465,
             longitude: -74.66309603862304,
             name: "Stop 2",
-            id: 2
+            route: 402,
+            id: 20,
+            stop_number: 2
         }
     ],
 }
