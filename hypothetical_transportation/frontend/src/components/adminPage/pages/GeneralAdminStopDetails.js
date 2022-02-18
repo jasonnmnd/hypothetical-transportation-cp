@@ -48,7 +48,7 @@ function GeneralAdminStopDetails(props) {
         <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
             <Row>
                 <Col>
-                  <Link to={`/admin`}>
+                  <Link to={`/admin/stop/plan/${props.viewedRoute.school.id}/${props.viewedRoute.id}`}>
                     <Button variant="yellowLong" size="lg">Edit Stop</Button>
                   </Link>
                 </Col>
