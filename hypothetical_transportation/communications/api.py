@@ -55,6 +55,9 @@ class SendAnnouncementAPI(generics.GenericAPIView):
             email_context = f"You are being sent this email because you are an administrator of this system\n"
             recipients.extend(get_user_model().objects.values_list('email', flat=True))
 
+        # Filter out emails ending in example.com
+        recipients = [recipient for recipient in recipients if not recipient.endswith('example.com')]
+
         with mail.get_connection() as connection:
             mail.EmailMessage(
                 subject=serializer.data.get('subject'),
