@@ -15,6 +15,7 @@ import { filterObjectForKeySubstring } from '../../../utils/utils';
 import MapComponent from '../../maps/MapComponent';
 import { getStudentPin, addSchoolPin, getStopPin } from '../../../utils/planner_maps';
 import {InfoWindow} from '@react-google-maps/api';
+import IconLegend from '../../common/IconLegend';
 
 
 function GeneralAdminRouteDetails(props) {
@@ -200,9 +201,12 @@ function GeneralAdminRouteDetails(props) {
 
         <Card style={{height: "550px"}}>
             <Card.Header as="h5">Map View of School, Students, and Stops</Card.Header>
-            <Card.Body>
-                <MapComponent pinData={pinData} otherMapComponents={extraComponents} center={{lng: Number(props.route.school.longitude),lat: Number(props.route.school.latitude)}}></MapComponent>
-            </Card.Body>
+            <Container className='d-flex flex-column justify-content-center' style={{marginTop: "20px"}}>
+                <IconLegend legendType='routeDetails'></IconLegend>
+                <Card.Body>
+                    <MapComponent pinData={pinData} otherMapComponents={extraComponents} center={{lng: Number(props.route.school.longitude),lat: Number(props.route.school.latitude)}}></MapComponent>
+                </Card.Body>    
+            </Container>
         </Card>
 
         <Card>

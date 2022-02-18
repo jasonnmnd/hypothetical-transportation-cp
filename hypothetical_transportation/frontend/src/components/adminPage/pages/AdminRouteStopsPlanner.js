@@ -14,6 +14,7 @@ import { getStopByRoute } from '../../../actions/stops';
 import StopPlannerMap from './StopPlannerMap';
 import ModifyStopTable from '../components/forms/ModifyStopTable';
 import Geocode from "react-geocode";
+import IconLegend from '../../common/IconLegend';
 
 
 function AdminRouteStopsPlanner(props) {
@@ -156,12 +157,7 @@ function AdminRouteStopsPlanner(props) {
         <br></br>
 
         <Container className="d-flex flex-column justify-content-center" style={{gap: "30px"}}>
-              <Card>
-                <Card.Header as="h5">Map Legend</Card.Header>
-                <Card.Body>
-                  Legend Here
-                </Card.Body>
-              </Card>
+            <IconLegend legendType='stopPlanner'></IconLegend>
             <StopPlannerMap 
                 students={props.students} 
                 school={props.school} 

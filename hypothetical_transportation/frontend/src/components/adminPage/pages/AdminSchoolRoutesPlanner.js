@@ -181,21 +181,6 @@ function AdminSchoolRoutesPlanner(props) {
 
   const [openInstruc, setOpenInstruc] = useState(false);
 
-  const routePlannerLegend = [
-    {
-        key: "No Route: ",
-        color: "🟥    "//❤️
-    },
-    {
-        key: "In This Route: ",
-        color: "🟩    "//💙
-    },
-    {
-      key: "Not In This Route: ",
-      color: "⬜    "//💙
-    },
-  ]
-
   return (
     
     <>      
@@ -277,7 +262,7 @@ function AdminSchoolRoutesPlanner(props) {
             {isCreate() || searchParams.get('route') == null ? null : 
             
             <Container className='d-flex flex-column'>
-              <IconLegend></IconLegend>
+              <IconLegend legendType='routePlanner'></IconLegend>
               <RoutePlannerMap 
                 students={props.students} 
                 school={props.school} 

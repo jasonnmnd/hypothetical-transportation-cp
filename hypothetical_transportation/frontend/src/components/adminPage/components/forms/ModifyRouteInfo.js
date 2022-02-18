@@ -65,7 +65,7 @@ function ModifyRouteInfo(props) {
       </div> */}
 
       <Container>
-        <Card style={{height: "550px"}}>
+        <Card style={{height: "600px"}}>
           <Card.Header as="h5">{props.title}</Card.Header>
           <Card.Body>
             <Form className="shadow-none p-3 mb-5 bg-white rounded" onSubmit={onSubmit}>
