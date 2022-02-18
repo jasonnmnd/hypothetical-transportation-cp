@@ -75,7 +75,15 @@ function ParentStudentDetails(props){
         <Card>
             <Card.Header as="h5">Route</Card.Header>
             <Card.Body>
-                <Card.Text>{(student.routes !==undefined && student.routes!==null) ? student.routes.name : "NONE"}</Card.Text>
+                <Form.Group className="mb-3" controlId="formGridDescription">
+                    <Form.Control 
+                    type="text"
+                    as="textarea"
+                    value={(student.routes !==undefined && student.routes!==null) ? student.routes.name : "NONE"}
+                    style={{height: '200px',pointerEvents: "none"}}
+                    readOnly
+                  />
+              </Form.Group>
             </Card.Body>
         </Card>
         </Container>

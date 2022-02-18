@@ -3,7 +3,7 @@ import Header from '../../header/Header';
 import { Link, Route, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes, { string } from 'prop-types';
-import { Container, Card, Button, Form, Collapse, Alert } from 'react-bootstrap';
+import { Container, Card, Button, Collapse, Alert } from 'react-bootstrap';
 import '../NEWadminPage.css';
 import { getRouteInfo, getRoutes, resetViewedRoute } from '../../../actions/routes';
 import { updateRoute, createRoute } from '../../../actions/routeplanner';
@@ -156,6 +156,12 @@ function AdminRouteStopsPlanner(props) {
         <br></br>
 
         <Container className="d-flex flex-column justify-content-center" style={{gap: "30px"}}>
+              <Card>
+                <Card.Header as="h5">Map Legend</Card.Header>
+                <Card.Body>
+                  Legend Here
+                </Card.Body>
+              </Card>
             <StopPlannerMap 
                 students={props.students} 
                 school={props.school} 
