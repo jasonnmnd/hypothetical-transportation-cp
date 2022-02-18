@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import axios from "axios";
 import config from "../../../utils/config";
 import { getStudentInfo,getInRangeStop } from '../../../actions/students';
-import { Container, Card, Button, Row, Col } from 'react-bootstrap';
+import { Container, Card, Button, Row, Col, Form } from 'react-bootstrap';
 import GeneralAdminTableView from "../../adminPage/components/views/GeneralAdminTableView";
 import isAdmin from "../../../utils/user";
 import Header from "../../header/Header";
@@ -85,15 +85,24 @@ function ParentStudentDetails(props){
         <Card>
             <Card.Header as="h5">Route</Card.Header>
             <Card.Body>
+                <Card.Text>{(student.routes !==undefined && student.routes!==null) ? student.routes.name : "NONE"}</Card.Text>
                 <Form.Group className="mb-3" controlId="formGridDescription">
                     <Form.Control 
                     type="text"
                     as="textarea"
-                    value={(student.routes !==undefined && student.routes!==null) ? student.routes.name : "NONE"}
+                    value={(student.routes !==undefined && student.routes!==null) ? student.routes.description : "NONE"}
                     style={{height: '200px',pointerEvents: "none"}}
                     readOnly
                   />
               </Form.Group>
+            </Card.Body>
+        </Card>
+
+
+        <Card>
+            <Card.Header as="h5">In Range Stops</Card.Header>
+            <Card.Body>
+                <GeneralAdminTableView title='In Range Stops' tableType='stop' values={props.stops} search="" action={doNothing}/>
             </Card.Body>
         </Card>
 
