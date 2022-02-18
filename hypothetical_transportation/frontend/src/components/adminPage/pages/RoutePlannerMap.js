@@ -5,8 +5,10 @@ import MapComponent from "../../maps/MapComponent";
 import PropTypes, { string } from 'prop-types';
 import { useSearchParams } from 'react-router-dom';
 import { NO_ROUTE } from '../../../utils/utils';
-import { getStudentPin, addSchoolPin } from '../../../utils/planner_maps';
+import { getStudentPin, addSchoolPin, getStudentRouteName } from '../../../utils/planner_maps';
 import { getDistance, getDistanceFromLatLonInMiles } from '../../../utils/geocode';
+import { Button, Modal } from 'react-bootstrap';
+import OverLappingStudentsModal from './OverLappingStudentsModal';
 
 
 const MARKER_OVERLAP_DISTANCE = 0.5; //miles
@@ -18,27 +20,21 @@ function RoutePlannerMap(props){
 
     const [extraComponents, setExtraComponents] = useState(null);
 
+    const [modalStudents, setModalStudents] = useState([]);
+
+    const clearModalStudents = () => {
+        setModalStudents([]);
+    }
+
     const createInfoWindow = (position, windowComponents) => {
         setExtraComponents(<InfoWindow position={position} onCloseClick={setExtraComponents(null)}>{windowComponents}</InfoWindow>)
     }
 
     
+
+    
     const getStudentInfoForWindow = (pinStuff) => {
-        const routeId = props.studentChanges[pinStuff.id];
-        let routeName = '';
-        if(routeId == null){
-            if(pinStuff.routes == null){
-                routeName = "NO ROUTE"
-            } else {
-                routeName = pinStuff.routes.name
-            }
-        } else if(routeId == NO_ROUTE) {
-            routeName = "NO ROUTE";
-        } else {
-            routeName = props.allRoutes.find(route => route.id == routeId).name
-            //should never be undefined
-        }
-        return <><h4>{pinStuff.full_name}</h4><h6>Route: {routeName}</h6></>
+        return <><h4>{pinStuff.full_name}</h4><h6>Route: {getStudentRouteName(pinStuff.id, pinStuff.routes, props.studentChanges, props.allRoutes)}</h6></>
     }
     
     const onStudentClick = (pinStuff, position) => {
@@ -52,7 +48,7 @@ function RoutePlannerMap(props){
     }
 
     const multipleStudentsChange = (pinStuff, position) => {
-        console.log("CHANGED")
+        setModalStudents(pinStuff.pins);
     }
 
     const onSchoolClick = (pinStuff, position) => {
@@ -60,8 +56,6 @@ function RoutePlannerMap(props){
     }
 
     useEffect(() => {
-        // console.log(props.studentChanges)
-        // console.log(props.school)
        setPinData(getPinData())
     }, [props]);
 
@@ -121,7 +115,6 @@ function RoutePlannerMap(props){
 
         while(students.length > 0){
             const student = students[0];
-            console.log(student)
             students.splice(0, 1); // remove current student
             const overlapGroup = overlappingStudents.find(overlapStudentObj => getDistance(overlapStudentObj.position, student.guardian) < MARKER_OVERLAP_DISTANCE)
             if(overlapGroup != undefined){
@@ -152,8 +145,6 @@ function RoutePlannerMap(props){
     const getStudentGroupsPinData = () => {
         //const normalStudents = props.students;
         const [overlappingStudents, normalStudents] = getMarkerOverlaps(props.students);
-        console.log(normalStudents);
-        console.log(overlappingStudents);
         
         return [
             {
@@ -202,7 +193,23 @@ function RoutePlannerMap(props){
     }
 
 
-    return <MapComponent pinData={pinData} otherMapComponents={extraComponents} center={{lng: Number(props.school.longitude),lat: Number(props.school.latitude)}} />
+    return (
+        <>
+            <OverLappingStudentsModal 
+                students={modalStudents} 
+                closeModal={clearModalStudents} 
+                studentChanges={props.studentChanges} 
+                allRoutes={props.allRoutes} 
+                changeStudentRoute={props.changeStudentRoute}
+                currentRoute={props.currentRoute}
+            />
+            <MapComponent 
+                pinData={pinData} 
+                otherMapComponents={extraComponents} 
+                center={{lng: Number(props.school.longitude),lat: Number(props.school.latitude)}} 
+            />
+        </>
+    )
 }
 
 RoutePlannerMap.propTypes = {
