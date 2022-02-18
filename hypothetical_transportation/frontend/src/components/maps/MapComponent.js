@@ -49,7 +49,7 @@ function MapComponent(props) {
 
 
     useEffect(() => {
-        //console.log(props.pinData)
+        console.log("props.pinData")
         initializePins(props.pinData)
       }, [props.pinData]);
 
@@ -97,7 +97,24 @@ function MapComponent(props) {
         }
         setPinClickFunctions(pin, {lat: lat, lng: lng}, temp)
         setPinDragFunctions(pin, temp);
+        // console.log(temp.position)
         bounds.extend(new google.maps.LatLng(temp.position.lat, temp.position.lng));
+        var lt = props.center.lat - (temp.position.lat-props.center.lat)
+        while(lt>180){
+            lt=lt-360
+        }
+        while(lt<-180){
+            lt=lt+360
+        }
+        var ln = props.center.lng - (temp.position.lng-props.center.lng)
+        while(ln>180){
+            ln=ln-360
+        }
+        while(ln<-180){
+            ln=ln+360
+        }
+        // console.log(lt,ln)
+        bounds.extend(new google.maps.LatLng(lt, ln));
         pinInfo = pinInfo.concat(temp);
         setPins(pinInfo)
     }
@@ -116,6 +133,7 @@ function MapComponent(props) {
                     .catch(err => console.log(err));
                 }
                 else {
+                    // console.log("addmarker")
                     addMarkerFromPin(parseFloat(pin.latitude), parseFloat(pin.longitude), pinGroup, pin)
                 }
                 
@@ -149,7 +167,8 @@ function MapComponent(props) {
 
     useEffect(()=>{
         var ne = bounds.getNorthEast();
-        var sw = bounds.getSouthWest();       
+        var sw = bounds.getSouthWest();   
+        // console.log(ne.lat(), ne.lng(), sw.lat(),sw.lng())    
         var latFraction = (latRad(ne.lat()) - latRad(sw.lat())) / Math.PI;
         var lngDiff = ne.lng() - sw.lng();
         var lngFraction = ((lngDiff < 0) ? (lngDiff + 360) : lngDiff) / 360;
