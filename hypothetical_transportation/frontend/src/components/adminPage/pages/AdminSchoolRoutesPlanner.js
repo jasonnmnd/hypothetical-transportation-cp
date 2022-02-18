@@ -284,6 +284,8 @@ function AdminSchoolRoutesPlanner(props) {
           <Button variant='yellowsubmit' onClick={resetStudentChanges}>Reset Changes</Button>
         </Container>
       </Container>
+
+      <br></br>
     </>
 
     );

@@ -124,6 +124,8 @@ function GeneralAdminStudentDetails(props) {
                 </Card.Body>
             </Card>
         </Container>
+
+        <br></br>
     </div>
   );
 }

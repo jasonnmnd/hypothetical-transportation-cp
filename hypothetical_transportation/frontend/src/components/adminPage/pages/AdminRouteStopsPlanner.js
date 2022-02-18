@@ -215,6 +215,8 @@ function AdminRouteStopsPlanner(props) {
           <Button variant='yellowsubmit' onClick={addNewStop}>Add New Stop</Button>
         </Container>
 
+        <br></br>
+
       </Container>
     </>
 

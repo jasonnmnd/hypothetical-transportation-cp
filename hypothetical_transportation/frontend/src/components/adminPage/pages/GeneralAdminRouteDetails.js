@@ -223,6 +223,8 @@ function GeneralAdminRouteDetails(props) {
             </Card.Body>
         </Card>
         </Container>
+
+        <br></br>
     </div>
     );
 }

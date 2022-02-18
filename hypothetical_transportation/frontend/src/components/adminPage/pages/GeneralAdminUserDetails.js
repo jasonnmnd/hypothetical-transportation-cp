@@ -99,6 +99,8 @@ function AdminUserDetails(props) {
             </Card.Body>
         </Card>
       </Container>
+
+      <br></br>
     </div>
   );
 }
