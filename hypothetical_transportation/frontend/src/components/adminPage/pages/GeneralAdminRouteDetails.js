@@ -181,7 +181,7 @@ function GeneralAdminRouteDetails(props) {
         <Card style={{height: "550px"}}>
             <Card.Header as="h5">Map View of School, Students, and Stops</Card.Header>
             <Card.Body>
-                <MapComponent pinData={pinData} center={{lng: Number(props.route.school.longitude),lat: Number(props.route.school.latitude)}}></MapComponent>
+                <MapComponent pinData={pinData} otherMapComponents={extraComponents} center={{lng: Number(props.route.school.longitude),lat: Number(props.route.school.latitude)}}></MapComponent>
             </Card.Body>
         </Card>
 
