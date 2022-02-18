@@ -104,7 +104,6 @@ function MapComponent(props) {
     const initializePins = (inPinData) => {
         inPinData.forEach((pinGroup) => {
             pinGroup.pins.forEach((pin) => {
-                console.log(pin)
                 if(pin.latitude == null || pin.longitude == null){
                     Geocode.fromAddress(pin.address)
                     .then((response) => {  
@@ -165,9 +164,9 @@ function MapComponent(props) {
         var lngFraction = ((lngDiff < 0) ? (lngDiff + 360) : lngDiff) / 360;
         var latZoom = zoom(WORLD_DIM.height, WORLD_DIM.height, latFraction);
         var lngZoom = zoom(WORLD_DIM.width, WORLD_DIM.width, lngFraction);
-        console.log({latZoom, lngZoom, ZOOM_MAX},Math.min(latZoom, lngZoom, ZOOM_MAX))
+        //console.log({latZoom, lngZoom, ZOOM_MAX},Math.min(latZoom, lngZoom, ZOOM_MAX))
         setZ( !isNaN(Math.min(latZoom, lngZoom, ZOOM_MAX))? Math.min(latZoom, lngZoom, ZOOM_MAX):z)
-        console.log(z)
+        //console.log(z)
     },[bounds])
 
 
