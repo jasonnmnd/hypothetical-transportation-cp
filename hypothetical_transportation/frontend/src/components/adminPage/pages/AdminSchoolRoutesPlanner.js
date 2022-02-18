@@ -14,6 +14,7 @@ import RoutePlannerMap from './RoutePlannerMap';
 import { NO_ROUTE } from '../../../utils/utils';
 import { Container, ButtonGroup, ToggleButton, Card, Button, Form, Collapse } from 'react-bootstrap';
 import PageNavigateModal from '../components/modals/PageNavigateModal';
+import IconLegend from '../../common/IconLegend';
 
 
 function AdminSchoolRoutesPlanner(props) {
@@ -276,20 +277,7 @@ function AdminSchoolRoutesPlanner(props) {
             {isCreate() || searchParams.get('route') == null ? null : 
             
             <Container className='d-flex flex-column'>
-              <Card>
-                <Card.Header as="h5">Map Legend</Card.Header>
-                <Card.Body>
-                  {
-                        routePlannerLegend.map((result, index) => {
-                        return (
-                            <Fragment key={index}>
-                                {result.key}
-                                {result.color}
-                            </Fragment>
-                        )})
-                    }
-                </Card.Body>
-              </Card>
+              <IconLegend></IconLegend>
               <RoutePlannerMap 
                 students={props.students} 
                 school={props.school} 
