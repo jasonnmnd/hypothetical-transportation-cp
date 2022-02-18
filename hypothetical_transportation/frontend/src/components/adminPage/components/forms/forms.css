@@ -1,0 +1,29 @@
+.grayed-out-tr {
+  background-color: lightgray;
+  color: gray;
+  font-weight: 700px;
+}
+
+.delete_td {
+  font-weight: bold;
+}
+
+.tr-header-delete {
+  background-color: darkgrey;
+}
+
+.tr-header {
+  background-color: #ffae07;
+}
+
+.btn-delete_add {
+  display: inline-block;
+  background-color: green;
+  background-position: 0%;
+  transition: 0.4s;
+  color: #fff;
+  cursor: pointer;
+  width: 35px;
+  height: 35px;
+  font-size: 12px;
+}

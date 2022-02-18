@@ -3,7 +3,7 @@ import Header from '../../header/Header';
 import { Link, Route, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes, { string } from 'prop-types';
-import { Container, Card, Button, Form, Collapse, Alert } from 'react-bootstrap';
+import { Container, Card, Button, Collapse, Alert } from 'react-bootstrap';
 import '../NEWadminPage.css';
 import { getRouteInfo, getRoutes, resetViewedRoute } from '../../../actions/routes';
 import { updateRoute, createRoute } from '../../../actions/routeplanner';
@@ -13,13 +13,16 @@ import { NO_ROUTE } from '../../../utils/utils';
 import { getStopByRoute } from '../../../actions/stops';
 import StopPlannerMap from './StopPlannerMap';
 import ModifyStopTable from '../components/forms/ModifyStopTable';
+import Geocode from "react-geocode";
 
 
 function AdminRouteStopsPlanner(props) {
   const param = useParams();
   const navigate = useNavigate();
 
-  const [stops, setStops] = useState(props.stops)
+  const [stops, setStops] = useState(props.stops);
+
+  const [deletedStops, setDeletedStops] = useState([]);
 
   const [newStopID, setNewStopID] = useState(-1);
 
@@ -30,8 +33,6 @@ function AdminRouteStopsPlanner(props) {
   }, [param]);
 
   useEffect(() => {
-    console.log(props.stops)
-    console.log("HELLOO")
     setStops(props.stops)
     props.getSchool(param.school_id);
     props.getStudents({routes: param.route_id})
@@ -61,22 +62,34 @@ function AdminRouteStopsPlanner(props) {
   }
 
   const onStopDragEnd = (pinInfo, e) => {
-    // const curLat = e.latLng.lat();
-    // const curLong = e.latLng.lng();
-    // Geocode.fromLatLng(curLat, coord.lng).then(
-    //   (response) => {
-    //     const address = response.results[0].formatted_address;
-    //     props.setAddress(address);
-    //   },
-    //   (error) => {
-    //     console.error(error);
-    //   }
-    // );
+    const curLat = e.latLng.lat();
+    const curLng = e.latLng.lng();
     let tempData = Array.from(stops);
     let changingElementIndex = tempData.findIndex(stop => stop.id == pinInfo.id);
-    tempData[changingElementIndex].latitude = e.latLng.lat()
-    tempData[changingElementIndex].longitude = e.latLng.lng()
-    setStops(tempData)
+    tempData[changingElementIndex].latitude = curLat
+    tempData[changingElementIndex].longitude = curLng
+    Geocode.fromLatLng(curLat, curLng).then(
+      (response) => {
+        const address = response.results[0].formatted_address;
+        tempData[changingElementIndex].address = address
+        setStops(tempData)
+      },
+      (error) => {
+        tempData[changingElementIndex].address = `${curLat}, ${curLng}`
+        setStops(tempData)
+      }
+    );
+    
+  }
+
+  const deleteStop = (pinInfo, position) => {
+    setStops(stops.filter(stop => stop.id != pinInfo.id));
+    setDeletedStops([...deletedStops, pinInfo])
+  }
+
+  const readdStop = (pinInfo) => {
+    setDeletedStops(deletedStops.filter(stop => stop.id != pinInfo.id));
+    setStops([...stops, pinInfo])
   }
 
   const resetStopChanges = () => {
@@ -132,6 +145,7 @@ function AdminRouteStopsPlanner(props) {
                 </div>
                   <p>Within this interface, you can interactively create, modify, and reorganize stops. Students are shown with the student pin and routes are shown with the bus pin.</p>
                   <p>Left click on the bus pin to view the stop, and you can drag bus pins around to move stops and make sure students are in range.</p>
+                  <p>Right click on the bus pin to delete the stop. You can add this stop back by using the table and clicking on "+".</p>
                   <p>Use the table to drag and drop "=" to reorganize stops. Double click on the stop name to change its name.</p>
                   <p>Finalize all changes by clicking on "Save". Revert changes made by clicking on "Reset".</p>
               </div>
@@ -142,17 +156,24 @@ function AdminRouteStopsPlanner(props) {
         <br></br>
 
         <Container className="d-flex flex-column justify-content-center" style={{gap: "30px"}}>
+              <Card>
+                <Card.Header as="h5">Map Legend</Card.Header>
+                <Card.Body>
+                  Legend Here
+                </Card.Body>
+              </Card>
             <StopPlannerMap 
                 students={props.students} 
                 school={props.school} 
                 onStopDragEnd={onStopDragEnd}
                 stops={stops}
+                deleteStop={deleteStop}
             />
 
           <Card>
             <Card.Header as="h5">Reorganize Stops</Card.Header>
             <Card.Body>
-              <ModifyStopTable stops={stops} setStops={setStops}/>
+              <ModifyStopTable stops={stops} setStops={setStops} deletedStops={deletedStops} readdStop={readdStop} />
             </Card.Body>
           </Card>
         </Container>        

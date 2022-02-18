@@ -10,7 +10,8 @@ import {
     REGISTER_FAIL,
     REGISTER_SUCCESS,
     RESET_PASSWORD_SUCCESS,
-    RESET_PASSWORD_FAIL
+    RESET_PASSWORD_FAIL,
+    ADD_USER
 } from './types';
 
 //CHECK TOKEN & LOAD USER
@@ -69,6 +70,10 @@ export const register = (user) => (dispatch, getState) => {
           type: REGISTER_SUCCESS,
           payload: res.data,
         });
+        // dispatch({
+        //   type: ADD_USER,
+        //   payload: res.data,
+        // });
       })
       .catch((err) => {
         dispatch(returnErrors(err.response.data, err.response.status));

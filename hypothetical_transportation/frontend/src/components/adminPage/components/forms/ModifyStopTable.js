@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { useSearchParams } from 'react-router-dom';
-
+import { Button } from 'react-bootstrap';
+import './forms.css';
 
 
 function ModifyStopTable(props) {
@@ -59,7 +60,7 @@ function ModifyStopTable(props) {
         <DragDropContext onDragEnd={handleDragEnd}>
             <table className="table borderd">
             <thead>
-                <tr>
+                <tr className='tr-header'>
                 <th />
                 <th>Name</th>
                 <th>Address</th>
@@ -67,36 +68,56 @@ function ModifyStopTable(props) {
                 <th>Longitude</th>
                 </tr>
             </thead>
-            <Droppable droppableId="droppable-1">
-                {(provider) => (
-                <tbody
-                    className="text-capitalize"
-                    ref={provider.innerRef}
-                    {...provider.droppableProps}
-                >
-                    {props.stops?.map((stop, index) => (
-                    <Draggable
-                        key={stop.id}
-                        draggableId={stop.id.toString()}
-                        index={index}
+                <tr className=''>
+                    <th colspan="5">Stops in Route</th>
+                </tr>
+                <Droppable droppableId="droppable-1">
+                    {(provider) => (
+                    <tbody
+                        className="text-capitalize"
+                        ref={provider.innerRef}
+                        {...provider.droppableProps}
                     >
-                        {(provider) => (
-                        <tr {...provider.draggableProps} ref={provider.innerRef} >
-                            <td {...provider.dragHandleProps}> = </td>
-                            <td onClick={() => setInputOnClick(stop)}>
-                                {inputField == stop.id ? getInputComponent(stop) : stop.name}
-                            </td>
-                            <td>{stop.address}</td>
-                            <td>{stop.latitude}</td>
-                            <td>{stop.longitude}</td>
-                        </tr>
-                        )}
-                    </Draggable>
-                    ))}
-                    {provider.placeholder}
+                        {props.stops?.map((stop, index) => (
+                        <Draggable
+                            key={stop.id}
+                            draggableId={stop.id.toString()}
+                            index={index}
+                        >
+                            {(provider) => (
+                            <tr {...provider.draggableProps} ref={provider.innerRef} >
+                                <td {...provider.dragHandleProps}> = </td>
+                                <td onClick={() => setInputOnClick(stop)}>
+                                    {inputField == stop.id ? getInputComponent(stop) : stop.name}
+                                </td>
+                                <td>{stop.address}</td>
+                                <td>{stop.latitude}</td>
+                                <td>{stop.longitude}</td>
+                            </tr>
+                            )}
+                        </Draggable>
+                        ))}
+                        {provider.placeholder}
+                    </tbody>
+                    )}
+                </Droppable>
+                <tbody>
+                    <tr className='tr-header-delete'>
+                        <th colspan="5">Deleted Stops</th>
+                    </tr>
+                    {props.deletedStops.map((stop) => (
+                    <tr className='grayed-out-tr'>
+                        {/* <td onClick={() => props.readdStop(stop)} >+</td> */}
+                        <td>
+                            <Button variant="delete_add" onClick={() => props.readdStop(stop)}>+</Button>
+                        </td>
+                        <td className='delete_td'>{stop.name}</td>
+                        <td className='delete_td'>{stop.address}</td>
+                        <td className='delete_td'>{stop.latitude}</td>
+                        <td className='delete_td'>{stop.longitude}</td>
+                    </tr>
+                    ))}  
                 </tbody>
-                )}
-            </Droppable>
             </table>
         </DragDropContext>
         </div>
@@ -106,7 +127,9 @@ function ModifyStopTable(props) {
 ModifyStopTable.propTypes = {
     stops: PropTypes.array,
     title: PropTypes.string,
-    setStops: PropTypes.func
+    setStops: PropTypes.func,
+    deletedStops: PropTypes.array,
+    readdStop: PropTypes.func
 }
 
 ModifyStopTable.defaultProps = {
