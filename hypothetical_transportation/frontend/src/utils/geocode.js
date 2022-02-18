@@ -23,11 +23,11 @@ export const getItemCoord = (address, setAdd) => {
 
 
 
-const getDistance = (position1, position2) => {
+export const getDistance = (position1, position2) => {
     return getDistanceFromLatLonInMiles(position1.latitude, position1.longitude, position2.latitude, position2.longitude);
 }
 
-function getDistanceFromLatLonInMiles(lat1,lon1,lat2,lon2) {
+export function getDistanceFromLatLonInMiles(lat1,lon1,lat2,lon2) {
     var R = 6371; // Radius of the earth in km
     var dLat = deg2rad(lat2-lat1);  // deg2rad below
     var dLon = deg2rad(lon2-lon1); 

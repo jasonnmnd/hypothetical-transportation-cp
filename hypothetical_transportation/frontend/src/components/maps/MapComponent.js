@@ -236,10 +236,8 @@ MapComponent.propTypes = {
             markerProps: PropTypes.object,
             pins: PropTypes.arrayOf(
                 PropTypes.shape({
-                    position: PropTypes.shape({
                         lng: PropTypes.number,
                         lat: PropTypes.number
-                    })
                 })
             )
         })
