@@ -1,3 +1,4 @@
+from urllib import response
 from django.contrib.auth import get_user_model
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
@@ -5,6 +6,9 @@ from rest_framework import viewsets, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
+import requests, json
+import os
+from datetime import time, datetime
 
 from .models import School, Route, Student, Stop
 from .serializers import UserSerializer, StudentSerializer, RouteSerializer, SchoolSerializer, FormatStudentSerializer, \
@@ -50,6 +54,113 @@ def parse_repr(repr_str: str) -> dict:
         repr_fields[key] = value
     return repr_fields
 
+def datetime_h_m_s_to_sec(date: datetime) -> int:
+    """
+    Change a datetime object into a value in seconds
+    :param date: datetime object
+    :return: integer value representing seconds
+    """
+    return date.hour*3600 + date.minute*60 + date.second
+
+
+def sec_to_datetime_h_m_s(seconds: int) -> datetime:
+    """
+    Change some integer into a datetime object in format HH:MM:SS
+    :param seconds: seconds
+    :return: datetime object
+    """
+    h = seconds//3600
+    m = (seconds%3600)//60
+    s = seconds%60
+    return time(h, m, s)
+
+
+def distance_matrix_api(matrix: list) -> json:
+    """
+    Given some list of addresses, fetch a distance matrix api from google
+    :param matrix: list of addresses to find the time between
+    :return: json response from google distance matrix api
+    """
+    url = os.environ.get('DISTANCE_MATRIX_API_URL')
+    key = os.environ.get('DISTANCE_MATRIX_API_KEY')
+    params = {'key': key, 'origins': matrix, 'destinations': matrix}
+    req = requests.get(url=url, params=params)
+    return json.loads(req.content)
+    
+
+def get_information_related_to_a_stop(stop: Stop):
+    """
+    Given some stop, find the information corresponding to every stop on the same route
+    :param stop: valid Stop object 
+    :return: int, int, Stop[], json -> the school start and stop time, the list of stops on the same route,
+    and the distance matrix json
+    """
+    route = stop.route
+    school = route.school
+
+    school_start_time = datetime_h_m_s_to_sec(school.bus_arrival_time)
+    school_letout_time = datetime_h_m_s_to_sec(school.bus_departure_time)
+    matrix = school.address
+
+    # here's the perhaps risky business. we order by stop number, and hope for the best
+    stops = Stop.objects.filter(route=route).distinct().order_by('stop_number')
+    for stop in stops:
+        matrix = matrix + f'|{stop.latitude}, {stop.longitude}'
+
+    times = distance_matrix_api(matrix)
+    return school_start_time, school_letout_time, stops, times
+
+def update_bus_times_for_stops_related_to_stop(stop: Stop):
+    """
+    Given some stop, calculate and update the dropoff and pickup times between each stop 
+    on the related route, given some order determined by the states
+    :param stop: valid Stop object
+    :return: datetime[], datetime[], Stop[] -> list of dropoff times, list of pickup times, and list of corresponding stops
+    """
+    school_start_time, school_letout_time, stops, times = get_information_related_to_a_stop(stop)
+    school_to_stop_1 = times['rows'][0]['elements'][1]['duration']['value']
+    stop_n_to_school = times['rows'][len(stops)-1]['elements'][0]['duration']['value']
+
+    # setup, handle the edge case of leaving the school
+    desc_times, asc_times = [], [school_to_stop_1]
+    running_desc_time, running_asc_time = 0, school_to_stop_1
+    
+    for stop_num in range(1, min(25, (len(stops)))):
+        prev_stop = times['rows'][stop_num]['elements'][stop_num-1]['duration']['value']
+        running_desc_time = running_desc_time + prev_stop # this is stop i to stop i-1
+        desc_times.append(running_desc_time)
+
+        next_stop = times['rows'][stop_num]['elements'][stop_num+1]['duration']['value']
+        running_asc_time = running_asc_time + next_stop # this is stop i to stop i+1
+        asc_times.append(running_asc_time)   
+
+    # handle the edge case of arriving to the school
+    running_desc_time = running_desc_time + stop_n_to_school
+    desc_times.append(running_desc_time)
+
+    dropoff_times = [sec_to_datetime_h_m_s((school_letout_time+time)%(24*3600)) for time in asc_times]
+    pickup_times = [sec_to_datetime_h_m_s((school_start_time+time-running_desc_time-stop_n_to_school)%(24*3600)) for time in desc_times]
+
+    stop_num = 0
+    for stop in stops:
+        stop.pickup_time=pickup_times[stop_num]
+        stop.dropoff_time=dropoff_times[stop_num]
+        stop.save()
+        stop_num = stop_num+1
+    return response
+
+
+def update_all_stops_related_to_school(school: School):
+    """
+    Given some school, update every stop associated.
+    :param school: valid School object
+    """
+    related_routes = Route.objects.filter(school=school).distinct().order_by('id')
+    for route in related_routes:
+        # this is stupid
+        stops = Stop.objects.filter(route=route).distinct().order_by('stop_number')
+        if stops:
+            update_bus_times_for_stops_related_to_stop(stops[0])
 
 class MapsAPI(APIView):
     def get(self, request, format=None):
@@ -93,6 +204,9 @@ class StopViewSet(viewsets.ModelViewSet):
         IsAdmin
     ]
 
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    filterset_fields = ['route']
+
     def get_serializer_class(self):
         return StopSerializer
 
@@ -115,6 +229,7 @@ class RouteViewSet(viewsets.ModelViewSet):
             return FormatRouteSerializer
         return RouteSerializer
 
+    # TODO: noticed this method is getting called twice for every actual request?
     def get_queryset(self):
         # Only return routes associated with children of current user
         if is_admin(self.request.user):

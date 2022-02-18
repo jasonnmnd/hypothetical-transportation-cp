@@ -1,13 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinLengthValidator
-# Create your models here.
+from django.contrib.postgres.fields import CICharField
 from django.conf import settings
 import datetime
 
 
 class School(models.Model):
-    name = models.CharField(max_length=150, validators=[MinLengthValidator(1)], unique=True)
+    name = CICharField(max_length=150, validators=[MinLengthValidator(1)], unique=True)
     address = models.CharField(max_length=150, validators=[MinLengthValidator(1)])
     latitude = models.DecimalField(max_digits=9, decimal_places=6, blank=False)
     longitude = models.DecimalField(max_digits=9, decimal_places=6, blank=False)

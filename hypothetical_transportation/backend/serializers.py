@@ -49,6 +49,13 @@ class RouteSerializer(serializers.ModelSerializer):
 
 
 class StopSerializer(serializers.ModelSerializer):
+
+    # def validate(self, data):
+    #     if 'name' in data and data['name'] is '':
+    #         data['name'] = f"Stop {data['stop_number']}"
+    #     print(data)
+    #     return data
+
     class Meta:
         model = Stop
         fields = '__all__'

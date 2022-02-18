@@ -14,6 +14,9 @@ from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -23,6 +26,7 @@ SECRET_KEY = 'django-insecure-dz)xt+ggvmpya26p(yn$y-0gcq1&$tnrj+i_n5*1u0_ek+j3lg
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+
 LOGGING = {
     'version': 1,
     'handlers': {
@@ -42,6 +46,7 @@ LOGGING = {
 
 ALLOWED_HOSTS = [
         '0.0.0.0',
+        'localhost',
         'hypothetical-transportation.colab.duke.edu',
         'ht.colab.duke.edu',
         'ht-dev.colab.duke.edu',
@@ -49,6 +54,7 @@ ALLOWED_HOSTS = [
         'ht-frontend.colab.duke.edu',
         'ht-backend.colab.duke.edu',
         'localhost',
+        'legoons.colab.duke.edu',
 ]
 
 # Application definition
@@ -59,6 +65,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'django.contrib.postgres',
     'django.contrib.staticfiles',
     'corsheaders',
     'rest_framework',
@@ -130,6 +137,7 @@ DATABASES = {
         'USER': 'admin',
         'PASSWORD': 'admin',
         'HOST': 'db',
+        # 'HOST': 'localhost',
         'PORT': '5432',
     }
 }
