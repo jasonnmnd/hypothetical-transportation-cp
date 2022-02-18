@@ -70,6 +70,10 @@ export const register = (user) => (dispatch, getState) => {
           type: REGISTER_SUCCESS,
           payload: res.data,
         });
+        dispatch({
+          type: ADD_USER,
+          payload: res.data,
+        });
       })
       .catch((err) => {
         dispatch(returnErrors(err.response.data, err.response.status));
