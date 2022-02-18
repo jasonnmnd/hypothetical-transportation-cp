@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { useSearchParams } from 'react-router-dom';
-
+import { Button } from 'react-bootstrap';
+import './forms.css';
 
 
 function ModifyStopTable(props) {
@@ -59,7 +60,7 @@ function ModifyStopTable(props) {
         <DragDropContext onDragEnd={handleDragEnd}>
             <table className="table borderd">
             <thead>
-                <tr>
+                <tr className='tr-header'>
                 <th />
                 <th>Name</th>
                 <th>Address</th>
@@ -67,7 +68,7 @@ function ModifyStopTable(props) {
                 <th>Longitude</th>
                 </tr>
             </thead>
-                <tr>
+                <tr className=''>
                     <th colspan="5">Stops in Route</th>
                 </tr>
                 <Droppable droppableId="droppable-1">
@@ -101,16 +102,19 @@ function ModifyStopTable(props) {
                     )}
                 </Droppable>
                 <tbody>
-                    <tr>
+                    <tr className='tr-header-delete'>
                         <th colspan="5">Deleted Stops</th>
                     </tr>
                     {props.deletedStops.map((stop) => (
-                    <tr>
-                        <td onClick={() => props.readdStop(stop)} >+</td>
-                        <td>{stop.name}</td>
-                        <td>{stop.address}</td>
-                        <td>{stop.latitude}</td>
-                        <td>{stop.longitude}</td>
+                    <tr className='grayed-out-tr'>
+                        {/* <td onClick={() => props.readdStop(stop)} >+</td> */}
+                        <td>
+                            <Button variant="delete_add" onClick={() => props.readdStop(stop)}>+</Button>
+                        </td>
+                        <td className='delete_td'>{stop.name}</td>
+                        <td className='delete_td'>{stop.address}</td>
+                        <td className='delete_td'>{stop.latitude}</td>
+                        <td className='delete_td'>{stop.longitude}</td>
                     </tr>
                     ))}  
                 </tbody>

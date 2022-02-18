@@ -145,6 +145,7 @@ function AdminRouteStopsPlanner(props) {
                 </div>
                   <p>Within this interface, you can interactively create, modify, and reorganize stops. Students are shown with the student pin and routes are shown with the bus pin.</p>
                   <p>Left click on the bus pin to view the stop, and you can drag bus pins around to move stops and make sure students are in range.</p>
+                  <p>Right click on the bus pin to delete the stop. You can add this stop back by using the table and clicking on "+".</p>
                   <p>Use the table to drag and drop "=" to reorganize stops. Double click on the stop name to change its name.</p>
                   <p>Finalize all changes by clicking on "Save". Revert changes made by clicking on "Reset".</p>
               </div>
