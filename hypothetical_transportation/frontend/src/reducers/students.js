@@ -1,4 +1,4 @@
- import { GET_STUDENTS, DELETE_STUDENT, ADD_STUDENT, GET_STUDENT, UPDATE_STUDENT} from '../actions/types.js';
+ import { GET_IN_RANGE_STOP,GET_STUDENTS, DELETE_STUDENT, ADD_STUDENT, GET_STUDENT, UPDATE_STUDENT} from '../actions/types.js';
 
  const initialState = {
    students: {
@@ -16,7 +16,8 @@
     guardianName: "",
     routeName: "",
     schoolName: "",
-  }
+  },
+  inRangeStops:[]
  };
 
  export default function (state = initialState, action) {
@@ -45,6 +46,12 @@
             ...state,
             viewedStudent: action.payload
           };
+      case GET_IN_RANGE_STOP:
+        return {
+          ...state,
+          inRangeStops: action.payload
+        };
+
      default:
        return state;
    }
