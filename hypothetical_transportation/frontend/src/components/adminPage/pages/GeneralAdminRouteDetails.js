@@ -12,6 +12,9 @@ import MapContainer from '../../maps/MapContainer';
 import { getStopByRoute } from '../../../actions/stops';
 import { Container, Card, Button, Row, Col, Alert, Form } from 'react-bootstrap'
 import { filterObjectForKeySubstring } from '../../../utils/utils';
+import MapComponent from '../../maps/MapComponent';
+import { getStudentPin, addSchoolPin } from '../../../utils/planner_maps';
+import {InfoWindow} from '@react-google-maps/api';
 
 
 function GeneralAdminRouteDetails(props) {
@@ -21,6 +24,9 @@ function GeneralAdminRouteDetails(props) {
   let [searchParams, setSearchParams] = useSearchParams();
   const STOP_PREFIX = "sto";  
   const [extra, setExtra] = useState({});
+  const [pinData, setPinData] = useState([]);
+  const [extraComponents, setExtraComponents] = useState(null);
+
 
   const handleConfirmDelete = () => {
     //Replace with API call to delete school and all its associated routes/students
@@ -43,7 +49,6 @@ function GeneralAdminRouteDetails(props) {
   }, []);
 
   useEffect(() => {
-      console.log("?")
     if(searchParams.get(`pageNum`) != null){
       let paramsToSend = Object.fromEntries([...searchParams]);
       paramsToSend.routes = param.id;
@@ -58,10 +63,43 @@ function GeneralAdminRouteDetails(props) {
 
   useEffect(()=>{
     setExtra({id: props.route.school.id,name: props.route.school.name, dropoff_time: props.route.school.bus_arrival_time, pickup_time: props.route.school.bus_departure_time, stop_number: 0})
-  },[props.route]);
+    setPinData(getPinData());
+  },[props.students]);
 
+    const getPinData = () => {
+        let pinData = getStudentsPinData();
+        console.log(pinData);
+        addSchoolPin(pinData, props.route.school, onSchoolClick)
+        console.log(pinData);
+        return pinData;
+    }
+    const onSchoolClick = (pinStuff, position) => {
+        createInfoWindow(position, <h1>{pinStuff.name}</h1>)
+    }
 
+    const getStudentsPinData = () => {
+    return [
+        {
+            iconColor: "green",
+            iconType: "student",
+            markerProps: {
+                onClick: onStudentClick,
+                onRightClick: ""
+            },
+            pins: props.students.map(student => {return getStudentPin(student)})
+        }
+    ]
+  }
+    const onStudentClick = (pinStuff, position) => {
+        
+        createInfoWindow(position, 
+            <><h4>{pinStuff.full_name}</h4></>
+        )
+    }
 
+    const createInfoWindow = (position, windowComponents) => {
+        setExtraComponents(<InfoWindow position={position} onCloseClick={setExtraComponents(null)}>{windowComponents}</InfoWindow>)
+    }
 
   return (
     <div>          
@@ -140,10 +178,10 @@ function GeneralAdminRouteDetails(props) {
             </Card.Body>
         </Card>
 
-        <Card>
-            <Card.Header as="h5">Map View </Card.Header>
+        <Card style={{height: "550px"}}>
+            <Card.Header as="h5">Map View of School, Students, and Stops</Card.Header>
             <Card.Body>
-                {/* <MapContainer schoolData={props.route.school} routeStudentData={props.students}/> */}
+                <MapComponent pinData={pinData} center={{lng: Number(props.route.school.longitude),lat: Number(props.route.school.latitude)}}></MapComponent>
             </Card.Body>
         </Card>
 
@@ -176,6 +214,7 @@ const mapStateToProps = (state) => ({
   user: state.auth.user,
   token: state.auth.token,
   route: state.routes.viewedRoute, 
+  school: state.schools.viewedSchool,
   students: state.students.students.results,
   stops:state.stop.stops.results
 });
