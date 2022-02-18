@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Geocode from "react-geocode";
 import { SCHOOL_MARKER, STOP_MARKER, STUDENT_MARKER } from './static/markers';
-import Spiderfy from "./Spiderfy.js";
 
 const CLICK_FUNCTIONS = ["onClick", "onRightClick"]
 const DRAG_FUNCTIONS = ["onDragEnd"]

@@ -67,36 +67,53 @@ function ModifyStopTable(props) {
                 <th>Longitude</th>
                 </tr>
             </thead>
-            <Droppable droppableId="droppable-1">
-                {(provider) => (
-                <tbody
-                    className="text-capitalize"
-                    ref={provider.innerRef}
-                    {...provider.droppableProps}
-                >
-                    {props.stops?.map((stop, index) => (
-                    <Draggable
-                        key={stop.id}
-                        draggableId={stop.id.toString()}
-                        index={index}
+                <tr>
+                    <th colspan="5">Stops in Route</th>
+                </tr>
+                <Droppable droppableId="droppable-1">
+                    {(provider) => (
+                    <tbody
+                        className="text-capitalize"
+                        ref={provider.innerRef}
+                        {...provider.droppableProps}
                     >
-                        {(provider) => (
-                        <tr {...provider.draggableProps} ref={provider.innerRef} >
-                            <td {...provider.dragHandleProps}> = </td>
-                            <td onClick={() => setInputOnClick(stop)}>
-                                {inputField == stop.id ? getInputComponent(stop) : stop.name}
-                            </td>
-                            <td>{stop.address}</td>
-                            <td>{stop.latitude}</td>
-                            <td>{stop.longitude}</td>
-                        </tr>
-                        )}
-                    </Draggable>
-                    ))}
-                    {provider.placeholder}
+                        {props.stops?.map((stop, index) => (
+                        <Draggable
+                            key={stop.id}
+                            draggableId={stop.id.toString()}
+                            index={index}
+                        >
+                            {(provider) => (
+                            <tr {...provider.draggableProps} ref={provider.innerRef} >
+                                <td {...provider.dragHandleProps}> = </td>
+                                <td onClick={() => setInputOnClick(stop)}>
+                                    {inputField == stop.id ? getInputComponent(stop) : stop.name}
+                                </td>
+                                <td>{stop.address}</td>
+                                <td>{stop.latitude}</td>
+                                <td>{stop.longitude}</td>
+                            </tr>
+                            )}
+                        </Draggable>
+                        ))}
+                        {provider.placeholder}
+                    </tbody>
+                    )}
+                </Droppable>
+                <tbody>
+                    <tr>
+                        <th colspan="5">Deleted Stops</th>
+                    </tr>
+                    {props.deletedStops.map((stop) => (
+                    <tr>
+                        <td onClick={() => props.readdStop(stop)} >+</td>
+                        <td>{stop.name}</td>
+                        <td>{stop.address}</td>
+                        <td>{stop.latitude}</td>
+                        <td>{stop.longitude}</td>
+                    </tr>
+                    ))}  
                 </tbody>
-                )}
-            </Droppable>
             </table>
         </DragDropContext>
         </div>
@@ -106,7 +123,9 @@ function ModifyStopTable(props) {
 ModifyStopTable.propTypes = {
     stops: PropTypes.array,
     title: PropTypes.string,
-    setStops: PropTypes.func
+    setStops: PropTypes.func,
+    deletedStops: PropTypes.array,
+    readdStop: PropTypes.func
 }
 
 ModifyStopTable.defaultProps = {

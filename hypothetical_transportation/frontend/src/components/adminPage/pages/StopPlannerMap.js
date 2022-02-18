@@ -80,7 +80,8 @@ function StopPlannerMap(props){
                 markerProps: {
                     onClick: onStopClick,
                     draggable: true,
-                    onDragEnd: props.onStopDragEnd
+                    onDragEnd: props.onStopDragEnd,
+                    onRightClick: props.deleteStop
                 },
                 pins: props.stops.map(stop => getStopPin(stop))
             },
@@ -103,6 +104,7 @@ StopPlannerMap.propTypes = {
     school: PropTypes.object,
     stops: PropTypes.array,
     onStopDragEnd: PropTypes.func,
+    deleteStop: PropTypes.func
 }
 
 // StopPlannerMap.defaultProps = {
