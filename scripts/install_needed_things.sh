@@ -6,6 +6,7 @@ brew services restart postgresql
 brew install npm
 npm install webpack
 brew install pip
-pip3 install psycopg2
+pip3 install psycopg2-binary
 # download postgresql if you can't login using using postgres
-pip3 install Django
+cd ../
+pip install -r requirements.txt
