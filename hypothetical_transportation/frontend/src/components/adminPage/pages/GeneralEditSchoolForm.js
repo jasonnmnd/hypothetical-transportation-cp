@@ -60,6 +60,30 @@ function GeneralEditSchoolForm(props) {
         }
     }, []);
 
+    useEffect(()=>{
+        if(props.action !== "edit"){
+            setName("")
+            setAddress("")
+            setCoord({lat: 36.0016944, lng: -78.9480547})
+            setBusArrivalTime({hour:"00", minute:"00"})
+            setBusDepartureTime({hour:"00", minute:"00"})
+        }
+        else{
+            props.getSchool(param.id);
+        }
+    },[props.action])
+
+    useEffect(()=>{
+        if(props.action == "edit"){
+            setName(props.curSchool.name);
+            setAddress(props.curSchool.address);
+            setCoord({lat: Number(props.curSchool.latitude), lng: Number(props.curSchool.longitude)})
+            setBusArrivalTime({hour: props.curSchool.bus_arrival_time.substring(0, 2), minute: props.curSchool.bus_arrival_time.substring(3, 5)});
+            setBusDepartureTime({hour: props.curSchool.bus_departure_time.substring(0, 2), minute: props.curSchool.bus_departure_time.substring(3, 5)});
+        }
+
+    },[props.curSchool])
+
     const handleSubmit = (event) => {
         const form = event.currentTarget;
         

@@ -57,6 +57,9 @@ function GeneralEditUserForm(props) {
             setAddress("")
             setCoord({lat: 36.0016944, lng: -78.9480547})
         }
+        else{
+            props.getUser(param.id);
+        }
     },[props.action])
 
     useEffect(()=>{
