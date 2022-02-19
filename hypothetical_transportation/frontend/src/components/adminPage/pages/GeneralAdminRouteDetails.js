@@ -63,7 +63,7 @@ function GeneralAdminRouteDetails(props) {
   }, [searchParams]);
 
   useEffect(()=>{
-    setExtra({id: props.route.school.id,name: props.route.school.name, dropoff_time: props.route.school.bus_arrival_time, pickup_time: props.route.school.bus_departure_time, stop_number: 0})
+    setExtra({id: props.route.school.id,name: props.route.school.name, dropoff_time: props.route.school.bus_departure_time, pickup_time: props.route.school.bus_arrival_time, stop_number: 0})
     setPinData(getPinData());
   },[props.students]);
 
