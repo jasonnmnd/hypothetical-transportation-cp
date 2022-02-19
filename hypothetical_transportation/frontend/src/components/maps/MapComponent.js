@@ -116,7 +116,7 @@ function MapComponent(props) {
         bounds.extend(new google.maps.LatLng(lt, ln));
         pinInfo = pinInfo.concat(temp);
         setPins(pinInfo)
-        console.log(pins)
+        // console.log(pins)
     }
     
     const initializePins = (inPinData) => {

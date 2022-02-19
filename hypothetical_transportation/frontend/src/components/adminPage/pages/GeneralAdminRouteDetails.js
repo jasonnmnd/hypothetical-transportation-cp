@@ -71,7 +71,7 @@ function GeneralAdminRouteDetails(props) {
         let pinData = getStudentsPinData();
         addSchoolPin(pinData, props.route.school, onSchoolClick)
         pinData = pinData.concat(getStopPinData());
-        console.log(pinData);
+        // console.log(pinData);
         return pinData;
     }
 
