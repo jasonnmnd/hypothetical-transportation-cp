@@ -216,6 +216,8 @@ function AdminSchoolRoutesPlanner(props) {
                     <li>Select "Remove Students from Routes" to remove any student from their existing route. Right click to remove any student from their current route.</li>
                   </ul>
                   <p>In edit mode, you can update a route's name and description and click "Save" to finalize those changes. To finalize any edits for students on the map, click "Save Changes". To clear current edits, click "Reset Changes".</p>
+                  <p>Changes you make to student's route will be retained across the interface. For example, if you remove student A from route 10 in the Remove Student From Routes interface, when you go back to edit any existing routes in the dropdown list, you will see student A marked as red (without route). When "Save Change" is pressed, all student changes across all routes will be updated at the same time. This is for the purpose of convenience and allowing user to bulk edit routes and students to their desire; however, note that without clicking "Save Changes", none of the changes will be saved to the database. They will also not retain after navigating away from the interface or refreshing. </p>
+                  <p>Note!: clicking "Save Changes" does not save the changes you made to the name/description field! Navigating away from a route will also wipe any changes you made to the name/description field if it was not saved! Click the specific "Save" button for saving name/description information</p>
               </div>
             </Card.Body>
           </Card>
