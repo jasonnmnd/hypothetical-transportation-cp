@@ -14,6 +14,7 @@ import { getStopByRoute, deleteStop, createStop, updateStop } from '../../../act
 import StopPlannerMap from './StopPlannerMap';
 import ModifyStopTable from '../components/forms/ModifyStopTable';
 import Geocode from "react-geocode";
+import IconLegend from '../../common/IconLegend';
 import { isStudentWithinRange } from '../../../utils/geocode';
 
 
@@ -189,12 +190,7 @@ function AdminRouteStopsPlanner(props) {
         <br></br>
 
         <Container className="d-flex flex-column justify-content-center" style={{gap: "30px"}}>
-              <Card>
-                <Card.Header as="h5">Map Legend</Card.Header>
-                <Card.Body>
-                  Legend Here
-                </Card.Body>
-              </Card>
+            <IconLegend legendType='stopPlanner'></IconLegend>
             <StopPlannerMap 
                 students={students} 
                 school={props.school} 
@@ -218,6 +214,8 @@ function AdminRouteStopsPlanner(props) {
           <Button variant='yellowsubmit' onClick={resetStopChanges}>Reset Changes</Button>
           <Button variant='yellowsubmit' onClick={addNewStop}>Add New Stop</Button>
         </Container>
+
+        <br></br>
 
       </Container>
     </>

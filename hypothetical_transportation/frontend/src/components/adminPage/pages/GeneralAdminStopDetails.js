@@ -48,7 +48,7 @@ function GeneralAdminStopDetails(props) {
         <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
             <Row>
                 <Col>
-                  <Link to={`/admin`}>
+                  <Link to={`/admin/stop/plan/${props.viewedRoute.school.id}/${props.viewedRoute.id}`}>
                     <Button variant="yellowLong" size="lg">Edit Stop</Button>
                   </Link>
                 </Col>
@@ -99,12 +99,14 @@ function GeneralAdminStopDetails(props) {
             </Card.Body>
         </Card>
 
-        <Card>
+        {/* <Card>
             <Card.Header as="h5">Map Of Stop and All Students In The Route Related To The Stop </Card.Header>
             <Card.Body>
             </Card.Body>
-        </Card>
+        </Card> */}
       </Container>
+
+      <br></br>
   </div>
 
   )

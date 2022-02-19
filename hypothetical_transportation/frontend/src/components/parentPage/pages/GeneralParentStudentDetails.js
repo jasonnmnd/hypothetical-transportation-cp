@@ -10,10 +10,15 @@ import { Container, Card, Button, Row, Col, Form } from 'react-bootstrap';
 import GeneralAdminTableView from "../../adminPage/components/views/GeneralAdminTableView";
 import isAdmin from "../../../utils/user";
 import Header from "../../header/Header";
+import MapComponent from "../../maps/MapComponent";
+import { InfoWindow } from "@react-google-maps/api";
 
 function ParentStudentDetails(props){
     const param = useParams();
     const student = props.student;
+    const [pinData, setPinData] = useState([]);
+    const [extraComponents, setExtraComponents] = useState(null);
+
 
     useEffect(() => {
         props.getStudentInfo(param.id);
@@ -23,6 +28,82 @@ function ParentStudentDetails(props){
     const doNothing = ()=>{
 
     }
+
+    useEffect(()=>{
+        setPinData(getPinData());
+    },[props.stops,student])
+
+
+    const getPinData = () => {
+        let pinData = getStopPinData();
+        addStudentPin(pinData, student, onStudentClick)
+        console.log(pinData);
+        return pinData;
+    }
+    const getStudentPin = (s) => {
+        return {
+            ...s, 
+            address: s.guardian.address, 
+            latitude: s.guardian.latitude, 
+            longitude: s.guardian.longitude
+        }
+    }
+    const getStopPin = (stop) => {
+        return {
+            ...stop, 
+        }
+    }
+
+    const addStudentPin = (pinData, onclick) => {
+        pinData.push({
+            iconColor: "green",
+            iconType: "student",
+            markerProps: {
+                onClick: onclick
+            },
+            pins: [
+                getStudentPin(student)
+            ]
+        })
+    }
+    
+
+    const createInfoWindow = (position, windowComponents) => {
+        setExtraComponents(<InfoWindow position={position} onCloseClick={setExtraComponents(null)}>{windowComponents}</InfoWindow>)
+    }
+
+
+    const getStopPinData = () => {
+        return [
+            {
+                iconColor: "blue",
+                iconType: "stop",
+                markerProps: {
+                    onClick: onStopClick,
+                    draggable: false,
+                    onRightClick: ""
+                },
+                pins: props.stops.map(stop => getStopPin(stop))
+            },
+        ]
+    }
+
+    const onStopClick = (pinStuff, position) => {
+        createInfoWindow(position, 
+            <div>
+                <h5>Name:{pinStuff.name}</h5>
+                <h5>Pick Up: {pinStuff.pickup_time}</h5>
+                <h5>Drop Off: {pinStuff.dropoff_time}</h5>
+            </div>
+        )
+    }
+
+    const onStudentClick = (pinStuff, position) => {
+        createInfoWindow(position, 
+            <><h4>{pinStuff.full_name}</h4></>
+        )
+    }
+
 
     return(
         // <>
@@ -97,6 +178,16 @@ function ParentStudentDetails(props){
               </Form.Group>
             </Card.Body>
         </Card>
+
+        <Card style={{height: "550px"}}>
+            <Card.Header as="h5">Map View of Stops</Card.Header>
+            <Container className='d-flex flex-column justify-content-center' style={{marginTop: "20px"}}>
+                <Card.Body>
+                    <MapComponent pinData={pinData} otherMapComponents={extraComponents} center={{lng: Number(props.student.guardian.longitude),lat: Number(props.student.guardian.latitude)}}></MapComponent>
+                </Card.Body>    
+            </Container>
+        </Card>
+
 
 
         <Card>

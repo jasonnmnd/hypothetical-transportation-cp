@@ -14,6 +14,7 @@ import RoutePlannerMap from './RoutePlannerMap';
 import { NO_ROUTE } from '../../../utils/utils';
 import { Container, ButtonGroup, ToggleButton, Card, Button, Form, Collapse } from 'react-bootstrap';
 import PageNavigateModal from '../components/modals/PageNavigateModal';
+import IconLegend from '../../common/IconLegend';
 
 
 function AdminSchoolRoutesPlanner(props) {
@@ -180,21 +181,6 @@ function AdminSchoolRoutesPlanner(props) {
 
   const [openInstruc, setOpenInstruc] = useState(false);
 
-  const routePlannerLegend = [
-    {
-        key: "No Route: ",
-        color: "🟥    "//❤️
-    },
-    {
-        key: "In This Route: ",
-        color: "🟩    "//💙
-    },
-    {
-      key: "Not In This Route: ",
-      color: "⬜    "//💙
-    },
-  ]
-
   return (
     
     <>      
@@ -276,20 +262,7 @@ function AdminSchoolRoutesPlanner(props) {
             {isCreate() || searchParams.get('route') == null ? null : 
             
             <Container className='d-flex flex-column'>
-              <Card>
-                <Card.Header as="h5">Map Legend</Card.Header>
-                <Card.Body>
-                  {
-                        routePlannerLegend.map((result, index) => {
-                        return (
-                            <Fragment key={index}>
-                                {result.key}
-                                {result.color}
-                            </Fragment>
-                        )})
-                    }
-                </Card.Body>
-              </Card>
+              <IconLegend legendType='routePlanner'></IconLegend>
               <RoutePlannerMap 
                 students={props.students} 
                 school={props.school} 
@@ -311,6 +284,8 @@ function AdminSchoolRoutesPlanner(props) {
           <Button variant='yellowsubmit' onClick={resetStudentChanges}>Reset Changes</Button>
         </Container>
       </Container>
+
+      <br></br>
     </>
 
     );

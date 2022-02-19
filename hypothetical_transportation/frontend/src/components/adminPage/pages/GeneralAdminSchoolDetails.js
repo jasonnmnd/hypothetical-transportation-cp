@@ -146,6 +146,8 @@ function GeneralAdminSchoolDetails(props) {
             </Card.Body>
         </Card>
       </Container>
+
+      <br></br>
     </>
   );
 }

@@ -13,8 +13,9 @@ import { getStopByRoute } from '../../../actions/stops';
 import { Container, Card, Button, Row, Col, Alert, Form } from 'react-bootstrap'
 import { filterObjectForKeySubstring } from '../../../utils/utils';
 import MapComponent from '../../maps/MapComponent';
-import { getStudentPin, addSchoolPin } from '../../../utils/planner_maps';
+import { getStudentPin, addSchoolPin, getStopPin } from '../../../utils/planner_maps';
 import {InfoWindow} from '@react-google-maps/api';
+import IconLegend from '../../common/IconLegend';
 
 
 function GeneralAdminRouteDetails(props) {
@@ -68,11 +69,31 @@ function GeneralAdminRouteDetails(props) {
 
     const getPinData = () => {
         let pinData = getStudentsPinData();
-        console.log(pinData);
         addSchoolPin(pinData, props.route.school, onSchoolClick)
+        pinData = pinData.concat(getStopPinData());
         console.log(pinData);
         return pinData;
     }
+
+    const getStopPinData = () => {
+        return [
+            {
+                iconColor: "blue",
+                iconType: "stop",
+                markerProps: {
+                    onClick: onStopClick,
+                    draggable: false,
+                    onRightClick: ""
+                },
+                pins: props.stops.map(stop => getStopPin(stop))
+            },
+        ]
+    }
+
+    const onStopClick = (pinStuff, position) => {
+        createInfoWindow(position, <h4>{pinStuff.name}</h4>)
+    }
+
     const onSchoolClick = (pinStuff, position) => {
         createInfoWindow(position, <h1>{pinStuff.name}</h1>)
     }
@@ -180,9 +201,12 @@ function GeneralAdminRouteDetails(props) {
 
         <Card style={{height: "550px"}}>
             <Card.Header as="h5">Map View of School, Students, and Stops</Card.Header>
-            <Card.Body>
-                <MapComponent pinData={pinData} otherMapComponents={extraComponents} center={{lng: Number(props.route.school.longitude),lat: Number(props.route.school.latitude)}}></MapComponent>
-            </Card.Body>
+            <Container className='d-flex flex-column justify-content-center' style={{marginTop: "20px"}}>
+                <IconLegend legendType='routeDetails'></IconLegend>
+                <Card.Body>
+                    <MapComponent pinData={pinData} otherMapComponents={extraComponents} center={{lng: Number(props.route.school.longitude),lat: Number(props.route.school.latitude)}}></MapComponent>
+                </Card.Body>    
+            </Container>
         </Card>
 
         <Card>
@@ -199,6 +223,8 @@ function GeneralAdminRouteDetails(props) {
             </Card.Body>
         </Card>
         </Container>
+
+        <br></br>
     </div>
     );
 }
