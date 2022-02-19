@@ -36,7 +36,7 @@ function ParentStudentDetails(props){
 
     const getPinData = () => {
         let pinData = getStopPinData();
-        addStudentPin(pinData, student, onStudentClick)
+        addStudentPin(pinData, onStudentClick)
         console.log(pinData);
         return pinData;
     }
