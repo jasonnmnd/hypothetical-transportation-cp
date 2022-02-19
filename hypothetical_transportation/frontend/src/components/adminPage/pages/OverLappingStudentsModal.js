@@ -11,7 +11,6 @@ import { getStudentRouteName } from '../../../utils/planner_maps';
 function OverlappingStudentsModal(props){
 
     const getInstructionsString = (routeName) => {
-        console.log(props.allRoutes)
         if(routeName == "none"){
             return "Please select which students you would like to remove from their routes."
         }
