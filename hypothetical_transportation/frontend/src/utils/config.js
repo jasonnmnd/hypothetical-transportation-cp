@@ -60,7 +60,7 @@ const stopColumns = {
         colTitle: "Stop Number",
         dataPath: "stop_number",
         search_key: "stop_number",
-        sortable: true,
+        sortable: false,
         filterable: false
     },
 
