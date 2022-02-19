@@ -65,7 +65,7 @@ function GeneralAdminRouteDetails(props) {
   useEffect(()=>{
     setExtra({id: props.route.school.id,name: props.route.school.name, dropoff_time: props.route.school.bus_departure_time, pickup_time: props.route.school.bus_arrival_time, stop_number: 0})
     setPinData(getPinData());
-  },[props.students,props.school,props.stops]);
+  },[props.students,props.route,props.stops]);
 
     const getPinData = () => {
         let pinData = getStudentsPinData();
@@ -204,7 +204,9 @@ function GeneralAdminRouteDetails(props) {
             <Container className='d-flex flex-column justify-content-center' style={{marginTop: "20px"}}>
                 <IconLegend legendType='routeDetails'></IconLegend>
                 <Card.Body>
-                    <MapComponent pinData={pinData} otherMapComponents={extraComponents} center={{lng: Number(props.route.school.longitude),lat: Number(props.route.school.latitude)}}></MapComponent>
+                    {props.route.school.id===-1?
+                        <></>:
+                        <MapComponent pinData={pinData} otherMapComponents={extraComponents} center={{lng: Number(props.route.school.longitude),lat: Number(props.route.school.latitude)}}></MapComponent>}
                 </Card.Body>    
             </Container>
         </Card>

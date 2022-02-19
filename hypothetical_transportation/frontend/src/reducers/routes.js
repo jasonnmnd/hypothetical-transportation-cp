@@ -11,7 +11,9 @@ const initialState = {
         school: {
             name: "",
             address: "Durham, NC",
-            id: -1
+            id: -1,
+            latitude: "36",
+            longitude: "70",
         },
         schoolName: ""
     }
@@ -55,7 +57,9 @@ export default function(state = initialState, action) {
                     school: {
                         name: "",
                         address: "Durham, NC",
-                        id: -1
+                        id: -1,
+                        latitude: "36",
+                        longitude: "70",
                     },
                     schoolName: ""
                 }
