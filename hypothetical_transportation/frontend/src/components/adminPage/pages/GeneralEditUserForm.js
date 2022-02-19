@@ -27,7 +27,7 @@ function GeneralEditUserForm(props) {
         full_name: "",
         address: "",
         email: "",
-        groups: [{id:2}],
+        groups: [2],
     });
     const [address, setAddress] = useState("");
 
@@ -52,7 +52,7 @@ function GeneralEditUserForm(props) {
                 full_name: "",
                 address: "",
                 email: "",
-                groups: [{id:2}],
+                groups: [2],
             })
             setAddress("")
         }
