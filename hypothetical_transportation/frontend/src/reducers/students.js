@@ -7,8 +7,7 @@
   viewedStudent: {
     id: null,
     student_id: "",
-    first_name: "",
-    last_name: "",
+    full_name: "",
     address: "",
     guardian: 0,
     routes: 0,

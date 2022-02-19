@@ -20,11 +20,11 @@ function GeneralManageStudentPage(props) {
     const [validated, setValidated] = useState(false);
 
     const emptyStudent={
-      student_id: null,
+      student_id: "",
       full_name: "",
       guardian: "",
       routes: "",
-      school: "null",
+      school: "",
     }
   
 
@@ -87,6 +87,23 @@ function GeneralManageStudentPage(props) {
     // }
     
   }, []);
+
+
+  useEffect(()=>{
+    if(props.action !== "edit"){
+        setObj(emptyStudent)
+    }
+    else{
+      props.getStudent(param.id);
+    }
+  },[props.action])
+
+useEffect(()=>{
+  if(props.action == "edit"){
+    setObj({...props.student, ["guardian"]:props.student.guardian.id,["school"]:props.student.school.id,["routes"]:props.student.routes?props.student.routes.id:null})
+  }
+
+},[props.student])
 
 
     return ( 
@@ -177,7 +194,7 @@ function GeneralManageStudentPage(props) {
                 <Form.Label as="h5">Student ID</Form.Label>
                 <Form.Control 
                 type="text"
-                placeholder="Enter name..." 
+                placeholder="Enter A Number For Student ID..." 
                 value={obj.student_id}
                 onChange={(e)=>{setObj({...obj, ["student_id"]: e.target.value})}}
                 />
@@ -198,7 +215,7 @@ function GeneralManageStudentPage(props) {
             <Form.Group className="mb-3" controlId="">
                 <Form.Label as="h5">School</Form.Label>
                 <Form.Select size="sm" value={obj.school} onChange={changeSchool}>
-                  <option value={"null"} >{"-----"}</option>
+                  <option value={""} >{"-----"}</option>
                     {props.schoollist!==null && props.schoollist!==undefined && props.schoollist.length!==0?props.schoollist.map((u,i)=>{
                         return <option value={u.id} key={i}>{u.name}</option>
                     }):null}
