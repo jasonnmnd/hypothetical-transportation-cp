@@ -8,7 +8,7 @@ import { NO_ROUTE } from '../../../utils/utils';
 import { getStudentPin, addSchoolPin, getStudentRouteName } from '../../../utils/planner_maps';
 import { getDistance } from '../../../utils/geocode';
 import { Button, Modal } from 'react-bootstrap';
-import OverLappingStudentsModal from './OverLappingStudentsModal';
+import OverLappingStudentsModal from '../components/modals/OverLappingStudentsModal';
 
 
 const MARKER_OVERLAP_DISTANCE = 0.0005; //miles

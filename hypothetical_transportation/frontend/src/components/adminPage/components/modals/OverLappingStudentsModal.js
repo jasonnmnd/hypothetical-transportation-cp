@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Button, Modal, Table } from 'react-bootstrap';
+import { Button, Container, Modal, Table } from 'react-bootstrap';
 import PropTypes, { string } from 'prop-types';
-import { getStudentRouteName } from '../../../utils/planner_maps';
+import { getStudentRouteName } from '../../../../utils/planner_maps';
+import "./modal.css";
 
 
 
@@ -27,7 +28,7 @@ function OverlappingStudentsModal(props){
                 <td>{student.guardian.address}</td>
                 <td>{getStudentRouteName(student.id, student.routes, props.studentChanges, props.allRoutes)}</td>
                 <td>
-                    <Button onClick={() => props.changeStudentRoute(student, null)}>Add to Route</Button>
+                    <Button variant="yellowTableSm" onClick={() => props.changeStudentRoute(student, null)}>Add</Button>
                 </td>
             </tr>
         ))
@@ -35,7 +36,7 @@ function OverlappingStudentsModal(props){
 
     const getStudentTable = () => {
         return (
-            <Table>
+            <Table striped bordered size="sm">
                 <thead>
                     <tr>
                         <th>Name</th>
@@ -54,17 +55,22 @@ function OverlappingStudentsModal(props){
     return (
         <Modal show={props.students.length > 0} onHide={props.closeModal}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Multiple Students</Modal.Title>
+                    <Container className='d-flex flex-row justify-content-center'>
+                        <Modal.Title>Multiple Students</Modal.Title>
+                    </Container>
                 </Modal.Header>
 
                 <Modal.Body>
                     <h2>There are multiple students at this marker!</h2>
-                    <h4>{getInstructionsString(props.currentRoute)}</h4>
+                    <h5>{getInstructionsString(props.currentRoute)}</h5>
                     {getStudentTable()}
                 </Modal.Body>
 
                 <Modal.Footer>
-                    <Button variant="primary" onClick={props.closeModal}>Close</Button>
+                    <Container className='d-flex flex-row justify-content-center'>
+                        <Button variant="yellowclose" onClick={props.closeModal}>Close</Button>
+                    </Container>
+                    
                 </Modal.Footer>
         </Modal>  
     )
