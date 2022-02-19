@@ -42,6 +42,7 @@ function GeneralEditUserForm(props) {
                 groups: props.curUser.groups[0].id
             });
             setAddress(props.curUser.address);
+            console.log("setcoord props.edit")
             setCoord({lat: Number(props.curUser.latitude), lng: Number(props.curUser.longitude)})
         }
     }, []);
@@ -55,19 +56,23 @@ function GeneralEditUserForm(props) {
                 groups: [2],
             })
             setAddress("")
+            console.log("setcoord props.action")
+            setCoord({lat: 36.0016944, lng: -78.9480547})
         }
     },[props.action])
 
     useEffect(()=>{
-        setFieldValues({
-            full_name: props.curUser.full_name,
-            address: props.curUser.address,
-            email: props.curUser.email,
-            groups: props.curUser.groups[0].id
-        });
-        setAddress(props.curUser.address);
-        setCoord({lat: Number(props.curUser.latitude), lng: Number(props.curUser.longitude)})
-
+        if(props.action == "edit"){
+            setFieldValues({
+                full_name: props.curUser.full_name,
+                address: props.curUser.address,
+                email: props.curUser.email,
+                groups: props.curUser.groups[0].id
+            });
+            setAddress(props.curUser.address);
+            console.log("setcoord props.curuser")
+            setCoord({lat: Number(props.curUser.latitude), lng: Number(props.curUser.longitude)})
+        }
     },[props.curUser])
 
     const handleSubmit = (event) => {
