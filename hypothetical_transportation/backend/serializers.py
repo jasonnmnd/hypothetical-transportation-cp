@@ -56,6 +56,9 @@ class StopSerializer(serializers.ModelSerializer):
     #     print(data)
     #     return data
 
+    # def __init__(self, *args, **kwargs):
+    #     many = kwargs.pop('many', True)
+    #     super(StopSerializer, self).__init__(many=many, *args, **kwargs)
     class Meta:
         model = Stop
         fields = '__all__'

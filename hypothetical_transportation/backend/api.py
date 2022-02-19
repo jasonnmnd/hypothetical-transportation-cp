@@ -17,6 +17,9 @@ from .search import DynamicSearchFilter
 from .customfilters import StudentCountShortCircuitFilter
 from .permissions import is_admin, IsAdminOrReadOnly, IsAdmin
 
+os.environ['DISTANCE_MATRIX_API_URL']='https://maps.googleapis.com/maps/api/distancematrix/json'
+os.environ['DISTANCE_MATRIX_API_KEY']='AIzaSyAs_8cqVS3l_q4lxKLiTgyrjRCN8aWN28g'
+
 
 def get_filter_dict(model):
     """
@@ -108,6 +111,7 @@ def get_information_related_to_a_stop(stop: Stop):
         matrix = matrix + f'|{stop.latitude}, {stop.longitude}'
 
     times = distance_matrix_api(matrix)
+    print(times)
     return school_start_time, school_letout_time, stops, times
 
 def update_bus_times_for_stops_related_to_stop(stop: Stop):
@@ -145,7 +149,9 @@ def update_bus_times_for_stops_related_to_stop(stop: Stop):
     for stop in stops:
         stop.pickup_time=pickup_times[stop_num]
         stop.dropoff_time=dropoff_times[stop_num]
-        stop.save()
+        # print(stop)
+        # print(f"internal stop_name: {stop.name}, dropoff time:{stop.dropoff_time}, pickup time:{stop.pickup_time}, long{stop.longitude} lat{stop.latitude}")
+        stop.save(update_fields=['pickup_time', 'dropoff_time'])
         stop_num = stop_num+1
     return response
 
@@ -207,11 +213,26 @@ class StopViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
     filterset_fields = ['route']
 
+    # @override
+    # def create(self, request):
+    #     res = self.create()
+    #     stop = self.get_object()
+    #     print(f'stop: {stop}\n')
+    # #     update_bus_times_for_stops_related_to_stop(stop)
+    #     content = parse_repr(repr(StopSerializer()))
+    #     return Response(content)
+
+
     def get_serializer_class(self):
         return StopSerializer
 
     def get_queryset(self):
         return Stop.objects.all()
+
+    # @action(detail=False, permission_classes=[permissions.AllowAny])
+    # def fields(self, request):
+    #     content = parse_repr(repr(StopSerializer()))
+    #     return Response(content)
 
 
 class RouteViewSet(viewsets.ModelViewSet):

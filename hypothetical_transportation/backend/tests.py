@@ -4,7 +4,6 @@ import datetime
 from django.test import RequestFactory, TestCase, TransactionTestCase
 from django.test import Client
 from .models import Student, School, Route, Stop
-from .api import update_all_stops_related_to_school
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 
@@ -22,8 +21,8 @@ class TestModels(TestCase):
             longitude=36.009121, 
             latitude=-78.926017, 
             name='Test Blank Stop Name',
-            bus_arrival_time='9:00:00',
-            bus_departure_time='16:00:00',
+            bus_arrival_time=datetime.time(9,0,0),
+            bus_departure_time=datetime.time(16,0,0)
         )
         route = Route.objects.create(
             name='Test Blank Stop Name Route 1', 
@@ -36,7 +35,7 @@ class TestModels(TestCase):
             school=school,
         )
         stop1 = Stop.objects.create(
-            name='',
+            name='dummy 1',
             latitude=35.996996,
             longitude=-78.944668,
             stop_number=1,
@@ -45,7 +44,7 @@ class TestModels(TestCase):
             route=route,
         )
         stop2 = Stop.objects.create(
-            name='',
+            name='dummy 2',
             latitude=35.997663,
             longitude=-78.936984,
             stop_number=2,
@@ -53,36 +52,39 @@ class TestModels(TestCase):
             dropoff_time="12:11:00",
             route=route,
         )
-        update_all_stops_related_to_school(school)
         stops = Stop.objects.all()
+        old_dropoff, old_pickup = [],[] 
         for stop in stops:
-            print(f"dropoff time:{stop.dropoff_time}, pickup time:{stop.pickup_time}")
+            print(f"stop_name: {stop.name}, dropoff time:{stop.dropoff_time}, pickup time:{stop.pickup_time}")
+            old_dropoff.append(stop.dropoff_time)
+            old_pickup.append(stop.pickup_time)
             self.assertIsNot(stop.dropoff_time, "12:11:00")
             self.assertIsNot(stop.pickup_time, "11:11:00")
+        
+        school.bus_arrival_time = datetime.time(10,0,0)
+        school.bus_departure_time = datetime.time(17,0,0)
+        school.save()
+        
+        old_dropoff2, old_pickup2 = [],[] 
+        for stop in Stop.objects.all():
+            old_dropoff2.append(stop.dropoff_time)
+            old_pickup2.append(stop.pickup_time)
+            if stop.dropoff_time in old_dropoff or stop.pickup_time in old_pickup:
+                self.assertFalse
 
-    # def test_stop_calc_time(self):
-    #     school = School.objects.create(
-    #         address='2211 Hillsborough Road Durham, NC 27705', 
-    #         longitude=0, 
-    #         latitude=0, 
-    #         name='Test Stop Calc Time',
-    #     )
-    #     route = Route.objects.create(
-    #         name='Test Stop Calc Time', 
-    #         description='test route', 
-    #         school=school,
-    #     )
-    #     stop = Stop.objects.create(
-    #         name='',
-    #         latitude=0,
-    #         longitude=0,
-    #         stop_number=3,
-    #         pickup_time="11:11:00",
-    #         dropoff_time="12:11:00",
-    #         route=route,
-    #     )
-    #     self.assertEquals('Stop 3 ', stop['name'])
+        # stops = Stop.objects.all()
+        
+        # for stop in Stop.objects.all():
+        #     stop.longitude = stop.longitude+stop.latitude
+        #     stop.latitude = stop.latitude
+        #     stop.save()
+        #     # print(f"OLD stop_name: {stop.name}, dropoff time:{stop.dropoff_time}, pickup time:{stop.pickup_time}")
 
+        # for stop in Stop.objects.all():
+        #     print(f"stop_name: {stop.name}, dropoff time:{stop.dropoff_time}, pickup time:{stop.pickup_time}")
+        #     if stop.dropoff_time in old_dropoff2 or stop.pickup_time in old_pickup2:
+        #         self.assertFalse
+        
 
 # Create your tests here.
 class AuthenticationObjectConsistency(TestCase):
