@@ -49,7 +49,7 @@ function OverlappingStudentsModal(props){
     }
 
     return (
-        <Modal show={props.students.length > 0} onHide={() => props.closeModal()}>
+        <Modal show={props.students.length > 0} onHide={props.closeModal}>
                 <Modal.Header closeButton>
                     <Modal.Title>Multiple Students</Modal.Title>
                 </Modal.Header>
@@ -61,7 +61,7 @@ function OverlappingStudentsModal(props){
                 </Modal.Body>
 
                 <Modal.Footer>
-                    <Button variant="primary">Close</Button>
+                    <Button variant="primary" onClick={props.closeModal}>Close</Button>
                 </Modal.Footer>
         </Modal>  
     )

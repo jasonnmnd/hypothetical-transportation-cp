@@ -6,12 +6,12 @@ import PropTypes, { string } from 'prop-types';
 import { useSearchParams } from 'react-router-dom';
 import { NO_ROUTE } from '../../../utils/utils';
 import { getStudentPin, addSchoolPin, getStudentRouteName } from '../../../utils/planner_maps';
-import { getDistance, getDistanceFromLatLonInMiles } from '../../../utils/geocode';
+import { getDistance } from '../../../utils/geocode';
 import { Button, Modal } from 'react-bootstrap';
 import OverLappingStudentsModal from './OverLappingStudentsModal';
 
 
-const MARKER_OVERLAP_DISTANCE = 0.5; //miles
+const MARKER_OVERLAP_DISTANCE = 0.0005; //miles
 
 
 function RoutePlannerMap(props){
@@ -116,7 +116,7 @@ function RoutePlannerMap(props){
         while(students.length > 0){
             const student = students[0];
             students.splice(0, 1); // remove current student
-            const overlapGroup = overlappingStudents.find(overlapStudentObj => getDistance(overlapStudentObj.position, student.guardian) < MARKER_OVERLAP_DISTANCE)
+            const overlapGroup = overlappingStudents.find(overlapStudentObj => getDistance(overlapStudentObj, student.guardian) < MARKER_OVERLAP_DISTANCE)
             if(overlapGroup != undefined){
                 overlapGroup.pins.push(student);
             }
@@ -175,7 +175,7 @@ function RoutePlannerMap(props){
                 pins: getStudentsWOtherRoute(normalStudents).map(student => {return getStudentPin(student)})
             },
             {
-                iconColor: "blue",
+                iconColor: "purple",
                 iconType: "student",
                 markerProps: {
                     onClick: onMultipleStudentClick,
