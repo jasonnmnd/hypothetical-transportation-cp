@@ -1,14 +1,14 @@
 import React, {useEffect, useState} from "react";
+import ParentHeader from "../header/ParentHeader";
 import Header from "../header/Header";
-import "./parentPage.css";
 import { useSearchParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { logout } from "../../actions/auth";
 import isAdmin from "../../utils/user";
-import SidebarSliding from "../adminPage/components/sidebar/SidebarSliding";
 import { getStudents } from '../../actions/students';
 import GeneralParentTableView from "./views/GeneralParentTableView";
+import { Container, Row, Col } from 'react-bootstrap';
 
 function ParentPage(props) {
 
@@ -35,23 +35,38 @@ function ParentPage(props) {
 
     return (
       
-        <div className="parent-page">
-          {isAdmin(props.user)? <SidebarSliding/>:null}
-          <Header textToDisplay={"Parent Portal"} shouldShowOptions={true}></Header>
-          <div>
-            <div className="welcome">
-              <h2>
-                Welcome,<span>{props.user.full_name}</span>
-              </h2>
-            </div>
-            <br></br>
+        // <div className="parent-page">
+        //   {isAdmin(props.user)? <SidebarSliding/>:null}
+        //   <Header textToDisplay={"Parent Portal"} shouldShowOptions={true}></Header>
+        //   <div>
+        //     <div className="welcome">
+        //       <h2>
+        //         Welcome,<span>{props.user.full_name}</span>
+        //       </h2>
+        //     </div>
+        //     <br></br>
 
-            <div className="page-description">
-              <GeneralParentTableView values={props.students} title={title} tableType={tableType} />
-            </div>
+        //     <div className="page-description">
+        //       <GeneralParentTableView values={props.students} title={title} tableType={tableType} />
+        //     </div>
 
-          </div>
+        //   </div>
           
+        // </div>
+        <div>
+          {
+            isAdmin(props.user) ? <Header></Header> : <ParentHeader></ParentHeader>
+          }
+          <Container>
+              <div className="shadow-sm p-3 mb-5 bg-white rounded d-flex flex-row justify-content-center">
+                <h1>Welcome, <span>{props.user.full_name}</span></h1>
+              </div>
+
+              <div className="shadow-lg p-3 mb-5 bg-white rounded">
+                <GeneralParentTableView values={props.students} title={title} tableType={tableType} />
+              </div>
+
+          </Container>
         </div>
 
     )

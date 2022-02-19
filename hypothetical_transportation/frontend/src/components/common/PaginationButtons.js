@@ -1,8 +1,9 @@
-import React, { Fragment, useState } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { useSearchParams } from 'react-router-dom';
 import "./generalTable.css"
+import { Button } from 'react-bootstrap';
 
 function PaginationButtons( props ) {
 
@@ -40,20 +41,43 @@ function PaginationButtons( props ) {
       }
   
     return (
-        <div className='align-all-buttons'>
-            <div className="prev-next-buttons">
+        // <div className='align-all-buttons'>
+        //     <div className="prev-next-buttons">
+        //         {searchParams.get(pageNumWithPrefix) == -1 ? 
+        //         <button className='button' onClick={handleLessClick}>Show Less</button> 
+        //         :
+        //         <div> 
+        //         <button className={(searchParams.get(pageNumWithPrefix) == 1) ? 'button-disabled' : 'button'} onClick={handlePrevClick} disabled={searchParams.get(pageNumWithPrefix) == 1} >Prev</button>
+        //         {searchParams.get(pageNumWithPrefix)}
+        //         <button className={props.nextDisable ? 'button-disabled' : 'button'} onClick={handleNextClick} disabled={props.nextDisable} >Next</button> 
+        //         <div className='divider15px'/>
+        //         <br></br>
+        //         <button className='button' onClick={handleAllClick} >Show All</button>
+        //         </div>}
+        //     </div>
+        // </div>
+
+        <>
+            <div className='d-flex flex-row justify-content-center'>
                 {searchParams.get(pageNumWithPrefix) == -1 ? 
-                <button className='button' onClick={handleLessClick}>Show Less</button> 
-                :
-                <div> 
-                <button className={(searchParams.get(pageNumWithPrefix) == 1) ? 'button-disabled' : 'button'} onClick={handlePrevClick} disabled={searchParams.get(pageNumWithPrefix) == 1} >Prev</button>
-                {searchParams.get(pageNumWithPrefix)}
-                <button className={props.nextDisable ? 'button-disabled' : 'button'} onClick={handleNextClick} disabled={props.nextDisable} >Next</button> 
-                <div className='divider15px'/>
-            <button className='button' onClick={handleAllClick} >Show All</button>
-                </div>}
+                 <Button className='btn-prevnext' onClick={handleLessClick}>Show Less</Button> 
+                 :
+                 <div> 
+                    <Button variant={(searchParams.get(pageNumWithPrefix) == 1) ? 'prevnext_disabled' : 'prevnext'} onClick={handlePrevClick} disabled={searchParams.get(pageNumWithPrefix) == 1} >Prev</Button>
+                    {" "}
+                    {searchParams.get(pageNumWithPrefix)}
+                    {" "}
+                    <Button variant={props.nextDisable ? 'prevnext_disabled' : 'prevnext'} onClick={handleNextClick} disabled={props.nextDisable}>Next</Button> 
+
+                    <div className='d-flex flex-row justify-content-center' style={{marginTop: "10px"}}>
+                        <Button variant='prevnext' onClick={handleAllClick} >Show All</Button>
+                    </div>
+                 </div>
+                 
+                }
+
             </div>
-        </div>
+        </>
     )
 
 }

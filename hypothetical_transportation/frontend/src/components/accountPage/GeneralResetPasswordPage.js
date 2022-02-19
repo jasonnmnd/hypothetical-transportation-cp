@@ -1,21 +1,25 @@
 import React from "react";
 import { useState } from "react";
 import { Link, Navigate, useNavigate } from 'react-router-dom';
-import SidebarSliding from "../adminPage/components/sidebar/SidebarSliding";
 import Header from "../header/Header";
+import ParentHeader from "../header/ParentHeader";
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import isAdmin from "../../utils/user";
-import config from "../../utils/config";
-import axios from "axios";
 import { resetPassword, resetResetPassword } from '../../actions/auth'
+import "../adminPage/NEWadminPage.css"
+import { Form, Button, Row, Col, Container, InputGroup, ButtonGroup, ToggleButton} from 'react-bootstrap';
 
 function GeneralResetPasswordPage(props){
     const navigate = useNavigate();
     const [values, setValue] = useState({ old: "", new: "", confirm:"" });
     
     const saveNewPassword = () => {
-        if (values.new === values.confirm) {
+        if(values.new===""){
+            console.log("You Cannot Have a blank password")
+            alert("You Cannot Have a blank password")
+          }
+          else if (values.new === values.confirm) {
             props.resetPassword(values.old, values.new);
             
 
@@ -37,61 +41,42 @@ function GeneralResetPasswordPage(props){
     }
 
     return(
-        <div className={"parent-page"}>
-            <Header textToDisplay={isAdmin(props.user) ? "Admin Portal": "Parent Portal"} shouldShowOptions={true}></Header>
-            {isAdmin(props.user)?        <SidebarSliding/>:null}
-            <div className="welcome">
-                <form className={"center"}>
-                    <div className="form-inner">
-                        <h2>Reset Passwords</h2>
+        <div>
+            {
+                isAdmin(props.user) ?  <Header></Header> : <ParentHeader></ParentHeader>
+            }
+            <Container className="container-main">
+                <Form className="shadow-lg p-3 mb-5 bg-white rounded">
+                    <Form.Group className="mb-3" controlId="formGridAddress1">
+                        <Form.Label as="h5">Old Password</Form.Label>
+                        <Form.Control
+                        type="password"
+                        placeholder="Enter old password..." 
+                        value={values.old}
+                        onChange={(e) => setValue({ ...values, old: e.target.value })}/>
+                    </Form.Group>
 
-                        <div className="form-group">
-                            <label htmlFor="old_pass">Old Password:</label>
-                            <input
-                            type="old"
-                            name="old"
-                            id="old"
-                            onChange={(e) => setValue({ ...values, old: e.target.value })}
-                            value={values.old}
-                            />
-                        </div>
+                    <Form.Group className="mb-3" controlId="formGridAddress1">
+                        <Form.Label as="h5">New Password</Form.Label>
+                        <Form.Control
+                        type="password"
+                        placeholder="Enter new password..." 
+                        value={values.new}
+                        onChange={(e) => setValue({ ...values, new: e.target.value })}/>
+                    </Form.Group>
 
-                        <div className="form-group">
-                            <label htmlFor="new_pass">New Password:</label>
-                            <input
-                            type="new"
-                            name="new"
-                            id="new"
-                            onChange={(e) => setValue({ ...values, new: e.target.value })}
-                            value={values.new}
-                            />
-                        </div>
+                    <Form.Group className="mb-3" controlId="formGridAddress1">
+                        <Form.Label as="h5">Confirm New Password</Form.Label>
+                        <Form.Control
+                        type="password"
+                        placeholder="Confirm new password..." 
+                        value={values.confirm}
+                        onChange={(e) => setValue({ ...values, confirm: e.target.value })}/>
+                    </Form.Group>
 
-                        <div className="form-group">
-                            <label htmlFor="confirm_pass">Confirm New Password:</label>
-                            <input
-                            type="confirm"
-                            name="confirm"
-                            id="confirm"
-                            onChange={(e) => setValue({ ...values, confirm: e.target.value })}
-                            value={values.confirm}
-                            />
-                        </div>
-
-                        <div className="divider15px" />
-                        <button onClick={resetHandler}>Confirm</button>
-
-                        <div className="divider15px" />
-                        {props.user.groups[0]==1 ? <Link to={"/account"}>
-                            <button>Back</button>
-                        </Link> : <Link to={"/account"}>
-                            <button>Back</button>
-                        </Link>}
-
-                        {<div className="message">{message}</div>}
-                    </div>
-                </form>
-            </div>
+                    <Button variant="yellowsubmit" type="submit" onClick={resetHandler}>Confirm</Button>
+                </Form>
+            </Container>
         </div>
     );
 }
