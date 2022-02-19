@@ -200,6 +200,7 @@ function MapComponent(props) {
         const newPost = mapRef.current.getCenter().toJSON();
         if(pos.lat!==newPost.lat && pos.lng!==newPost.lng){
             setPos(newPost)
+            setSet(true)
         }
     }
 
