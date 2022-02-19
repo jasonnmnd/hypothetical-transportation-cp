@@ -99,11 +99,11 @@ function GeneralAdminStopDetails(props) {
             </Card.Body>
         </Card>
 
-        <Card>
+        {/* <Card>
             <Card.Header as="h5">Map Of Stop and All Students In The Route Related To The Stop </Card.Header>
             <Card.Body>
             </Card.Body>
-        </Card>
+        </Card> */}
       </Container>
 
       <br></br>
