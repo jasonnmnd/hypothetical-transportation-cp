@@ -23,12 +23,14 @@ function GeneralEditUserForm(props) {
     const[coord,setCoord]=useState({lat:36.0016944, lng:-78.9480547});
     
     const [fieldValues, setFieldValues] = useState({
+        id: 0,
         full_name: "",
         address: "",
         email: "",
-        groups: 2,
+        groups: [{id:2}],
     });
     const [address, setAddress] = useState("");
+
 
     useEffect(() => {
         if(props.action == "edit"){
@@ -43,6 +45,30 @@ function GeneralEditUserForm(props) {
             setCoord({lat: Number(props.curUser.latitude), lng: Number(props.curUser.longitude)})
         }
     }, []);
+
+    useEffect(()=>{
+        if(props.action !== "edit"){
+            setFieldValues({
+                full_name: "",
+                address: "",
+                email: "",
+                groups: [{id:2}],
+            })
+            setAddress("")
+        }
+    },[props.action])
+
+    useEffect(()=>{
+        setFieldValues({
+            full_name: props.curUser.full_name,
+            address: props.curUser.address,
+            email: props.curUser.email,
+            groups: props.curUser.groups[0].id
+        });
+        setAddress(props.curUser.address);
+        setCoord({lat: Number(props.curUser.latitude), lng: Number(props.curUser.longitude)})
+
+    },[props.curUser])
 
     const handleSubmit = (event) => {
         event.preventDefault();

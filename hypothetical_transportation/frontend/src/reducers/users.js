@@ -10,14 +10,14 @@ const initialState = {
         full_name: "",
         email: "",
         address: "",
-        groups: [],
+        groups: [{id:2}],
   },
   postedUser:{
     id: 0,
     full_name: "",
     email: "",
     address: "",
-    groups: [],
+    groups: [{id:2}],
 },
 };
 
