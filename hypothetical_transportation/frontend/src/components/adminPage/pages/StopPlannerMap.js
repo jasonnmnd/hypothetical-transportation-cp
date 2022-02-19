@@ -96,7 +96,7 @@ function StopPlannerMap(props){
     }
 
 
-    return <MapComponent pinData={pinData} otherMapComponents={extraComponents} />
+    return <MapComponent pinData={pinData} otherMapComponents={extraComponents} center={{lng: Number(props.school.longitude),lat: Number(props.school.latitude)}}/>
 }
 
 StopPlannerMap.propTypes = {
