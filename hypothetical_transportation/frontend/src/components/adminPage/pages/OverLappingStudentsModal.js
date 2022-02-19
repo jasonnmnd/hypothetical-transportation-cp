@@ -11,10 +11,14 @@ import { getStudentRouteName } from '../../../utils/planner_maps';
 function OverlappingStudentsModal(props){
 
     const getInstructionsString = (routeName) => {
+        console.log(props.allRoutes)
         if(routeName == "none"){
             return "Please select which students you would like to remove from their routes."
         }
-        return `Please select which students you would like to add to the route.`
+        if(routeName == null || routeName == "" || props.allRoutes.length == 0){
+            return null
+        }
+        return `Please select which students you would like to add to ${props.allRoutes.find(route => route.id == parseInt(routeName)).name}.`
     }
 
     const getStudentRows = () => {
