@@ -12,7 +12,7 @@ import { getItemCoord } from "../../../utils/geocode";
 import PageNavigateModal from "../components/modals/PageNavigateModal";
 import { resetPostedUser } from "../../../actions/users";
 
-//Edit/New user
+//Edit/New user form
 function GeneralEditUserForm(props) {
     const navigate = useNavigate();
     const param = useParams();

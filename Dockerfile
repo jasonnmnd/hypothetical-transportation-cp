@@ -12,6 +12,7 @@ WORKDIR .
 # move requirements into new directory
 COPY requirements.txt .
 COPY entrypoint/ .
+
 # CMD ["npm", "run", "build"]
 
 # install requirements

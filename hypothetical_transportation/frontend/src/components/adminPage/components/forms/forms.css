@@ -27,3 +27,7 @@
   height: 35px;
   font-size: 12px;
 }
+
+.inputFieldInTable {
+  width: 100%
+}

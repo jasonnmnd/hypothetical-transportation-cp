@@ -46,8 +46,6 @@ class RouteSerializer(serializers.ModelSerializer):
 
 
 class StopSerializer(serializers.ModelSerializer):
-    pickup_time = serializers.TimeField(read_only=True)
-    dropoff_time = serializers.TimeField(read_only=True)
 
     class Meta:
         model = Stop

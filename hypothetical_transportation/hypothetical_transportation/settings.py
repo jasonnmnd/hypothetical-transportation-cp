@@ -68,6 +68,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'django.contrib.postgres',
     'django.contrib.staticfiles',
     'corsheaders',
     'rest_framework',
@@ -141,6 +142,7 @@ DATABASES = {
         'USER': 'admin',
         'PASSWORD': 'admin',
         'HOST': 'db',
+        # 'HOST': 'localhost',
         'PORT': '5432',
     }
 }
