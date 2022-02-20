@@ -114,7 +114,7 @@ class Student(models.Model):
         student_address = self.guardian.latitude, self.guardian.longitude
         for stop in self.routes.stops.all():
             stop_address = stop.latitude, stop.longitude
-            if get_straightline_distance(*student_address, *stop_address) < 2.0 * LEN_OF_MILE:
+            if get_straightline_distance(*student_address, *stop_address) < 0.3 * LEN_OF_MILE:
                 return True
         return False
 

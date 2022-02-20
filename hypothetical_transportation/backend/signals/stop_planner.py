@@ -73,7 +73,7 @@ def get_time_between(lat1, long1, lat2, long2):
 #                 student_has_in_range_route = False
 #                 for stop in route.stops.all():
 #                     stop_address = stop.latitude, stop.longitude
-#                     if get_distance_between(*student_address, *stop_address) < 0.75 * LEN_OF_MILE:
+#                     if get_distance_between(*student_address, *stop_address) < 0.3 * LEN_OF_MILE:
 #                         student_has_in_range_route = True
 #                         student.has_inrange_stop = True
 #                         student.save()
