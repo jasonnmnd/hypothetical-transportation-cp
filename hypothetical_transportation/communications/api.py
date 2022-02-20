@@ -48,13 +48,29 @@ def get_users_all():
     return get_user_model().objects.values_list('email', flat=True)
 
 
+def get_recipients_from_email_query(serializer: SendAnnouncementSerializer):
+    """
+    Get email recipients list from announcement query with SendAnnouncementSerializer
+
+    :param serializer: SendAnnouncementSerializer expected
+    :return: list of recipient emails, excluding those that end with example.com
+    """
+    recipients = list()
+    id_type = serializer.data.get("id_type")
+    object_id = serializer.data.get("object_id")
+    if id_type == "ROUTE":
+        recipients.extend(get_users_where_student_route_id(object_id).values_list('email', flat=True))
+    elif id_type == "SCHOOL":
+        recipients.extend(get_users_where_student_school_id(object_id).values_list('email', flat=True))
+    elif id_type == "ALL":
+        recipients.extend(get_users_all().values_list('email', flat=True))
+    recipients = [recipient for recipient in recipients if not recipient.endswith('example.com')]
+    return recipients
+
+
 class SendAnnouncementAPI(generics.GenericAPIView):
     """
-    This API provides the ability to post announcements to the specified users
-
-    1. all parents with children attending a given school
-    2. all parents with children on a given route
-    3. all users of the system
+    Sends an email announcement to the specified group
     """
     serializer_class = SendAnnouncementSerializer
     permission_classes = [
@@ -64,28 +80,19 @@ class SendAnnouncementAPI(generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        recipients = list()
-        id_type = serializer.data.get("id_type")
-        object_id = serializer.data.get("object_id")
-        if id_type == "ROUTE":
-            recipients.extend(get_users_where_student_route_id(object_id).values_list('email', flat=True))
-        elif id_type == "SCHOOL":
-            recipients.extend(get_users_where_student_school_id(object_id).values_list('email', flat=True))
-        elif id_type == "ALL":
-            recipients.extend(get_users_all().values_list('email', flat=True))
-        recipients = recipients[0:1] if len(recipients) > 0 else list()
-        send_rich_format_email(template="generic.html", template_context={"body": serializer.data.get('body')},
+        recipients = get_recipients_from_email_query(serializer)
+        custom_context = request.data.get('context', None)
+        send_rich_format_email(template=serializer.data.get("template", "announcement_email.html"),
+                               template_context={"body": serializer.data.get('body'), "context": custom_context},
                                subject=serializer.data.get('subject'), to=[], bcc=recipients)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class SendRouteAnnouncementAPI(generics.GenericAPIView):
     """
-    This API provides the ability to post announcements to the specified users
+    Sends an email announcement to the specified group
 
-    1. all parents with children attending a given school
-    2. all parents with children on a given route
-    3. all users of the system
+    Email content will include information from the parent interface, tailored to each parent.
     """
     serializer_class = SendAnnouncementSerializer
     permission_classes = [
@@ -95,29 +102,16 @@ class SendRouteAnnouncementAPI(generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        recipients = list()
-        id_type = serializer.data.get("id_type")
-        object_id = serializer.data.get("object_id")
-        if id_type == "ROUTE":
-            recipients.extend(get_users_where_student_route_id(object_id).values_list('email', flat=True))
-        elif id_type == "SCHOOL":
-            recipients.extend(get_users_where_student_school_id(object_id).values_list('email', flat=True))
-        elif id_type == "ALL":
-            recipients.extend(get_users_all().values_list('email', flat=True))
-
-        # Filter out emails ending in example.com
-        recipients = [recipient for recipient in recipients if not recipient.endswith('example.com')]
-        # recipients = recipients[0:1] if len(recipients) > 0 else list()
-
+        recipients = get_recipients_from_email_query(serializer)
+        custom_context = request.data.get('context', None)
         for recipient in recipients:
             user = get_user_model().objects.get(email=recipient)
-            print(user.students)
             student_info = generate_student_info(user)
-            print(student_info)
-            send_rich_format_email(template="route.html", template_context={"body": serializer.data.get('body'),
-                                                                            "student_info": student_info},
-                                   subject=serializer.data.get('subject'), to=[], bcc=recipients)
-
+            send_rich_format_email(template=serializer.data.get("template", "route_announcement_email.html"),
+                                   template_context={"body": serializer.data.get('body'),
+                                                     "student_info": student_info,
+                                                     "context": custom_context},
+                                   subject=serializer.data.get('subject'), to=[recipient], bcc=[])
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
@@ -125,7 +119,27 @@ def generate_student_info(user):
     """
     Generates information as required by 5.1
     :param user: User object
-    :return:
+    :return: list of objects corresponding to the parent view of students and related informaion
+        [
+            {
+                "full_name": "",
+                "school": "",
+                "routes": {
+                    "route_name":"",
+                    "description":"",
+                },
+                "stops": [
+                    {
+                        "stop_name":"",
+                        "pickup_time":"",
+                        "dropoff_time":"",
+                        "location":"",
+                    },
+                    ...
+                ]
+            },
+            ...
+        ]
     """
     students = list()
     for student in user.students.all():
