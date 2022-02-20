@@ -13,7 +13,7 @@ from .models import InvitationCode
 class InviteAPI(generics.GenericAPIView):
     serializer_class = InviteSerializer
     permission_classes = [
-        permissions.AllowAny
+        IsAdmin,
     ]
 
     def post(self, request, *args, **kwargs):
