@@ -159,7 +159,7 @@ function GeneralAdminEmailPage(props) {
                 <h1>Send Email</h1>
             </div>
             <Form className="shadow-lg p-3 mb-5 bg-white rounded">
-                <Container className='d-flex justify-content-center flex-row align-items-baseline' style={{gap: "30px"}}>
+                <Container className='d-flex justify-content-center'>
                     <Form.Group className="mb-3" controlId="validationCustom01">
                         <ButtonGroup>
                         {emailTypes.map((radio, idx) => (
@@ -180,10 +180,12 @@ function GeneralAdminEmailPage(props) {
                         ))}
                         </ButtonGroup>
                     </Form.Group>
+                </Container>
 
+                <Container className='d-flex flex-row justify-content-center'>
                     <label>
                         <input type="checkbox" checked={thisIsRouteAnnouncement} onChange={handleThisIsRouteAnnouncement} />
-                        This is a Route Announcement
+                        <strong>{"  Include Route Announcement Information"}</strong>
                     </label>
                 </Container>
                 
