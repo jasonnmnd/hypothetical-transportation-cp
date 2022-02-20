@@ -12,6 +12,7 @@ import isAdmin from "../../../utils/user";
 import Header from "../../header/Header";
 import MapComponent from "../../maps/MapComponent";
 import { InfoWindow } from "@react-google-maps/api";
+import IconLegend from "../../common/IconLegend";
 
 function ParentStudentDetails(props){
     const param = useParams();
@@ -195,15 +196,15 @@ function ParentStudentDetails(props){
             </Card.Body>
         </Card>
 
-        <Card style={{height: "550px"}}>
+        <Card>
             <Card.Header as="h5">Map View of Stops</Card.Header>
             <Container className='d-flex flex-column justify-content-center' style={{marginTop: "20px"}}>
+                <IconLegend legendType='parentStudent'></IconLegend>
                 <Card.Body>
                     <MapComponent pinData={pinData} otherMapComponents={extraComponents} center={{lng: Number(props.student.guardian.longitude),lat: Number(props.student.guardian.latitude)}}></MapComponent>
                 </Card.Body>    
             </Container>
         </Card>
-
 
 
         <Card>
