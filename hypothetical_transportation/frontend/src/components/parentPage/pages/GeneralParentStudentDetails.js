@@ -193,7 +193,7 @@ function ParentStudentDetails(props){
         <Card>
             <Card.Header as="h5">In Range Stops</Card.Header>
             <Card.Body>
-                <GeneralAdminTableView title='In Range Stops' tableType='stop' values={props.stops} search="" action={doNothing}/>
+                <GeneralAdminTableView title='In Range Stops' tableType='stop' values={props.stops} search="" action={doNothing} totalCount={props.stopCount+1}/>
             </Card.Body>
         </Card>
 
@@ -213,7 +213,8 @@ const mapStateToProps = (state) => ({
     user: state.auth.user,
     token: state.auth.token,
     student: state.students.viewedStudent,
-    stops: state.students.inRangeStops,
+    stops: state.students.inRangeStops.results,
+    stopCount: state.students.inRangeStops.count,
 });
 
 export default connect(mapStateToProps, {getStudentInfo,getInRangeStop})(ParentStudentDetails)
