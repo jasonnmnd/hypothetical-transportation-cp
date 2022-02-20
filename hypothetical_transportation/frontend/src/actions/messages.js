@@ -8,6 +8,10 @@ export const createMessage = (msg) => {
   };
 };
 
+export const createMessageDispatch = (msg) => (dispatch) => {
+  dispatch(createMessage(msg))
+}
+
 // RETURN ERRORS
 export const returnErrors = (msg, status) => {
   return {
