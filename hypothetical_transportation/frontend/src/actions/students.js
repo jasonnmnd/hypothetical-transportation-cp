@@ -168,12 +168,28 @@ export const getStudent = (studentID) => (dispatch, getState) => {
         }).catch(err => console.log(err));
 }
 
-export const getInRangeStop = (studentID) =>(dispatch, getState) => {
-  axios.get(`/api/student/${studentID}/inrange_stops/`, tokenConfig(getState))
-        .then(res => {
+export const getInRangeStop = (studentID, parameters) =>(dispatch, getState) => {
+  // axios.get(`/api/student/${studentID}/inrange_stops/`, tokenConfig(getState))
+  //       .then(res => {
+  //         dispatch({
+  //           type: GET_IN_RANGE_STOP,
+  //           payload: res.data,
+  //         });
+  //       }).catch(err => console.log(err));
+
+
+
+        let config = tokenConfig(getState);
+        if(parameters){
+          config.params = getParameters(parameters);
+        }
+        axios
+        .get(`/api/student/${studentID}/inrange_stops/`, config)
+          .then((res) => {
           dispatch({
             type: GET_IN_RANGE_STOP,
             payload: res.data,
           });
-        }).catch(err => console.log(err));
+})
+          .catch((err) => dispatch(returnErrors(err.response.data, err.response.status)));
 }

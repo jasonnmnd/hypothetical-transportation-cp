@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ParentHeader from "../../header/ParentHeader";
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import axios from "axios";
@@ -18,11 +18,12 @@ function ParentStudentDetails(props){
     const student = props.student;
     const [pinData, setPinData] = useState([]);
     const [extraComponents, setExtraComponents] = useState(null);
+    let [searchParams, setSearchParams] = useSearchParams();
 
 
     useEffect(() => {
         props.getStudentInfo(param.id);
-        props.getInRangeStop(param.id);
+        // props.getInRangeStop(param.id);
     }, []);
 
     const doNothing = ()=>{
@@ -32,6 +33,21 @@ function ParentStudentDetails(props){
     useEffect(()=>{
         setPinData(getPinData());
     },[props.stops,student])
+
+
+  useEffect(() => {
+    if(searchParams.get(`pageNum`) != null){
+      let paramsToSend = Object.fromEntries([...searchParams]);
+      paramsToSend.student = param.id;
+      props.getInRangeStop(param.id, paramsToSend);
+    }
+    else{
+      setSearchParams({
+        [`pageNum`]: 1,
+      })
+    }
+  }, [searchParams]);
+
 
 
     const getPinData = () => {
@@ -193,7 +209,7 @@ function ParentStudentDetails(props){
         <Card>
             <Card.Header as="h5">In Range Stops</Card.Header>
             <Card.Body>
-                <GeneralAdminTableView title='In Range Stops' tableType='stop' values={props.stops} search="" action={doNothing} totalCount={props.stopCount+1}/>
+                <GeneralAdminTableView title='In Range Stops' tableType='stop' values={props.stops} search="" action={doNothing} totalCount={props.stopCount}/>
             </Card.Body>
         </Card>
 
