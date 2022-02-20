@@ -196,9 +196,9 @@ function GeneralAdminEmailPage(props) {
                         <strong>Welcome to the email interface.</strong>
                         </div>
                         <p>Within this interface, you can send emails to different groups of users.</p>
-                        <p>You can choose to send the email to all parents, parents whose children belong to a specific school, or parents whose children belong to a specific route within a specific school by using the toggle selection and dropdown menu</p>
+                        <p>You can choose to send the email to all parents, parents whose children belong to a specific school, or parents whose children belong to a specific route within a specific school by using the toggle selection and dropdown menu.</p>
                         <p>Normal general announcement will contain only the subject line and the email body you input.</p>
-                        <p>Route announcement will include an additional attachment that compiles all information a user will see on their parent interface into text form. Checkt the box to include route announcement information to achieve that.</p>
+                        <p>Route announcement will include an additional attachment that compiles all information a user will see on their parent interface into text form. Check the box to include route announcement information to achieve that.</p>
 
                     </div>
                     </Card.Body>
