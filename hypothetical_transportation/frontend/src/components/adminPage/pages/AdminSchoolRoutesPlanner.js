@@ -15,6 +15,7 @@ import { NO_ROUTE } from '../../../utils/utils';
 import { Container, ButtonGroup, ToggleButton, Card, Button, Form, Collapse } from 'react-bootstrap';
 import PageNavigateModal from '../components/modals/PageNavigateModal';
 import IconLegend from '../../common/IconLegend';
+import { createMessageDispatch } from '../../../actions/messages';
 
 
 function AdminSchoolRoutesPlanner(props) {
@@ -134,6 +135,7 @@ function AdminSchoolRoutesPlanner(props) {
         routes: routeVal
       }, student);
     });
+    // props.createMessageDispatch({ route: "Route Updated"})
     setOpenModal(true);
   }
 
@@ -302,7 +304,8 @@ AdminSchoolRoutesPlanner.propTypes = {
     getStudents: PropTypes.func.isRequired,
     resetViewedRoute: PropTypes.func.isRequired,
     patchStudent: PropTypes.func.isRequired,
-    resetPosted: PropTypes.func.isRequired
+    resetPosted: PropTypes.func.isRequired,
+    createMessageDispatch: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => ({
@@ -314,4 +317,4 @@ const mapStateToProps = (state) => ({
   postedRoute: state.routeplanner.postedRoute,
 });
 
-export default connect(mapStateToProps, {resetPosted, patchStudent, getRouteInfo, updateRoute, getSchool, createRoute, getRoutes, getStudents, resetViewedRoute})(AdminSchoolRoutesPlanner)
+export default connect(mapStateToProps, {createMessageDispatch, resetPosted, patchStudent, getRouteInfo, updateRoute, getSchool, createRoute, getRoutes, getStudents, resetViewedRoute})(AdminSchoolRoutesPlanner)

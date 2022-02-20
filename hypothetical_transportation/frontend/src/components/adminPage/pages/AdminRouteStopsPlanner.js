@@ -16,6 +16,7 @@ import ModifyStopTable from '../components/forms/ModifyStopTable';
 import Geocode from "react-geocode";
 import IconLegend from '../../common/IconLegend';
 import { isStudentWithinRange } from '../../../utils/geocode';
+import { createMessageDispatch } from '../../../actions/messages';
 
 
 function AdminRouteStopsPlanner(props) {
@@ -77,7 +78,7 @@ function AdminRouteStopsPlanner(props) {
     stopsToUpdate.forEach(stop => {
       props.updateStop(stop, stop.id)
     })
-
+    props.createMessageDispatch({ student: "Route Stops Updated"})
     navigate(`/admin/route/${param.route_id}`)
 
   }
@@ -232,6 +233,7 @@ AdminRouteStopsPlanner.propTypes = {
     createStop: PropTypes.func.isRequired,
     updateStop: PropTypes.func.isRequired,
     stops: PropTypes.array,
+    createMessageDispatch: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = (state) => ({
@@ -240,7 +242,8 @@ const mapStateToProps = (state) => ({
   currentRoute: state.routes.viewedRoute,
   school: state.schools.viewedSchool,
   studentsInSchool: state.students.students.results,
-  stops: state.stop.stops.results
+  stops: state.stop.stops.results,
+  
 });
 
 AdminRouteStopsPlanner.defaultProps = {
@@ -266,4 +269,4 @@ AdminRouteStopsPlanner.defaultProps = {
     ],
 }
 
-export default connect(mapStateToProps, {updateStop, getStopByRoute, getRouteInfo, getSchool, getStudents, deleteStop, createStop})(AdminRouteStopsPlanner)
+export default connect(mapStateToProps, {createMessageDispatch, updateStop, getStopByRoute, getRouteInfo, getSchool, getStudents, deleteStop, createStop})(AdminRouteStopsPlanner)

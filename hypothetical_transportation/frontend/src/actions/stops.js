@@ -55,7 +55,7 @@ axios
     axios
       .post('/api/stop/', stop, tokenConfig(getState))
       .then((res) => {
-        dispatch(createMessage({ student: 'Stop Created' }));
+        // dispatch(createMessage({ student: 'Stop Created' }));
       })
       .catch((err) => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
   };
@@ -64,7 +64,7 @@ axios
     axios
             .put(`/api/stop/${id}/`,stop, tokenConfig(getState))
             .then(res =>{
-              dispatch(createMessage({ student: 'Stop Updated' }));
+              // dispatch(createMessage({ student: 'Stop Updated' }));
                 
             }).catch(err => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});
   }
