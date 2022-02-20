@@ -49,4 +49,4 @@ boilerplate.zip
 hypothetical_transportation/frontend/static/frontend/main.js/main.js
 .DS_Store
 hypothetical_transportation/accounts/migrations/
-hypothetical_transportation/backend/migrations/
+# hypothetical_transportation/backend/migrations/
