@@ -67,7 +67,7 @@ function ParentPage(props) {
           }
           <Container>
               <div className="shadow-sm p-3 mb-5 bg-white rounded d-flex flex-row justify-content-center">
-                <h1>Welcome, <span>{props.user.full_name}</span></h1>
+                <h1>Welcome, {props.user.full_name}</h1>
               </div>
 
               <div className="shadow-lg p-3 mb-5 bg-white rounded">
