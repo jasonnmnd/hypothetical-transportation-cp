@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{{ body }}
+<h4>Your Students</h4>
+{% for student in student_info %}
+    <div>
+        <strong>Student:</strong> {{ student.full_name }}
+    </div>
+    <div>
+        <strong>School:</strong> {{ student.school }}
+    </div>
+    <div>
+        <strong>Route:</strong> {{ student.routes.route_name }} - {{ student.routes.description }}
+    </div>
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Pickup Time</th>
+            <th>Drop-off Time</th>
+            <th>Location</th>
+        </tr>
+        {% for stop in student.stops %}
+            <tr>
+                <th>{{ stop.stop_name }}</th>
+                <th>{{ stop.pickup_time }}</th>
+                <th>{{ stop.dropoff_time }}</th>
+                <th>{{ stop.location }}</th>
+            </tr>
+        {% endfor %}
+    </table>
+    <br>
+{% endfor %}
+{#{% for student in student_info %}#}
+{#{% endfor %}#}
+</body>
+</html>

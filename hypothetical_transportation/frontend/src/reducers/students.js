@@ -16,7 +16,9 @@
     routeName: "",
     schoolName: "",
   },
-  inRangeStops:[]
+  inRangeStops:{
+    count:0,
+    results:[]}
  };
 
  export default function (state = initialState, action) {

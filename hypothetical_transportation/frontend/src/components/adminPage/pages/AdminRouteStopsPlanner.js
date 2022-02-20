@@ -78,6 +78,8 @@ function AdminRouteStopsPlanner(props) {
       props.updateStop(stop, stop.id)
     })
 
+    navigate(`/admin/route/${param.route_id}`)
+
   }
 
   const addNewStop = () => {

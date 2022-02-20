@@ -11,10 +11,8 @@ import { Form, Button, Row, Col, Container, InputGroup, ButtonGroup, ToggleButto
 import { getItemCoord } from "../../../utils/geocode";
 import PageNavigateModal from "../components/modals/PageNavigateModal";
 import { resetPostedUser } from "../../../actions/users";
-//input1: title of form
-//input2: list of fields?
-//input3: a typed object matching the fields
-//input4: string action determining new or edit
+
+//Edit/New user form
 function GeneralEditUserForm(props) {
     const navigate = useNavigate();
     const param = useParams();
@@ -27,7 +25,7 @@ function GeneralEditUserForm(props) {
         full_name: "",
         address: "",
         email: "",
-        groups: [2],
+        groups: 2,
     });
     const [address, setAddress] = useState("");
 
@@ -52,7 +50,7 @@ function GeneralEditUserForm(props) {
                 full_name: "",
                 address: "",
                 email: "",
-                groups: [2],
+                groups: 2,
             })
             setAddress("")
             setCoord({lat: 36.0016944, lng: -78.9480547})

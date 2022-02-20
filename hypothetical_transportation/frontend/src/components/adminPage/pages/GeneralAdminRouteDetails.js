@@ -199,7 +199,7 @@ function GeneralAdminRouteDetails(props) {
             </Card.Body>
         </Card>
 
-        <Card style={{height: "550px"}}>
+        <Card>
             <Card.Header as="h5">Map View of School, Students, and Stops</Card.Header>
             <Container className='d-flex flex-column justify-content-center' style={{marginTop: "20px"}}>
                 <IconLegend legendType='routeDetails'></IconLegend>

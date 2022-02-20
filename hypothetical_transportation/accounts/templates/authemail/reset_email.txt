@@ -1,0 +1,2 @@
+Reset your password by clicking on this link:
+    http://localhost:8000/user/reset/{{ code }}

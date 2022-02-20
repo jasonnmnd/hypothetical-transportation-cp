@@ -206,15 +206,17 @@ class StudentViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['get'], permission_classes=[IsAdminOrReadOnly])
     def inrange_stops(self, request, pk=None):
+        # This action assumes that pagination is always enabled
         student = get_object_or_404(self.get_queryset(), pk=pk)
         if student.routes is None:
-            content = {'detail': 'This student does not yet have a route configured.'}
-            return Response(content, status=status.HTTP_400_BAD_REQUEST)
+            page = self.paginator.paginate_queryset([], request)
+            return self.paginator.get_paginated_response(StopSerializer(page, many=True).data)
         student_inrange_stops = [stop for stop in student.routes.stops.all() if
                                  get_straightline_distance(student.guardian.latitude, student.guardian.longitude,
                                                            stop.latitude,
                                                            stop.longitude) < 0.75 * LEN_OF_MILE]
-        return Response(StopSerializer(student_inrange_stops, many=True).data)
+        page = self.paginator.paginate_queryset(student_inrange_stops, request)
+        return self.paginator.get_paginated_response(StopSerializer(page, many=True).data)
 
     @action(detail=False, permission_classes=[permissions.AllowAny])
     def fields(self, request):

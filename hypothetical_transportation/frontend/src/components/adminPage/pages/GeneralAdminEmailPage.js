@@ -19,11 +19,16 @@ function GeneralAdminEmailPage(props) {
     const [currSchool, setCurrSchool] = useState("");
     const [currRoute, setCurrRoute] = useState("");
     const [emailSelection, setEmailSelection] = useState(1);
+    const [thisIsRouteAnnouncement, setThisIsRouteAnnouncement] = React.useState(false);
 
     const ROUTE_PREFIX = "rou";
     let [searchParams, setSearchParams] = useSearchParams();
     const allSearchParams = Object.fromEntries([...searchParams]);
     let routeSearchParams = filterObjectForKeySubstring(allSearchParams, ROUTE_PREFIX);
+
+    const handleThisIsRouteAnnouncement = () => {
+        setThisIsRouteAnnouncement(!thisIsRouteAnnouncement);
+      };
 
     const param = useParams();
 
@@ -72,7 +77,7 @@ function GeneralAdminEmailPage(props) {
         // }
 
         //Make bakend call here
-        console.log("Submit button pressed with school " + currSchool + " and route " + currRoute);
+        // console.log("Submit button pressed with school " + currSchool + " and route " + currRoute);
         
         const payload = {
             object_id: currSchool == "" ? currRoute : currSchool,
@@ -81,14 +86,27 @@ function GeneralAdminEmailPage(props) {
             body: body
         }
         
-        axios.post('/api/send-announcement', payload)
-          .then((res) => {
-            nagivate(`/admin`);
-            alert('Email Successfully Sent!');
-          })
-          .catch((err) => {
-            alert('Email was not sent. Please try again.')
-        });
+        if(thisIsRouteAnnouncement!==true){
+            // console.log("not route announcement")
+            axios.post('/api/communication/send-announcement', payload)
+            .then((res) => {
+                nagivate(`/admin`);
+                alert('Email Successfully Sent!');
+            })
+            .catch((err) => {
+                alert('Email was not sent. Please try again.')
+            });
+        }
+        else{
+            axios.post('/api/communication/send-route-announcement', payload)
+            .then((res) => {
+                nagivate(`/admin`);
+                alert('Email Successfully Sent!');
+            })
+            .catch((err) => {
+                alert('Email was not sent. Please try again.')
+            });
+        }
     }
 
     const emailTypes = [
@@ -175,6 +193,13 @@ function GeneralAdminEmailPage(props) {
                         ))}
                         </ButtonGroup>
                     </Form.Group>
+                </Container>
+
+                <Container className='d-flex flex-row justify-content-center'>
+                    <label>
+                        <input type="checkbox" checked={thisIsRouteAnnouncement} onChange={handleThisIsRouteAnnouncement} />
+                        <strong>{"  Include Route Announcement Information"}</strong>
+                    </label>
                 </Container>
                 
                 {emailSelection == 1 ? 

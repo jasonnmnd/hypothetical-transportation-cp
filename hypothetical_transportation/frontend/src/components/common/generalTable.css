@@ -42,3 +42,13 @@
   font-size: 15px;
   cursor: not-allowed;
 }
+
+.page-item.active .page-link {
+  background-color: #ffae07;
+  color: rgba(33, 37, 41, 255);
+  border-color: rgba(33, 37, 41, 255);
+}
+
+.page-link {
+  color: rgba(33, 37, 41, 255);
+}

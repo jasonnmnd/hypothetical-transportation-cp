@@ -109,3 +109,25 @@ h1 {
   border-color: #e7e7e7;
   color: black;
 }
+
+.btn-group > .btn-check:checked + .btn,
+.btn-group > .btn-check:focus + .btn,
+.btn-group > .btn:hover,
+.btn-group > .btn:focus,
+.btn-group > .btn:active,
+.btn-group > .btn.active,
+.btn-group-vertical > .btn-check:checked + .btn,
+.btn-group-vertical > .btn-check:focus + .btn,
+.btn-group-vertical > .btn:hover,
+.btn-group-vertical > .btn:focus,
+.btn-group-vertical > .btn:active,
+.btn-group-vertical > .btn.active {
+  background-color: rgba(33, 37, 41, 255);
+  border-color: rgba(33, 37, 41, 255);
+  color: #ffae07;
+}
+
+.btn-outline-success {
+  color: #ffae07;
+  border-color: rgba(33, 37, 41, 255);
+}
