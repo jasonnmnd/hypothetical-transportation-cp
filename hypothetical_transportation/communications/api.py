@@ -3,11 +3,37 @@ from rest_framework.response import Response
 from .serializers import SendAnnouncementSerializer
 
 from django.contrib.auth import get_user_model
+from django.core.mail.message import EmailMultiAlternatives
 from backend.models import School, Route
 from django.core import mail
+from django.conf import settings
 from django.shortcuts import get_object_or_404
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 
 from backend.geo_utils import get_straightline_distance, LEN_OF_MILE
+
+
+def send_rich_format_email(template: str, template_context: dict, subject: str, to: list, bcc: list):
+    """
+    Send email with HTML attachment
+    :param subject: subject of email
+    :param template: email template for content
+    :param template_context: context for template
+    :param to: email recipients
+    :param bcc: email recipients (BCC)
+    :return: None
+    """
+    html_message = render_to_string(template, template_context)
+    plain_message = strip_tags(html_message)
+    # mail.send_mail(subject, plain_message, from_email='abc', to=to, bcc=bcc)
+    email = EmailMultiAlternatives(subject, plain_message, settings.EMAIL_FROM, to=to, bcc=bcc)
+    email.attach_alternative(html_message, 'text/html')
+    email.send()
+
+
+# def get_parents_where_route_id(route_id: int):
+#     route = get_object_or_404(Route, pk=route_id)
 
 
 class SendAnnouncementAPI(generics.GenericAPIView):
