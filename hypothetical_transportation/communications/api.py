@@ -12,6 +12,7 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 
 from backend.geo_utils import get_straightline_distance, LEN_OF_MILE
+from backend.permissions import IsAdmin
 
 
 def send_rich_format_email(template: str, template_context: dict, subject: str, to: list, bcc: list):
@@ -74,7 +75,7 @@ class SendAnnouncementAPI(generics.GenericAPIView):
     """
     serializer_class = SendAnnouncementSerializer
     permission_classes = [
-        permissions.AllowAny
+        IsAdmin
     ]
 
     def post(self, request, *args, **kwargs):
@@ -100,7 +101,7 @@ class SendRouteAnnouncementAPI(generics.GenericAPIView):
     """
     serializer_class = SendAnnouncementSerializer
     permission_classes = [
-        permissions.AllowAny
+        IsAdmin
     ]
 
     def post(self, request, *args, **kwargs):

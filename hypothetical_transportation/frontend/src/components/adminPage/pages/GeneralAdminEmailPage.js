@@ -19,11 +19,16 @@ function GeneralAdminEmailPage(props) {
     const [currSchool, setCurrSchool] = useState("");
     const [currRoute, setCurrRoute] = useState("");
     const [emailSelection, setEmailSelection] = useState(1);
+    const [thisIsRouteAnnouncement, setThisIsRouteAnnouncement] = React.useState(false);
 
     const ROUTE_PREFIX = "rou";
     let [searchParams, setSearchParams] = useSearchParams();
     const allSearchParams = Object.fromEntries([...searchParams]);
     let routeSearchParams = filterObjectForKeySubstring(allSearchParams, ROUTE_PREFIX);
+
+    const handleThisIsRouteAnnouncement = () => {
+        setValue(!value);
+      };
 
     const param = useParams();
 
@@ -154,7 +159,7 @@ function GeneralAdminEmailPage(props) {
                 <h1>Send Email</h1>
             </div>
             <Form className="shadow-lg p-3 mb-5 bg-white rounded">
-                <Container className='d-flex justify-content-center'>
+                <Container className='d-flex justify-content-center flex-row align-items-baseline' style={{gap: "30px"}}>
                     <Form.Group className="mb-3" controlId="validationCustom01">
                         <ButtonGroup>
                         {emailTypes.map((radio, idx) => (
@@ -175,6 +180,11 @@ function GeneralAdminEmailPage(props) {
                         ))}
                         </ButtonGroup>
                     </Form.Group>
+
+                    <label>
+                        <input type="radio" checked={thisIsRouteAnnouncement} onChange={handleThisIsRouteAnnouncement} />
+                        This is a Route Announcement
+                    </label>
                 </Container>
                 
                 {emailSelection == 1 ? 

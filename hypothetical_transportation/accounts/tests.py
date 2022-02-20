@@ -3,6 +3,7 @@ from django.test import TestCase
 from django.test import RequestFactory, TestCase
 from django.test import Client
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
 from .serializers import UserSerializer
 
 
@@ -10,9 +11,11 @@ from .serializers import UserSerializer
 
 class AuthenticationActions(TestCase):
     def setUp(self):
+        admin_group = Group.objects.create(name='Administrator')
         self.newuser = get_user_model().objects.create_verified_user(email='az@gmail.com', password='bassword',
                                                                      full_name='Aziraphale', address='', latitude=0,
                                                                      longitude=0)
+        self.newuser.groups.add(admin_group)
         self.factory = RequestFactory()
         self.client = Client()
         response = self.client.post('/api/auth/login',
