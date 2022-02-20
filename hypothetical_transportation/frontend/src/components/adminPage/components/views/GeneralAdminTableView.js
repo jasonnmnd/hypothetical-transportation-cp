@@ -64,6 +64,14 @@ function GeneralAdminTableView( props ) {
             color: "🟥    "//❤️
         }
     ]
+
+    if(props.totalCount == 0){
+        return (
+            <div className="d-flex justify-content-space-between flex-column" style={{gap: "10px"}}>
+                <h1>NO RESULTS</h1>
+            </div>
+        )
+    }
   
     
 
