@@ -6,11 +6,16 @@ import { useSearchParams } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import './forms.css';
 
+const NAME = "name"
 
 function ModifyStopTable(props) {
 
     
+    const [inputFieldStop, setInputFieldStop] = useState(null);
+
     const [inputField, setInputField] = useState(null);
+    
+    const [inputFieldValue, setInputFieldValue] = useState(null);
 
     const handleDragEnd = (e) => {
         if (!e.destination) return;
@@ -22,18 +27,27 @@ function ModifyStopTable(props) {
     };
 
     const setInputOnClick = (stop) => {
-        setInputField(stop.id);
+        setInputFieldStop(stop);
+        setInputField(NAME);
+        setInputFieldValue(stop.name);
     }
 
-    const onNameInputChange = (e) => {
+    const onInputChange = (e) => {
+        setInputFieldValue(e.target.value)
+    }
+
+    const changeNameOfStop = (stopToChange, newName) => {
         let tempData = Array.from(props.stops);
-        let changingElementIndex = tempData.findIndex(stop => stop.id == e.target.id);
-        tempData[changingElementIndex].name = e.target.value
+        let changingElementIndex = tempData.findIndex(stop => stop.id == stopToChange.id);
+        tempData[changingElementIndex].name = newName
         props.setStopsWithProperInds(tempData);
     }
 
     const handleKeyDown = (e) => {
         if (e.key === 'Enter') {
+            changeNameOfStop(inputFieldStop, inputFieldValue);
+          setInputFieldStop(null);
+          setInputFieldValue(null);
           setInputField(null);
         }
     }
@@ -42,8 +56,8 @@ function ModifyStopTable(props) {
         return <input 
                     type="text"
                     name="stopName"
-                    onChange={onNameInputChange}
-                    value={stop.name}
+                    onChange={onInputChange}
+                    value={inputFieldValue}
                     id={stop.id}
                     onKeyDown={handleKeyDown}
         ></input>
@@ -62,7 +76,7 @@ function ModifyStopTable(props) {
                     <td {...provider.dragHandleProps}> = </td>
                     <td>{stop.stop_number}</td>
                     <td onClick={() => setInputOnClick(stop)}>
-                        {inputField == stop.id ? getInputComponent(stop) : stop.name}
+                        {inputFieldStop?.id == stop.id ? getInputComponent(stop) : stop.name}
                     </td>
                     <td>{stop.location}</td>
                 </tr>
