@@ -5,7 +5,7 @@ import { tokenConfig } from './auth';
 
 import { createMessage, returnErrors } from './messages';
 
-import { ADD_STUDENT, GET_STUDENT, CREATE_MESSAGE, GET_STUDENTS, DELETE_STUDENT, POPULATE_TABLE, DELETE_ITEM, UPDATE_STUDENT } from './types';
+import {GET_IN_RANGE_STOP, ADD_STUDENT, GET_STUDENT, CREATE_MESSAGE, GET_STUDENTS, DELETE_STUDENT, POPULATE_TABLE, DELETE_ITEM, UPDATE_STUDENT } from './types';
 import { getOffsetString, getQueryStringsFormatted, getParameters } from './utils';
 
 
@@ -93,6 +93,26 @@ export const updateStudent = (student, id) => (dispatch, getState) => {
           }).catch(err => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});
 }
 
+export const patchStudent = (student, id) => (dispatch, getState) => {
+  
+  
+  axios
+          .patch(`/api/student/${id}/`,student, tokenConfig(getState))
+          .then(res =>{
+            // dispatch(createMessage({ student: 'Student Updated' }));
+            dispatch({
+              type: DELETE_STUDENT,
+              payload: parseInt(id)
+            })
+            //console.log(res.data);
+            dispatch({
+              type: ADD_STUDENT,
+              payload: res.data
+            })
+              
+          }).catch(err => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});
+}
+
 
 export const searchStudents = (filter, value, sort, pageNum = -1) => (dispatch, getState) => {
   const url = `/api/student/?ordering=${sort}&search=${value}&search_fields=${filter}&${getOffsetString(pageNum)}`
@@ -143,6 +163,16 @@ export const getStudent = (studentID) => (dispatch, getState) => {
         .then(res => {
           dispatch({
             type: GET_STUDENT,
+            payload: res.data,
+          });
+        }).catch(err => console.log(err));
+}
+
+export const getInRangeStop = (studentID) =>(dispatch, getState) => {
+  axios.get(`/api/student/${studentID}/inrange_stops/`, tokenConfig(getState))
+        .then(res => {
+          dispatch({
+            type: GET_IN_RANGE_STOP,
             payload: res.data,
           });
         }).catch(err => console.log(err));

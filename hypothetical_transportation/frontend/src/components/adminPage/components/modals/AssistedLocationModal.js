@@ -53,7 +53,7 @@ function AssistedLocationModal(props) {
             <div className='title>'></div>
                 <h1>Are you sure your address is correct?</h1>
 
-                <LoadScript googleMapsApiKey='AIzaSyA6nIh9bWUWFOD_y7hEZ7UQh_KmPn5Sq58'>
+                
                     <GoogleMap
                     mapContainerStyle={mapStyles}
                     zoom={13}
@@ -62,7 +62,6 @@ function AssistedLocationModal(props) {
                     <Marker key={"Your Location"} position={userLocation}></Marker> 
                     
                     </GoogleMap>
-                </LoadScript>
 
             <div className='footer'></div>
                 <button onClick={

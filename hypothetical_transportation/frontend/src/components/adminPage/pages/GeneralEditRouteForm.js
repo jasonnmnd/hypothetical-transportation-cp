@@ -1,8 +1,9 @@
 import React from 'react';
 import Header from '../../header/Header';
-import { Container, Form, Button } from 'react-bootstrap';
+import { Container, Form, Button, Alert } from 'react-bootstrap';
 import { useState } from 'react';
-import "../NEWadminPage.css"
+import { Link } from 'react-router-dom';
+import "../NEWadminPage.css";
 
 function GeneralEditRouteForm() {
 
@@ -18,30 +19,19 @@ function GeneralEditRouteForm() {
       <div>
           <Header></Header>
           <Container className="container-main">
-            <Form className="shadow-lg p-3 mb-5 bg-white rounded">
-                <Form.Group className="mb-3" controlId="validationCustom01">
-                    <Form.Label as="h5">Name of Route</Form.Label>
-                    <Form.Control 
-                    required type="text"
-                    placeholder="Enter Route Name..." 
-                    value={obj.name}
-                    onChange={(e)=>{
-                        setObj({...obj, ["name"]: e.target.value})
-                    }}
-                    />
-                </Form.Group>
-
-                <Form.Group className="mb-3" controlId="formGridAddress1">
-                    <Form.Label as="h5">Route Description</Form.Label>
-                    <Form.Control 
-                    as="textarea"
-                    required type="text"
-                    style={{ height: '100px' }}
-                    placeholder="Enter Route Description..." 
-                    value={obj.description}
-                    onChange={(e)=>{setObj({...obj, ["description"]: e.target.value})}}                    />
-                </Form.Group>
-            </Form>
+          <Alert variant="success">
+            <Alert.Heading>Make a New Route</Alert.Heading>
+            <p>
+                To make a new route, first choose a school and plan a route for that school. You will be able to make 
+                new routes, edit existing routes, and assign students within each route to a stop.
+            </p>
+            <hr />
+            <Link to={`/admin/schools?pageNum=1`}>
+                <Button variant='yellow'>
+                    View Schools
+                </Button>
+            </Link>
+            </Alert>
           </Container>
 
       </div>

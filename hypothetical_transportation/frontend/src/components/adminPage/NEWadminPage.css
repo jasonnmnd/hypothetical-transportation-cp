@@ -8,7 +8,7 @@
 
 .btn-yellow {
   display: inline-block;
-  padding: 10px 15px;
+  padding: 8px 6px;
   border-radius: 8px;
   background-color: #ffae07;
   background-size: 200%;
@@ -17,6 +17,7 @@
   color: #fff;
   font-weight: 700;
   cursor: pointer;
+  width: 300px;
 }
 
 .btn-yellow:hover {
@@ -52,7 +53,7 @@
   color: #fff;
   font-weight: 700;
   cursor: pointer;
-  width: 300px;
+  width: 350px;
 }
 
 .btn-yellowLong:hover {
@@ -61,15 +62,16 @@
 
 .btn-yellowToggle {
   display: inline-block;
-  border-radius: 8px;
+  border-radius: 4px;
   background-color: #ffae07;
   background-position: 0%;
   transition: 0.4s;
   color: #fff;
-  font-weight: 700;
+  font-weight: 600;
   cursor: pointer;
-  width: 150px;
-  height: 35px;
+  width: 140px;
+  height: 30px;
+  font-size: 12px;
 }
 
 .btn-yellowToggle:hover {
@@ -79,4 +81,53 @@
 h1 {
   color: #333333;
   font-family: Impact, Charcoal, sans-serif;
+}
+
+.reverseArrow {
+  transform: rotate(180deg);
+}
+
+.btn-instrucToggle {
+  display: inline-block;
+  border-radius: 4px;
+  background-color: #ffae07;
+  background-position: 0%;
+  transition: 0.4s;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  width: 200px;
+  height: 30px;
+  font-size: 12px;
+}
+
+.btn-instrucToggle:hover {
+  background-color: #ffdd99;
+}
+
+.default {
+  border-color: #e7e7e7;
+  color: black;
+}
+
+.btn-group > .btn-check:checked + .btn,
+.btn-group > .btn-check:focus + .btn,
+.btn-group > .btn:hover,
+.btn-group > .btn:focus,
+.btn-group > .btn:active,
+.btn-group > .btn.active,
+.btn-group-vertical > .btn-check:checked + .btn,
+.btn-group-vertical > .btn-check:focus + .btn,
+.btn-group-vertical > .btn:hover,
+.btn-group-vertical > .btn:focus,
+.btn-group-vertical > .btn:active,
+.btn-group-vertical > .btn.active {
+  background-color: rgba(33, 37, 41, 255);
+  border-color: rgba(33, 37, 41, 255);
+  color: #ffae07;
+}
+
+.btn-outline-success {
+  color: #ffae07;
+  border-color: rgba(33, 37, 41, 255);
 }

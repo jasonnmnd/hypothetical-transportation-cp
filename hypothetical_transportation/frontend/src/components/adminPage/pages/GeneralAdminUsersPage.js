@@ -37,7 +37,7 @@ function GeneralAdminUsersPage(props) {
             <h1>List of Users</h1>
           </div>
           <div className="shadow-lg p-3 mb-5 bg-white rounded">
-            <GeneralAdminTableView values={props.users} tableType={tableType} search="" title={title} />
+            <GeneralAdminTableView values={props.users} tableType={tableType} search="" title={title} totalCount={props.userCount}/>
           </div>
         </Container>
     </div>
@@ -51,6 +51,7 @@ GeneralAdminUsersPage.propTypes = {
 const mapStateToProps = (state) => ({
   user: state.auth.user,
   users: state.users.users.results,
+  userCount: state.users.users.count
 });
 
 export default connect(mapStateToProps, {getUsers} )(GeneralAdminUsersPage)

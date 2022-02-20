@@ -1,13 +1,14 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import image from "../../../public/schoolbusBackground.jpg";
 import { connect } from 'react-redux';
 import PlainHeader from "../header/PlainHeader";
-
 import { Button, Form, Col, Row, Container} from 'react-bootstrap';
 import "./login.css";
+import axios from "axios";
 
 function ForgotPasswordForm( props ) {
+    const navigate = useNavigate();
     const [details, setDetails] = useState({ email: ""});
     const [validated, setValidated] = useState(false);
   
@@ -25,6 +26,15 @@ function ForgotPasswordForm( props ) {
         setValidated(true);
         //backend send email to submitted value
         //if email is not associated with the user do something else?
+        console.log(details);
+        axios.post('/api/auth/password/reset', details)
+          .then((res) => {
+            navigate(`/`);
+            alert('Password reset submitted. Check your email for more instructions!');
+          })
+          .catch((err) => {
+            console.log(err)
+          });
     };
   
     

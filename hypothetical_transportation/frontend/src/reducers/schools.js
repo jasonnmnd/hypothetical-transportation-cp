@@ -8,6 +8,8 @@ const initialState = {
         id: null,
         name: "",
         address: "",
+        bus_arrival_time:"00:00:00",
+        bus_departure_time:"00:00:00"
   }
 };
 
