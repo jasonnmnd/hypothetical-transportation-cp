@@ -16,6 +16,7 @@ COPY entrypoint/ .
 
 # install requirements
 RUN pip install -r requirements.txt
+RUN pip freeze
 
 # move entire current directory into new dir
 COPY ./hypothetical_transportation /code/
