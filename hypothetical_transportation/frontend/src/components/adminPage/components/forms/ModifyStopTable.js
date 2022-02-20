@@ -5,12 +5,24 @@ import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { useSearchParams } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import './forms.css';
+import Geocode from "react-geocode";
+import { createMessageDispatch } from '../../../../actions/messages';
 
+const NAME = "name";
+const LOCATION = "location";
 
 function ModifyStopTable(props) {
-
+    Geocode.setApiKey("AIzaSyA6nIh9bWUWFOD_y7hEZ7UQh_KmPn5Sq58");
+    Geocode.setLanguage("en");
+    Geocode.setRegion("us");
+    Geocode.setLocationType("ROOFTOP");
+    Geocode.enableDebug();
     
+    const [inputFieldStop, setInputFieldStop] = useState(null);
+
     const [inputField, setInputField] = useState(null);
+    
+    const [inputFieldValue, setInputFieldValue] = useState(null);
 
     const handleDragEnd = (e) => {
         if (!e.destination) return;
@@ -21,33 +33,88 @@ function ModifyStopTable(props) {
         props.setStops(tempData);
     };
 
-    const setInputOnClick = (stop) => {
-        setInputField(stop.id);
+    const setInput = (stop, field, value) => {
+        setInputFieldStop(stop);
+        setInputField(field);
+        setInputFieldValue(value);
     }
 
-    const onNameInputChange = (e) => {
+    const onInputChange = (e) => {
+        setInputFieldValue(e.target.value)
+    }
+
+    const changeNameOfStop = (stopToChange, newName) => {
         let tempData = Array.from(props.stops);
-        let changingElementIndex = tempData.findIndex(stop => stop.id == e.target.id);
-        tempData[changingElementIndex].name = e.target.value
+        let changingElement = tempData.find(stop => stop.id == stopToChange.id);
+        changingElement.name = newName
         props.setStopsWithProperInds(tempData);
     }
 
-    const handleKeyDown = (e) => {
+    const changeLocationOfStop = (stopToChange, newLocation, newLat, newLng) => {
+        let tempData = Array.from(props.stops);
+        let changingElement = tempData.find(stop => stop.id == stopToChange.id);
+        changingElement.location = newLocation;
+        changingElement.latitude = newLat;
+        changingElement.longitude = newLng;
+        props.setStopsWithProperInds(tempData);
+    }
+
+    const handleKeyDownName = (e) => {
         if (e.key === 'Enter') {
-          setInputField(null);
+            changeNameOfStop(inputFieldStop, inputFieldValue);
+          setInput(null, null, null);
         }
     }
 
-    const getInputComponent = (stop) => {
-        return <input 
-                    type="text"
-                    name="stopName"
-                    onChange={onNameInputChange}
-                    value={stop.name}
-                    id={stop.id}
-                    onKeyDown={handleKeyDown}
-        ></input>
+    const handleKeyDownLocation = (e) => {
+        if (e.key === 'Enter') {
+            Geocode.fromAddress(inputFieldValue).then(
+                (response) => {
+                    const { lat, lng } = response.results[0].geometry.location;
+                    changeLocationOfStop(inputFieldStop, inputFieldValue, lat, lng);
+                    setInput(null, null, null);
+                },
+                (error) => {
+                    props.createMessageDispatch({ student: 'Please enter a valid location' });
+            });
+          
+        }
     }
+
+    const getNameInputComponent = (stop) => {
+        if(inputFieldStop?.id == stop.id && inputField == NAME){
+            return <td>
+                        <input 
+                            className='inputFieldInTable'
+                            type="text"
+                            name="stopEdit"
+                            onChange={onInputChange}
+                            value={inputFieldValue}
+                            id={stop.id}
+                            onKeyDown={handleKeyDownName}
+                         />
+                    </td>
+        }
+        return <td onClick={() => setInput(stop, NAME, stop.name)}>{`✏️ ${stop.name}`}</td>
+    }
+
+    const getLocationInputComponent = (stop) => {
+        if(inputFieldStop?.id == stop.id && inputField == LOCATION){
+            return <td>
+                        <input 
+                            className='inputFieldInTable'
+                            type="text"
+                            name="stopEdit"
+                            onChange={onInputChange}
+                            value={inputFieldValue}
+                            id={stop.id}
+                            onKeyDown={handleKeyDownLocation}
+                         />
+                    </td>
+        }
+        return <td onClick={() => setInput(stop, LOCATION, stop.location)}>{`✏️ ${stop.location}`}</td>
+    }
+
     const getStopsInMapTableBody = () => {
         let tempData = Array.from(props.stops);
         tempData.sort((a, b) => a.stop_num - b.stop_num);
@@ -61,10 +128,8 @@ function ModifyStopTable(props) {
                 <tr {...provider.draggableProps} ref={provider.innerRef} >
                     <td {...provider.dragHandleProps}> = </td>
                     <td>{stop.stop_number}</td>
-                    <td onClick={() => setInputOnClick(stop)}>
-                        {inputField == stop.id ? getInputComponent(stop) : stop.name}
-                    </td>
-                    <td>{stop.location}</td>
+                    {getNameInputComponent(stop, NAME)}
+                    {getLocationInputComponent(stop, LOCATION)}
                 </tr>
                 )}
             </Draggable>
@@ -147,7 +212,8 @@ ModifyStopTable.propTypes = {
     setStops: PropTypes.func,
     deletedStops: PropTypes.array,
     readdStop: PropTypes.func, 
-    setStopsWithProperInds: PropTypes.func
+    setStopsWithProperInds: PropTypes.func,
+    createMessageDispatch: PropTypes.func.isRequired
 }
 
 ModifyStopTable.defaultProps = {
@@ -158,4 +224,4 @@ const mapStateToProps = (state) => ({
  
 });
 
-export default connect(mapStateToProps)(ModifyStopTable);
+export default connect(mapStateToProps, {createMessageDispatch})(ModifyStopTable);
