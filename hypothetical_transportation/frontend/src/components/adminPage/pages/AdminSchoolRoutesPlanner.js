@@ -232,7 +232,6 @@ function AdminSchoolRoutesPlanner(props) {
                 id={`radio-${idx}`}
                 type="radio"
                 variant={'outline-success'}
-                // style={{backgroundColor: "#212529", borderColor:"#212529"}}
                 name="radio"
                 value={radio.value}
                 checked={routeSelect == radio.value}
