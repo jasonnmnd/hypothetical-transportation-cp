@@ -27,7 +27,7 @@ function GeneralEditUserForm(props) {
         full_name: "",
         address: "",
         email: "",
-        groups: [2],
+        groups: 2,
     });
     const [address, setAddress] = useState("");
 
@@ -52,7 +52,7 @@ function GeneralEditUserForm(props) {
                 full_name: "",
                 address: "",
                 email: "",
-                groups: [2],
+                groups: 2,
             })
             setAddress("")
             setCoord({lat: 36.0016944, lng: -78.9480547})

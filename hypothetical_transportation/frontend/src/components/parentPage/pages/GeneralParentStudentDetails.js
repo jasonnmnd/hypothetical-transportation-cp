@@ -53,7 +53,7 @@ function ParentStudentDetails(props){
     const getPinData = () => {
         let pinData = getStopPinData();
         addStudentPin(pinData, onStudentClick)
-        console.log(pinData);
+        // console.log(pinData);
         return pinData;
     }
     const getStudentPin = (s) => {

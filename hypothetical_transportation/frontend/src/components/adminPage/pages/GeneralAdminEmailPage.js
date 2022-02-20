@@ -27,7 +27,7 @@ function GeneralAdminEmailPage(props) {
     let routeSearchParams = filterObjectForKeySubstring(allSearchParams, ROUTE_PREFIX);
 
     const handleThisIsRouteAnnouncement = () => {
-        setValue(!value);
+        setThisIsRouteAnnouncement(!thisIsRouteAnnouncement);
       };
 
     const param = useParams();
@@ -77,7 +77,7 @@ function GeneralAdminEmailPage(props) {
         // }
 
         //Make bakend call here
-        console.log("Submit button pressed with school " + currSchool + " and route " + currRoute);
+        // console.log("Submit button pressed with school " + currSchool + " and route " + currRoute);
         
         const payload = {
             object_id: currSchool == "" ? currRoute : currSchool,
@@ -86,14 +86,27 @@ function GeneralAdminEmailPage(props) {
             body: body
         }
         
-        axios.post('/api/send-announcement', payload)
-          .then((res) => {
-            nagivate(`/admin`);
-            alert('Email Successfully Sent!');
-          })
-          .catch((err) => {
-            alert('Email was not sent. Please try again.')
-        });
+        if(thisIsRouteAnnouncement!==true){
+            // console.log("not route announcement")
+            axios.post('/api/communication/send-announcement', payload)
+            .then((res) => {
+                nagivate(`/admin`);
+                alert('Email Successfully Sent!');
+            })
+            .catch((err) => {
+                alert('Email was not sent. Please try again.')
+            });
+        }
+        else{
+            axios.post('/api/communication/send-route-announcement', payload)
+            .then((res) => {
+                nagivate(`/admin`);
+                alert('Email Successfully Sent!');
+            })
+            .catch((err) => {
+                alert('Email was not sent. Please try again.')
+            });
+        }
     }
 
     const emailTypes = [
@@ -159,7 +172,7 @@ function GeneralAdminEmailPage(props) {
                 <h1>Send Email</h1>
             </div>
             <Form className="shadow-lg p-3 mb-5 bg-white rounded">
-                <Container className='d-flex justify-content-center flex-row align-items-baseline' style={{gap: "30px"}}>
+                <Container className='d-flex justify-content-center'>
                     <Form.Group className="mb-3" controlId="validationCustom01">
                         <ButtonGroup>
                         {emailTypes.map((radio, idx) => (
@@ -180,10 +193,12 @@ function GeneralAdminEmailPage(props) {
                         ))}
                         </ButtonGroup>
                     </Form.Group>
+                </Container>
 
+                <Container className='d-flex flex-row justify-content-center'>
                     <label>
-                        <input type="radio" checked={thisIsRouteAnnouncement} onChange={handleThisIsRouteAnnouncement} />
-                        This is a Route Announcement
+                        <input type="checkbox" checked={thisIsRouteAnnouncement} onChange={handleThisIsRouteAnnouncement} />
+                        <strong>{"  Include Route Announcement Information"}</strong>
                     </label>
                 </Container>
                 
