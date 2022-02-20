@@ -39,7 +39,7 @@ function AdminRoutesPage(props) {
             <h1>List of Routes</h1>
           </div>
           <div className="shadow-lg p-3 mb-5 bg-white rounded">
-            <GeneralAdminTableView values={props.routes} tableType={tableType} search="" title={title} />
+            <GeneralAdminTableView values={props.routes} tableType={tableType} search="" title={title} totalCount={props.routeCount} />
           </div>
         </Container>
     </div>
@@ -51,7 +51,8 @@ AdminRoutesPage.propTypes = {
 
 const mapStateToProps = (state) => ({
   user: state.auth.user,
-  routes: state.routes.routes.results
+  routes: state.routes.routes.results,
+  routeCount: state.routes.routes.count
 });
 
 export default connect(mapStateToProps, {getRoutes})(AdminRoutesPage)

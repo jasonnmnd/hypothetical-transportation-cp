@@ -7,22 +7,28 @@ import { getSchools } from '../../../actions/schools';
 import { getRoutes } from '../../../actions/routes';
 import PropTypes from 'prop-types';
 import { filterObjectForKeySubstring } from '../../../utils/utils';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import axios from 'axios';
 
 
 
 function GeneralAdminEmailPage(props) {
-
+    const nagivate = useNavigate();
     const [subject, setSubject] = useState("");
     const [body, setBody] = useState("");
     const [currSchool, setCurrSchool] = useState("");
     const [currRoute, setCurrRoute] = useState("");
     const [emailSelection, setEmailSelection] = useState(1);
+    const [thisIsRouteAnnouncement, setThisIsRouteAnnouncement] = React.useState(false);
 
     const ROUTE_PREFIX = "rou";
     let [searchParams, setSearchParams] = useSearchParams();
     const allSearchParams = Object.fromEntries([...searchParams]);
     let routeSearchParams = filterObjectForKeySubstring(allSearchParams, ROUTE_PREFIX);
+
+    const handleThisIsRouteAnnouncement = () => {
+        setThisIsRouteAnnouncement(!thisIsRouteAnnouncement);
+      };
 
     const param = useParams();
 
@@ -47,20 +53,60 @@ function GeneralAdminEmailPage(props) {
         setCurrRoute(e.target.value);
     }
 
+    const getIdType = (buttonVal) => {
+        if (buttonVal == 1) {
+            return "ALL"
+        } else if (buttonVal == 2) {
+            return "SCHOOL"
+        } else if (buttonVal == 3) {
+            return "ROUTE"
+        }
+    }
+
     const submit = (e) => {
         e.preventDefault();
-        if(!props.schoollist.some(v => ((''+v.id) === currSchool))){
-            alert("Something is wrong with the school you entered. The selection has been cleared; please select from the dropdown list instead.")
-            setCurrSchool("")
-            setCurrRoute("")
-        }
-        if(!props.routes.some(v => ((''+v.id) === currRoute))){
-            alert("Something is wrong with the route you entered. The selection has been cleared; please select from the dropdown list instead.")
-            setCurrSchool("")
-            setCurrRoute("")
-        }
+        // if(!props.schoollist.some(v => ((''+v.id) === currSchool))){
+        //     alert("Something is wrong with the school you entered. The selection has been cleared; please select from the dropdown list instead.")
+        //     setCurrSchool("")
+        //     setCurrRoute("")
+        // }
+        // if(!props.routes.some(v => ((''+v.id) === currRoute))){
+        //     alert("Something is wrong with the route you entered. The selection has been cleared; please select from the dropdown list instead.")
+        //     setCurrSchool("")
+        //     setCurrRoute("")
+        // }
 
-        console.log("Submit button pressed with school " + currSchool + " and route " + currRoute);
+        //Make bakend call here
+        // console.log("Submit button pressed with school " + currSchool + " and route " + currRoute);
+        
+        const payload = {
+            object_id: currSchool == "" ? currRoute : currSchool,
+            id_type: getIdType(emailSelection),
+            subject: subject,
+            body: body
+        }
+        
+        if(thisIsRouteAnnouncement!==true){
+            // console.log("not route announcement")
+            axios.post('/api/communication/send-announcement', payload)
+            .then((res) => {
+                nagivate(`/admin`);
+                alert('Email Successfully Sent!');
+            })
+            .catch((err) => {
+                alert('Email was not sent. Please try again.')
+            });
+        }
+        else{
+            axios.post('/api/communication/send-route-announcement', payload)
+            .then((res) => {
+                nagivate(`/admin`);
+                alert('Email Successfully Sent!');
+            })
+            .catch((err) => {
+                alert('Email was not sent. Please try again.')
+            });
+        }
     }
 
     const emailTypes = [
@@ -147,6 +193,13 @@ function GeneralAdminEmailPage(props) {
                         ))}
                         </ButtonGroup>
                     </Form.Group>
+                </Container>
+
+                <Container className='d-flex flex-row justify-content-center'>
+                    <label>
+                        <input type="checkbox" checked={thisIsRouteAnnouncement} onChange={handleThisIsRouteAnnouncement} />
+                        <strong>{"  Include Route Announcement Information"}</strong>
+                    </label>
                 </Container>
                 
                 {emailSelection == 1 ? 

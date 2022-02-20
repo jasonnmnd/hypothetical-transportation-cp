@@ -14,6 +14,10 @@ function GeneralAdminTableView( props ) {
 
     const nav = useNavigate();
 
+    const handleExtraColumnClick = (d)=>{
+        nav(`/admin/school/${d.id}`);
+    }
+
     const handleViewClick = (d) => {
         //route to /props.title?somethingid=id => props.title determins routing to student, route, school, user
         //console.log(d)
@@ -31,6 +35,10 @@ function GeneralAdminTableView( props ) {
 
         else if (props.tableType == 'route') {
             nav(`/admin/route/${d.id}`);
+        }
+
+        else if (props.tableType == 'stop') {
+            nav(`/admin/stop/${d.id}`);
         }
     };
 
@@ -56,17 +64,25 @@ function GeneralAdminTableView( props ) {
             color: "🟥    "//❤️
         }
     ]
+
+    if(props.totalCount == 0){
+        return (
+            <div className="d-flex justify-content-space-between flex-column" style={{gap: "10px"}}>
+                <h1>NO RESULTS</h1>
+            </div>
+        )
+    }
   
     
 
     return (
         <div className="d-flex justify-content-space-between flex-column" style={{gap: "10px"}}>
-            <Button onClick={toggleSort} variant="yellowToggle">Search Options</Button>
+            <Button onClick={toggleSort} variant="yellowToggle">Search Options {showSort ? "▲" : "▼"}</Button>
             {showSort ? (props.search != null && props.search != undefined ? <SearchBar buttons={getFilterOptions(props.tableType)} sortBy={getSortOptions(props.tableType)} search={props.search}></SearchBar> : null) : <></>}
             {props.tableType == 'student' ? <GeneralLegend legend={studentLegend}></GeneralLegend> : <></>}
             {props.tableType == 'route' ? <GeneralLegend legend={routeLegend}></GeneralLegend> : <></>}
-            <GeneralTable rows={props.values} columnNames={getColumns(props.tableType)} actionName={props.actionName?props.actionName:"View"} action={props.action? props.action:handleViewClick}/>
-            {props.pagination != null && props.pagination != undefined ? <PaginationButtons nextDisable={!props.values || props.values.length < pageSize} prefix={props.pagination}/> : null}
+            <GeneralTable tableType={props.tableType} rows={props.values} columnNames={getColumns(props.tableType)} actionName={props.actionName?props.actionName:"View"} action={props.action? props.action:handleViewClick} extraAction={handleExtraColumnClick} extraRow={props.extraRow}/>
+            {props.pagination != null && props.pagination != undefined ? <PaginationButtons nextDisable={!props.values || props.values.length < pageSize} prefix={props.pagination} count={props.totalCount}/> : null}
         </div>
     )
 
@@ -76,8 +92,10 @@ GeneralAdminTableView.propTypes = {
     title: PropTypes.string.isRequired,
     tableType: PropTypes.string.isRequired,
     values: PropTypes.arrayOf(PropTypes.object),
+    extraRow: PropTypes.object,
     search: PropTypes.string,
-    pagination: PropTypes.string
+    pagination: PropTypes.string,
+    totalCount: PropTypes.number
 }
 
 GeneralAdminTableView.defaultProps = {

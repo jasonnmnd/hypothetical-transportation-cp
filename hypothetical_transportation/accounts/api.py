@@ -13,7 +13,7 @@ from .models import InvitationCode
 class InviteAPI(generics.GenericAPIView):
     serializer_class = InviteSerializer
     permission_classes = [
-        permissions.AllowAny
+        IsAdmin,
     ]
 
     def post(self, request, *args, **kwargs):
@@ -39,10 +39,14 @@ class InviteAPI(generics.GenericAPIView):
             user.save()
             ipaddr = self.request.META.get('REMOTE_ADDR', '0.0.0.0')
             invite_code = InvitationCode.objects.create_signup_code(user=user, ipaddr=ipaddr)
-            # # TODO: Send email with the following link
-            print('DEBUG:', invite_code.code)
             invite_code.send_invitation_email()
-            return Response({}, status=status.HTTP_201_CREATED)
+            content = {
+                'id': user.id,
+                'email': user.email,
+                'full_name': user.full_name,
+                'code': invite_code.code,
+            }
+            return Response(content, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 

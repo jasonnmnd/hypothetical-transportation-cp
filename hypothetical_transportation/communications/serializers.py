@@ -10,3 +10,4 @@ class SendAnnouncementSerializer(serializers.Serializer):
     ])
     subject = serializers.CharField()
     body = serializers.CharField()
+    template = serializers.CharField(required=False)

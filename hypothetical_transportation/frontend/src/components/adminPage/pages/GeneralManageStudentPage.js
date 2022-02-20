@@ -10,7 +10,7 @@ import { getUsers, getUser } from '../../../actions/users';
 import { getStudent, addStudent, updateStudent } from '../../../actions/students';
 import { getRoutesByID } from '../../../actions/routes';
 import { Form, Button, Row, Col, Container, InputGroup, ButtonGroup, ToggleButton} from 'react-bootstrap';
-
+import { resetPostedUser } from '../../../actions/users';
 
 function GeneralManageStudentPage(props) {
     const param = useParams()
@@ -24,7 +24,7 @@ function GeneralManageStudentPage(props) {
       full_name: "",
       guardian: "",
       routes: "",
-      school: "null",
+      school: "",
     }
   
 
@@ -40,6 +40,7 @@ function GeneralManageStudentPage(props) {
 
 
   const handleSubmit = (event) => {
+    console.log(obj)
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
       event.preventDefault();
@@ -77,11 +78,32 @@ function GeneralManageStudentPage(props) {
       setObj({...props.student, ["guardian"]:props.student.guardian.id,["school"]:props.student.school.id,["routes"]:props.student.routes?props.student.routes.id:null})
       // props.getRoutesByID({school: props.student.school.id}) // Normal to get an api request error on first load
     }
+    if(props.selectedUser!==null && props.selectedUser.id!==0){
+      setObj({ ...obj, ["guardian"]: props.selectedUser.id});
+      resetPostedUser();
+    }
     // else{
     //   props.getRoutesByID({school: obj.school})
     // }
     
   }, []);
+
+
+  useEffect(()=>{
+    if(props.action !== "edit"){
+        setObj(emptyStudent)
+    }
+    else{
+      props.getStudent(param.id);
+    }
+  },[props.action])
+
+useEffect(()=>{
+  if(props.action == "edit"){
+    setObj({...props.student, ["guardian"]:props.student.guardian.id,["school"]:props.student.school.id,["routes"]:props.student.routes?props.student.routes.id:null})
+  }
+
+},[props.student])
 
 
     return ( 
@@ -171,8 +193,8 @@ function GeneralManageStudentPage(props) {
             <Form.Group as={Col} controlId="formGridID">
                 <Form.Label as="h5">Student ID</Form.Label>
                 <Form.Control 
-                required type="text"
-                placeholder="Enter name..." 
+                type="text"
+                placeholder="Enter A Number For Student ID..." 
                 value={obj.student_id}
                 onChange={(e)=>{setObj({...obj, ["student_id"]: e.target.value})}}
                 />
@@ -183,7 +205,7 @@ function GeneralManageStudentPage(props) {
             <Form.Group className="mb-3" controlId="">
                 <Form.Label as="h5">Parent</Form.Label>
                 <Form.Select size="sm" value={obj.guardian} onChange={setParent}>
-                {/* <option value={""}>{"-----"}</option>: */}
+                <option value={""}>{"-----"}</option>:
                 {props.users!==null && props.users!==undefined && props.users.length!==0?props.users.map((u,i)=>{
                     return <option value={u.id} key={i}>{u.email}</option>
                 }):null}
@@ -193,7 +215,7 @@ function GeneralManageStudentPage(props) {
             <Form.Group className="mb-3" controlId="">
                 <Form.Label as="h5">School</Form.Label>
                 <Form.Select size="sm" value={obj.school} onChange={changeSchool}>
-                  {/* <option value={"null"} >{"-----"}</option> */}
+                  <option value={""} >{"-----"}</option>
                     {props.schoollist!==null && props.schoollist!==undefined && props.schoollist.length!==0?props.schoollist.map((u,i)=>{
                         return <option value={u.id} key={i}>{u.name}</option>
                     }):null}
@@ -230,7 +252,7 @@ const mapStateToProps = (state) => ({
   users: state.users.users.results,
   student: state.students.viewedStudent,
   routes: state.routes.routes.results,
-  selectedUser: state.users.viewedUser
+  selectedUser: state.users.postedUser
 });
 
 export default connect(mapStateToProps, {getSchools, getUsers, getStudent, getRoutesByID, getUser, addStudent, updateStudent})(GeneralManageStudentPage)

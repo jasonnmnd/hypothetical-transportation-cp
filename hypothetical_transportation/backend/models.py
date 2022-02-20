@@ -1,16 +1,17 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinLengthValidator
-# Create your models here.
+from django.contrib.postgres.fields import CICharField
 from django.conf import settings
 import datetime
+from .geo_utils import get_straightline_distance, get_time_between, add_time_with_delta, LEN_OF_MILE
 
 
 class School(models.Model):
-    name = models.CharField(max_length=150, validators=[MinLengthValidator(1)], unique=True)
+    name = CICharField(max_length=150, validators=[MinLengthValidator(1)], unique=True)
     address = models.CharField(max_length=150, validators=[MinLengthValidator(1)])
-    latitude = models.DecimalField(max_digits=9, decimal_places=6, blank=False)
-    longitude = models.DecimalField(max_digits=9, decimal_places=6, blank=False)
+    latitude = models.FloatField(blank=False)
+    longitude = models.FloatField(blank=False)
     bus_arrival_time = models.TimeField(blank=False, default=datetime.time(9, 0, 0))
     bus_departure_time = models.TimeField(blank=False, default=datetime.time(15, 0, 0))
 
@@ -25,7 +26,14 @@ class Route(models.Model):
         School, related_name='routes',
         on_delete=models.CASCADE
     )
-    is_complete = models.BooleanField(default=False, blank=True)
+
+    # is_complete = models.BooleanField(default=False, blank=True)
+    @property
+    def is_complete(self):
+        for student in self.students.all():
+            if not student.has_inrange_stop:
+                return False
+        return True
 
     class Meta:
         ordering = ['id']
@@ -34,8 +42,8 @@ class Route(models.Model):
 class Stop(models.Model):
     name = models.CharField(max_length=150, blank=True)
     location = models.CharField(max_length=450)
-    latitude = models.DecimalField(max_digits=9, decimal_places=6, blank=False)
-    longitude = models.DecimalField(max_digits=9, decimal_places=6, blank=False)
+    latitude = models.FloatField(blank=False)
+    longitude = models.FloatField(blank=False)
     route = models.ForeignKey(Route, related_name='stops', on_delete=models.CASCADE)
     stop_number = models.PositiveIntegerField(null=False)
     pickup_time = models.TimeField(blank=True, default=datetime.time(9, 0, 0))
@@ -62,8 +70,18 @@ class Student(models.Model):
         settings.AUTH_USER_MODEL, related_name='students',
         on_delete=models.CASCADE
     )
-    student_id = models.PositiveIntegerField(null=True)
-    has_inrange_stop = models.BooleanField(default=False, blank=True)
+    student_id = models.PositiveIntegerField(null=True, blank=True)
+
+    # has_inrange_stop = models.BooleanField(default=False, blank=True)
+
+    @property
+    def has_inrange_stop(self):
+        student_address = self.guardian.latitude, self.guardian.longitude
+        for stop in self.routes.stops.all():
+            stop_address = stop.latitude, stop.longitude
+            if get_straightline_distance(*student_address, *stop_address) < 2.0 * LEN_OF_MILE:
+                return True
+        return False
 
     class Meta:
         ordering = ['id']

@@ -10,8 +10,12 @@ import { getStudents } from '../../../actions/students';
 import GeneralAdminTableView from '../components/views/GeneralAdminTableView';
 import MapContainer from '../../maps/MapContainer';
 import { getStopByRoute } from '../../../actions/stops';
-import { Container, Card, Button, Row, Col } from 'react-bootstrap'
+import { Container, Card, Button, Row, Col, Alert, Form } from 'react-bootstrap'
 import { filterObjectForKeySubstring } from '../../../utils/utils';
+import MapComponent from '../../maps/MapComponent';
+import { getStudentPin, addSchoolPin, getStopPin } from '../../../utils/planner_maps';
+import {InfoWindow} from '@react-google-maps/api';
+import IconLegend from '../../common/IconLegend';
 
 
 function GeneralAdminRouteDetails(props) {
@@ -20,6 +24,10 @@ function GeneralAdminRouteDetails(props) {
   const [openModal, setOpenModal] = useState(false);
   let [searchParams, setSearchParams] = useSearchParams();
   const STOP_PREFIX = "sto";  
+  const [extra, setExtra] = useState({});
+  const [pinData, setPinData] = useState([]);
+  const [extraComponents, setExtraComponents] = useState(null);
+
 
   const handleConfirmDelete = () => {
     //Replace with API call to delete school and all its associated routes/students
@@ -34,10 +42,11 @@ function GeneralAdminRouteDetails(props) {
   useEffect(() => {
     props.getRouteInfo(param.id);
 
-    const allSearchParams = Object.fromEntries([...searchParams]);
-    let stopSearchParams = filterObjectForKeySubstring(allSearchParams, STOP_PREFIX);  
-    stopSearchParams.route = param.id
-    props.getStopByRoute(stopSearchParams);
+    // const allSearchParams = Object.fromEntries([...searchParams]);
+    // let stopSearchParams = filterObjectForKeySubstring(allSearchParams, STOP_PREFIX);  
+    // stopSearchParams.route = param.id
+    // console.log(stopSearchParams)
+    props.getStopByRoute(param.id);
   }, []);
 
   useEffect(() => {
@@ -53,19 +62,76 @@ function GeneralAdminRouteDetails(props) {
     }
   }, [searchParams]);
 
+  useEffect(()=>{
+    setExtra({id: props.route.school.id,name: props.route.school.name, dropoff_time: props.route.school.bus_departure_time, pickup_time: props.route.school.bus_arrival_time, stop_number: 0})
+    setPinData(getPinData());
+  },[props.students,props.route,props.stops]);
 
+    const getPinData = () => {
+        let pinData = getStudentsPinData();
+        addSchoolPin(pinData, props.route.school, onSchoolClick)
+        pinData = pinData.concat(getStopPinData());
+        // console.log(pinData);
+        return pinData;
+    }
 
+    const getStopPinData = () => {
+        return [
+            {
+                iconColor: "blue",
+                iconType: "stop",
+                markerProps: {
+                    onClick: onStopClick,
+                    draggable: false,
+                    onRightClick: ""
+                },
+                pins: props.stops.map(stop => getStopPin(stop))
+            },
+        ]
+    }
+
+    const onStopClick = (pinStuff, position) => {
+        createInfoWindow(position, <h4>{pinStuff.name}</h4>)
+    }
+
+    const onSchoolClick = (pinStuff, position) => {
+        createInfoWindow(position, <h1>{pinStuff.name}</h1>)
+    }
+
+    const getStudentsPinData = () => {
+    return [
+        {
+            iconColor: "green",
+            iconType: "student",
+            markerProps: {
+                onClick: onStudentClick,
+                onRightClick: ""
+            },
+            pins: props.students.map(student => {return getStudentPin(student)})
+        }
+    ]
+  }
+    const onStudentClick = (pinStuff, position) => {
+        
+        createInfoWindow(position, 
+            <><h4>{pinStuff.full_name}</h4></>
+        )
+    }
+
+    const createInfoWindow = (position, windowComponents) => {
+        setExtraComponents(<InfoWindow position={position} onCloseClick={setExtraComponents(null)}>{windowComponents}</InfoWindow>)
+    }
 
   return (
-    <div>  
-        <Header></Header>
+    <div>          
         <div>{openModal && <DeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}</div>
+        <Header></Header>
         <Container className="container-main d-flex flex-column" style={{gap: "20px"}}>
         <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
             <Row>
                 <Col>
-                    <Link to={`/admin/route/edit/${props.route.school.id}/${props.route.id}`}>
-                        <Button variant="yellowLong" size="lg">Edit Route</Button>
+                    <Link to={`/admin/stop/plan/${props.route.school.id}/${props.route.id}`}>
+                        <Button variant="yellowLong" size="lg">Stop Planner</Button>
                     </Link>
                 </Col>
 
@@ -79,6 +145,11 @@ function GeneralAdminRouteDetails(props) {
         <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
             <Row>
                 <Col>
+                    <Link to={`/admin/route/plan/${props.route.school.id}?route=${props.route.id}`}>
+                        <Button variant="yellowLong" size="lg">Edit Students in Route</Button>
+                    </Link>
+                </Col>
+                <Col>
                     <Link to={`/admin/route_email/${props.route.school.id}/${props.route.id}`}>
                         <Button variant="yellowLong" size="lg">Send Route-wide Email</Button>
                     </Link>
@@ -90,13 +161,32 @@ function GeneralAdminRouteDetails(props) {
             <Card.Header as="h5">Name</Card.Header>
             <Card.Body>
                 <Card.Text>{props.route.name}</Card.Text>
+                { props.route.is_complete ?
+                <></>
+                :
+                <Alert variant="danger">
+                {/* <Alert.Heading>Warning: This route is incomplete!</Alert.Heading> */}
+                <p>
+                    Warning: This route is incomplete! There are students on this route who currently do not have an in-range stop.
+                    Use the Stop Planner to plan stops for these student(s).
+                </p>
+                </Alert>
+                }
             </Card.Body>
         </Card>
 
         <Card>
             <Card.Header as="h5">Description </Card.Header>
             <Card.Body>
-                <Card.Text>{props.route.description}</Card.Text>
+                <Form.Group className="mb-3" controlId="formGridDescription">
+                    <Form.Control 
+                    type="text"
+                    as="textarea"
+                    value={props.route.description}
+                    style={{height: '200px',pointerEvents: "none"}}
+                    readOnly
+                  />
+              </Form.Group>
             </Card.Body>
         </Card>
 
@@ -110,26 +200,33 @@ function GeneralAdminRouteDetails(props) {
         </Card>
 
         <Card>
-            <Card.Header as="h5">Map View </Card.Header>
-            <Card.Body>
-                <MapContainer schoolData={props.route.school} routeStudentData={props.students}/>
-            </Card.Body>
+            <Card.Header as="h5">Map View of School, Students, and Stops</Card.Header>
+            <Container className='d-flex flex-column justify-content-center' style={{marginTop: "20px"}}>
+                <IconLegend legendType='routeDetails'></IconLegend>
+                <Card.Body>
+                    {props.route.school.id===-1?
+                        <></>:
+                        <MapComponent pinData={pinData} otherMapComponents={extraComponents} center={{lng: Number(props.route.school.longitude),lat: Number(props.route.school.latitude)}}></MapComponent>}
+                </Card.Body>    
+            </Container>
         </Card>
 
         <Card>
             <Card.Header as="h5">Associated Students</Card.Header>
             <Card.Body>
-                <GeneralAdminTableView title='Associated Students' tableType='student' values={props.students} search="" />
+                <GeneralAdminTableView title='Associated Students' tableType='student' values={props.students} search="" totalCount={props.studentCount} />
             </Card.Body>
         </Card>
 
         <Card>
             <Card.Header as="h5">Associated Stops</Card.Header>
             <Card.Body>
-                <GeneralAdminTableView title='Associated Stops' tableType='stop' values={props.stops} search="" />
+                <GeneralAdminTableView title='Associated Stops' tableType='stop' values={props.stops} search="" extraRow={extra} totalCount={props.stopCount + 1}/>
             </Card.Body>
         </Card>
         </Container>
+
+        <br></br>
     </div>
     );
 }
@@ -145,8 +242,11 @@ const mapStateToProps = (state) => ({
   user: state.auth.user,
   token: state.auth.token,
   route: state.routes.viewedRoute, 
+  school: state.schools.viewedSchool,
   students: state.students.students.results,
-  stops:state.stop.stops.results
+  stops:state.stop.stops.results,
+  studentCount: state.students.students.count,
+  stopCount: state.stop.stops.count
 });
 
 export default connect(mapStateToProps, {getRouteInfo, getStudents, deleteRoute,getStopByRoute})(GeneralAdminRouteDetails)

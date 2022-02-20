@@ -9,3 +9,5 @@ export const filterObjectForKeySubstring = (obj, substr) => {
           .filter( key => key.includes(substr))
           .reduce( (res, key) => (res[key.replace(substr, "")] = obj[key], res), {} );
 }
+
+export const NO_ROUTE = "none"

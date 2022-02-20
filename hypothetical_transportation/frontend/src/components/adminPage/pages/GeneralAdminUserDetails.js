@@ -44,10 +44,10 @@ function AdminUserDetails(props) {
   }, []);
 
   return (
-    <div>  
-        <Header></Header>
-        <div>{openModal && <DeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}</div>
-        <Container className="container-main d-flex flex-column" style={{gap: "20px"}}>
+    <div>        
+      <div>{openModal && <DeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}</div>
+      <Header></Header>
+      <Container className="container-main d-flex flex-column" style={{gap: "20px"}}>
         <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
             <Row>
                 <Col>
@@ -95,10 +95,12 @@ function AdminUserDetails(props) {
         <Card>
             <Card.Header as="h5">List of Students</Card.Header>
             <Card.Body>
-                <GeneralAdminTableView values={props.students} tableType='student' title='Students' search={null} />
+                <GeneralAdminTableView values={props.students} tableType='student' title='Students' search={null} totalCount={props.studentCount} />
             </Card.Body>
         </Card>
-        </Container>
+      </Container>
+
+      <br></br>
     </div>
   );
 }
@@ -111,8 +113,8 @@ AdminUserDetails.propTypes = {
 const mapStateToProps = (state) => ({
   user: state.users.viewedUser,
   token: state.auth.token,
-  students: state.students.students.results
-  
+  students: state.students.students.results,
+  studentCount: state.students.students.count
 });
 
 export default connect(mapStateToProps, {getUser, getStudents, deleteUser})(AdminUserDetails)

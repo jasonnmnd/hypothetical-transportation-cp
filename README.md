@@ -69,15 +69,13 @@ _Seeding the Database with random data:_
 python3 manage.py flush
 python3 manage.py seeddb /*Optional Flags*/
 ```
-Optional Flags:
+_To configure email credentials:_
 
---numusers [param] (default=100)
+```
+export AUTHEMAIL_EMAIL_HOST_USER=<GMAIL_ACCOUNT>
+export AUTHEMAIL_EMAIL_HOST_PASSWORD=<PASSWORD>
+```
 
---numroutes [param] (default=400)
-
---numschools [param] (default=400)
-
---numstudents [param] (default=1000)
 
 Optional Flags:
 

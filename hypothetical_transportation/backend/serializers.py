@@ -21,15 +21,9 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class EditUserSerializer(serializers.ModelSerializer):
-    def update(self, instance, validated_data):
-        updated_instance = super().update(instance, validated_data)
-        updated_instance.set_password(validated_data['password'])
-        updated_instance.save()
-        return updated_instance
-
     class Meta:
         model = get_user_model()
-        fields = ('id', 'email', 'full_name', 'password', 'address', 'latitude', 'longitude', 'groups')
+        fields = ('id', 'email', 'full_name', 'address', 'latitude', 'longitude', 'groups')
 
 
 class FormatUserSerializer(UserSerializer):
@@ -43,12 +37,16 @@ class SchoolSerializer(serializers.ModelSerializer):
 
 
 class RouteSerializer(serializers.ModelSerializer):
+    is_complete = serializers.BooleanField(read_only=True)
+
     class Meta:
         model = Route
         fields = '__all__'
+        # fields = ['id', 'is_complete', 'school', 'student_count', 'name', 'description']
 
 
 class StopSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Stop
         fields = '__all__'
@@ -56,7 +54,7 @@ class StopSerializer(serializers.ModelSerializer):
 
 class FormatRouteSerializer(RouteSerializer):
     school = SchoolSerializer()
-    stops = StopSerializer(many=True)
+    # stops = StopSerializer(many=True)
     student_count = serializers.SerializerMethodField('get_student_count')
 
     def get_student_count(self, obj):
@@ -64,6 +62,8 @@ class FormatRouteSerializer(RouteSerializer):
 
 
 class StudentSerializer(serializers.ModelSerializer):
+    has_inrange_stop = serializers.BooleanField(read_only=True)
+
     class Meta:
         model = Student
         fields = '__all__'
@@ -77,7 +77,7 @@ class StudentSerializer(serializers.ModelSerializer):
         # if self.partial:
         #     # Handles patch to avoid breaking things
         #     return data
-        if 'school' and 'routes' in data:
+        if 'school' in data and 'routes' in data:
             if not data['school'] or not data['routes']:
                 # No consistency to enforce
                 return data
@@ -95,3 +95,20 @@ class FormatStudentSerializer(StudentSerializer):
     school = SchoolSerializer()
     routes = RouteSerializer()
     guardian = FormatUserSerializer()
+
+
+class StopLocationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Stop
+        fields = ['latitude', 'longitude']
+
+
+class StudentLocationSerializer(serializers.Serializer):
+    id = serializers.IntegerField(required=True)
+    latitude = serializers.FloatField(required=True)
+    longitude = serializers.FloatField(required=True)
+
+
+class CheckInrangeSerializer(serializers.Serializer):
+    stops = StopLocationSerializer(many=True)
+    students = StudentLocationSerializer(many=True)
