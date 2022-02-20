@@ -10,7 +10,6 @@ import routes from './routes';
 import routeplanner from './routeplanner';
 import stop from './stops';
 
-
 export default combineReducers({
   students,
   schools,
