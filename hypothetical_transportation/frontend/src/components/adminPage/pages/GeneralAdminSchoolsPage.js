@@ -41,7 +41,7 @@ function GeneralAdminSchoolsPage(props) {
             <h1>List of Schools</h1>
           </div>
           <div className="shadow-lg p-3 mb-5 bg-white rounded">
-            <GeneralAdminTableView values={props.schools} tableType={tableType} search="" title={title} />
+            <GeneralAdminTableView values={props.schools} tableType={tableType} search="" title={title} totalCount={props.schoolCount} />
           </div>
         </Container>
     </div>
@@ -54,7 +54,8 @@ GeneralAdminSchoolsPage.propTypes = {
 
 const mapStateToProps = (state) => ({
   user: state.auth.user,
-  schools: state.schools.schools.results
+  schools: state.schools.schools.results,
+  schoolCount: state.schools.schools.count
 });
 
 export default connect(mapStateToProps, {getSchools})(GeneralAdminSchoolsPage)

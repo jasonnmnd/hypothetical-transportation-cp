@@ -5,7 +5,7 @@ import { tokenConfig } from './auth';
 import { createMessage, returnErrors } from './messages';
 import { getStudents } from './students';
 import { getParameters } from './utils';
-import { GET_USERS, ADD_USER, DELETE_USER, POPULATE_TABLE, GET_USER, DELETE_ITEM } from './types';
+import { GET_USERS, ADD_USER, DELETE_USER, POPULATE_TABLE, GET_USER, DELETE_ITEM,RESET_POSTED_USER } from './types';
 
 
 export const getUsers = (parameters) => (dispatch, getState) => {
@@ -50,6 +50,13 @@ export const addUser = (user) => (dispatch, getState) => {
 
     }).catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
 };
+
+
+export const resetPostedUser = ()=>(dispatch)=>{
+  dispatch({
+    type: RESET_POSTED_USER,
+  });
+}
 
 
 export const getUser = (id) => (dispatch, getState) => {

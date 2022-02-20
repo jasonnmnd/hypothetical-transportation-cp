@@ -5,13 +5,10 @@ import { tokenConfig } from './auth';
 import { createMessage, returnErrors } from './messages';
 import { getParameters, getQueryStringsFormatted, pageSize } from "./utils";
 
-export const getStopByRoute = (parameters) => (dispatch, getState) => {
+export const getStopByRoute = (route_id) => (dispatch, getState) => {
     let config = tokenConfig(getState);
-    if(parameters){
-      config.params = getParameters(parameters);
-    }
       axios
-      .get('/api/stop/', config)
+      .get(`/api/stop/?route=${route_id}`, config)
       .then((res) => {
           dispatch({
               type: GET_STOPS,
@@ -29,7 +26,7 @@ export const getStopByRoute = (parameters) => (dispatch, getState) => {
 
 export const getStopInfo = (stopID) => (dispatch, getState) => {
       axios
-      .get(`/api/stop/${stopID}`, tokenConfig(getState))
+      .get(`/api/stop/${stopID}/`, tokenConfig(getState))
       .then((res) => {
           dispatch({
               type: GET_STOP,
@@ -52,3 +49,22 @@ axios
     })
     .catch(err => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});
 }
+
+  
+  export const createStop = (stop) => (dispatch, getState) => {
+    axios
+      .post('/api/stop/', stop, tokenConfig(getState))
+      .then((res) => {
+        dispatch(createMessage({ student: 'Stop Created' }));
+      })
+      .catch((err) => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
+  };
+
+  export const updateStop = (stop, id) => (dispatch, getState) => {
+    axios
+            .put(`/api/stop/${id}/`,stop, tokenConfig(getState))
+            .then(res =>{
+              dispatch(createMessage({ student: 'Stop Updated' }));
+                
+            }).catch(err => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});
+  }

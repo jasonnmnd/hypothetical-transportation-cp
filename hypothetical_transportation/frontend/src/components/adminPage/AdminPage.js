@@ -117,6 +117,8 @@ function AdminPage( props ) {
                 </Col>
               </Row>
             </Container>
+
+            <br></br>
           </div>
         </div>
     )

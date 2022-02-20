@@ -38,7 +38,7 @@ function GeneralAdminStudentsPage(props) {
             <h1>List of Students</h1>
           </div>
           <div className="shadow-lg p-3 mb-5 bg-white rounded">
-            <GeneralAdminTableView values={props.students} tableType={tableType} search="" title={title} />
+            <GeneralAdminTableView values={props.students} tableType={tableType} search="" title={title} totalCount={props.studentCount} />
           </div>
         </Container>
     </div>    
@@ -50,7 +50,8 @@ GeneralAdminStudentsPage.propTypes = {
 
 const mapStateToProps = (state) => ({
   user: state.auth.user,
-  students: state.students.students.results
+  students: state.students.students.results,
+  studentCount: state.students.students.count
 });
 
 export default connect(mapStateToProps, {getStudents, searchStudents})(GeneralAdminStudentsPage)

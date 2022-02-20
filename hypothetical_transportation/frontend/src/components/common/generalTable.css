@@ -1,59 +1,3 @@
-.prev-next-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-}
-
-.button {
-  display: inline-block;
-  padding: 10px 15px;
-  border-radius: 8px;
-  background-color: #ffae07;
-  background-size: 200%;
-  background-position: 0%;
-  transition: 0.4s;
-  color: #fff;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.button-disabled {
-  display: inline-block;
-  padding: 10px 15px;
-  border-radius: 8px;
-  background-color: #ffe5b1;
-  background-size: 200%;
-  background-position: 0%;
-  transition: 0.4s;
-  color: #fff;
-  font-weight: 700;
-  cursor: not-allowed;
-}
-
-.button:hover {
-  background-color: #ffdd99;
-}
-
-.divider15px {
-  width: 15px;
-  height: auto;
-  display: inline-block;
-}
-
-.align-all-buttons {
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-}
-
-.center {
-  margin-left: auto;
-  margin-right: auto;
-  text-align: center;
-}
-
 .tr-clickable {
   cursor: pointer;
 }
@@ -97,4 +41,14 @@
   font-weight: 500;
   font-size: 15px;
   cursor: not-allowed;
+}
+
+.page-item.active .page-link {
+  background-color: #ffae07;
+  color: rgba(33, 37, 41, 255);
+  border-color: rgba(33, 37, 41, 255);
+}
+
+.page-link {
+  color: rgba(33, 37, 41, 255);
 }

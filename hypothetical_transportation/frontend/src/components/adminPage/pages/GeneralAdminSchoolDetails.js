@@ -67,10 +67,10 @@ function GeneralAdminSchoolDetails(props) {
 
 
   return (
-    <>  
-        <Header></Header>
-        {openModal && <FormDeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}
-        <Container className="container-main d-flex flex-column" style={{gap: "20px"}}>
+    <>          
+      {openModal && <FormDeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}
+      <Header></Header>
+      <Container className="container-main d-flex flex-column" style={{gap: "20px"}}>
         <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
             <Row>
               <Col>
@@ -90,7 +90,7 @@ function GeneralAdminSchoolDetails(props) {
             <Row>
               <Col>
                 <Link to={`/admin/route/plan/${props.school.id}`}>
-                  <Button variant="yellowLong" size="lg">New Route for this School</Button>
+                  <Button variant="yellowLong" size="lg">New/Edit Route for this School</Button>
                 </Link>
 
               </Col>
@@ -135,17 +135,19 @@ function GeneralAdminSchoolDetails(props) {
         <Card>
             <Card.Header as="h5">Associated Students </Card.Header>
                 <Card.Body>
-                    <GeneralAdminTableView values={props.students} tableType='student' title='Associated Students' search={STUDENT_PREFIX} pagination={STUDENT_PREFIX}/>
+                    <GeneralAdminTableView values={props.students} tableType='student' title='Associated Students' search={STUDENT_PREFIX} pagination={STUDENT_PREFIX} totalCount={props.studentCount}/>
                 </Card.Body>
         </Card>
 
         <Card>
             <Card.Header as="h5">Associated Routes </Card.Header>
             <Card.Body>
-                <GeneralAdminTableView values={props.routes} tableType='route' title='Associated Routes' search={ROUTE_PREFIX} pagination={ROUTE_PREFIX}/>
+                <GeneralAdminTableView values={props.routes} tableType='route' title='Associated Routes' search={ROUTE_PREFIX} pagination={ROUTE_PREFIX} totalCount={props.routeCount}/>
             </Card.Body>
         </Card>
-        </Container>
+      </Container>
+
+      <br></br>
     </>
   );
 }
@@ -162,7 +164,9 @@ const mapStateToProps = (state) => ({
   token: state.auth.token,
   school: state.schools.viewedSchool,
   students: state.students.students.results,
-  routes: state.routes.routes.results
+  routes: state.routes.routes.results,
+  studentCount: state.students.students.count,
+  routeCount: state.routes.routes.count
 });
 
 export default connect(mapStateToProps, {getSchool, getStudents, getRoutes, deleteSchool})(GeneralAdminSchoolDetails)

@@ -112,8 +112,6 @@ function MapContainer(props) {
   }
 
   return (
-    <LoadScript
-      googleMapsApiKey='AIzaSyA6nIh9bWUWFOD_y7hEZ7UQh_KmPn5Sq58'>
        <GoogleMap
          mapContainerStyle={mapStyles}
          zoom={13}
@@ -145,7 +143,6 @@ function MapContainer(props) {
          }
 
        </GoogleMap>
-    </LoadScript>
  );
 }
 
