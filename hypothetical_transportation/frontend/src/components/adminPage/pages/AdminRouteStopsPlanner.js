@@ -69,8 +69,6 @@ function AdminRouteStopsPlanner(props) {
 
     stopsToCreate.forEach(stop => {
       let {id, ...tempStop} = stop;
-      tempStop.pickup_time = "9,0,0";
-      tempStop.dropoff_time = "15,0,0";
       props.createStop(tempStop)
     })
 

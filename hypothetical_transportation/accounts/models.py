@@ -20,6 +20,7 @@ class CustomEmailUserManager(EmailUserManager):
         return super()._create_user(email, password, False, False, True, **extra_fields)
 
 
+
 class User(EmailAbstractUser):
     first_name = None
     last_name = None
@@ -35,6 +36,10 @@ class User(EmailAbstractUser):
     class Meta:
         ordering = ['id']
 
+# class EmailableUser(User, EmailAbstractUser):
+#     objects = CustomEmailUserManager()
+#     class Meta:
+#         abstract = True
 
 class AbstractVerificationCode(models.Model):
     """

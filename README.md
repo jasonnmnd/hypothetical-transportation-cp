@@ -1,4 +1,4 @@
-# ECE-458
+# ECE-458 LeGoons
 
 Senior design course project!
 
@@ -11,21 +11,16 @@ Using github actions, a developmental server is automatically deployed upon push
 The one thing to watch out for: if you edit a docker-compose file, you have to ssh into every host, `git fetch origin && git pull`
 
 The hosts for these servers are as listed:
-
 #### PRODUCTION
-
 `https://hypothetical-transportation.colab.duke.edu:8000`
 
 #### DEV
-
 `https://ht-dev.colab.duke.edu:8000`
 
 #### TEST ENV (must be deployed manually)
-
 `https://ht-test.colab.duke.edu:8000`
 
 ### Creating a new server
-
 #### Reserve a VCM/obtain a host
 
 ```
@@ -46,14 +41,12 @@ npm install
 npm run dev
 ```
 
-To compile for production, run:
-
+To compile for production, run: 
 ```
 npm run build
 ```
 
 ### Running the Stack
-
 #### First Time Installation
 
 ```

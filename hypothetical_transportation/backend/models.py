@@ -1,14 +1,14 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinLengthValidator
-# Create your models here.
+from django.contrib.postgres.fields import CICharField
 from django.conf import settings
 import datetime
 from .geo_utils import get_straightline_distance, get_time_between, add_time_with_delta, LEN_OF_MILE
 
 
 class School(models.Model):
-    name = models.CharField(max_length=150, validators=[MinLengthValidator(1)], unique=True)
+    name = CICharField(max_length=150, validators=[MinLengthValidator(1)], unique=True)
     address = models.CharField(max_length=150, validators=[MinLengthValidator(1)])
     latitude = models.FloatField(blank=False)
     longitude = models.FloatField(blank=False)
@@ -46,43 +46,8 @@ class Stop(models.Model):
     longitude = models.FloatField(blank=False)
     route = models.ForeignKey(Route, related_name='stops', on_delete=models.CASCADE)
     stop_number = models.PositiveIntegerField(null=False)
-
-    # pickup_time = models.TimeField(blank=True, default=datetime.time(9, 0, 0))
-    # dropoff_time = models.TimeField(blank=True, default=datetime.time(15, 0, 0))
-
-    @property
-    def pickup_time(self):
-        assoc_school = self.route.school
-        school_arrival_time = assoc_school.bus_arrival_time
-        last_time = school_arrival_time
-        last_address = assoc_school.latitude, assoc_school.longitude
-
-        for stop in self.route.stops.order_by('-stop_number'):
-            stop_address = stop.latitude, stop.longitude
-            time_delta = get_time_between(*stop_address, *last_address)
-            pickup_time = add_time_with_delta(last_time, -time_delta)
-            if stop.id == self.id:
-                return pickup_time
-            last_time = pickup_time
-            last_address = stop_address
-        return last_time
-
-    @property
-    def dropoff_time(self):
-        assoc_school = self.route.school
-        school_departure_time = assoc_school.bus_departure_time
-        last_time = school_departure_time
-        last_address = assoc_school.latitude, assoc_school.longitude
-
-        for stop in self.route.stops.order_by('-stop_number'):
-            stop_address = stop.latitude, stop.longitude
-            time_delta = get_time_between(*stop_address, *last_address)
-            pickup_time = add_time_with_delta(last_time, time_delta)
-            if stop.id == self.id:
-                return pickup_time
-            last_time = pickup_time
-            last_address = stop_address
-        return last_time
+    pickup_time = models.TimeField(blank=True, default=datetime.time(9, 0, 0))
+    dropoff_time = models.TimeField(blank=True, default=datetime.time(15, 0, 0))
 
     class Meta:
         ordering = ['route', 'stop_number']

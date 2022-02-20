@@ -7,6 +7,84 @@ from .models import Student, School, Route, Stop
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 
+class TestModels(TestCase):
+    
+    def test_school_name(self):
+        school = School.objects.create(address='', latitude=0, longitude=0, name='Test_School_Name')
+        check_school_lower = School.objects.get(name='Test_School_name')
+        check_school_upper = School.objects.get(name='Test_School_Name')
+        self.assertEqual(check_school_lower, check_school_upper)
+
+    def test_stop_dropoff_and_pickup(self):
+        school = School.objects.create(
+            address='2211 Hillsborough Road Durham, NC 27705', 
+            longitude=36.009121, 
+            latitude=-78.926017, 
+            name='Test Blank Stop Name',
+            bus_arrival_time=datetime.time(9,0,0),
+            bus_departure_time=datetime.time(16,0,0)
+        )
+        route = Route.objects.create(
+            name='Test Blank Stop Name Route 1', 
+            description='test route', 
+            school=school,
+        )
+        route2 = route = Route.objects.create(
+            name='Test Blank Stop Name Route 2', 
+            description='test route', 
+            school=school,
+        )
+        stop1 = Stop.objects.create(
+            name='dummy 1',
+            latitude=35.996996,
+            longitude=-78.944668,
+            stop_number=1,
+            pickup_time="11:11:00",
+            dropoff_time="12:11:00",
+            route=route,
+        )
+        stop2 = Stop.objects.create(
+            name='dummy 2',
+            latitude=35.997663,
+            longitude=-78.936984,
+            stop_number=2,
+            pickup_time="11:11:00",
+            dropoff_time="12:11:00",
+            route=route,
+        )
+        stops = Stop.objects.all()
+        old_dropoff, old_pickup = [],[] 
+        for stop in stops:
+            print(f"stop_name: {stop.name}, dropoff time:{stop.dropoff_time}, pickup time:{stop.pickup_time}")
+            old_dropoff.append(stop.dropoff_time)
+            old_pickup.append(stop.pickup_time)
+            self.assertIsNot(stop.dropoff_time, "12:11:00")
+            self.assertIsNot(stop.pickup_time, "11:11:00")
+        
+        school.bus_arrival_time = datetime.time(10,0,0)
+        school.bus_departure_time = datetime.time(17,0,0)
+        school.save()
+        
+        old_dropoff2, old_pickup2 = [],[] 
+        for stop in Stop.objects.all():
+            old_dropoff2.append(stop.dropoff_time)
+            old_pickup2.append(stop.pickup_time)
+            if stop.dropoff_time in old_dropoff or stop.pickup_time in old_pickup:
+                self.assertFalse
+
+        # stops = Stop.objects.all()
+        
+        # for stop in Stop.objects.all():
+        #     stop.longitude = stop.longitude+stop.latitude
+        #     stop.latitude = stop.latitude
+        #     stop.save()
+        #     # print(f"OLD stop_name: {stop.name}, dropoff time:{stop.dropoff_time}, pickup time:{stop.pickup_time}")
+
+        # for stop in Stop.objects.all():
+        #     print(f"stop_name: {stop.name}, dropoff time:{stop.dropoff_time}, pickup time:{stop.pickup_time}")
+        #     if stop.dropoff_time in old_dropoff2 or stop.pickup_time in old_pickup2:
+        #         self.assertFalse
+        
 
 # Create your tests here.
 class StopConsistency(TestCase):
@@ -133,23 +211,6 @@ class AuthenticationObjectConsistency(TestCase):
         logged_out_check_response = self.client.get('/api/auth/user',
                                                     HTTP_AUTHORIZATION=f'Token {auth_token}')
         self.assertEqual(logged_out_check_response.data['detail'].code, 'authentication_failed')
-
-
-# class StopOperations(TestCase):
-#     def setUp(self):
-#         self.stop1 = Stop.objects.create(name='stop1', location='loc1')
-#         self.stop2 = Stop.objects.create(name='stop2', location='loc2')
-#         self.stop3 = Stop.objects.create(name='stop3', location='loc3')
-#         self.school1 = School.objects.create(name='school1', address='loc2', bus_arrival_time=datetime.time(9, 0, 0),
-#                                              bus_departure_time=datetime.time(15, 0, 0))
-#         self.route1 = Route.objects.create(name='route1', description='', school=self.school1)
-#         StopRoute.objects.create(stop=self.stop1, route=self.route1)
-#         StopRoute.objects.create(stop=self.stop3, route=self.route1)
-#         StopRoute.objects.create(stop=self.stop2, route=self.route1)
-#
-#     def test_order_preservation(self):
-#         # TODO: not yet a real test!
-#         print(self.route1.stops.all().order_by('stoproute__id'))
 
 
 class PermissionViews(TransactionTestCase):

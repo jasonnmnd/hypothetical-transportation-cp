@@ -25,5 +25,5 @@ class Command(BaseCommand):
                                                                   longitude=0)
             admin.groups.add(admin_group.id)
         except IntegrityError:
-            raise CommandError('Admin user with this email already exists')
+            print(CommandError('Admin user with this email already exists'))
         self.stdout.write(self.style.SUCCESS('Created Initial User'))
