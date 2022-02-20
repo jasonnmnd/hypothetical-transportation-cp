@@ -13,7 +13,7 @@
 }
 
 .tr-header {
-  background-color: #ffae07;
+  background-color: rgb(244, 177, 75);
 }
 
 .btn-delete_add {
@@ -29,5 +29,5 @@
 }
 
 .inputFieldInTable {
-  width: 100%
+  width: 100%;
 }
