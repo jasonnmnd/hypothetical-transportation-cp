@@ -32,8 +32,20 @@ def send_rich_format_email(template: str, template_context: dict, subject: str, 
     email.send()
 
 
-# def get_parents_where_route_id(route_id: int):
-#     route = get_object_or_404(Route, pk=route_id)
+def get_users_where_student_route_id(route_id: int):
+    route = get_object_or_404(Route, pk=route_id)
+    students_queryset = route.students
+    return get_user_model().objects.filter(id__in=students_queryset.values('guardian_id')).distinct()
+
+
+def get_users_where_student_school_id(school_id: int):
+    school = get_object_or_404(School, pk=school_id)
+    students_queryset = school.students
+    return get_user_model().objects.filter(id__in=students_queryset.values('guardian_id')).distinct()
+
+
+def get_users_all():
+    return get_user_model().objects.values_list('email', flat=True)
 
 
 class SendAnnouncementAPI(generics.GenericAPIView):
@@ -53,47 +65,17 @@ class SendAnnouncementAPI(generics.GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         recipients = list()
-        email_context = ''
-
         id_type = serializer.data.get("id_type")
         object_id = serializer.data.get("object_id")
         if id_type == "ROUTE":
-            try:
-                route = Route.objects.get(pk=object_id)
-                email_context = f"You are being sent this email because your child is a member of {route.name}\n"
-                students_queryset = route.students
-            except Route.DoesNotExist:
-                return Response({'object_id': ['Route with this ID does not exist']},
-                                status=status.HTTP_400_BAD_REQUEST)
-            user_queryset = get_user_model().objects.filter(id__in=students_queryset.values('guardian_id')).distinct()
-            recipients.extend(user_queryset.values_list('email', flat=True))
-
+            recipients.extend(get_users_where_student_route_id(object_id).values_list('email', flat=True))
         elif id_type == "SCHOOL":
-            try:
-                school = School.objects.get(pk=object_id)
-                email_context = f"You are being sent this email because your child is a member of {school.name}\n"
-                students_queryset = school.students
-            except School.DoesNotExist:
-                return Response({'object_id': ['School with this ID does not exist']},
-                                status=status.HTTP_400_BAD_REQUEST)
-            user_queryset = get_user_model().objects.filter(id__in=students_queryset.values('guardian_id')).distinct()
-            recipients.extend(user_queryset.values_list('email', flat=True))
-
+            recipients.extend(get_users_where_student_school_id(object_id).values_list('email', flat=True))
         elif id_type == "ALL":
-            email_context = f"You are being sent this email because you are a user of this system\n"
-            recipients.extend(get_user_model().objects.values_list('email', flat=True))
-
-        # Filter out emails ending in example.com
-        recipients = [recipient for recipient in recipients if not recipient.endswith('example.com')]
-
-        with mail.get_connection() as connection:
-            mail.EmailMessage(
-                subject=serializer.data.get('subject'),
-                body=f"{email_context}{serializer.data.get('body')}",
-                from_email='DONOTREPLYEXAMPLE@example.com',
-                bcc=recipients,
-                connection=connection,
-            ).send()
+            recipients.extend(get_users_all().values_list('email', flat=True))
+        recipients = recipients[0:1] if len(recipients) > 0 else list()
+        send_rich_format_email(template="generic.html", template_context={"body": serializer.data.get('body')},
+                               subject=serializer.data.get('subject'), to=[], bcc=recipients)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
@@ -114,69 +96,58 @@ class SendRouteAnnouncementAPI(generics.GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         recipients = list()
-        email_context = ''
-
         id_type = serializer.data.get("id_type")
         object_id = serializer.data.get("object_id")
         if id_type == "ROUTE":
-            try:
-                route = Route.objects.get(pk=object_id)
-                email_context = f"You are being sent this email because your child is a member of {route.name}\n"
-                students_queryset = route.students
-            except Route.DoesNotExist:
-                return Response({'object_id': ['Route with this ID does not exist']},
-                                status=status.HTTP_400_BAD_REQUEST)
-            user_queryset = get_user_model().objects.filter(id__in=students_queryset.values('guardian_id')).distinct()
-            recipients.extend(user_queryset.values_list('email', flat=True))
-
+            recipients.extend(get_users_where_student_route_id(object_id).values_list('email', flat=True))
         elif id_type == "SCHOOL":
-            try:
-                school = School.objects.get(pk=object_id)
-                email_context = f"You are being sent this email because your child is a member of {school.name}\n"
-                students_queryset = school.students
-            except School.DoesNotExist:
-                return Response({'object_id': ['School with this ID does not exist']},
-                                status=status.HTTP_400_BAD_REQUEST)
-            user_queryset = get_user_model().objects.filter(id__in=students_queryset.values('guardian_id')).distinct()
-            recipients.extend(user_queryset.values_list('email', flat=True))
-
+            recipients.extend(get_users_where_student_school_id(object_id).values_list('email', flat=True))
         elif id_type == "ALL":
-            email_context = f"You are being sent this email because you are a user of this system\n"
-            recipients.extend(get_user_model().objects.values_list('email', flat=True))
+            recipients.extend(get_users_all().values_list('email', flat=True))
 
         # Filter out emails ending in example.com
         recipients = [recipient for recipient in recipients if not recipient.endswith('example.com')]
+        # recipients = recipients[0:1] if len(recipients) > 0 else list()
 
         for recipient in recipients:
             user = get_user_model().objects.get(email=recipient)
-            with mail.get_connection() as connection:
-                mail.EmailMessage(
-                    subject=serializer.data.get('subject'),
-                    body=f"{email_context}{serializer.data.get('body')}\n\n{generate_attachment(user)}",
-                    from_email='DONOTREPLYEXAMPLE@example.com',
-                    to=[recipient],
-                    connection=connection,
-                ).send()
+            print(user.students)
+            student_info = generate_student_info(user)
+            print(student_info)
+            send_rich_format_email(template="route.html", template_context={"body": serializer.data.get('body'),
+                                                                            "student_info": student_info},
+                                   subject=serializer.data.get('subject'), to=[], bcc=recipients)
+
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-def generate_attachment(user):
+def generate_student_info(user):
     """
     Generates information as required by 5.1
-    :param user:
+    :param user: User object
     :return:
     """
-    content = list()
+    students = list()
     for student in user.students.all():
-        content.append(f'- {student.full_name}\n')
+        student_info = dict()
+        student_info['full_name'] = student.full_name
+        student_info['school'] = student.school.name
         if student.routes:
-            content.append(f'   - Route: {student.routes.name}\n')
-            content.append(f'       - Description: {student.routes.name}\n')
+            student_info['routes'] = {
+                'route_name': student.routes.name,
+                'description': student.routes.description,
+            }
             student_inrange_stops = [stop for stop in student.routes.stops.all() if
                                      get_straightline_distance(student.guardian.latitude, student.guardian.longitude,
                                                                stop.latitude,
-                                                               stop.longitude) < 5 * LEN_OF_MILE]
-            content.append(f'   - In-Range Stops: Name, Pickup Time, Drop-off Time, Location\n')
+                                                               stop.longitude) < 2 * LEN_OF_MILE]
+            student_info['stops'] = list()
             for stop in student_inrange_stops:
-                content.append(f'       - {stop.name} {stop.pickup_time} {stop.dropoff_time} {stop.location}\n')
-    return ''.join(content)
+                student_info['stops'].append({
+                    "stop_name": stop.name,
+                    "pickup_time": stop.pickup_time,
+                    "dropoff_time": stop.dropoff_time,
+                    "location": stop.location,
+                })
+        students.append(student_info)
+    return students
