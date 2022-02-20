@@ -85,7 +85,11 @@ class SendAnnouncementAPI(generics.GenericAPIView):
         send_rich_format_email(template=serializer.data.get("template", "announcement_email.html"),
                                template_context={"body": serializer.data.get('body'), "context": custom_context},
                                subject=serializer.data.get('subject'), to=[], bcc=recipients)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        response_context = {
+            "recipients": recipients,
+            **serializer.data
+        }
+        return Response(response_context, status=status.HTTP_200_OK)
 
 
 class SendRouteAnnouncementAPI(generics.GenericAPIView):
@@ -112,7 +116,12 @@ class SendRouteAnnouncementAPI(generics.GenericAPIView):
                                                      "student_info": student_info,
                                                      "context": custom_context},
                                    subject=serializer.data.get('subject'), to=[recipient], bcc=[])
-        return Response(serializer.data, status=status.HTTP_200_OK)
+
+        response_context = {
+            "recipients": recipients,
+            **serializer.data
+        }
+        return Response(response_context, status=status.HTTP_200_OK)
 
 
 def generate_student_info(user):
