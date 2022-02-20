@@ -159,7 +159,7 @@ function GeneralAdminEmailPage(props) {
                 <h1>Send Email</h1>
             </div>
             <Form className="shadow-lg p-3 mb-5 bg-white rounded">
-                <Container className='d-flex justify-content-center flex-row align-items-baseline' style={{gap: "20px"}}>
+                <Container className='d-flex justify-content-center flex-row align-items-baseline' style={{gap: "30px"}}>
                     <Form.Group className="mb-3" controlId="validationCustom01">
                         <ButtonGroup>
                         {emailTypes.map((radio, idx) => (
