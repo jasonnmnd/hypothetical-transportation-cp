@@ -27,7 +27,7 @@ function GeneralAdminEmailPage(props) {
     let routeSearchParams = filterObjectForKeySubstring(allSearchParams, ROUTE_PREFIX);
 
     const handleThisIsRouteAnnouncement = () => {
-        setValue(!value);
+        setThisIsRouteAnnouncement(!thisIsRouteAnnouncement);
       };
 
     const param = useParams();
@@ -182,7 +182,7 @@ function GeneralAdminEmailPage(props) {
                     </Form.Group>
 
                     <label>
-                        <input type="radio" checked={thisIsRouteAnnouncement} onChange={handleThisIsRouteAnnouncement} />
+                        <input type="checkbox" checked={thisIsRouteAnnouncement} onChange={handleThisIsRouteAnnouncement} />
                         This is a Route Announcement
                     </label>
                 </Container>
