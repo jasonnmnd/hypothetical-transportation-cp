@@ -78,7 +78,7 @@ class AnnouncementTests(TransactionTestCase):
         Test that all four parents are contacted by the all email.  Outbox size is 1 due to BCC
         :return: None
         """
-        login_response = self.client.post('/api/send-announcement',
+        login_response = self.client.post('/api/communication/send-announcement',
                                           json.dumps(
                                               {
                                                   "id_type": "ALL",
@@ -100,7 +100,7 @@ class AnnouncementTests(TransactionTestCase):
         Test that Route 1 and Route 3 both have correct number of recipients (1 parent and 2 parents, respectively)
         :return: None
         """
-        login_response = self.client.post('/api/send-announcement',
+        login_response = self.client.post('/api/communication/send-announcement',
                                           json.dumps(
                                               {
                                                   "object_id": 1,
@@ -116,7 +116,7 @@ class AnnouncementTests(TransactionTestCase):
         self.assertEqual(len(recipients), 1)
         self.assertIn(self.parent1.email, recipients)
         mail.outbox = []
-        login_response = self.client.post('/api/send-announcement',
+        login_response = self.client.post('/api/communication/send-announcement',
                                           json.dumps(
                                               {
                                                   "object_id": 3,
@@ -138,7 +138,7 @@ class AnnouncementTests(TransactionTestCase):
         Test that announcement reaches parents of students who attend school 1 (parents 1 and 2)
         :return: None
         """
-        login_response = self.client.post('/api/send-announcement',
+        login_response = self.client.post('/api/communication/send-announcement',
                                           json.dumps(
                                               {
                                                   "object_id": 1,
@@ -160,7 +160,7 @@ class AnnouncementTests(TransactionTestCase):
         Test that all four parents are contacted by the all email.  Outbox size is 4 due to personalized content
         :return: None
         """
-        login_response = self.client.post('/api/send-route-announcement',
+        login_response = self.client.post('/api/communication/send-route-announcement',
                                           json.dumps(
                                               {
                                                   "id_type": "ALL",
@@ -183,7 +183,7 @@ class AnnouncementTests(TransactionTestCase):
         respectively).
         :return: None
         """
-        login_response = self.client.post('/api/send-route-announcement',
+        login_response = self.client.post('/api/communication/send-route-announcement',
                                           json.dumps(
                                               {
                                                   "object_id": 1,
@@ -199,7 +199,7 @@ class AnnouncementTests(TransactionTestCase):
         self.assertEqual(len(recipients), 1)
         self.assertIn(self.parent1.email, recipients)
         mail.outbox = []
-        login_response = self.client.post('/api/send-route-announcement',
+        login_response = self.client.post('/api/communication/send-route-announcement',
                                           json.dumps(
                                               {
                                                   "object_id": 3,
@@ -221,7 +221,7 @@ class AnnouncementTests(TransactionTestCase):
         Test that announcement reaches parents of students who attend school 1
         :return: None
         """
-        login_response = self.client.post('/api/send-route-announcement',
+        login_response = self.client.post('/api/communication/send-route-announcement',
                                           json.dumps(
                                               {
                                                   "object_id": 1,
@@ -245,7 +245,7 @@ class AnnouncementTests(TransactionTestCase):
         :return: None
         """
         code = hash("Message")
-        self.client.post('/api/send-announcement',
+        self.client.post('/api/communication/send-announcement',
                          json.dumps(
                              {
                                  "object_id": 1,
@@ -261,7 +261,7 @@ class AnnouncementTests(TransactionTestCase):
         self.assertEqual(len(mail.outbox), 1)
         self.assertIn(str(code), mail.outbox[0].body)
         mail.outbox = list()
-        self.client.post('/api/send-route-announcement',
+        self.client.post('/api/communication/send-route-announcement',
                          json.dumps(
                              {
                                  "object_id": 1,
