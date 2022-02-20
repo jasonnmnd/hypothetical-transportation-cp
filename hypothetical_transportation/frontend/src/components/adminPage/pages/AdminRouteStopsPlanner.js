@@ -63,7 +63,6 @@ function AdminRouteStopsPlanner(props) {
     const stopsToUpdate = stops.filter(stop => stop.id > -1);
     let stopsToCreate = stops.filter(stop => stop.id < 0);
     const stopsToDelete = deletedStops.filter(stop => stop.id > -1);
-    console.log(stopsToCreate)
     stopsToDelete.forEach(stop => {
       props.deleteStop(stop.id)
     })
@@ -72,7 +71,6 @@ function AdminRouteStopsPlanner(props) {
       let {id, ...tempStop} = stop;
       tempStop.pickup_time = "9,0,0";
       tempStop.dropoff_time = "15,0,0";
-      console.log(tempStop)
       props.createStop(tempStop)
     })
 

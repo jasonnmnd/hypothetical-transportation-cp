@@ -214,14 +214,14 @@ function GeneralAdminRouteDetails(props) {
         <Card>
             <Card.Header as="h5">Associated Students</Card.Header>
             <Card.Body>
-                <GeneralAdminTableView title='Associated Students' tableType='student' values={props.students} search="" />
+                <GeneralAdminTableView title='Associated Students' tableType='student' values={props.students} search="" totalCount={props.studentCount} />
             </Card.Body>
         </Card>
 
         <Card>
             <Card.Header as="h5">Associated Stops</Card.Header>
             <Card.Body>
-                <GeneralAdminTableView title='Associated Stops' tableType='stop' values={props.stops} search="" extraRow={extra}/>
+                <GeneralAdminTableView title='Associated Stops' tableType='stop' values={props.stops} search="" extraRow={extra} totalCount={props.stopCount + 1}/>
             </Card.Body>
         </Card>
         </Container>
@@ -244,7 +244,9 @@ const mapStateToProps = (state) => ({
   route: state.routes.viewedRoute, 
   school: state.schools.viewedSchool,
   students: state.students.students.results,
-  stops:state.stop.stops.results
+  stops:state.stop.stops.results,
+  studentCount: state.students.students.count,
+  stopCount: state.stop.stops.count
 });
 
 export default connect(mapStateToProps, {getRouteInfo, getStudents, deleteRoute,getStopByRoute})(GeneralAdminRouteDetails)

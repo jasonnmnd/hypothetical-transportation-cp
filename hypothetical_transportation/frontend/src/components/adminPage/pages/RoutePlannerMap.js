@@ -11,7 +11,7 @@ import { Button, Modal } from 'react-bootstrap';
 import OverLappingStudentsModal from '../components/modals/OverLappingStudentsModal';
 
 
-const MARKER_OVERLAP_DISTANCE = 0.0005; //miles
+const MARKER_OVERLAP_DISTANCE = 0.01; //miles
 
 
 function RoutePlannerMap(props){

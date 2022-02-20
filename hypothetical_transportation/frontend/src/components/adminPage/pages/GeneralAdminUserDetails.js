@@ -95,7 +95,7 @@ function AdminUserDetails(props) {
         <Card>
             <Card.Header as="h5">List of Students</Card.Header>
             <Card.Body>
-                <GeneralAdminTableView values={props.students} tableType='student' title='Students' search={null} />
+                <GeneralAdminTableView values={props.students} tableType='student' title='Students' search={null} totalCount={props.studentCount} />
             </Card.Body>
         </Card>
       </Container>
@@ -113,8 +113,8 @@ AdminUserDetails.propTypes = {
 const mapStateToProps = (state) => ({
   user: state.users.viewedUser,
   token: state.auth.token,
-  students: state.students.students.results
-  
+  students: state.students.students.results,
+  studentCount: state.students.students.count
 });
 
 export default connect(mapStateToProps, {getUser, getStudents, deleteUser})(AdminUserDetails)

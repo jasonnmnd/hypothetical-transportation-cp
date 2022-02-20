@@ -135,14 +135,14 @@ function GeneralAdminSchoolDetails(props) {
         <Card>
             <Card.Header as="h5">Associated Students </Card.Header>
                 <Card.Body>
-                    <GeneralAdminTableView values={props.students} tableType='student' title='Associated Students' search={STUDENT_PREFIX} pagination={STUDENT_PREFIX}/>
+                    <GeneralAdminTableView values={props.students} tableType='student' title='Associated Students' search={STUDENT_PREFIX} pagination={STUDENT_PREFIX} totalCount={props.studentCount}/>
                 </Card.Body>
         </Card>
 
         <Card>
             <Card.Header as="h5">Associated Routes </Card.Header>
             <Card.Body>
-                <GeneralAdminTableView values={props.routes} tableType='route' title='Associated Routes' search={ROUTE_PREFIX} pagination={ROUTE_PREFIX}/>
+                <GeneralAdminTableView values={props.routes} tableType='route' title='Associated Routes' search={ROUTE_PREFIX} pagination={ROUTE_PREFIX} totalCount={props.routeCount}/>
             </Card.Body>
         </Card>
       </Container>
@@ -164,7 +164,9 @@ const mapStateToProps = (state) => ({
   token: state.auth.token,
   school: state.schools.viewedSchool,
   students: state.students.students.results,
-  routes: state.routes.routes.results
+  routes: state.routes.routes.results,
+  studentCount: state.students.students.count,
+  routeCount: state.routes.routes.count
 });
 
 export default connect(mapStateToProps, {getSchool, getStudents, getRoutes, deleteSchool})(GeneralAdminSchoolDetails)

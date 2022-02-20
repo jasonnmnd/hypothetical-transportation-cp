@@ -71,7 +71,7 @@ function ParentPage(props) {
               </div>
 
               <div className="shadow-lg p-3 mb-5 bg-white rounded">
-                <GeneralAdminTableView values={props.students} title={title} tableType={tableType} action={handleViewClick} />
+                <GeneralAdminTableView values={props.students} title={title} tableType={tableType} action={handleViewClick} totalCount={props.studentCount} />
               </div>
 
           </Container>
@@ -95,7 +95,8 @@ const mapStateToProps = (state) => ({
     isAuthenticated: state.auth.isAuthenticated,
     user: state.auth.user,
     token: state.auth.token,
-    students: state.students.students.results
+    students: state.students.students.results,
+    studentCount: state.students.students.count
 });
 
 export default connect(mapStateToProps, {logout, getStudents} )(ParentPage)
