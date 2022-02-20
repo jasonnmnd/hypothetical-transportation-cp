@@ -25,6 +25,8 @@ jobs:
           username: ${{secrets.DEV_SSH_USERNAME}}
           password: ${{secrets.DEV_SSH_PASSWORD}}
           script: |
+            export AUTHEMAIL_EMAIL_HOST_USER=${{secrets.AUTHEMAIL_EMAIL_HOST_USER}}
+            export AUTHEMAIL_EMAIL_HOST_PASSWORD=${{secrets.AUTHEMAIL_EMAIL_HOST_PASSWORD}}
             cd ece-458
             sudo docker login --username ${{ secrets.DOCKERHUB_USERNAME }} --password ${{ secrets.DOCKERHUB_TOKEN }}
             sudo docker-compose -f docker-compose.dev.yml pull
