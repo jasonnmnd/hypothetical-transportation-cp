@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import Geocode from "react-geocode";
 import { getIcon, SCHOOL_MARKER, STOP_MARKER, STUDENT_MARKER } from './static/markers';
 
-const CLICK_FUNCTIONS = ["onClick", "onRightClick"]
+const CLICK_FUNCTIONS = ["onClick", "onRightClick", "onMouseOver"]
 const DRAG_FUNCTIONS = ["onDragEnd"]
 
 
@@ -21,8 +21,10 @@ function MapComponent(props) {
     Geocode.setLocationType("ROOFTOP");
     Geocode.enableDebug();
 
+    const [pins, setPins] = useState([]);
+    let pinInfo = [];
+
     const getSVGWithAnchor = (svg) => {
-        console.log(svg);
         const ret = {
             ...svg,
             anchor: new window.google.maps.Point(svg.anchor[0], svg.anchor[1])
@@ -30,25 +32,13 @@ function MapComponent(props) {
         return ret
     }
 
-
-    const [pins, setPins] = useState([]);
-    let pinInfo = [];
-
     const getColoredIcon = (color, icon) => {
-        console.log(icon);
         return getSVGWithAnchor(getIcon(icon, color));
-        // const svg = getSVGWColor(color, icon);
-        
-        // let iconData = {...ICONS[icon]};
-        // iconData.fillColor = color;
-        // return iconData;
     }
 
 
-
-
     useEffect(() => {
-        // console.log("props.pinData")
+        //console.log(props.pinData)
         initializePins(props.pinData)
       }, [props.pinData]);
 
@@ -226,6 +216,13 @@ function MapComponent(props) {
                 {getMarkers(pins)}
                 {props.otherMapComponents}
             {/* </Spiderfy> */}
+            {/* {[0,1].map((pin, pinInd) => { return <Marker position={{lat: -33.847927 + pinInd,lng: 150.6517938}} key={"DF"}>
+                <InfoWindow
+                key={"pinInd"}
+                visible={true}>
+                <div>fahfhsdfhdsf</div>
+            </InfoWindow>
+            </Marker>})} */}
             
         </GoogleMap>
         )
