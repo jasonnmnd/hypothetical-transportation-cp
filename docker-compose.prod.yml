@@ -1,30 +1,57 @@
-version: "3.9"
+version: "2"
    
 services:
   db:
     image: postgres
     volumes:
-      - ./data/db:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data/
     environment:
       - POSTGRES_DB=admin
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=admin
+    ports:
+      - 5432:5432
   web:
     image: dmm107/ece-458:web-prod
     command: ./entrypoint_prod.sh
-    # command: bash -c "python hypothetical_transportation/manage.py makemigrations && "\
-    #           "python hypothetical_transportation/manage.py migrate && "\
-    #           "python hypothetical_transportation/manage.py loaddata hypothetical_transportation/backend/fixtures/data.json &&"\
-    #           "python hypothetical_transportation/manage.py initadmin && "\
-    #           "python hypothetical_transportation/manage.py runserver_plus 0.0.0.0:8000 --cert-file /etc/letsencrypt/live/hypothetical-transportation.colab.duke.edu/fullchain.pem --key-file /etc/letsencrypt/live/hypothetical-transportation.colab.duke.edu/privkey.pem"
     volumes:
-      - .:/local
-      - /etc/letsencrypt/:/etc/letsencrypt/
-    ports:
-      - "8000:8000"
+      - static_volume:/code/staticfiles
+      - media_volume:/home/app/web/mediafiles
+    expose:
+      - "8000"
     environment:
       - POSTGRES_DB=admin
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=admin
+      - VIRTUAL_HOST=hypothetical-transportation.colab.duke.edu
+      - VIRTUAL_PORT=8000
+      - LETSENCRYPT_HOST=hypothetical-transportation.colab.duke.edu
+      - LETSENCRYPT_EMAIL=dmm107@duke.edu
     depends_on:
       - db
+  nginx-proxy:
+    container_name: nginx-proxy
+    build: ./nginx/prod
+    restart: always
+    ports:
+      - 443:443
+      - 80:80
+    volumes:
+      - /etc/letsencrypt/:/etc/letsencrypt/
+      - static_volume:/code/staticfiles
+      - certs:/etc/nginx/certs
+      - html:/usr/share/nginx/html
+      - vhost:/etc/nginx/vhost.d
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    depends_on:
+      - web
+  
+volumes:
+  static_volume:
+  postgres_data:
+  static_volume:
+  media_volume:
+  certs:
+  html:
+  vhost:
+  acme:
