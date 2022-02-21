@@ -95,7 +95,7 @@ function ModifyStopTable(props) {
                          />
                     </td>
         }
-        return <td onClick={() => setInput(stop, NAME, stop.name)}>{`✏️ ${stop.name}`}</td>
+        return <td className='clickable' onClick={() => setInput(stop, NAME, stop.name)}>{`✏️ ${stop.name}`}</td>
     }
 
     const getLocationInputComponent = (stop) => {
@@ -112,7 +112,7 @@ function ModifyStopTable(props) {
                          />
                     </td>
         }
-        return <td onClick={() => setInput(stop, LOCATION, stop.location)}>{`✏️ ${stop.location}`}</td>
+        return <td className='clickable' onClick={() => setInput(stop, LOCATION, stop.location)}>{`✏️ ${stop.location}`}</td>
     }
 
     const getStopsInMapTableBody = () => {
