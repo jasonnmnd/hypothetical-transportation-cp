@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import { filterObjectForKeySubstring } from '../../../utils/utils';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
+import config from '../../../utils/config';
 
 
 
@@ -81,15 +82,23 @@ function GeneralAdminEmailPage(props) {
         // console.log("Submit button pressed with school " + currSchool + " and route " + currRoute);
         
         const payload = {
-            object_id: currSchool == "" ? currRoute : currSchool,
+            object_id: currSchool == "" ? parseInt(currRoute) : parseInt(currSchool),
             id_type: getIdType(emailSelection),
             subject: subject,
             body: body
         }
-        
+
+        //Backend requires object_id to be set to a number, or removed
+        if (getIdType(emailSelection) == "ALL") {
+            delete payload['object_id'];
+        }
+
+        console.log(payload);
+
+
         if(thisIsRouteAnnouncement!==true){
             // console.log("not route announcement")
-            axios.post('/api/communication/send-announcement', payload)
+            axios.post('/api/communication/send-announcement', payload, config(props.token))
             .then((res) => {
                 nagivate(`/admin`);
                 alert('Email Successfully Sent!');
@@ -99,7 +108,7 @@ function GeneralAdminEmailPage(props) {
             });
         }
         else{
-            axios.post('/api/communication/send-route-announcement', payload)
+            axios.post('/api/communication/send-route-announcement', payload, config(props.token))
             .then((res) => {
                 nagivate(`/admin`);
                 alert('Email Successfully Sent!');
@@ -308,6 +317,7 @@ GeneralAdminEmailPage.propTypes = {
 const mapStateToProps = (state) => ({
     schoollist: state.schools.schools.results,
     routes: state.routes.routes.results,
+    token: state.auth.token
 })
 
 export default connect(mapStateToProps, {getSchools, getRoutes}) (GeneralAdminEmailPage);
