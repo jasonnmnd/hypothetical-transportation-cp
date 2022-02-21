@@ -3,7 +3,7 @@ import { GoogleMap, LoadScript, Marker, InfoWindow, useJsApiLoader } from '@reac
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Geocode from "react-geocode";
-import { SCHOOL_MARKER, STOP_MARKER, STUDENT_MARKER } from './static/markers';
+import { getIcon, SCHOOL_MARKER, STOP_MARKER, STUDENT_MARKER } from './static/markers';
 
 const CLICK_FUNCTIONS = ["onClick", "onRightClick"]
 const DRAG_FUNCTIONS = ["onDragEnd"]
@@ -22,6 +22,7 @@ function MapComponent(props) {
     Geocode.enableDebug();
 
     const getSVGWithAnchor = (svg) => {
+        console.log(svg);
         const ret = {
             ...svg,
             anchor: new window.google.maps.Point(svg.anchor[0], svg.anchor[1])
@@ -29,19 +30,18 @@ function MapComponent(props) {
         return ret
     }
 
-    const ICONS = {
-        school: getSVGWithAnchor(SCHOOL_MARKER),
-        student: getSVGWithAnchor(STUDENT_MARKER),
-        stop: getSVGWithAnchor(STOP_MARKER)
-    }
 
     const [pins, setPins] = useState([]);
     let pinInfo = [];
 
     const getColoredIcon = (color, icon) => {
-        let iconData = {...ICONS[icon]};
-        iconData.fillColor = color;
-        return iconData;
+        console.log(icon);
+        return getSVGWithAnchor(getIcon(icon, color));
+        // const svg = getSVGWColor(color, icon);
+        
+        // let iconData = {...ICONS[icon]};
+        // iconData.fillColor = color;
+        // return iconData;
     }
 
 

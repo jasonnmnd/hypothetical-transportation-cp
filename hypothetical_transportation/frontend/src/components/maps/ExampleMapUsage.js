@@ -165,7 +165,7 @@ function ExampleMapUsage(){
     const pinData = [
         {
             iconColor: "green",
-            iconType: "student",
+            iconType: "studentCheck",
             markerProps: {
                 draggable: true
             },
@@ -173,7 +173,7 @@ function ExampleMapUsage(){
         },
         {
             iconColor: "red",
-            iconType: "student",
+            iconType: "studentX",
             markerProps: {
                 draggable: false
             },

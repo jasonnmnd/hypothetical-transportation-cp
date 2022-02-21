@@ -55,7 +55,7 @@ function StopPlannerMap(props){
         return [
             {
                 iconColor: "green",
-                iconType: "student",
+                iconType: "studentCheck",
                 markerProps: {
                     onClick: onStudentClick,
                 },
@@ -63,7 +63,7 @@ function StopPlannerMap(props){
             },
             {
                 iconColor: "red",
-                iconType: "student",
+                iconType: "studentX",
                 markerProps: {
                     onClick: onStudentClick,
                 },
@@ -89,9 +89,9 @@ function StopPlannerMap(props){
     }
     
     const getPinData = () => {
-        let pinData = getStudentGroupsPinData();
+        let pinData = getStopPinData();
         addSchoolPin(pinData, props.school, onSchoolClick)
-        pinData = pinData.concat(getStopPinData());
+        pinData = pinData.concat(getStudentGroupsPinData());
         return pinData;
     }
 

@@ -149,7 +149,7 @@ function RoutePlannerMap(props){
         return [
             {
                 iconColor: "green",
-                iconType: "student",
+                iconType: "studentCheck",
                 markerProps: {
                     onClick: onStudentClick,
                     onRightClick: props.changeStudentRoute
@@ -158,7 +158,7 @@ function RoutePlannerMap(props){
             },
             {
                 iconColor: "red",
-                iconType: "student",
+                iconType: "studentX",
                 markerProps: {
                     onClick: onStudentClick,
                     onRightClick: props.changeStudentRoute
@@ -167,7 +167,7 @@ function RoutePlannerMap(props){
             },
             {
                 iconColor: "grey",
-                iconType: "student",
+                iconType: "studentCheck",
                 markerProps: {
                     onClick: onStudentClick,
                     onRightClick: props.changeStudentRoute
@@ -176,7 +176,7 @@ function RoutePlannerMap(props){
             },
             {
                 iconColor: "purple",
-                iconType: "student",
+                iconType: "studentMultiple",
                 markerProps: {
                     onClick: onMultipleStudentClick,
                     onRightClick: multipleStudentsChange

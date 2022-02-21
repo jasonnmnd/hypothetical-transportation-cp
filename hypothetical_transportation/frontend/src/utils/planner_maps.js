@@ -3,7 +3,7 @@ import { NO_ROUTE } from "./utils"
 
 export const addSchoolPin = (pinData, school, onSchoolClick) => {
     pinData.push({
-        iconColor: "black",
+        iconColor: "white",
         iconType: "school",
         markerProps: {
             onClick: onSchoolClick
