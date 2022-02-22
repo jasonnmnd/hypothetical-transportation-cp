@@ -13,6 +13,7 @@ services:
       - 5432:5432
   web:
     image: dmm107/ece-458:web-prod
+    # build: .
     command: ./entrypoint_prod.sh
     volumes:
       - static_volume:/code/staticfiles
