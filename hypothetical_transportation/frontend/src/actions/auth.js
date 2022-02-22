@@ -10,7 +10,8 @@ import {
     REGISTER_FAIL,
     REGISTER_SUCCESS,
     RESET_PASSWORD_SUCCESS,
-    RESET_PASSWORD_FAIL
+    RESET_PASSWORD_FAIL,
+    ADD_USER
 } from './types';
 
 //CHECK TOKEN & LOAD USER
@@ -62,13 +63,17 @@ export const login = (email, password) => (dispatch) => {
 // REGISTER USER
 export const register = (user) => (dispatch, getState) => {
     axios
-      .post('/api/auth/register', user, tokenConfig(getState))
+      .post('/api/auth/invite', user, tokenConfig(getState))
       .then((res) => {
         dispatch(createMessage({ user: 'User Created' }));
         dispatch({
           type: REGISTER_SUCCESS,
           payload: res.data,
         });
+        // dispatch({
+        //   type: ADD_USER,
+        //   payload: res.data,
+        // });
       })
       .catch((err) => {
         dispatch(returnErrors(err.response.data, err.response.status));
@@ -80,6 +85,7 @@ export const register = (user) => (dispatch, getState) => {
 
 // LOGOUT USER
 export const logout = () => (dispatch, getState) => {
+  console.log("LOGGING OUT")
     axios
       .post('/api/auth/logout/', null, tokenConfig(getState))
       .then((res) => {
@@ -107,10 +113,10 @@ export const resetPassword = (old_password, new_password) => (dispatch, getState
               });
             })
             .catch((err) => {
+              dispatch(alert("Old password entered was incorrect. Try again."));
               dispatch(returnErrors(err.response.data, err.response.status));
               dispatch({
                 type: RESET_PASSWORD_FAIL,
-
               });
             });
 }
@@ -119,6 +125,41 @@ export const resetResetPassword = () => (dispatch) => {
   dispatch({
     type: RESET_PASSWORD_FAIL
   })
+}
+
+export const failLogin = () => (dispatch) => {
+  dispatch({
+    type: LOGIN_FAIL
+  })
+}
+
+export const tokenLogin = (token) => (dispatch) => {
+  //check if token is valid and return user
+  
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${token}`
+    },
+  };
+  
+  return axios
+      .get('/api/auth/user', config)
+      .then((res) => {
+        dispatch({
+          type: LOGIN_SUCCESS,
+          payload: {
+            user: res.data,
+            token: token
+          }
+        });
+      })
+      .catch((err) => {
+        dispatch(returnErrors(err.response.data, err.response.status));
+        // dispatch({
+        //   type: REGISTER_FAIL,
+        // });
+      });
 }
   
 // Setup config with token - helper function

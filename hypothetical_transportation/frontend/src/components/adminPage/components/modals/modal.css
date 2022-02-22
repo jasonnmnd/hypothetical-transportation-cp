@@ -77,3 +77,31 @@
 .modalContainer .modal-form input {
   max-width: 200px;
 }
+
+.btn-yellowTableSm {
+  display: inline-block;
+  padding: 4px 6px;
+  background-color: #ffae07;
+  transition: 0.4s;
+  color: #fff;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.btn-yellowTableSm:hover {
+  background-color: #ffdd99;
+}
+
+.btn-yellowclose {
+  display: inline-block;
+  padding: 10px 15px;
+  background-color: #ffae07;
+  transition: 0.4s;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-yellowclose:hover {
+  background-color: #ffdd99;
+}

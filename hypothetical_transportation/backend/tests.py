@@ -1,22 +1,139 @@
 import json
+import datetime
 
 from django.test import RequestFactory, TestCase, TransactionTestCase
 from django.test import Client
-from .models import Student, School, Route
+from .models import Student, School, Route, Stop
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 
+class TestModels(TestCase):
+    
+    def test_school_name(self):
+        school = School.objects.create(address='', latitude=0, longitude=0, name='Test_School_Name')
+        check_school_lower = School.objects.get(name='Test_School_name')
+        check_school_upper = School.objects.get(name='Test_School_Name')
+        self.assertEqual(check_school_lower, check_school_upper)
+
+    def test_stop_dropoff_and_pickup(self):
+        school = School.objects.create(
+            address='2211 Hillsborough Road Durham, NC 27705', 
+            longitude=36.009121, 
+            latitude=-78.926017, 
+            name='Test Blank Stop Name',
+            bus_arrival_time=datetime.time(9,0,0),
+            bus_departure_time=datetime.time(16,0,0)
+        )
+        route = Route.objects.create(
+            name='Test Blank Stop Name Route 1', 
+            description='test route', 
+            school=school,
+        )
+        route2 = route = Route.objects.create(
+            name='Test Blank Stop Name Route 2', 
+            description='test route', 
+            school=school,
+        )
+        stop1 = Stop.objects.create(
+            name='dummy 1',
+            latitude=35.996996,
+            longitude=-78.944668,
+            stop_number=1,
+            pickup_time="11:11:00",
+            dropoff_time="12:11:00",
+            route=route,
+        )
+        stop2 = Stop.objects.create(
+            name='dummy 2',
+            latitude=35.997663,
+            longitude=-78.936984,
+            stop_number=2,
+            pickup_time="11:11:00",
+            dropoff_time="12:11:00",
+            route=route,
+        )
+        stops = Stop.objects.all()
+        old_dropoff, old_pickup = [],[] 
+        for stop in stops:
+            print(f"stop_name: {stop.name}, dropoff time:{stop.dropoff_time}, pickup time:{stop.pickup_time}")
+            old_dropoff.append(stop.dropoff_time)
+            old_pickup.append(stop.pickup_time)
+            self.assertIsNot(stop.dropoff_time, "12:11:00")
+            self.assertIsNot(stop.pickup_time, "11:11:00")
+        
+        school.bus_arrival_time = datetime.time(10,0,0)
+        school.bus_departure_time = datetime.time(17,0,0)
+        school.save()
+        
+        old_dropoff2, old_pickup2 = [],[] 
+        for stop in Stop.objects.all():
+            old_dropoff2.append(stop.dropoff_time)
+            old_pickup2.append(stop.pickup_time)
+            if stop.dropoff_time in old_dropoff or stop.pickup_time in old_pickup:
+                self.assertFalse
+
+        # stops = Stop.objects.all()
+        
+        # for stop in Stop.objects.all():
+        #     stop.longitude = stop.longitude+stop.latitude
+        #     stop.latitude = stop.latitude
+        #     stop.save()
+        #     # print(f"OLD stop_name: {stop.name}, dropoff time:{stop.dropoff_time}, pickup time:{stop.pickup_time}")
+
+        # for stop in Stop.objects.all():
+        #     print(f"stop_name: {stop.name}, dropoff time:{stop.dropoff_time}, pickup time:{stop.pickup_time}")
+        #     if stop.dropoff_time in old_dropoff2 or stop.pickup_time in old_pickup2:
+        #         self.assertFalse
+        
 
 # Create your tests here.
+class StopConsistency(TestCase):
+    def setUp(self):
+        self.parent1 = get_user_model().objects.create_verified_user(email='user1@example.com',
+                                                                     password='password',
+                                                                     full_name='user', address='example address',
+                                                                     latitude=3.0, longitude=-0.8)
+        self.parent2 = get_user_model().objects.create_verified_user(email='user2@example.com',
+                                                                     password='password',
+                                                                     full_name='user', address='example address',
+                                                                     latitude=4.0, longitude=-2.0)
+        self.school = School.objects.create(address='origin', longitude=0, latitude=0, name='example school')
+        self.route1 = Route.objects.create(name='route 1', description='', school=self.school)
+        self.stop4 = Stop.objects.create(name='', location='', latitude=1, longitude=0, route=self.route1,
+                                         stop_number=4)
+        self.stop3 = Stop.objects.create(name='', location='', latitude=2, longitude=0, route=self.route1,
+                                         stop_number=3)
+        self.stop2 = Stop.objects.create(name='', location='', latitude=3, longitude=0, route=self.route1,
+                                         stop_number=2)
+        self.stop1 = Stop.objects.create(name='', location='', latitude=4, longitude=0, route=self.route1,
+                                         stop_number=1)
+        self.student1 = Student.objects.create(full_name='student 1', active=True,
+                                               school=self.school, routes=self.route1, guardian=self.parent1,
+                                               student_id=1)
+
+    # def test_closest_stop(self):
+    #     print(self.stop4.pickup_time)
+    #     print(self.stop3.pickup_time)
+    #     print(self.stop2.pickup_time)
+    #     print(self.stop1.pickup_time)
+    #     print(self.stop4.dropoff_time)
+    #     print(self.stop3.dropoff_time)
+    #     print(self.stop2.dropoff_time)
+    #     print(self.stop1.dropoff_time)
+    #     print(self.student1.has_inrange_stop)
+
+
 class AuthenticationObjectConsistency(TestCase):
     def setUp(self):
         admin_group = Group.objects.create(name='Administrator')
         guardian_group = Group.objects.create(name='Guardian')
 
         # SET UP ADMINISTRATOR
-        admin_user = get_user_model().objects.create_user(email='admin@example.com', password='wordpass',
-                                                          full_name='admin user', address='loc0')
+        admin_user = get_user_model().objects.create_verified_user(email='admin@example.com', password='wordpass',
+                                                                   full_name='admin user', address='loc0', latitude=0,
+                                                                   longitude=0)
         admin_user.groups.add(admin_group)
+        # admin_user.is_verified = True
 
         login_response = self.client.post('/api/auth/login',
                                           json.dumps(
@@ -25,12 +142,15 @@ class AuthenticationObjectConsistency(TestCase):
         self.admin_token = login_response.data['token']
         self.admin_user = admin_user
 
-        stan = get_user_model().objects.create_user(email='stanpines@mysteryshack.com', password='mysteryshack',
-                                                    full_name='Stanley Pines', address='618 Gopher Road')
-        dan = get_user_model().objects.create_user(email='manlydan@gmail.com', password='wordpass',
-                                                   full_name='Manly Dan', address='')
-        school = School.objects.create(address='1111 Some St.', name='Eggbert Elementary')
-        high_school = School.objects.create(address='7777 Some St.', name='Gravity Falls High School')
+        stan = get_user_model().objects.create_verified_user(email='stanpines@mysteryshack.com',
+                                                             password='mysteryshack',
+                                                             full_name='Stanley Pines', address='618 Gopher Road',
+                                                             latitude=0, longitude=0)
+        dan = get_user_model().objects.create_verified_user(email='manlydan@gmail.com', password='wordpass',
+                                                            full_name='Manly Dan', address='', latitude=0, longitude=0)
+        school = School.objects.create(address='1111 Some St.', longitude=0, latitude=0, name='Eggbert Elementary')
+        high_school = School.objects.create(address='7777 Some St.', longitude=0, latitude=0,
+                                            name='Gravity Falls High School')
         route = Route.objects.create(name='School Route 1', description='', school=school)
 
         mabel = Student.objects.create(full_name='Mabel Pines', active=True,
@@ -56,6 +176,8 @@ class AuthenticationObjectConsistency(TestCase):
                               'full_name': 'Stanford Pines',
                               'password': 'mysteryshack',
                               'address': 'Mostly an alternative dimension',
+                              'latitude': 0.0,
+                              'longitude': 0.0,
                               'groups': [],
                               }),
                          content_type='application/json', HTTP_AUTHORIZATION=f'Token {self.admin_token}')
@@ -99,25 +221,28 @@ class PermissionViews(TransactionTestCase):
         guardian_group = Group.objects.create(name='Guardian')
 
         # SET UP ADMINISTRATOR
-        admin_user = get_user_model().objects.create_user(email='admin@example.com', password='wordpass',
-                                                          full_name='admin user', address='loc0')
+        admin_user = get_user_model().objects.create_verified_user(email='admin@example.com', password='wordpass',
+                                                                   full_name='admin user', address='loc0', latitude=0,
+                                                                   longitude=0)
         admin_user.groups.add(admin_group)
 
         # SET UP USER 1
-        normal_user1 = get_user_model().objects.create_user(email='user1@example.com', password='wordpass',
-                                                            full_name='user', address='loc1')
+        normal_user1 = get_user_model().objects.create_verified_user(email='user1@example.com', password='wordpass',
+                                                                     full_name='user', address='loc1', latitude=0,
+                                                                     longitude=0)
         normal_user1.groups.add(guardian_group)
 
         # SET UP USER 2
-        normal_user2 = get_user_model().objects.create_user(email='user2@example.com', password='wordpass',
-                                                            full_name='user', address='loc2')
+        normal_user2 = get_user_model().objects.create_verified_user(email='user2@example.com', password='wordpass',
+                                                                     full_name='user', address='loc2', latitude=0,
+                                                                     longitude=0)
         normal_user2.groups.add(guardian_group)
         self.normal_user2 = normal_user2
 
-        school1 = School.objects.create(address='', name='School 1')
-        school2 = School.objects.create(address='', name='School 2')
-        school3 = School.objects.create(address='', name='School 3')
-        school4 = School.objects.create(address='', name='School 4')
+        school1 = School.objects.create(address='', latitude=0, longitude=0, name='School 1')
+        school2 = School.objects.create(address='', latitude=0, longitude=0, name='School 2')
+        school3 = School.objects.create(address='', latitude=0, longitude=0, name='School 3')
+        school4 = School.objects.create(address='', latitude=0, longitude=0, name='School 4')
         route1 = Route.objects.create(name='School Route 1', description='', school=school1)
         route2 = Route.objects.create(name='School Route 2', description='', school=school2)
         route3 = Route.objects.create(name='School Route 3', description='', school=school3)
@@ -229,6 +354,8 @@ class PermissionViews(TransactionTestCase):
                                         {
                                             'name': 'new school',
                                             'address': '',
+                                            'latitude': 0,
+                                            'longitude': 0,
                                         }),
                                     content_type='application/json')
         self.assertEqual(response.status_code, 401)
@@ -297,8 +424,9 @@ class PermissionViews(TransactionTestCase):
 
     def test_guardian_needs_address(self):
         # SET UP ADDRESS-LESS USER 3
-        normal_user3 = get_user_model().objects.create_user(email='user3@example.com', password='wordpass',
-                                                            full_name='user', address='')
+        normal_user3 = get_user_model().objects.create_verified_user(email='user3@example.com', password='wordpass',
+                                                                     full_name='user', address='', latitude=0,
+                                                                     longitude=0)
         response = self.client.post('/api/student/',
                                     json.dumps(
                                         {
@@ -318,9 +446,10 @@ class PermissionViews(TransactionTestCase):
         response = self.client.put(f'/api/user/{self.normal_user2.id}/',
                                    json.dumps(
                                        {'email': 'user2@gmail.com',
-                                        'full_name': 'First Last',
-                                        'password': 'wordpass6',
+                                        'full_name': 'Correct Name',
                                         'address': 'address',
+                                        'latitude': 0,
+                                        'longitude': 0,
                                         'groups': [],
                                         }),
                                    content_type='application/json',
@@ -329,20 +458,18 @@ class PermissionViews(TransactionTestCase):
         response = self.client.put(f'/api/user/{self.normal_user2.id}/',
                                    json.dumps(
                                        {'email': 'user2@gmail.com',
-                                        'full_name': 'First Last',
-                                        'password': 'wordpass',
+                                        'full_name': 'Should not be set',
                                         'address': 'address',
+                                        'longitude': 0,
+                                        'latitude': 0,
                                         'groups': [],
                                         }),
                                    content_type='application/json',
                                    HTTP_AUTHORIZATION=f'Token {self.user1_token}')
         self.assertEqual(response.status_code, 403)
 
-        login_response = self.client.post('/api/auth/login',
-                                          json.dumps(
-                                              {'email': 'user2@gmail.com', 'password': 'wordpass6'}),
-                                          content_type='application/json')
-        self.assertEqual(login_response.status_code, 200)
+        response = self.client.get(f'/api/user/{self.normal_user2.id}/', HTTP_AUTHORIZATION=f'Token {self.admin_token}')
+        self.assertEqual(response.data['full_name'], 'Correct Name')
 
     def test_student_routes_guardian_optional(self):
         response = self.client.post('/api/student/',
@@ -381,6 +508,8 @@ class PermissionViews(TransactionTestCase):
                                             'full_name': 'bob smith',
                                             'password': 'wordpass',
                                             'address': '',
+                                            'latitude': 0,
+                                            'longitude': 0,
                                             'groups': [],
                                         }),
                                     content_type='application/json',

@@ -53,16 +53,18 @@ function TestMap(props) {
         const lat = e.latLng.lat();
         const lng = e.latLng.lng();
         setLocation({ lat, lng});
+        // console.log({lat,lng});
+        props.setCoord({ lat:lat, lng:lng});
         getAddressFromLongLat({lat, lng});
     };
 
     useEffect(() => {
-        getLongLatFromAddress(props.address);
+        // getLongLatFromAddress(props.address);
+        setLocation(props.coord)
+        console.log(props.coord)
     }, [props]);
 
   return (
-    <LoadScript
-      googleMapsApiKey='AIzaSyA6nIh9bWUWFOD_y7hEZ7UQh_KmPn5Sq58'>
        <GoogleMap mapContainerStyle={mapStyles} zoom={13} center={location}>
        {
             location.lat ? 
@@ -71,13 +73,14 @@ function TestMap(props) {
                 null
        }
        </GoogleMap>
-    </LoadScript>
  );
 }
 
 TestMap.propTypes = {
     address: PropTypes.string,
-    setAddress: PropTypes.func
+    coord: PropTypes.object,
+    setAddress: PropTypes.func,
+    setCoord: PropTypes.func,
 }
 
 const mapStateToProps = (state) => ({

@@ -5,7 +5,7 @@ import { tokenConfig } from './auth';
 import { createMessage, returnErrors } from './messages';
 import { getStudents } from './students';
 import { getParameters } from './utils';
-import { GET_USERS, ADD_USER, DELETE_USER, POPULATE_TABLE, GET_USER, DELETE_ITEM } from './types';
+import { GET_USERS, ADD_USER, DELETE_USER, POPULATE_TABLE, GET_USER, DELETE_ITEM,RESET_POSTED_USER } from './types';
 
 
 export const getUsers = (parameters) => (dispatch, getState) => {
@@ -14,7 +14,7 @@ export const getUsers = (parameters) => (dispatch, getState) => {
     config.params = getParameters(parameters);
   }
 
-  axios
+  return axios
     .get('/api/user/', config)
     .then((res) => {
       dispatch({
@@ -28,7 +28,7 @@ export const getUsers = (parameters) => (dispatch, getState) => {
 
 
 export const deleteUser = (id) => (dispatch, getState) => {
-    axios.delete(`/api/user/${id}/`, tokenConfig(getState))
+    return axios.delete(`/api/user/${id}/`, tokenConfig(getState))
     .then(res => {
       dispatch(createMessage({ user: 'User Deleted' }));
         dispatch({
@@ -39,8 +39,8 @@ export const deleteUser = (id) => (dispatch, getState) => {
 }
 
 export const addUser = (user) => (dispatch, getState) => {
-    axios
-    .post(`/api/auth/register`, user, tokenConfig(getState))
+    return axios
+    .post(`/api/auth/invite`, user, tokenConfig(getState))
     .then(res =>{
       dispatch(createMessage({ user: 'User Created' }));
         dispatch({
@@ -51,36 +51,16 @@ export const addUser = (user) => (dispatch, getState) => {
     }).catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
 };
 
-export const searchUsers = (i1, i2, i3) => (dispatch, getState) => {
-  let url=`/api/user/`
-  if(i1==="" || i2==="" || i1===undefined || i2===undefined){
-    if(i3!==""&& i3!==undefined){
-      url=`/api/user/?ordering=${i3}`
-    }
-  }
-  else{
-    if(i3!=="" && i3!==undefined){
-      url=`/api/user/?search=${i2}&search_fields=${i1}&ordering=${i3}`
-    }
-    else{
-      url=`/api/user/?search=${i2}&search_fields=${i1}`
-    }
-  }
-  
-  axios.get(url, tokenConfig(getState))
-        .then(res => {
-            dispatch({
-                type: GET_USERS,
-                payload: res.data,
-              });
-        }).catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
-};
 
-
+export const resetPostedUser = ()=>(dispatch)=>{
+  dispatch({
+    type: RESET_POSTED_USER,
+  });
+}
 
 
 export const getUser = (id) => (dispatch, getState) => {
-  axios.get(`/api/user/${id}/`, tokenConfig(getState))
+  return axios.get(`/api/user/${id}/`, tokenConfig(getState))
       .then(res => {
         dispatch({
           type: GET_USER,
@@ -91,7 +71,7 @@ export const getUser = (id) => (dispatch, getState) => {
   }
 
   export const updateUser = (user, id) => (dispatch, getState) => {
-    axios
+    return axios
             .put(`/api/user/${id}/`,user, tokenConfig(getState))
             .then(res =>{
               dispatch(createMessage({ user: 'User Updated' }));

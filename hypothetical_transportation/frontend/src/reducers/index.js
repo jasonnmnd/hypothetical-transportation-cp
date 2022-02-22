@@ -8,6 +8,7 @@ import users from './users';
 import table from './table';
 import routes from './routes';
 import routeplanner from './routeplanner';
+import stop from './stops';
 
 export default combineReducers({
   students,
@@ -18,5 +19,6 @@ export default combineReducers({
   users,
   table,
   routeplanner,
-  routes
+  routes,
+  stop,
 });

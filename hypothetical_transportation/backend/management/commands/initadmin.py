@@ -11,15 +11,18 @@ class Command(BaseCommand):
         parser.add_argument('--email', nargs='?', type=str, default='admin@example.com')
         parser.add_argument('--fullname', nargs='?', type=str, default='admin')
         parser.add_argument('--password', nargs='?', type=str, default='password')
-        parser.add_argument('--address', nargs='?', type=str, default='')
+        parser.add_argument('--address', nargs='?', type=str, default='534 Research Dr, Durham, NC 27705')
 
     def handle(self, *args, **options):
         try:
             admin_group, _ = Group.objects.get_or_create(name='Administrator')
             Group.objects.get_or_create(name='Guardian')
 
-            admin = get_user_model().objects.create_user(email=options['email'], password=options['password'],
-                                                         full_name=options['fullname'], address=options['address'])
+            admin = get_user_model().objects.create_verified_user(email=options['email'], password=options['password'],
+                                                                  full_name=options['fullname'],
+                                                                  address=options['address'],
+                                                                  latitude=0,
+                                                                  longitude=0)
             admin.groups.add(admin_group.id)
         except IntegrityError:
             print(CommandError('Admin user with this email already exists'))

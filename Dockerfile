@@ -21,3 +21,4 @@ RUN pip freeze
 
 # move entire current directory into new dir
 COPY ./hypothetical_transportation /code/
+COPY ./hypothetical_transportation/frontend/static /code/staticfiles
