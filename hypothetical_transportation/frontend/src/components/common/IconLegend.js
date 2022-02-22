@@ -112,7 +112,7 @@ function IconLegend(props) {
                 <Fragment key={index}>
                     {result.key}
                     {result.icon}
-                    {getLegend() == "stopPlanner" ? <p>HI</p> : <></>}
+                    {props.legendType == "stopPlanner" ? <br></br> : <></>}
                 </Fragment>
             )})
         }

@@ -168,17 +168,15 @@ function AdminRouteStopsPlanner(props) {
           <Card>
             <Card.Header as="h5">Stop Planner Map</Card.Header>
             <Card.Body>
-            <Container>
               <Card>
                 <Card.Body>
                   <h5 style={{fontWeight:"700px"}}>Instructions: </h5>
                   <h6>Drag and Drop Stops to Reposition. Right Click to Remove Stop. Left Click to View Info.</h6>
                 </Card.Body>
               </Card>
-              </Container>
               <br></br>
-                <Container className="d-flex flex-row justify-content-center" style={{gap: "30px"}}>
-                  <Container style={{width: "3500px"}}>
+                <Container className="d-flex flex-row justify-content-center">
+                  <Container style={{width: "800px"}}>
                   <StopPlannerMap 
                       students={students} 
                       school={props.school} 
