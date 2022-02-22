@@ -82,7 +82,7 @@ function GeneralAdminEmailPage(props) {
         // console.log("Submit button pressed with school " + currSchool + " and route " + currRoute);
         
         const payload = {
-            object_id: currSchool == "" ? parseInt(currRoute) : parseInt(currSchool),
+            object_id: getIdType(emailSelection) == "SCHOOL" ? parseInt(currSchool) : parseInt(currRoute),
             id_type: getIdType(emailSelection),
             subject: subject,
             body: body
