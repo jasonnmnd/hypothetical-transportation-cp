@@ -137,12 +137,12 @@ WSGI_APPLICATION = 'hypothetical_transportation.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        #'NAME': 'admin',
-        'NAME': 'ht_db',
+        'NAME': 'admin',
+        # 'NAME': 'ht_db',
         'USER': 'admin',
         'PASSWORD': 'admin',
-        #'HOST': 'db',
-        'HOST': 'localhost',
+        'HOST': 'db',
+        # 'HOST': 'localhost',
         'PORT': '5432',
     }
 }
@@ -212,22 +212,22 @@ EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 
 
-class DisableMigrations(object):
+# class DisableMigrations(object):
 
-    def __contains__(self, item):
-        return True
+#     def __contains__(self, item):
+#         return True
 
-    def __getitem__(self, item):
-        return None
+#     def __getitem__(self, item):
+#         return None
 
 
-TESTS_IN_PROGRESS = False
-if 'test' in sys.argv[1:] or 'jenkins' in sys.argv[1:]:
-    logging.disable(logging.CRITICAL)
-    PASSWORD_HASHERS = (
-        'django.contrib.auth.hashers.MD5PasswordHasher',
-    )
-    DEBUG = False
-    TEMPLATE_DEBUG = False
-    TESTS_IN_PROGRESS = True
-    MIGRATION_MODULES = DisableMigrations()
+# TESTS_IN_PROGRESS = False
+# if 'test' in sys.argv[1:] or 'jenkins' in sys.argv[1:]:
+#     logging.disable(logging.CRITICAL)
+#     PASSWORD_HASHERS = (
+#         'django.contrib.auth.hashers.MD5PasswordHasher',
+#     )
+#     DEBUG = False
+#     TEMPLATE_DEBUG = False
+#     TESTS_IN_PROGRESS = True
+#     MIGRATION_MODULES = DisableMigrations()
