@@ -7,8 +7,79 @@ from .models import Student, School, Route, Stop
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 
+
+class TestStudentInRange(TransactionTestCase):
+    reset_sequences = True
+
+    def test_routes_without_students_are_complete(self):
+        """
+        Route 1 should be complete at the start
+        :return: None
+        """
+        response = self.client.get('/api/route/1/', HTTP_AUTHORIZATION=f'Token {self.admin_token}')
+        self.assertEqual(response.data['is_complete'], True)
+
+    def setUp(self):
+        """
+        Test case has one student, one school, one route, and three stops
+            Parent 1 + Student 1: Wilkinson Building (36.00352740209603, -78.93814858774756)
+            Parent 1 + Student 2: Pitchforks (35.99934207787379, -78.93672453082038)
+            School 1:
+                Route 1:
+                    Stop 1: Decker Tower (35.99855601792323, -78.93568366591728)
+                    Stop 2: Perkins Library (36.002406773314895, -78.93857625780537)
+                    Stop 3: Panda Express (36.00122851433393, -78.9405447866412)
+        :return: None
+        """
+        self.wilkinson_loc = (36.00352740209603, -78.93814858774756)
+        self.pitch_loc = (35.99934207787379, -78.93672453082038)
+        self.decker_loc = (35.99855601792323, -78.93568366591728)
+        self.perkins_loc = (36.002406773314895, -78.93857625780537)
+        self.panda_loc = (36.00122851433393, -78.9405447866412)
+
+        admin_group = Group.objects.create(name='Administrator')
+        admin_user = get_user_model().objects.create_verified_user(email='admin@example.com', password='wordpass',
+                                                                   full_name='admin user', address='loc0', latitude=0,
+                                                                   longitude=0)
+        admin_user.groups.add(admin_group)
+        login_response = self.client.post('/api/auth/login',
+                                          json.dumps(
+                                              {'email': 'admin@example.com', 'password': 'wordpass'}),
+                                          content_type='application/json')
+        self.admin_token = login_response.data['token']
+        self.admin_user = admin_user
+        self.parent1 = get_user_model().objects.create_verified_user(email='user1@example.com',
+                                                                     password='password',
+                                                                     full_name='user', address='Wilkinson Building',
+                                                                     latitude=self.wilkinson_loc[0],
+                                                                     longitude=self.wilkinson_loc[1])
+        self.parent2 = get_user_model().objects.create_verified_user(email='user2@example.com',
+                                                                     password='password',
+                                                                     full_name='user', address='Pitchforks',
+                                                                     latitude=self.decker_loc[0],
+                                                                     longitude=self.decker_loc[1])
+        school = School.objects.create(address='dummy origin', longitude=0, latitude=0, name='example school')
+        route = Route.objects.create(name='Route 1', description='', school=school)
+        Stop.objects.create(name='Stop 1', location='Decker Tower', latitude=self.decker_loc[0],
+                            longitude=self.decker_loc[1], route=route, pickup_time="00:00:00", dropoff_time="00:00:00",
+                            stop_number=1)
+        Stop.objects.create(name='Stop 2', location='Perkins Library', latitude=self.perkins_loc[0],
+                            longitude=self.perkins_loc[1], route=route, pickup_time="00:00:00", dropoff_time="00:00:00",
+                            stop_number=2)
+        Stop.objects.create(name='Stop 3', location='Panda Express', latitude=self.panda_loc[0],
+                            longitude=self.panda_loc[1], route=route, pickup_time="00:00:00", dropoff_time="00:00:00",
+                            stop_number=3)
+
+        Student.objects.create(full_name='student 1', active=True,
+                               school=school, routes=None, guardian=self.parent1,
+                               student_id=1)
+        Student.objects.create(full_name='student 2', active=True,
+                               school=school, routes=None, guardian=self.parent2,
+                               student_id=2)
+
+
 class TestModels(TestCase):
-    
+
     def test_school_name(self):
         school = School.objects.create(address='', latitude=0, longitude=0, name='Test_School_Name')
         check_school_lower = School.objects.get(name='Test_School_name')
@@ -17,21 +88,21 @@ class TestModels(TestCase):
 
     def test_stop_dropoff_and_pickup(self):
         school = School.objects.create(
-            address='2211 Hillsborough Road Durham, NC 27705', 
-            longitude=36.009121, 
-            latitude=-78.926017, 
+            address='2211 Hillsborough Road Durham, NC 27705',
+            longitude=36.009121,
+            latitude=-78.926017,
             name='Test Blank Stop Name',
-            bus_arrival_time=datetime.time(9,0,0),
-            bus_departure_time=datetime.time(16,0,0)
+            bus_arrival_time=datetime.time(9, 0, 0),
+            bus_departure_time=datetime.time(16, 0, 0)
         )
         route = Route.objects.create(
-            name='Test Blank Stop Name Route 1', 
-            description='test route', 
+            name='Test Blank Stop Name Route 1',
+            description='test route',
             school=school,
         )
         route2 = route = Route.objects.create(
-            name='Test Blank Stop Name Route 2', 
-            description='test route', 
+            name='Test Blank Stop Name Route 2',
+            description='test route',
             school=school,
         )
         stop1 = Stop.objects.create(
@@ -53,19 +124,19 @@ class TestModels(TestCase):
             route=route,
         )
         stops = Stop.objects.all()
-        old_dropoff, old_pickup = [],[] 
+        old_dropoff, old_pickup = [], []
         for stop in stops:
             print(f"stop_name: {stop.name}, dropoff time:{stop.dropoff_time}, pickup time:{stop.pickup_time}")
             old_dropoff.append(stop.dropoff_time)
             old_pickup.append(stop.pickup_time)
             self.assertIsNot(stop.dropoff_time, "12:11:00")
             self.assertIsNot(stop.pickup_time, "11:11:00")
-        
-        school.bus_arrival_time = datetime.time(10,0,0)
-        school.bus_departure_time = datetime.time(17,0,0)
+
+        school.bus_arrival_time = datetime.time(10, 0, 0)
+        school.bus_departure_time = datetime.time(17, 0, 0)
         school.save()
-        
-        old_dropoff2, old_pickup2 = [],[] 
+
+        old_dropoff2, old_pickup2 = [], []
         for stop in Stop.objects.all():
             old_dropoff2.append(stop.dropoff_time)
             old_pickup2.append(stop.pickup_time)
@@ -73,7 +144,7 @@ class TestModels(TestCase):
                 self.assertFalse
 
         # stops = Stop.objects.all()
-        
+
         # for stop in Stop.objects.all():
         #     stop.longitude = stop.longitude+stop.latitude
         #     stop.latitude = stop.latitude
@@ -84,7 +155,7 @@ class TestModels(TestCase):
         #     print(f"stop_name: {stop.name}, dropoff time:{stop.dropoff_time}, pickup time:{stop.pickup_time}")
         #     if stop.dropoff_time in old_dropoff2 or stop.pickup_time in old_pickup2:
         #         self.assertFalse
-        
+
 
 # Create your tests here.
 class StopConsistency(TestCase):
