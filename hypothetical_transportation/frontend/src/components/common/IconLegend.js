@@ -111,13 +111,8 @@ function IconLegend(props) {
             return (
                 <Fragment key={index}>
                     {result.key}
-                    {/* {getColoredIcon(result.iconColor, result.iconType)} */}
-                    {/* {<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -5 50 50" style={{height: "40px", width:"40px"}}>
-                        <g fill={result.iconFill}>
-                        <path d={result.iconPath}/>
-                        </g>
-                    </svg>} */}
                     {result.icon}
+                    {getLegend() == "stopPlanner" ? <p>HI</p> : <></>}
                 </Fragment>
             )})
         }
