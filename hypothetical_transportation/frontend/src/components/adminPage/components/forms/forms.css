@@ -12,6 +12,10 @@
   background-color: darkgrey;
 }
 
+.tr-column_names-delete {
+  background-color: rgb(194, 194, 194);
+}
+
 .tr-header {
   background-color: rgb(244, 177, 75);
 }
@@ -30,4 +34,8 @@
 
 .inputFieldInTable {
   width: 100%;
+}
+
+.clickable {
+  cursor: pointer;
 }

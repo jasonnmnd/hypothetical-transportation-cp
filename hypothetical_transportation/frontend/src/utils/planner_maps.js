@@ -3,7 +3,7 @@ import { NO_ROUTE } from "./utils"
 
 export const addSchoolPin = (pinData, school, onSchoolClick) => {
     pinData.push({
-        iconColor: "black",
+        iconColor: "white",
         iconType: "school",
         markerProps: {
             onClick: onSchoolClick
@@ -27,6 +27,16 @@ export const getStopPin = (stop) => {
     return {
         ...stop, 
     }
+}
+
+export const getCurRouteFromStudent = (student, studentChanges) => {
+    if(studentChanges[student.id] != null){
+        return studentChanges[student.id];
+    }
+    if(student.routes == null){
+        return null;
+    }
+    return student.routes.id;
 }
 
 export const getStudentRouteName = (studentId, studentRouteObj, studentChanges, allRoutes) => {

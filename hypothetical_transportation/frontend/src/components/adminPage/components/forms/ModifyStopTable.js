@@ -95,7 +95,7 @@ function ModifyStopTable(props) {
                          />
                     </td>
         }
-        return <td onClick={() => setInput(stop, NAME, stop.name)}>{`✏️ ${stop.name}`}</td>
+        return <td className='clickable' onClick={() => setInput(stop, NAME, stop.name)}>{`✏️ ${stop.name}`}</td>
     }
 
     const getLocationInputComponent = (stop) => {
@@ -112,7 +112,7 @@ function ModifyStopTable(props) {
                          />
                     </td>
         }
-        return <td onClick={() => setInput(stop, LOCATION, stop.location)}>{`✏️ ${stop.location}`}</td>
+        return <td className='clickable' onClick={() => setInput(stop, LOCATION, stop.location)}>{`✏️ ${stop.location}`}</td>
     }
 
     const getStopsInMapTableBody = () => {
@@ -130,6 +130,8 @@ function ModifyStopTable(props) {
                     <td>{stop.stop_number}</td>
                     {getNameInputComponent(stop, NAME)}
                     {getLocationInputComponent(stop, LOCATION)}
+                    <td>{stop.pickup_time}</td>
+                    <td>{stop.dropoff_time}</td>
                 </tr>
                 )}
             </Draggable>
@@ -154,10 +156,10 @@ function ModifyStopTable(props) {
             <tr className='tr-header-delete'>
                 <th colSpan="3">Deleted Stops</th>
             </tr>
-            <tr>
-            <th />
-            <th>Name</th>
-            <th>Location</th>
+            <tr className='tr-column_names-delete'>
+                <th />
+                <th>Name</th>
+                <th>Location</th>
             </tr>
         </thead>
             <tbody>
@@ -177,13 +179,15 @@ function ModifyStopTable(props) {
             <table className="table borderd">
             <thead>
                 <tr className='tr-header'>
-                    <th colSpan="4">Stops in Route</th>
+                    <th colSpan="6">Stops in Route</th>
                 </tr>
                 <tr>
                 <th />
                 <th>Stop Number</th>
                 <th>Name</th>
                 <th>Location</th>
+                <th>Pickup Time</th>
+                <th>Dropoff Time</th>
                 </tr>
             </thead>
                 

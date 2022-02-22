@@ -74,7 +74,7 @@ function ParentStudentDetails(props){
     const addStudentPin = (pinData, onclick) => {
         pinData.push({
             iconColor: "green",
-            iconType: "student",
+            iconType: "studentCheck",
             markerProps: {
                 onClick: onclick
             },

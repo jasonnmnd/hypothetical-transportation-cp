@@ -1,0 +1,60 @@
+version: "2"
+
+services:
+  db:
+    image: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_DB=admin
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+    ports:
+      - 5432:5432
+  web:
+    build: .
+    command: ./entrypoint_local.sh
+    volumes:
+      - static_volume:/code/staticfiles
+      - media_volume:/home/app/web/mediafiles
+      # - .:/code/
+    # ports:
+      # - "8000:8000"
+    expose:
+      - "8000"
+    environment:
+      - POSTGRES_DB=admin
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - VIRTUAL_HOST=legoons-ht.colab.duke.edu
+      - VIRTUAL_PORT=8000
+      - LETSENCRYPT_HOST=legoons-ht.colab.duke.edu
+      - LETSENCRYPT_EMAIL=dmm107@duke.edu
+    depends_on:
+      - db
+  nginx-proxy:
+    container_name: nginx-proxy
+    build: ./nginx
+    restart: always
+    ports:
+      - 443:443
+      - 80:80
+    volumes:
+      - /etc/letsencrypt/:/etc/letsencrypt/
+      - static_volume:/code/staticfiles
+      - certs:/etc/nginx/certs
+      - html:/usr/share/nginx/html
+      - vhost:/etc/nginx/vhost.d
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    depends_on:
+      - web
+  
+volumes:
+  static_volume:
+  postgres_data:
+  static_volume:
+  media_volume:
+  certs:
+  html:
+  vhost:
+  acme:

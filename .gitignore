@@ -20,6 +20,7 @@ __pycache__/
 
 # data
 *.dump
+data/
 
 # npm
 node_modules/

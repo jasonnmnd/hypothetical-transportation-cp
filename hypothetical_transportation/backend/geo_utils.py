@@ -26,7 +26,7 @@ def query_distance_matrix(lat1, long1, lat2, long2):
     payload = {}
     headers = {}
     response = requests.request("GET", url, headers=headers, data=payload)
-    print(response.text)
+    # print(response.text)
 # def time_to_seconds(time: datetime.time):
 #     return time.hour * 3600 + time.minute * 60 + time.second
 #

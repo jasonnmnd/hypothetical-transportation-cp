@@ -102,7 +102,7 @@ function GeneralAdminRouteDetails(props) {
     return [
         {
             iconColor: "green",
-            iconType: "student",
+            iconType: "studentCheck",
             markerProps: {
                 onClick: onStudentClick,
                 onRightClick: ""

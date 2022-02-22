@@ -4,7 +4,8 @@
   "description": "Senior design course project!",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack --mode development --watch ./hypothetical_transportation/frontend/src/index.js --output-path ./hypothetical_transportation/frontend/static/frontend/main.js"
+    "dev": "webpack --mode development --watch ./hypothetical_transportation/frontend/src/index.js --output-path ./hypothetical_transportation/frontend/static/frontend/main.js",
+    "build": "webpack --mode production ./hypothetical_transportation/frontend/src/index.js --output-path ./hypothetical_transportation/frontend/static/frontend/main.js"
   },
   "repository": {
     "type": "git",
@@ -26,7 +27,7 @@
     "css-loader": "^6.5.1",
     "file-loader": "^6.2.0",
     "style-loader": "^3.3.1",
-    "webpack": "^5.66.0",
+    "webpack": "^5.69.1",
     "webpack-cli": "^4.9.2"
   },
   "dependencies": {

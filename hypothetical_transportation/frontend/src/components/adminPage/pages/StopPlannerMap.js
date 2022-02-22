@@ -49,23 +49,29 @@ function StopPlannerMap(props){
         return props.students.filter(student => !student.has_inrange_stop);
     }
 
+    const getStudentInfoWindow = (pinStuff) => {
+        return <InfoWindow key={`student-${pinStuff.id}`}></InfoWindow>
+    }
+
 
     const getStudentGroupsPinData = () => {
         
         return [
             {
                 iconColor: "green",
-                iconType: "student",
+                iconType: "studentCheck",
                 markerProps: {
                     onClick: onStudentClick,
+                    onRightClick: onStudentClick,
                 },
                 pins: getStudentsWStop().map(student => {return getStudentPin(student)})
             },
             {
                 iconColor: "red",
-                iconType: "student",
+                iconType: "studentX",
                 markerProps: {
                     onClick: onStudentClick,
+                    onRightClick: onStudentClick,
                 },
                 pins: getStudentsWOStop().map(student => {return getStudentPin(student)})
             },
@@ -89,9 +95,9 @@ function StopPlannerMap(props){
     }
     
     const getPinData = () => {
-        let pinData = getStudentGroupsPinData();
+        let pinData = getStopPinData();
         addSchoolPin(pinData, props.school, onSchoolClick)
-        pinData = pinData.concat(getStopPinData());
+        pinData = pinData.concat(getStudentGroupsPinData());
         return pinData;
     }
 
