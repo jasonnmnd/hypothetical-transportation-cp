@@ -141,7 +141,10 @@ def update_bus_times_for_stops_related_to_stop(stop: Stop):
         asc_times.append(running_asc_time)   
 
     # handle the edge case of arriving to the school
-    running_desc_time = running_desc_time + stop_n_to_school
+    if len(stops)==1:
+        running_desc_time = times['rows'][1]['elements'][0]['duration']['value']
+    else:
+        running_desc_time = running_desc_time + stop_n_to_school
     desc_times.append(running_desc_time)
     dropoff_times = [sec_to_datetime_h_m_s((school_letout_time+time)%(24*3600)) for time in asc_times]
     pickup_times = [sec_to_datetime_h_m_s((school_start_time+time-running_desc_time-stop_n_to_school)%(24*3600)) for time in desc_times]
