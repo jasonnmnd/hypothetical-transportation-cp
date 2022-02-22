@@ -126,7 +126,7 @@ def update_bus_times_for_stops_related_to_stop(stop: Stop):
     school_start_time, school_letout_time, stops, times = get_information_related_to_a_stop(stop)
     school_to_stop_1 = times['rows'][0]['elements'][1]['duration']['value']
     stop_n_to_school = times['rows'][len(stops)-1]['elements'][0]['duration']['value']
-
+    # print(times)
     # setup, handle the edge case of leaving the school
     desc_times, asc_times = [], [school_to_stop_1]
     running_desc_time, running_asc_time = 0, school_to_stop_1
@@ -141,8 +141,15 @@ def update_bus_times_for_stops_related_to_stop(stop: Stop):
         asc_times.append(running_asc_time)   
 
     # handle the edge case of arriving to the school
-    running_desc_time = running_desc_time + stop_n_to_school
-    desc_times.append(running_desc_time)
+    if len(stops)==1:
+        # print("hiiii")
+        # ok, because of how we handle creating pickup times, this needs to be a negative value
+        desc_times.append(-1*times['rows'][1]['elements'][0]['duration']['value'])
+        # print(running_desc_time)
+    else:
+        running_desc_time = running_desc_time + stop_n_to_school
+        desc_times.append(running_desc_time)
+    # print(desc_times)
     dropoff_times = [sec_to_datetime_h_m_s((school_letout_time+time)%(24*3600)) for time in asc_times]
     pickup_times = [sec_to_datetime_h_m_s((school_start_time+time-running_desc_time-stop_n_to_school)%(24*3600)) for time in desc_times]
     stop_num = 0
@@ -154,7 +161,6 @@ def update_bus_times_for_stops_related_to_stop(stop: Stop):
         stop.save(update_fields=['pickup_time', 'dropoff_time'])
         stop_num = stop_num+1
     return response
-
 
 def update_all_stops_related_to_school(school: School):
     """
