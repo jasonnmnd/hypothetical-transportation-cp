@@ -89,8 +89,14 @@ Optional Flags:
 
 #### Starting the Server
 
+locally:
 ```
 python3 manage.py runserver
+```
+
+within the host:
+```
+sudo docker-compose -f docker-compose.<ENV>.yml up --build
 ```
 
 ### Testing
