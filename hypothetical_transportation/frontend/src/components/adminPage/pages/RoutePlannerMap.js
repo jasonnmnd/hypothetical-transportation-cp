@@ -159,7 +159,7 @@ function RoutePlannerMap(props){
             },
             {
                 iconColor: "grey",
-                iconType: "studentCheck",
+                iconType: "student",
                 markerProps: {
                     onRightClick: onStudentClick,
                     onClick: props.changeStudentRoute
