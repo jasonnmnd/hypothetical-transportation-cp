@@ -31,7 +31,7 @@ export const getStopPin = (stop) => {
 
 export const getCurRouteFromStudent = (student, studentChanges) => {
     if(studentChanges[student.id] != null){
-        if(studentChanges[student.id] == "none"){
+        if(studentChanges[student.id] == NO_ROUTE){
             return null;
         }
         return studentChanges[student.id];

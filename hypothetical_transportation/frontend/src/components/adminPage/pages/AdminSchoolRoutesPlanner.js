@@ -15,6 +15,7 @@ import { NO_ROUTE } from '../../../utils/utils';
 import { Container, ButtonGroup, ToggleButton, Card, Button, Form, Collapse } from 'react-bootstrap';
 import PageNavigateModal from '../components/modals/PageNavigateModal';
 import IconLegend from '../../common/IconLegend';
+import { getCurRouteFromStudent } from '../../../utils/planner_maps';
 
 
 function AdminSchoolRoutesPlanner(props) {
@@ -32,17 +33,12 @@ function AdminSchoolRoutesPlanner(props) {
     return searchParams.get(`route`) == 'new';
   }
 
-  const isDelete = () => {
-    return searchParams.get(`route`) == 'none';
-  }
 
   useEffect(() => {
     props.getRoutes({school: param.school_id});
 
     if (isCreate()) { //This is to make sure the button sets to create/edit/delete
       setRouteSelection(1); 
-    } else if (isDelete()) {
-      setRouteSelection(3);
     } else {
       setRouteSelection(2);
     }
@@ -119,10 +115,16 @@ function AdminSchoolRoutesPlanner(props) {
   }
 
   const changeStudentRoute = (pinStuff, position) => {
-    console.log(pinStuff);
+    let newID = "";
+    if(getCurRouteFromStudent(pinStuff, studentChanges) == searchParams.get('route')){
+      newID = NO_ROUTE
+    }
+    else {
+      newID = searchParams.get('route')
+    }
     setStudentChanges({
       ...studentChanges,
-      [pinStuff.id]: searchParams.get('route')
+      [pinStuff.id]: newID
     })
   }
 
@@ -144,7 +146,6 @@ function AdminSchoolRoutesPlanner(props) {
   const routePlannerTypes = [
     {name: "Create New Route", value: 1},
     {name: "Edit Existing Route", value: 2},
-    {name: "Remove Students from Routes", value: 3},
   ]
 
   const [routeSelect, setRouteSelection] = useState(1);
@@ -163,12 +164,6 @@ function AdminSchoolRoutesPlanner(props) {
         })
       }
     }
-    else if (e.target.value == 3) {
-      setSearchParams({
-        [`route`]: "none"
-      })
-    }
-      
   }
 
   const navToRoutes = ()=>{
