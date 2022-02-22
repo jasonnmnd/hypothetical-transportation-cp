@@ -12,10 +12,10 @@ The one thing to watch out for: if you edit a docker-compose file, you have to s
 
 The hosts for these servers are as listed:
 #### PRODUCTION
-`https://hypothetical-transportation.colab.duke.edu:8000`
+`https://hypothetical-transportation.colab.duke.edu`
 
 #### DEV
-`https://ht-dev.colab.duke.edu:8000`
+`https://ht-dev.colab.duke.edu`
 
 #### TEST ENV (must be deployed manually)
 `https://ht-test.colab.duke.edu:8000`
