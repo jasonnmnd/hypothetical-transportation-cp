@@ -55,7 +55,7 @@ class TestModels(TestCase):
         stops = Stop.objects.all()
         old_dropoff, old_pickup = [],[] 
         for stop in stops:
-            print(f"stop_name: {stop.name}, dropoff time:{stop.dropoff_time}, pickup time:{stop.pickup_time}")
+            # print(f"stop_name: {stop.name}, dropoff time:{stop.dropoff_time}, pickup time:{stop.pickup_time}")
             old_dropoff.append(stop.dropoff_time)
             old_pickup.append(stop.pickup_time)
             self.assertIsNot(stop.dropoff_time, "12:11:00")
@@ -85,6 +85,28 @@ class TestModels(TestCase):
         #     if stop.dropoff_time in old_dropoff2 or stop.pickup_time in old_pickup2:
         #         self.assertFalse
         
+    def test_single_stop_dropoff_and_pickup(self):
+        school = School.objects.create(
+            address='2211 Hillsborough Road Durham, NC 27705', 
+            longitude=36.009121, 
+            latitude=-78.926017, 
+            name='Test Single Stop',
+            bus_arrival_time=datetime.time(9,0,0),
+            bus_departure_time=datetime.time(16,0,0)
+        )
+        route = Route.objects.create(
+            name='Test Single Stop Route', 
+            description='test route', 
+            school=school,
+        )
+        stop = Stop.objects.create(
+            name='Test Single Stop',
+            latitude=35.996996,
+            longitude=-78.944668,
+            stop_number=1,
+            route=route,
+        )
+        self.assertNotEqual(Stop.objects.filter(route=route).order_by('id')[0].pickup_time, school.bus_arrival_time)
 
 # Create your tests here.
 class StopConsistency(TestCase):
