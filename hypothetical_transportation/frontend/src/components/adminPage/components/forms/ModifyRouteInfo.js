@@ -65,11 +65,12 @@ function ModifyRouteInfo(props) {
       </div> */}
 
       <Container>
-        <Card style={{height: "600px"}}>
+        <Card style={{height: "400px"}}>
           <Card.Header as="h5">{props.title}</Card.Header>
           <Card.Body>
             <Form className="shadow-none p-3 mb-5 bg-white rounded" onSubmit={onSubmit}>
               <Form.Group className="mb-3" controlId="formGridName">
+                <Form.Label as="h5">Route Name</Form.Label>
                 <Form.Control 
                   required
                   type="text"
@@ -82,6 +83,7 @@ function ModifyRouteInfo(props) {
               </Form.Group>
 
               <Form.Group className="mb-3" controlId="formGridDescription">
+                <Form.Label as="h5">Route Description</Form.Label>
                 <Form.Control 
                   required type="text"
                   as="textarea"
@@ -94,8 +96,8 @@ function ModifyRouteInfo(props) {
                   />
               </Form.Group>
 
-              <Button variant="yellow" type="submit">
-                Save
+              <Button variant="yellowLong" type="submit">
+                Save Route Name and Description
               </Button>
 
             </Form>

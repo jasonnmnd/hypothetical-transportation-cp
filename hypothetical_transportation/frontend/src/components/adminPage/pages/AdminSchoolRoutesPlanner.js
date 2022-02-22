@@ -265,28 +265,32 @@ function AdminSchoolRoutesPlanner(props) {
           <Container className="container-main d-flex flex-row" style={{gap: "10px"}}>
             {isCreate() || searchParams.get('route') == null ? null : 
             
-            <Container className='d-flex flex-column'>
-              <IconLegend legendType='routePlanner'></IconLegend>
-              <RoutePlannerMap 
-                students={props.students} 
-                school={props.school} 
-                currentRoute={getRouteFromSearchParams()} 
-                changeStudentRoute={changeStudentRoute}
-                studentChanges={studentChanges}
-                allRoutes={props.routes}/>
-            
-            </Container>
+              <Container className='d-flex flex-column' style={{width: "2000px"}}>
+                <IconLegend legendType='routePlanner'></IconLegend>
+                <RoutePlannerMap 
+                  students={props.students} 
+                  school={props.school} 
+                  currentRoute={getRouteFromSearchParams()} 
+                  changeStudentRoute={changeStudentRoute}
+                  studentChanges={studentChanges}
+                  allRoutes={props.routes}/>
+
+                <br></br>
+
+                <Container className="d-flex flex-row justify-content-center" style={{gap: "20px"}}>
+                  <Button variant='yellowsubmit' onClick={submit}>Save Map Changes</Button>
+                  <Button variant='yellowsubmit' onClick={resetStudentChanges}>Reset Map Changes</Button>
+                </Container>
+
+              </Container>
+
+              
             }
             
           {searchParams.get(`route`) == NO_ROUTE || searchParams.get('route') == null ? null : <ModifyRouteInfo title={getInfoTitle()} routeName={props.currentRoute.name} routeDescription={props.currentRoute.description} onSubmitFunc={onInfoSubmit}/>}
         </Container>
 
         <br></br>
-
-        <Container className="d-flex flex-row justify-content-center" style={{gap: "20px"}}>
-          <Button variant='yellowsubmit' onClick={submit}>Save Changes</Button>
-          <Button variant='yellowsubmit' onClick={resetStudentChanges}>Reset Changes</Button>
-        </Container>
       </Container>
 
       <br></br>
