@@ -57,7 +57,6 @@ ALLOWED_HOSTS = [
         'ht-frontend.colab.duke.edu',
         'ht-backend.colab.duke.edu',
         'legoons.colab.duke.edu',
-        'localhost',
 ]
 
 # Application definition
@@ -79,7 +78,6 @@ INSTALLED_APPS = [
     'frontend',
     'backend',
     'accounts',
-    'django_extensions',
     'communications',
 ]
 
