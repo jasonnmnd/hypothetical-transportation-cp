@@ -188,7 +188,7 @@ class StopPlannerAPI(generics.GenericAPIView):
                 student_coord = student['latitude'], student['longitude']
                 for stop in stops:
                     stop_coord = stop['latitude'], stop['longitude']
-                    if get_straightline_distance(*student_coord, *stop_coord) < 0.75 * LEN_OF_MILE:
+                    if get_straightline_distance(*student_coord, *stop_coord) < 0.3 * LEN_OF_MILE:
                         has_inrange_stop = True
                         break
                 students_response.append({"id": student['id'], "has_inrange_stop": has_inrange_stop})
@@ -351,7 +351,7 @@ class StudentViewSet(viewsets.ModelViewSet):
         student_inrange_stops = [stop for stop in student.routes.stops.all() if
                                  get_straightline_distance(student.guardian.latitude, student.guardian.longitude,
                                                            stop.latitude,
-                                                           stop.longitude) < 0.75 * LEN_OF_MILE]
+                                                           stop.longitude) < 0.3 * LEN_OF_MILE]
         page = self.paginator.paginate_queryset(student_inrange_stops, request)
         return self.paginator.get_paginated_response(StopSerializer(page, many=True).data)
 

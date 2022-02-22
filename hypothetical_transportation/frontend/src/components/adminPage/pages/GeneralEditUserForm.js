@@ -162,7 +162,7 @@ function GeneralEditUserForm(props) {
                                         key={idx}
                                         id={`radio-${idx}`}
                                         type="radio"
-                                        variant={'outline-success'}
+                                        variant={'outline-warning'}
                                         name="radio"
                                         value={radio.value}
                                         checked={fieldValues.groups == radio.value}

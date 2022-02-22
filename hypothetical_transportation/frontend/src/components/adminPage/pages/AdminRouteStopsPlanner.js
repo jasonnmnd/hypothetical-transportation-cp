@@ -16,6 +16,7 @@ import ModifyStopTable from '../components/forms/ModifyStopTable';
 import Geocode from "react-geocode";
 import IconLegend from '../../common/IconLegend';
 import { isStudentWithinRange } from '../../../utils/geocode';
+import { createMessageDispatch } from '../../../actions/messages';
 
 
 function AdminRouteStopsPlanner(props) {
@@ -37,11 +38,11 @@ function AdminRouteStopsPlanner(props) {
   }, [param]);
 
   useEffect(() => {
-    setStudents(props.students)
+    setStudents(JSON.parse(JSON.stringify(props.students)))
   }, [props.students]);
 
   useEffect(() => {
-    setStops(props.stops)
+    setStops(JSON.parse(JSON.stringify(props.stops)))
   }, [props.stops]);
 
   useEffect(() => {
@@ -75,7 +76,7 @@ function AdminRouteStopsPlanner(props) {
     stopsToUpdate.forEach(stop => {
       props.updateStop(stop, stop.id)
     })
-
+    props.createMessageDispatch({ student: "Route Stops Updated"})
     navigate(`/admin/route/${param.route_id}`)
 
   }
@@ -124,8 +125,9 @@ function AdminRouteStopsPlanner(props) {
   }
 
   const resetStopChanges = () => {
-    setStops(props.stops);
-    setStudents(props.students);
+    setStops(JSON.parse(JSON.stringify(props.stops)));
+    setStudents(JSON.parse(JSON.stringify(props.students)));
+    setDeletedStops([])
   }
 
   const [openInstruc, setOpenInstruc] = useState(false);
@@ -157,48 +159,40 @@ function AdminRouteStopsPlanner(props) {
         </Alert>
         }
 
-        <div className='d-flex flex-row justify-content-center'>
-          <Button
-          onClick={() => setOpenInstruc(!openInstruc)}
-          aria-controls="example-collapse-text"
-          aria-expanded={openInstruc}
-          variant="instrucToggle"
-          >
-            Stop Planner Instructions {openInstruc ? "▲" : "▼"}
-          </Button>
-        </div>
         
-        <Collapse in={openInstruc}>
-          <Card>
-            <Card.Body>
-              <div id="example-collapse-text">
-                <div className='d-flex flex-row justify-content-center'>
-                  <strong>Welcome to the stop planner interface.</strong>
-                </div>
-                  <p>Within this interface, you can interactively create, modify, and reorganize stops. Students are shown with the student pin and routes are shown with the bus pin.</p>
-                  <p>Left click on the bus pin to view the stop, and you can drag bus pins around to move stops and make sure students are in range.</p>
-                  <p>Right click on the bus pin to delete the stop. You can add this stop back by using the table and clicking on "+".</p>
-                  <p>Use the table to drag and drop "=" to reorganize stops. Double click on the stop name to change its name.</p>
-                  <p>Finalize all changes by clicking on "Save". Revert changes made by clicking on "Reset".</p>
-              </div>
-            </Card.Body>
-          </Card>
-        </Collapse>
-
+        
+        
+        
         <br></br>
 
         <Container className="d-flex flex-column justify-content-center" style={{gap: "30px"}}>
-            <IconLegend legendType='stopPlanner'></IconLegend>
-            <StopPlannerMap 
-                students={students} 
-                school={props.school} 
-                onStopDragEnd={onStopDragEnd}
-                stops={stops}
-                deleteStop={deleteStopFromTable}
-            />
+          <Card>
+            <Card.Header as="h5">Stop Planner Map</Card.Header>
+            <Card.Body>
+              <Card>
+                <Card.Body>
+                  <h5 style={{fontWeight:"700px"}}>Instructions: </h5>
+                  <h6>Drag and Drop Stops to Reposition. Right Click to Remove Stop. Left Click to View Info.</h6>
+                </Card.Body>
+              </Card>
+              <br></br>
+                <Container className="d-flex flex-row justify-content-center">
+                  <Container style={{width: "800px"}}>
+                  <StopPlannerMap 
+                      students={students} 
+                      school={props.school} 
+                      onStopDragEnd={onStopDragEnd}
+                      stops={stops}
+                      deleteStop={deleteStopFromTable}
+                  />
+                  </Container>
+                  <IconLegend legendType='stopPlanner'></IconLegend>
+                </Container>
+              </Card.Body>
+          </Card>
 
           <Card>
-            <Card.Header as="h5">Reorganize Stops</Card.Header>
+            <Card.Header as="h5">Reorganize Stops - Drag Row to Reorder</Card.Header>
             <Card.Body>
               <ModifyStopTable stops={stops} setStops={setStops} setStopsWithProperInds={setStopsWithProperInds} deletedStops={deletedStops} readdStop={readdStop} />
             </Card.Body>
@@ -230,6 +224,7 @@ AdminRouteStopsPlanner.propTypes = {
     createStop: PropTypes.func.isRequired,
     updateStop: PropTypes.func.isRequired,
     stops: PropTypes.array,
+    createMessageDispatch: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = (state) => ({
@@ -238,7 +233,8 @@ const mapStateToProps = (state) => ({
   currentRoute: state.routes.viewedRoute,
   school: state.schools.viewedSchool,
   studentsInSchool: state.students.students.results,
-  stops: state.stop.stops.results
+  stops: state.stop.stops.results,
+  
 });
 
 AdminRouteStopsPlanner.defaultProps = {
@@ -264,4 +260,4 @@ AdminRouteStopsPlanner.defaultProps = {
     ],
 }
 
-export default connect(mapStateToProps, {updateStop, getStopByRoute, getRouteInfo, getSchool, getStudents, deleteStop, createStop})(AdminRouteStopsPlanner)
+export default connect(mapStateToProps, {createMessageDispatch, updateStop, getStopByRoute, getRouteInfo, getSchool, getStudents, deleteStop, createStop})(AdminRouteStopsPlanner)

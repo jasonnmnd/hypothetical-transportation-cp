@@ -40,7 +40,7 @@ function GeneralManageStudentPage(props) {
 
 
   const handleSubmit = (event) => {
-    console.log(obj)
+    // console.log(obj)
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
       event.preventDefault();
@@ -76,11 +76,16 @@ function GeneralManageStudentPage(props) {
     if(props.action==="edit"){
       props.getStudent(param.id);
       setObj({...props.student, ["guardian"]:props.student.guardian.id,["school"]:props.student.school.id,["routes"]:props.student.routes?props.student.routes.id:null})
+      props.resetPostedUser()
+
       // props.getRoutesByID({school: props.student.school.id}) // Normal to get an api request error on first load
     }
-    if(props.selectedUser!==null && props.selectedUser.id!==0){
+    // console.log("also")
+    // console.log(props.selectedUser)
+    if(props.selectedUser!==null && props.selectedUser.id!==0&& props.selectedUser.id!==obj.guardian){
+      // console.log("setting obj")
       setObj({ ...obj, ["guardian"]: props.selectedUser.id});
-      resetPostedUser();
+      props.resetPostedUser()
     }
     // else{
     //   props.getRoutesByID({school: obj.school})
@@ -88,10 +93,26 @@ function GeneralManageStudentPage(props) {
     
   }, []);
 
+  useEffect(()=>{
+    // console.log(props.selectedUser)
+    if(props.selectedUser!==null && props.selectedUser.id!==0 && props.selectedUser.id!==obj.guardian){
+      // console.log("setting obj useeffecgt selecteds user")
+      setObj({ ...obj, ["guardian"]: props.selectedUser.id});
+    }
+  },[props.selectedUser])
+
 
   useEffect(()=>{
     if(props.action !== "edit"){
-        setObj(emptyStudent)
+      if(props.selectedUser!==null && props.selectedUser.id!==0 && props.selectedUser.id!==obj.guardian){
+        // console.log("action if")
+        setObj({ ...emptyStudent, ["guardian"]: props.selectedUser.id});
+        props.resetPostedUser()
+      }
+      else{
+        // console.log("action else")
+        setObj({...emptyStudent, ["guardian"]: obj.guardian})
+      }
     }
     else{
       props.getStudent(param.id);
@@ -242,7 +263,8 @@ GeneralManageStudentPage.propTypes = {
     getRoutesByID: PropTypes.func.isRequired,
     getUser: PropTypes.func.isRequired,
     addStudent: PropTypes.func.isRequired,
-    updateStudent: PropTypes.func.isRequired
+    updateStudent: PropTypes.func.isRequired,
+    resetPostedUser: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => ({
@@ -255,4 +277,4 @@ const mapStateToProps = (state) => ({
   selectedUser: state.users.postedUser
 });
 
-export default connect(mapStateToProps, {getSchools, getUsers, getStudent, getRoutesByID, getUser, addStudent, updateStudent})(GeneralManageStudentPage)
+export default connect(mapStateToProps, {getSchools, getUsers, getStudent, getRoutesByID, getUser, addStudent, updateStudent,resetPostedUser})(GeneralManageStudentPage)

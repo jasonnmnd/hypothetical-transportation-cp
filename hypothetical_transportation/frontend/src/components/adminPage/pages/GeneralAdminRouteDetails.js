@@ -102,7 +102,7 @@ function GeneralAdminRouteDetails(props) {
     return [
         {
             iconColor: "green",
-            iconType: "student",
+            iconType: "studentCheck",
             markerProps: {
                 onClick: onStudentClick,
                 onRightClick: ""
@@ -146,7 +146,7 @@ function GeneralAdminRouteDetails(props) {
             <Row>
                 <Col>
                     <Link to={`/admin/route/plan/${props.route.school.id}?route=${props.route.id}`}>
-                        <Button variant="yellowLong" size="lg">Edit Students in Route</Button>
+                        <Button variant="yellowLong" size="lg">Route Planner</Button>
                     </Link>
                 </Col>
                 <Col>

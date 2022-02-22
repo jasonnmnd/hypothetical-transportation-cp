@@ -19,10 +19,12 @@ function AdminPage( props ) {
         <div>
           <Header/>
           <div>
+            <Container>
+              <div className="shadow-sm p-3 mb-5 bg-white rounded d-flex flex-row justify-content-center">
+                  <h1>Welcome, {props.user.full_name}</h1>
+              </div>
+            </Container>
             <Container fluid className="d-flex flex-column justify-content-center align-items-center" style={{gap: "20px 50px"}}>
-              <Row>
-                <Col><h1>Welcome, <span>{props.user.full_name}</span></h1></Col>
-              </Row>
 
               <Row>
                 <Col>

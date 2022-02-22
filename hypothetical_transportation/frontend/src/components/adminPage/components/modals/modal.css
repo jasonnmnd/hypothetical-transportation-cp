@@ -59,7 +59,7 @@
   height: 45px;
   margin: 10px;
   border: none;
-  background-color: #ffae07;
+  background-color: rgb(244, 177, 75);
   color: rgb(255, 255, 255);
   border-radius: 8px;
   font-size: 20px;
@@ -71,7 +71,7 @@
 }
 
 #cancelBtn {
-  background-color: #ffae07;
+  background-color: rgb(244, 177, 75);
 }
 
 .modalContainer .modal-form input {
@@ -81,7 +81,7 @@
 .btn-yellowTableSm {
   display: inline-block;
   padding: 4px 6px;
-  background-color: #ffae07;
+  background-color: rgb(244, 177, 75);
   transition: 0.4s;
   color: #fff;
   font-weight: 400;
@@ -95,7 +95,7 @@
 .btn-yellowclose {
   display: inline-block;
   padding: 10px 15px;
-  background-color: #ffae07;
+  background-color: rgb(244, 177, 75);
   transition: 0.4s;
   color: #fff;
   font-weight: 700;

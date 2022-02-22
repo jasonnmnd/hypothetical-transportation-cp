@@ -28,7 +28,7 @@ SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 SECRET_KEY = 'django-insecure-dz)xt+ggvmpya26p(yn$y-0gcq1&$tnrj+i_n5*1u0_ek+j3lg'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 LOGGING = {
     'version': 1,
@@ -137,11 +137,12 @@ WSGI_APPLICATION = 'hypothetical_transportation.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'admin',
+        #'NAME': 'admin',
+        'NAME': 'ht_db',
         'USER': 'admin',
         'PASSWORD': 'admin',
-        'HOST': 'db',
-        # 'HOST': 'localhost',
+        #'HOST': 'db',
+        'HOST': 'localhost',
         'PORT': '5432',
     }
 }

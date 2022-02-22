@@ -3,9 +3,9 @@ import { GoogleMap, LoadScript, Marker, InfoWindow, useJsApiLoader } from '@reac
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Geocode from "react-geocode";
-import { SCHOOL_MARKER, STOP_MARKER, STUDENT_MARKER } from './static/markers';
+import { getIcon, SCHOOL_MARKER, STOP_MARKER, STUDENT_MARKER } from './static/markers';
 
-const CLICK_FUNCTIONS = ["onClick", "onRightClick"]
+const CLICK_FUNCTIONS = ["onClick", "onRightClick", "onMouseOver"]
 const DRAG_FUNCTIONS = ["onDragEnd"]
 
 
@@ -21,6 +21,9 @@ function MapComponent(props) {
     Geocode.setLocationType("ROOFTOP");
     Geocode.enableDebug();
 
+    const [pins, setPins] = useState([]);
+    let pinInfo = [];
+
     const getSVGWithAnchor = (svg) => {
         const ret = {
             ...svg,
@@ -29,26 +32,13 @@ function MapComponent(props) {
         return ret
     }
 
-    const ICONS = {
-        school: getSVGWithAnchor(SCHOOL_MARKER),
-        student: getSVGWithAnchor(STUDENT_MARKER),
-        stop: getSVGWithAnchor(STOP_MARKER)
-    }
-
-    const [pins, setPins] = useState([]);
-    let pinInfo = [];
-
     const getColoredIcon = (color, icon) => {
-        let iconData = {...ICONS[icon]};
-        iconData.fillColor = color;
-        return iconData;
+        return getSVGWithAnchor(getIcon(icon, color));
     }
-
-
 
 
     useEffect(() => {
-        // console.log("props.pinData")
+        //console.log(props.pinData)
         initializePins(props.pinData)
       }, [props.pinData]);
 
@@ -226,6 +216,13 @@ function MapComponent(props) {
                 {getMarkers(pins)}
                 {props.otherMapComponents}
             {/* </Spiderfy> */}
+            {/* {[0,1].map((pin, pinInd) => { return <Marker position={{lat: -33.847927 + pinInd,lng: 150.6517938}} key={"DF"}>
+                <InfoWindow
+                key={"pinInd"}
+                visible={true}>
+                <div>fahfhsdfhdsf</div>
+            </InfoWindow>
+            </Marker>})} */}
             
         </GoogleMap>
         )
