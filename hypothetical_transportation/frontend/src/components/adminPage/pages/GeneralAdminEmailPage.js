@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Header from '../../header/Header';
 import "../NEWadminPage.css";
-import { Container, Form, Button, ButtonGroup, ToggleButton } from 'react-bootstrap'; 
+import { Container, Form, Button, ButtonGroup, ToggleButton,Collapse, Card } from 'react-bootstrap'; 
 import { connect } from 'react-redux';
 import { getSchools } from '../../../actions/schools';
 import { getRoutes } from '../../../actions/routes';
@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import { filterObjectForKeySubstring } from '../../../utils/utils';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
+import config from '../../../utils/config';
 
 
 
@@ -20,6 +21,7 @@ function GeneralAdminEmailPage(props) {
     const [currRoute, setCurrRoute] = useState("");
     const [emailSelection, setEmailSelection] = useState(1);
     const [thisIsRouteAnnouncement, setThisIsRouteAnnouncement] = React.useState(false);
+    const [openInstruc, setOpenInstruc] = useState(false);
 
     const ROUTE_PREFIX = "rou";
     let [searchParams, setSearchParams] = useSearchParams();
@@ -80,15 +82,23 @@ function GeneralAdminEmailPage(props) {
         // console.log("Submit button pressed with school " + currSchool + " and route " + currRoute);
         
         const payload = {
-            object_id: currSchool == "" ? currRoute : currSchool,
+            object_id: getIdType(emailSelection) == "SCHOOL" ? parseInt(currSchool) : parseInt(currRoute),
             id_type: getIdType(emailSelection),
             subject: subject,
             body: body
         }
-        
+
+        //Backend requires object_id to be set to a number, or removed
+        if (getIdType(emailSelection) == "ALL") {
+            delete payload['object_id'];
+        }
+
+        console.log(payload);
+
+
         if(thisIsRouteAnnouncement!==true){
             // console.log("not route announcement")
-            axios.post('/api/communication/send-announcement', payload)
+            axios.post('/api/communication/send-announcement', payload, config(props.token))
             .then((res) => {
                 nagivate(`/admin`);
                 alert('Email Successfully Sent!');
@@ -98,7 +108,7 @@ function GeneralAdminEmailPage(props) {
             });
         }
         else{
-            axios.post('/api/communication/send-route-announcement', payload)
+            axios.post('/api/communication/send-route-announcement', payload, config(props.token))
             .then((res) => {
                 nagivate(`/admin`);
                 alert('Email Successfully Sent!');
@@ -167,10 +177,44 @@ function GeneralAdminEmailPage(props) {
   return (
     <>
         <Header></Header>
+
+
         <Container className="container-main">
             <div className="shadow-sm p-3 mb-5 bg-white rounded d-flex flex-row justify-content-center">
                 <h1>Send Email</h1>
             </div>
+
+            <div>
+            <div className='d-flex flex-row justify-content-center'>
+                <Button
+                onClick={() => setOpenInstruc(!openInstruc)}
+                aria-controls="example-collapse-text"
+                aria-expanded={openInstruc}
+                variant="instrucToggle"
+                >
+                    Email Instructions {openInstruc ? "▲" : "▼"}
+                </Button>
+            </div>
+            
+            <br></br>
+            <Collapse in={openInstruc}>
+                <Card>
+                    <Card.Body>
+                    <div id="example-collapse-text">
+                        <div className='d-flex flex-row justify-content-center'>
+                        <strong>Welcome to the email interface.</strong>
+                        </div>
+                        <p>Within this interface, you can send emails to different groups of users.</p>
+                        <p>You can choose to send the email to all parents, parents whose children belong to a specific school, or parents whose children belong to a specific route within a specific school by using the toggle selection and dropdown menu.</p>
+                        <p>Normal general announcement will contain only the subject line and the email body you input.</p>
+                        <p>Route announcement will include an additional attachment that compiles all information a user will see on their parent interface into text form. Check the box to include route announcement information to achieve that.</p>
+
+                    </div>
+                    </Card.Body>
+                </Card>
+            </Collapse>
+            </div>
+            <br></br>
             <Form className="shadow-lg p-3 mb-5 bg-white rounded">
                 <Container className='d-flex justify-content-center'>
                     <Form.Group className="mb-3" controlId="validationCustom01">
@@ -180,7 +224,7 @@ function GeneralAdminEmailPage(props) {
                                 key={idx}
                                 id={`radio-${idx}`}
                                 type="radio"
-                                variant={'outline-success'}
+                                variant={'outline-warning'}
                                 name="radio"
                                 value={radio.value}
                                 checked={emailSelection == radio.value}
@@ -273,6 +317,7 @@ GeneralAdminEmailPage.propTypes = {
 const mapStateToProps = (state) => ({
     schoollist: state.schools.schools.results,
     routes: state.routes.routes.results,
+    token: state.auth.token
 })
 
 export default connect(mapStateToProps, {getSchools, getRoutes}) (GeneralAdminEmailPage);

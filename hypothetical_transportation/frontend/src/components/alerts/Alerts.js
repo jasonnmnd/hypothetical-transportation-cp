@@ -36,7 +36,8 @@ function Alerts(props) {
             prevErrorRef.current = props.error;
         }
 
-        if ((JSON.stringify(message)!== JSON.stringify(prevMessageRef.current))) {
+        //if ((JSON.stringify(message)!== JSON.stringify(prevMessageRef.current))) {
+        if(message!==prevMessageRef.current){
           if (message.student) alert(message.student);
           if (message.user && message.user.includes("Create")){
             if(confirm(message.user + " Would you like to navigate to create a new student for them?")){

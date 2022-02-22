@@ -164,7 +164,7 @@ def generate_student_info(user):
             student_inrange_stops = [stop for stop in student.routes.stops.all() if
                                      get_straightline_distance(student.guardian.latitude, student.guardian.longitude,
                                                                stop.latitude,
-                                                               stop.longitude) < 2 * LEN_OF_MILE]
+                                                               stop.longitude) < 0.3 * LEN_OF_MILE]
             student_info['stops'] = list()
             for stop in student_inrange_stops:
                 student_info['stops'].append({

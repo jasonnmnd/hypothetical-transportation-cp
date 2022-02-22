@@ -48,7 +48,7 @@ function ForgotPasswordForm( props ) {
             backgroundSize: "cover"
             }}>
             <Form className="rounded p-4 p-sm3" noValidate validated={validated} onSubmit={handleSubmit}>
-                <h2>Please Enter the Email Address associated with your account:</h2>
+                <h2>Please enter the email address associated with your account:</h2>
 
                 <Form.Group as={Col} className="mb-3" controlId="formBasicEmail">
                     <Form.Label>Email Address</Form.Label>

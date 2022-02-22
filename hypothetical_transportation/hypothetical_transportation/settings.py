@@ -28,7 +28,7 @@ SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 SECRET_KEY = 'django-insecure-dz)xt+ggvmpya26p(yn$y-0gcq1&$tnrj+i_n5*1u0_ek+j3lg'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 LOGGING = {
     'version': 1,
@@ -79,7 +79,6 @@ INSTALLED_APPS = [
     'frontend',
     'backend',
     'accounts',
-    'django_extensions',
     'communications',
 ]
 
@@ -139,6 +138,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'admin',
+        # 'NAME': 'ht_db',
         'USER': 'admin',
         'PASSWORD': 'admin',
         'HOST': 'db',
@@ -212,22 +212,22 @@ EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 
 
-class DisableMigrations(object):
+# class DisableMigrations(object):
 
-    def __contains__(self, item):
-        return True
+#     def __contains__(self, item):
+#         return True
 
-    def __getitem__(self, item):
-        return None
+#     def __getitem__(self, item):
+#         return None
 
 
-TESTS_IN_PROGRESS = False
-if 'test' in sys.argv[1:] or 'jenkins' in sys.argv[1:]:
-    logging.disable(logging.CRITICAL)
-    PASSWORD_HASHERS = (
-        'django.contrib.auth.hashers.MD5PasswordHasher',
-    )
-    DEBUG = False
-    TEMPLATE_DEBUG = False
-    TESTS_IN_PROGRESS = True
-    MIGRATION_MODULES = DisableMigrations()
+# TESTS_IN_PROGRESS = False
+# if 'test' in sys.argv[1:] or 'jenkins' in sys.argv[1:]:
+#     logging.disable(logging.CRITICAL)
+#     PASSWORD_HASHERS = (
+#         'django.contrib.auth.hashers.MD5PasswordHasher',
+#     )
+#     DEBUG = False
+#     TEMPLATE_DEBUG = False
+#     TESTS_IN_PROGRESS = True
+#     MIGRATION_MODULES = DisableMigrations()
