@@ -28,7 +28,7 @@ function OverlappingStudentsModal(props){
                 <td>{student.guardian.address}</td>
                 <td>{getStudentRouteName(student.id, student.routes, props.studentChanges, props.allRoutes)}</td>
                 <td>
-                    <Button variant="yellowTableSm" onClick={() => props.changeStudentRoute(student, null)}>Add</Button>
+                    <Button variant="yellowTableSm" onClick={() => props.changeStudentRoute(student, null)}>{props.currentRoute == "none" ? "remove" : "add"}</Button>
                 </td>
             </tr>
         ))
