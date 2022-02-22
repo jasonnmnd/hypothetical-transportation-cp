@@ -17,21 +17,21 @@ function IconLegend(props) {
         },
 
         {
-            key: "Students in This Route: ",
+            key: " Students in This Route: ",
             icon: STUDENT_CHECK_LEGEND("green")
         },
 
         {
-            key: "Students on Other Routes: ",
+            key: " Students on Other Routes: ",
             icon: STUDENT_CHECK_LEGEND("gray")
         },
 
         {
-            key: "Students Without Route: ",
+            key: " Students Without Route: ",
             icon: STUDENT_X_LEGEND("red")
         },
         {
-            key: "Multiple Students: ",
+            key: " Multiple Students: ",
             icon: STUDENT_MULTIPLE_LEGEND("purple")
         }
     ]
@@ -42,16 +42,16 @@ function IconLegend(props) {
             icon: SCHOOL_LEGEND("white")
         },
         {
-            key: "Students in This Route: ",
+            key: " Students in This Route: ",
             icon: STUDENT_CHECK_LEGEND("green")
         },
 
         {
-            key: "Multiple Students: ",
+            key: " Multiple Students: ",
             icon: STUDENT_MULTIPLE_LEGEND("purple")
         },
         {
-            key: "Stops: ",
+            key: " Stops: ",
             icon: STOP_LEGEND("blue")
         }
     ]
@@ -63,16 +63,16 @@ function IconLegend(props) {
         },
 
         {
-            key: "Students with In Range Stops: ",
+            key: " Students with In Range Stops: ",
             icon: STUDENT_CHECK_LEGEND("green")
         },
 
         {
-            key: "Students with NO In Range Stops: ",
+            key: " Students with NO In Range Stops: ",
             icon: STUDENT_X_LEGEND("red")
         },
         {
-            key: "Stops: ",
+            key: " Stops: ",
             icon: STOP_LEGEND("blue")
         }
     ]

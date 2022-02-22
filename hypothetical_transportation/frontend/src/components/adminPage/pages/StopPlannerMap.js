@@ -60,9 +60,9 @@ function StopPlannerMap(props){
             {
                 iconColor: "green",
                 iconType: "studentCheck",
-                //infoWindowFunc: getStudentInfoWindow,
                 markerProps: {
                     onClick: onStudentClick,
+                    onRightClick: onStudentClick,
                 },
                 pins: getStudentsWStop().map(student => {return getStudentPin(student)})
             },
@@ -71,7 +71,7 @@ function StopPlannerMap(props){
                 iconType: "studentX",
                 markerProps: {
                     onClick: onStudentClick,
-                    draggable: true,
+                    onRightClick: onStudentClick,
                 },
                 pins: getStudentsWOStop().map(student => {return getStudentPin(student)})
             },

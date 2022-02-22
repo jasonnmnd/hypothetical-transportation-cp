@@ -12,6 +12,10 @@
   background-color: darkgrey;
 }
 
+.tr-column_names-delete {
+  background-color: rgb(194, 194, 194);
+}
+
 .tr-header {
   background-color: #ffae07;
 }

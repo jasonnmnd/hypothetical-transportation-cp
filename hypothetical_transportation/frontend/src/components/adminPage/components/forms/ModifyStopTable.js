@@ -156,10 +156,10 @@ function ModifyStopTable(props) {
             <tr className='tr-header-delete'>
                 <th colSpan="3">Deleted Stops</th>
             </tr>
-            <tr>
-            <th />
-            <th>Name</th>
-            <th>Location</th>
+            <tr className='tr-column_names-delete'>
+                <th />
+                <th>Name</th>
+                <th>Location</th>
             </tr>
         </thead>
             <tbody>

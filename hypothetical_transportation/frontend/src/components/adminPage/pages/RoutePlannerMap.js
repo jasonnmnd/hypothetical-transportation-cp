@@ -5,7 +5,7 @@ import MapComponent from "../../maps/MapComponent";
 import PropTypes, { string } from 'prop-types';
 import { useSearchParams } from 'react-router-dom';
 import { NO_ROUTE } from '../../../utils/utils';
-import { getStudentPin, addSchoolPin, getStudentRouteName } from '../../../utils/planner_maps';
+import { getStudentPin, addSchoolPin, getStudentRouteName, getCurRouteFromStudent } from '../../../utils/planner_maps';
 import { getDistance } from '../../../utils/geocode';
 import { Button, Modal } from 'react-bootstrap';
 import OverLappingStudentsModal from '../components/modals/OverLappingStudentsModal';
@@ -60,34 +60,26 @@ function RoutePlannerMap(props){
     }, [props]);
 
     
-    const getCurRouteFromStudent = (student) => {
-        if(props.studentChanges[student.id] != null){
-            return props.studentChanges[student.id];
-        }
-        if(student.routes == null){
-            return null;
-        }
-        return student.routes.id;
-    }
+
     
 
     const getStudentsWORoute = (students) => {
         return students.filter(student => {
-            const curRoute = getCurRouteFromStudent(student)
+            const curRoute = getCurRouteFromStudent(student, props.studentChanges)
             return curRoute == null || curRoute == NO_ROUTE;
         });
     }
 
     const getStudentsWCurrentRoute = (students) => {
         return students.filter(student => {
-            const curRoute = getCurRouteFromStudent(student)
+            const curRoute = getCurRouteFromStudent(student, props.studentChanges)
             return curRoute != null && curRoute != NO_ROUTE && curRoute == props.currentRoute;
         });
     }
     
     const getStudentsWOtherRoute = (students) => {
         return students.filter(student => {
-            const curRoute = getCurRouteFromStudent(student)
+            const curRoute = getCurRouteFromStudent(student, props.studentChanges)
             return curRoute != null && curRoute != NO_ROUTE && curRoute != props.currentRoute
         });
     }
@@ -151,8 +143,8 @@ function RoutePlannerMap(props){
                 iconColor: "green",
                 iconType: "studentCheck",
                 markerProps: {
-                    onClick: onStudentClick,
-                    onRightClick: props.changeStudentRoute
+                    onRightClick: onStudentClick,
+                    onClick: props.changeStudentRoute
                 },
                 pins: getStudentsWCurrentRoute(normalStudents).map(student => {return getStudentPin(student)})
             },
@@ -160,8 +152,8 @@ function RoutePlannerMap(props){
                 iconColor: "red",
                 iconType: "studentX",
                 markerProps: {
-                    onClick: onStudentClick,
-                    onRightClick: props.changeStudentRoute
+                    onRightClick: onStudentClick,
+                    onClick: props.changeStudentRoute
                 },
                 pins: getStudentsWORoute(normalStudents).map(student => {return getStudentPin(student)})
             },
@@ -169,8 +161,8 @@ function RoutePlannerMap(props){
                 iconColor: "grey",
                 iconType: "studentCheck",
                 markerProps: {
-                    onClick: onStudentClick,
-                    onRightClick: props.changeStudentRoute
+                    onRightClick: onStudentClick,
+                    onClick: props.changeStudentRoute
                 },
                 pins: getStudentsWOtherRoute(normalStudents).map(student => {return getStudentPin(student)})
             },
@@ -178,8 +170,8 @@ function RoutePlannerMap(props){
                 iconColor: "purple",
                 iconType: "studentMultiple",
                 markerProps: {
-                    onClick: onMultipleStudentClick,
-                    onRightClick: multipleStudentsChange
+                    onRightClick: onMultipleStudentClick,
+                    onClick: multipleStudentsChange
                 },
                 pins: overlappingStudents
             },

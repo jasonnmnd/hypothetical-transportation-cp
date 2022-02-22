@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Button, Container, Modal, Table } from 'react-bootstrap';
 import PropTypes, { string } from 'prop-types';
-import { getStudentRouteName } from '../../../../utils/planner_maps';
+import { getCurRouteFromStudent, getStudentRouteName } from '../../../../utils/planner_maps';
 import "./modal.css";
 
 
@@ -23,7 +23,7 @@ function OverlappingStudentsModal(props){
 
     const getStudentRows = () => {
         return props.students.map((student) => (
-            <tr key={student.id}> 
+            <tr key={student.id} style={{backgroundColor: getCurRouteFromStudent(student, props.studentChanges) == props.currentRoute ? "rgb(176, 255, 151)" : getCurRouteFromStudent(student, props.studentChanges) == null ? "rgb(255, 136, 136)" : "rgb(200, 200, 200)"}}> 
                 <td>{student.full_name}</td>
                 <td>{student.guardian.address}</td>
                 <td>{getStudentRouteName(student.id, student.routes, props.studentChanges, props.allRoutes)}</td>

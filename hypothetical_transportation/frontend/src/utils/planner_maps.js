@@ -29,6 +29,16 @@ export const getStopPin = (stop) => {
     }
 }
 
+export const getCurRouteFromStudent = (student, studentChanges) => {
+    if(studentChanges[student.id] != null){
+        return studentChanges[student.id];
+    }
+    if(student.routes == null){
+        return null;
+    }
+    return student.routes.id;
+}
+
 export const getStudentRouteName = (studentId, studentRouteObj, studentChanges, allRoutes) => {
     const routeId = studentChanges[studentId];
     let routeName = '';
