@@ -79,7 +79,6 @@ INSTALLED_APPS = [
     'frontend',
     'backend',
     'accounts',
-    'django_extensions',
     'communications',
 ]
 
