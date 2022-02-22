@@ -16,6 +16,7 @@ import { Container, ButtonGroup, ToggleButton, Card, Button, Form, Collapse } fr
 import PageNavigateModal from '../components/modals/PageNavigateModal';
 import IconLegend from '../../common/IconLegend';
 import { getCurRouteFromStudent } from '../../../utils/planner_maps';
+import { createMessageDispatch } from '../../../actions/messages';
 
 
 function AdminSchoolRoutesPlanner(props) {
@@ -136,6 +137,7 @@ function AdminSchoolRoutesPlanner(props) {
         routes: routeVal
       }, student);
     });
+    // props.createMessageDispatch({ route: "Route Updated"})
     setOpenModal(true);
   }
 
@@ -226,7 +228,7 @@ function AdminSchoolRoutesPlanner(props) {
                 key={idx}
                 id={`radio-${idx}`}
                 type="radio"
-                variant={'outline-success'}
+                variant={'outline-warning'}
                 name="radio"
                 value={radio.value}
                 checked={routeSelect == radio.value}
@@ -258,28 +260,32 @@ function AdminSchoolRoutesPlanner(props) {
           <Container className="container-main d-flex flex-row" style={{gap: "10px"}}>
             {isCreate() || searchParams.get('route') == null ? null : 
             
-            <Container className='d-flex flex-column'>
-              <IconLegend legendType='routePlanner'></IconLegend>
-              <RoutePlannerMap 
-                students={props.students} 
-                school={props.school} 
-                currentRoute={getRouteFromSearchParams()} 
-                changeStudentRoute={changeStudentRoute}
-                studentChanges={studentChanges}
-                allRoutes={props.routes}/>
-            
-            </Container>
+              <Container className='d-flex flex-column' style={{width: "2000px"}}>
+                <IconLegend legendType='routePlanner'></IconLegend>
+                <RoutePlannerMap 
+                  students={props.students} 
+                  school={props.school} 
+                  currentRoute={getRouteFromSearchParams()} 
+                  changeStudentRoute={changeStudentRoute}
+                  studentChanges={studentChanges}
+                  allRoutes={props.routes}/>
+
+                <br></br>
+
+                <Container className="d-flex flex-row justify-content-center" style={{gap: "20px"}}>
+                  <Button variant='yellowsubmit' onClick={submit}>Save Map Changes</Button>
+                  <Button variant='yellowsubmit' onClick={resetStudentChanges}>Reset Map Changes</Button>
+                </Container>
+
+              </Container>
+
+              
             }
             
           {searchParams.get(`route`) == NO_ROUTE || searchParams.get('route') == null ? null : <ModifyRouteInfo title={getInfoTitle()} routeName={props.currentRoute.name} routeDescription={props.currentRoute.description} onSubmitFunc={onInfoSubmit}/>}
         </Container>
 
         <br></br>
-
-        <Container className="d-flex flex-row justify-content-center" style={{gap: "20px"}}>
-          <Button variant='yellowsubmit' onClick={submit}>Save Changes</Button>
-          <Button variant='yellowsubmit' onClick={resetStudentChanges}>Reset Changes</Button>
-        </Container>
       </Container>
 
       <br></br>
@@ -297,7 +303,8 @@ AdminSchoolRoutesPlanner.propTypes = {
     getStudents: PropTypes.func.isRequired,
     resetViewedRoute: PropTypes.func.isRequired,
     patchStudent: PropTypes.func.isRequired,
-    resetPosted: PropTypes.func.isRequired
+    resetPosted: PropTypes.func.isRequired,
+    createMessageDispatch: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => ({
@@ -309,4 +316,4 @@ const mapStateToProps = (state) => ({
   postedRoute: state.routeplanner.postedRoute,
 });
 
-export default connect(mapStateToProps, {resetPosted, patchStudent, getRouteInfo, updateRoute, getSchool, createRoute, getRoutes, getStudents, resetViewedRoute})(AdminSchoolRoutesPlanner)
+export default connect(mapStateToProps, {createMessageDispatch, resetPosted, patchStudent, getRouteInfo, updateRoute, getSchool, createRoute, getRoutes, getStudents, resetViewedRoute})(AdminSchoolRoutesPlanner)

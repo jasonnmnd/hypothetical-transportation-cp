@@ -3,7 +3,7 @@
 }
 
 .table-header-rows {
-  background-color: #ffae07;
+  background-color: rgb(244, 177, 75);
 }
 
 .btn-sort {
@@ -17,7 +17,7 @@
   display: inline-block;
   padding: 4px 6px;
   border-radius: 8px;
-  background-color: #ffae07;
+  background-color: rgb(244, 177, 75);
   background-position: 0%;
   transition: 0.4s;
   color: #fff;
@@ -34,7 +34,7 @@
   display: inline-block;
   padding: 4px 6px;
   border-radius: 8px;
-  background-color: #ffae07;
+  background-color: rgb(244, 177, 75);
   background-position: 0%;
   transition: 0.4s;
   color: #fff;
@@ -44,7 +44,7 @@
 }
 
 .page-item.active .page-link {
-  background-color: #ffae07;
+  background-color: rgb(244, 177, 75);
   color: rgba(33, 37, 41, 255);
   border-color: rgba(33, 37, 41, 255);
 }

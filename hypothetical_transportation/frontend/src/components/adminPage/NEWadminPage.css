@@ -10,7 +10,7 @@
   display: inline-block;
   padding: 8px 6px;
   border-radius: 8px;
-  background-color: #ffae07;
+  background-color: rgb(244, 177, 75);
   background-size: 200%;
   background-position: 0%;
   transition: 0.4s;
@@ -28,7 +28,7 @@
 .btn-yellowsubmit {
   display: inline-block;
   padding: 10px 15px;
-  background-color: #ffae07;
+  background-color: rgb(244, 177, 75);
   transition: 0.4s;
   color: #fff;
   font-weight: 700;
@@ -47,7 +47,7 @@
   display: inline-block;
   padding: 10px 15px;
   border-radius: 8px;
-  background-color: #ffae07;
+  background-color: rgb(244, 177, 75);
   background-size: 200%;
   background-position: 0%;
   transition: 0.4s;
@@ -64,7 +64,7 @@
 .btn-yellowToggle {
   display: inline-block;
   border-radius: 4px;
-  background-color: #ffae07;
+  background-color: rgb(244, 177, 75);
   background-position: 0%;
   transition: 0.4s;
   color: #fff;
@@ -91,7 +91,7 @@ h1 {
 .btn-instrucToggle {
   display: inline-block;
   border-radius: 4px;
-  background-color: #ffae07;
+  background-color: rgb(244, 177, 75);
   background-position: 0%;
   transition: 0.4s;
   color: #fff;
@@ -125,10 +125,10 @@ h1 {
 .btn-group-vertical > .btn.active {
   background-color: rgba(33, 37, 41, 255);
   border-color: rgba(33, 37, 41, 255);
-  color: #ffae07;
+  color: rgb(244, 177, 75);
 }
 
-.btn-outline-success {
-  color: #ffae07;
+.btn-outline-warning {
+  color: rgb(244, 177, 75);
   border-color: rgba(33, 37, 41, 255);
 }

@@ -16,6 +16,7 @@ import ModifyStopTable from '../components/forms/ModifyStopTable';
 import Geocode from "react-geocode";
 import IconLegend from '../../common/IconLegend';
 import { isStudentWithinRange } from '../../../utils/geocode';
+import { createMessageDispatch } from '../../../actions/messages';
 
 
 function AdminRouteStopsPlanner(props) {
@@ -45,9 +46,17 @@ function AdminRouteStopsPlanner(props) {
   }, [props.stops]);
 
   useEffect(() => {
+    props.getRouteInfo(param.route_id)
     props.getSchool(param.school_id);
     props.getStudents({routes: param.route_id})
   }, []);
+
+  const [complete,setComplete] = useState(true)
+  useEffect(() => {
+    props.getSchool(param.school_id);
+    props.getStudents({routes: param.route_id})
+    setComplete(props.currentRoute.is_complete)
+  }, [props.currentRoute]);
 
   const setStops = (newStops) => {
     let tempStopsData = Array.from(newStops);
@@ -75,7 +84,7 @@ function AdminRouteStopsPlanner(props) {
     stopsToUpdate.forEach(stop => {
       props.updateStop(stop, stop.id)
     })
-
+    props.createMessageDispatch({ student: "Route Stops Updated"})
     navigate(`/admin/route/${param.route_id}`)
 
   }
@@ -129,6 +138,7 @@ function AdminRouteStopsPlanner(props) {
     setDeletedStops([])
   }
 
+
   const [openInstruc, setOpenInstruc] = useState(false);
 
   return (
@@ -141,7 +151,7 @@ function AdminRouteStopsPlanner(props) {
           <h1>{`${props.currentRoute.name} Stop Planner`}</h1>
         </div>
 
-        { props.currentRoute.is_complete ?
+        { complete ?
         <Alert variant="success">
         <Alert.Heading>Success: This route is complete!</Alert.Heading>
         <p>
@@ -168,17 +178,15 @@ function AdminRouteStopsPlanner(props) {
           <Card>
             <Card.Header as="h5">Stop Planner Map</Card.Header>
             <Card.Body>
-            <Container>
               <Card>
                 <Card.Body>
                   <h5 style={{fontWeight:"700px"}}>Instructions: </h5>
                   <h6>Drag and Drop Stops to Reposition. Right Click to Remove Stop. Left Click to View Info.</h6>
                 </Card.Body>
               </Card>
-              </Container>
               <br></br>
-                <Container className="d-flex flex-row justify-content-center" style={{gap: "30px"}}>
-                  <Container style={{width: "3500px"}}>
+                <Container className="d-flex flex-row justify-content-center">
+                  <Container style={{width: "800px"}}>
                   <StopPlannerMap 
                       students={students} 
                       school={props.school} 
@@ -225,6 +233,7 @@ AdminRouteStopsPlanner.propTypes = {
     createStop: PropTypes.func.isRequired,
     updateStop: PropTypes.func.isRequired,
     stops: PropTypes.array,
+    createMessageDispatch: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = (state) => ({
@@ -233,7 +242,8 @@ const mapStateToProps = (state) => ({
   currentRoute: state.routes.viewedRoute,
   school: state.schools.viewedSchool,
   studentsInSchool: state.students.students.results,
-  stops: state.stop.stops.results
+  stops: state.stop.stops.results,
+  
 });
 
 AdminRouteStopsPlanner.defaultProps = {
@@ -259,4 +269,4 @@ AdminRouteStopsPlanner.defaultProps = {
     ],
 }
 
-export default connect(mapStateToProps, {updateStop, getStopByRoute, getRouteInfo, getSchool, getStudents, deleteStop, createStop})(AdminRouteStopsPlanner)
+export default connect(mapStateToProps, {createMessageDispatch, updateStop, getStopByRoute, getRouteInfo, getSchool, getStudents, deleteStop, createStop})(AdminRouteStopsPlanner)

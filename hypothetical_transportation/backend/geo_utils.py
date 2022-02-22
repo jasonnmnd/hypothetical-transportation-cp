@@ -12,8 +12,7 @@ def add_time_with_delta(time: datetime.time, time_delta: datetime.timedelta):
 
 
 def get_straightline_distance(lat1, long1, lat2, long2):
-    # return geopy.distance.distance((lat1, long1), (lat2, long2)).miles
-    return math.sqrt((lat2 - lat1) ** 2 + (long2 - long1) ** 2)
+    return geopy.distance.distance((lat1, long1), (lat2, long2)).miles
 
 
 def get_time_between(lat1, long1, lat2, long2):
