@@ -38,11 +38,11 @@ function AdminRouteStopsPlanner(props) {
   }, [param]);
 
   useEffect(() => {
-    setStudents(props.students)
+    setStudents(JSON.parse(JSON.stringify(props.students)))
   }, [props.students]);
 
   useEffect(() => {
-    setStops(props.stops)
+    setStops(JSON.parse(JSON.stringify(props.stops)))
   }, [props.stops]);
 
   useEffect(() => {
@@ -125,8 +125,9 @@ function AdminRouteStopsPlanner(props) {
   }
 
   const resetStopChanges = () => {
-    setStops(props.stops);
-    setStudents(props.students);
+    setStops(JSON.parse(JSON.stringify(props.stops)));
+    setStudents(JSON.parse(JSON.stringify(props.students)));
+    setDeletedStops([])
   }
 
   const [openInstruc, setOpenInstruc] = useState(false);
