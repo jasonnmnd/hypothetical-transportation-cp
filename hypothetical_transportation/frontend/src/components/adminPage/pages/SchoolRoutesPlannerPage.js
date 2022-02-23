@@ -114,6 +114,7 @@ function SchoolRoutesPlannerPage(props) {
     })
     props.createMessageDispatch({ student: "Route Stops Updated"})
     setDeletedStops([])
+    props.getRouteInfo(searchParams.get("route"))
   }
 
   
