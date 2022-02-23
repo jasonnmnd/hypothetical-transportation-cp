@@ -32,7 +32,7 @@ function RoutePlannerInstructions(props) {
                     <p>Within this interface, you can interactively modify and create routes.</p>
                     <ul>
                         <li>Select "Add New Route" to make a new route with name and description.</li>
-                        <li>Select "Edit Existing Route" to add or remove any student to the currently selected route from the dropdown. Right click to see the student's info. Left click to add/remove a student.</li>
+                        <li>Select "Add/Remove Students" to add or remove any student to the currently selected route from the dropdown. Right click to see the student's info. Left click to add/remove a student.</li>
                         <li>Select "Stop Planner" to plan stops for the selected route.</li>
                     </ul>
 
