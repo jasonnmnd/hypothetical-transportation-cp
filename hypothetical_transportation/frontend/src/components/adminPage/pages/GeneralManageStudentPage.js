@@ -216,7 +216,7 @@ useEffect(()=>{
                 <Form.Control 
                 type="text"
                 placeholder="Enter A Number For Student ID..." 
-                value={obj.student_id}
+                value={obj.student_id==null? "":obj.student_id}
                 onChange={(e)=>{setObj({...obj, ["student_id"]: e.target.value===""?null:e.target.value})}}
                 />
                 <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
