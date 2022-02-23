@@ -274,7 +274,6 @@ function SchoolRoutesPlannerPage(props) {
         <RoutePlannerInstructions/>
 
         <br></br>
-        <br></br>
 
         <Container className='d-flex flex-row justify-content-center'>
           <CreateRouteModal setCreateSearchParam={setCreateSearchParam} show={searchParams.get(IS_CREATE_PARAM) == "true"} onInfoSubmit={onInfoSubmit} />
