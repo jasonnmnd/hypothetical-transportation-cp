@@ -101,8 +101,8 @@ function StopPlannerMap(props){
     
     const getPinData = () => {
         let pinData = getStudentGroupsPinData();
-        pinData = pinData.concat(getStopPinData());
         addSchoolPin(pinData, props.school, onSchoolClick)
+        pinData = pinData.concat(getStopPinData());
         return pinData;
     }
 
