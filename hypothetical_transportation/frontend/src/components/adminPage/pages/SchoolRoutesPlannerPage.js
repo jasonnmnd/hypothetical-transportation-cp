@@ -41,6 +41,7 @@ function SchoolRoutesPlannerPage(props) {
   let [searchParams, setSearchParams] = useSearchParams();
   const [stops, setStopsWithProperInds] = useState(props.stops);
   const [deletedStops, setDeletedStops] = useState([]);
+  const [studentChanges, setStudentChanges] = useState({});
 
 
 
@@ -115,6 +116,20 @@ function SchoolRoutesPlannerPage(props) {
     props.createMessageDispatch({ student: "Route Stops Updated"})
     setDeletedStops([])
     props.getRouteInfo(searchParams.get("route"))
+  }
+
+  const saveRoutePlannerMapChanges = () => {
+    Object.keys(studentChanges).forEach(student => {
+      const routeVal = studentChanges[student] == NO_ROUTE ? null : studentChanges[student]
+      props.patchStudent({
+        routes: routeVal
+      }, student);
+    });
+    resetStudentChanges();
+  }
+
+  const resetStudentChanges = () => {
+    setStudentChanges({})
   }
 
   
@@ -258,6 +273,10 @@ function SchoolRoutesPlannerPage(props) {
               school={props.school} 
               routes={props.routes}
               onInfoSubmit={onInfoSubmit}
+              studentChanges={studentChanges}
+              setStudentChanges={setStudentChanges}
+              resetStudentChanges={resetStudentChanges}
+              saveRoutePlannerMapChanges={saveRoutePlannerMapChanges}
             /> 
             : null
             }

@@ -51,13 +51,7 @@ function RouteStopsPlanner(props) {
   useEffect(() => {
     props.getStopByRoute(props.route_id);
     props.getStudents({routes: props.route_id})
-  }, []);
-
-
-
-
-
-  
+  }, []);  
   
 
   const setStops = (newStops) => {
