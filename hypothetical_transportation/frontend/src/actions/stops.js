@@ -44,7 +44,7 @@ axios
         dispatch(createMessage({ stop: 'Stop Deleted' }));
         dispatch({
             type: DELETE_STOP,
-            payload: parseInt(id)
+            payload: parseInt(stopID)
         });
     })
     .catch(err => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});

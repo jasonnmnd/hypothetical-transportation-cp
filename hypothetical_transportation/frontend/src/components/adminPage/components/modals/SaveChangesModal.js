@@ -35,10 +35,10 @@ function SaveChangesModal(props){
                 </Modal.Body>
 
                 <Modal.Footer>
-                    <Container className='d-flex flex-row justify-content-center'>
-                        <Button variant="secondary" onClick={props.onCancel}>Cancel</Button>
-                        <Button variant="secondary" onClick={onContinue}>Continue</Button>
-                        <Button variant="primary" onClick={onSave}>Save and Continue</Button>
+                    <Container className='d-flex flex-row justify-content-center' style={{gap: "20px"}}>
+                            <Button variant="saveModal" onClick={props.onCancel}>Cancel</Button>
+                            <Button variant="saveModal" onClick={onContinue}>Continue without Saving</Button>
+                            <Button variant="saveModal" onClick={onSave}>Save and Continue</Button>
                     </Container>
                 </Modal.Footer>
         </Modal>  

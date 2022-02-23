@@ -27,7 +27,6 @@ function RouteStopsPlanner(props) {
 
   const [complete,setComplete] = useState(true);
 
-  const [toggleToRefresh, setToggleToRefresh] = useState(false);
 
 
 
@@ -41,6 +40,7 @@ function RouteStopsPlanner(props) {
   }, [props.students]);
 
   useEffect(() => {
+    props.initStops.sort((a, b) => a.stop_number - b.stop_number);
     setStops(JSON.parse(JSON.stringify(props.initStops)))
   }, [props.initStops]);
 
@@ -51,15 +51,7 @@ function RouteStopsPlanner(props) {
   useEffect(() => {
     props.getStopByRoute(props.route_id);
     props.getStudents({routes: props.route_id})
-  }, []);
-
-//   useEffect(() => {
-//     setToggleToRefresh(!toggleToRefresh);
-//   }, [props.stops, props.deletedStops]);
-
-
-
-  
+  }, []);  
   
 
   const setStops = (newStops) => {
@@ -173,6 +165,7 @@ function RouteStopsPlanner(props) {
                       onStopDragEnd={onStopDragEnd}
                       stops={props.stops}
                       deleteStop={deleteStopFromTable}
+                      setComplete={setComplete}
                   />
                   </Container>
                   <IconLegend legendType='stopPlanner'></IconLegend>
