@@ -87,8 +87,9 @@ function RoutePlanner(props) {
                 </Container>
 
             </Container>
-            
-            <ModifyRouteInfo title={"Edit Route"} routeName={props.currentRoute.name} routeDescription={props.currentRoute.description} onSubmitFunc={(e) => props.onInfoSubmit(e, false)}/>
+            <Container>
+                <ModifyRouteInfo title={"Edit Route"} routeName={props.currentRoute.name} routeDescription={props.currentRoute.description} onSubmitFunc={(e) => props.onInfoSubmit(e, false)}/>
+            </Container>
         </Container>
     </Container>
 

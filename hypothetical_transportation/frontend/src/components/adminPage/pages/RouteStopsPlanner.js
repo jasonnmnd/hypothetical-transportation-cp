@@ -146,10 +146,6 @@ function RouteStopsPlanner(props) {
         </p>
         </Alert>
         }
-
-        
-        
-        
         
         <br></br>
 
@@ -225,7 +221,7 @@ RouteStopsPlanner.propTypes = {
 const mapStateToProps = (state) => ({
   students: state.students.students.results,
   studentsInSchool: state.students.students.results,
-  
+  currentRoute: state.routes.viewedRoute
 });
 
 RouteStopsPlanner.defaultProps = {
