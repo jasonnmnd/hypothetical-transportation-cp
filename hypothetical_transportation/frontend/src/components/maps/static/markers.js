@@ -11,7 +11,7 @@ export const STUDENT_X_MARKER = {
     //url: 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg),
     stroke: '#000000',
     fillOpacity: 1,
-    anchor: [11.5, 25],
+    anchor: [12, 23.5],
 }
 
 export const STUDENT_MULTIPLE_MARKER = {
@@ -25,7 +25,7 @@ export const STUDENT_MARKER = {
     //url: 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg),
     stroke: '#000000',
     fillOpacity: 1,
-    anchor: [15, 30],
+    anchor: [16, 25],
 }
 
 
@@ -64,7 +64,9 @@ const getStudentMultipleSVG = (color) => {
 }
 
 const getStudentSVG = (color) => {
-    return `<svg xmlns="http://www.w3.org/2000/svg" width="30px" height="30px" viewBox="0 0 24 24" fill="${color}" ><path d="M12 11a4 4 0 1 0-4-4 4 4 0 0 0 4 4z"/><path d="M18 21a1 1 0 0 0 1-1 7 7 0 0 0-14 0 1 1 0 0 0 1 1z"/></svg>`
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" viewBox="0 0 16 16" fill="${color}" >` +
+    '<path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>' +
+    '</svg>'
 }
 
 const getSchoolSVG = (color) => {
@@ -123,7 +125,9 @@ export const STUDENT_MULTIPLE_LEGEND = (color) => <svg xmlns="http://www.w3.org/
 <g><path d="M42,22.3c-2.8-1.1-3.2-2.2-3.2-3.3s0.8-2.2,1.8-3c1.7-1.4,2.6-3.5,2.6-5.8c0-4.4-2.9-8.2-8-8.2   c-4.7,0-7.5,3.2-7.9,7.1c0,0.4,0.2,0.7,0.5,0.9c3.8,2.4,6.1,6.6,6.1,11.7c0,3.8-1.5,7.2-4.2,9.6c-0.2,0.2-0.2,0.6,0,0.8   c0.7,0.5,2.3,1.2,3.3,1.7c0.3,0.1,0.5,0.2,0.8,0.2h12.1c2.3,0,4.1-1.9,4.1-4v-0.6C50,25.9,46.2,24,42,22.3z"/>
 <path d="M28.6,36.2c-3.4-1.4-3.9-2.6-3.9-3.9c0-1.3,1-2.6,2.1-3.6c2-1.7,3.1-4.1,3.1-6.9c0-5.2-3.4-9.7-9.6-9.7   c-6.1,0-9.6,4.5-9.6,9.7c0,2.8,1.1,5.2,3.1,6.9c1.1,1,2.1,2.3,2.1,3.6c0,1.3-0.5,2.6-4,3.9c-5,2-9.9,4.3-9.9,8.5V45v1   c0,2.2,1.8,4,4.1,4h27.7c2.3,0,4.2-1.8,4.2-4v-1v-0.4C38,40.5,33.6,38.2,28.6,36.2z"/></g></svg>
 
-export const STUDENT_OTHER_ROUTE_LEGEND = (color) => <svg xmlns="http://www.w3.org/2000/svg" width="30px" height="30px" viewBox="0 0 24 24" fill={color}><path d="M12 11a4 4 0 1 0-4-4 4 4 0 0 0 4 4z"/><path d="M18 21a1 1 0 0 0 1-1 7 7 0 0 0-14 0 1 1 0 0 0 1 1z"/></svg>
+export const STUDENT_OTHER_ROUTE_LEGEND = (color) => <svg xmlns="http://www.w3.org/2000/svg" width="30px" height="30px" viewBox="0 0 16 16" fill={color} >
+<path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+</svg>
 
 
 export const getIcon = (icon, color) => {
