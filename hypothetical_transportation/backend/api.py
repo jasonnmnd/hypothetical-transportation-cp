@@ -1,6 +1,8 @@
+from turtle import distance
 from urllib import response
 from django.contrib.auth import get_user_model
 from django_filters.rest_framework import DjangoFilterBackend
+from numpy import mat
 from rest_framework import filters, status
 from rest_framework import viewsets, permissions, generics
 from rest_framework.decorators import action
@@ -21,7 +23,7 @@ from .geo_utils import get_straightline_distance, LEN_OF_MILE
 
 os.environ['DISTANCE_MATRIX_API_URL']='https://maps.googleapis.com/maps/api/distancematrix/json'
 os.environ['DISTANCE_MATRIX_API_KEY']='AIzaSyAs_8cqVS3l_q4lxKLiTgyrjRCN8aWN28g'
-
+MAX_STOPS_IN_ONE_CALL = 10
 
 def get_filter_dict(model):
     """
@@ -105,16 +107,35 @@ def get_information_related_to_a_stop(stop: Stop):
 
     school_start_time = datetime_h_m_s_to_sec(school.bus_arrival_time)
     school_letout_time = datetime_h_m_s_to_sec(school.bus_departure_time)
-    matrix = school.address
-
-    # here's the perhaps risky business. we order by stop number, and hope for the best
+    matrix = ""
+    matrices = []
     stops = Stop.objects.filter(route=route).distinct().order_by('stop_number')
-    for stop in stops:
-        matrix = matrix + f'|{stop.latitude}, {stop.longitude}'
+    # print(f'stops: {stops}')
+    stop_count = 1
+    starting = True
 
-    times = distance_matrix_api(matrix)
+    for stop in stops:
+        # print(f"stop name: {stop.name}")
+        # print(f"stop_count: {stop_count}")
+        if stop_count == 1 and starting:
+            matrix = school.address + f'|{stop.latitude}, {stop.longitude}'
+            starting = False
+        elif stop_count == 1 and not starting:
+            # print(f"entered: {stop_count}")
+            matrices.append(matrix)
+            matrix = school.address + f'|{stop.latitude}, {stop.longitude}'
+        else:
+            matrix = matrix + f'|{stop.latitude}, {stop.longitude}'
+        if stop_count == MAX_STOPS_IN_ONE_CALL:
+            stop_count = 1
+        else:
+            stop_count = stop_count + 1
+    matrices.append(matrix)
+
+    # times = distance_matrix_api(matrix)
     # print(times)
-    return school_start_time, school_letout_time, stops, times
+    print(f"matrices: {matrices}")
+    return school_start_time, school_letout_time, stops, matrices
 
 def update_bus_times_for_stops_related_to_stop(stop: Stop):
     """
@@ -123,7 +144,22 @@ def update_bus_times_for_stops_related_to_stop(stop: Stop):
     :param stop: valid Stop object
     :return: datetime[], datetime[], Stop[] -> list of dropoff times, list of pickup times, and list of corresponding stops
     """
-    school_start_time, school_letout_time, stops, times = get_information_related_to_a_stop(stop)
+    school_start_time, school_letout_time, stops, matrices = get_information_related_to_a_stop(stop)
+    times = {}
+    starting = True
+    for group in matrices:
+        res = distance_matrix_api(group)
+        if res['status'] is not 'OK':
+            return response
+        if starting:
+            times['rows'] = res['rows']
+            starting = False
+        else:
+            times['rows'] = times['rows'] + (res['rows'])
+
+    # print(times)
+
+
     school_to_stop_1 = times['rows'][0]['elements'][1]['duration']['value']
     stop_n_to_school = times['rows'][len(stops)-1]['elements'][0]['duration']['value']
     # print(times)
@@ -131,15 +167,13 @@ def update_bus_times_for_stops_related_to_stop(stop: Stop):
     desc_times, asc_times = [], [school_to_stop_1]
     running_desc_time, running_asc_time = 0, school_to_stop_1
     
-    for stop_num in range(1, min(25, (len(stops)))):
+    for stop_num in range(1, len(stops)):
         prev_stop = times['rows'][stop_num]['elements'][stop_num-1]['duration']['value']
         running_desc_time = running_desc_time + prev_stop # this is stop i to stop i-1
         desc_times.append(running_desc_time)
-
         next_stop = times['rows'][stop_num]['elements'][stop_num+1]['duration']['value']
         running_asc_time = running_asc_time + next_stop # this is stop i to stop i+1
         asc_times.append(running_asc_time)   
-
     # handle the edge case of arriving to the school
     if len(stops)==1:
         # print("hiiii")
