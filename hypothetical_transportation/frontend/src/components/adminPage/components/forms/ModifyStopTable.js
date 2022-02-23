@@ -117,7 +117,7 @@ function ModifyStopTable(props) {
 
     const getStopsInMapTableBody = () => {
         let tempData = Array.from(props.stops);
-        tempData.sort((a, b) => a.stop_num - b.stop_num);
+        tempData.sort((a, b) => a.stop_number - b.stop_number);
         return tempData.map((stop, index) => (
             <Draggable
                 key={stop.id}

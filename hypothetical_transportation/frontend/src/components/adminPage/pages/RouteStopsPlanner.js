@@ -41,6 +41,7 @@ function RouteStopsPlanner(props) {
   }, [props.students]);
 
   useEffect(() => {
+    props.initStops.sort((a, b) => a.stop_number - b.stop_number);
     setStops(JSON.parse(JSON.stringify(props.initStops)))
   }, [props.initStops]);
 
