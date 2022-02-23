@@ -19,8 +19,8 @@ from .permissions import is_admin, IsAdminOrReadOnly, IsAdmin
 from django.shortcuts import get_object_or_404
 from .geo_utils import get_straightline_distance, LEN_OF_MILE
 
-os.environ['DISTANCE_MATRIX_API_URL']='https://maps.googleapis.com/maps/api/distancematrix/json'
-os.environ['DISTANCE_MATRIX_API_KEY']='AIzaSyAs_8cqVS3l_q4lxKLiTgyrjRCN8aWN28g'
+os.environ['DISTANCE_MATRIX_API_URL'] = 'https://maps.googleapis.com/maps/api/distancematrix/json'
+os.environ['DISTANCE_MATRIX_API_KEY'] = 'AIzaSyAs_8cqVS3l_q4lxKLiTgyrjRCN8aWN28g'
 
 
 def get_filter_dict(model):
@@ -59,13 +59,14 @@ def parse_repr(repr_str: str) -> dict:
         repr_fields[key] = value
     return repr_fields
 
+
 def datetime_h_m_s_to_sec(date: datetime) -> int:
     """
     Change a datetime object into a value in seconds
     :param date: datetime object
     :return: integer value representing seconds
     """
-    return date.hour*3600 + date.minute*60 + date.second
+    return date.hour * 3600 + date.minute * 60 + date.second
 
 
 def sec_to_datetime_h_m_s(seconds: int) -> datetime:
@@ -74,9 +75,9 @@ def sec_to_datetime_h_m_s(seconds: int) -> datetime:
     :param seconds: seconds
     :return: datetime object
     """
-    h = seconds//3600
-    m = (seconds%3600)//60
-    s = seconds%60
+    h = seconds // 3600
+    m = (seconds % 3600) // 60
+    s = seconds % 60
     return time(h, m, s)
 
 
@@ -91,7 +92,7 @@ def distance_matrix_api(matrix: list) -> json:
     params = {'key': key, 'origins': matrix, 'destinations': matrix}
     req = requests.get(url=url, params=params)
     return json.loads(req.content)
-    
+
 
 def get_information_related_to_a_stop(stop: Stop):
     """
@@ -116,6 +117,7 @@ def get_information_related_to_a_stop(stop: Stop):
     # print(times)
     return school_start_time, school_letout_time, stops, times
 
+
 def update_bus_times_for_stops_related_to_stop(stop: Stop):
     """
     Given some stop, calculate and update the dropoff and pickup times between each stop 
@@ -125,37 +127,43 @@ def update_bus_times_for_stops_related_to_stop(stop: Stop):
     """
     school_start_time, school_letout_time, stops, times = get_information_related_to_a_stop(stop)
     school_to_stop_1 = times['rows'][0]['elements'][1]['duration']['value']
-    stop_n_to_school = times['rows'][len(stops)-1]['elements'][0]['duration']['value']
-
+    stop_n_to_school = times['rows'][len(stops) - 1]['elements'][0]['duration']['value']
+    # print(times)
     # setup, handle the edge case of leaving the school
     desc_times, asc_times = [], [school_to_stop_1]
     running_desc_time, running_asc_time = 0, school_to_stop_1
-    
+
     for stop_num in range(1, min(25, (len(stops)))):
-        prev_stop = times['rows'][stop_num]['elements'][stop_num-1]['duration']['value']
-        running_desc_time = running_desc_time + prev_stop # this is stop i to stop i-1
+        prev_stop = times['rows'][stop_num]['elements'][stop_num - 1]['duration']['value']
+        running_desc_time = running_desc_time + prev_stop  # this is stop i to stop i-1
         desc_times.append(running_desc_time)
 
-        next_stop = times['rows'][stop_num]['elements'][stop_num+1]['duration']['value']
-        running_asc_time = running_asc_time + next_stop # this is stop i to stop i+1
-        asc_times.append(running_asc_time)   
+        next_stop = times['rows'][stop_num]['elements'][stop_num + 1]['duration']['value']
+        running_asc_time = running_asc_time + next_stop  # this is stop i to stop i+1
+        asc_times.append(running_asc_time)
 
-    # handle the edge case of arriving to the school
-    if len(stops)==1:
-        running_desc_time = times['rows'][1]['elements'][0]['duration']['value']
+        # handle the edge case of arriving to the school
+    if len(stops) == 1:
+        # print("hiiii")
+        # ok, because of how we handle creating pickup times, this needs to be a negative value
+        desc_times.append(-1 * times['rows'][1]['elements'][0]['duration']['value'])
+        # print(running_desc_time)
     else:
         running_desc_time = running_desc_time + stop_n_to_school
-    desc_times.append(running_desc_time)
-    dropoff_times = [sec_to_datetime_h_m_s((school_letout_time+time)%(24*3600)) for time in asc_times]
-    pickup_times = [sec_to_datetime_h_m_s((school_start_time+time-running_desc_time-stop_n_to_school)%(24*3600)) for time in desc_times]
+        desc_times.append(running_desc_time)
+    # print(desc_times)
+    dropoff_times = [sec_to_datetime_h_m_s((school_letout_time + time) % (24 * 3600)) for time in asc_times]
+    pickup_times = [
+        sec_to_datetime_h_m_s((school_start_time + time - running_desc_time - stop_n_to_school) % (24 * 3600)) for time
+        in desc_times]
     stop_num = 0
     # print(stops)
     for stop in stops:
-        stop.pickup_time=pickup_times[stop_num]
-        stop.dropoff_time=dropoff_times[stop_num]
+        stop.pickup_time = pickup_times[stop_num]
+        stop.dropoff_time = dropoff_times[stop_num]
         # print(f"internal stop_name: {stop.name}, dropoff time:{stop.dropoff_time}, pickup time:{stop.pickup_time}, long{stop.longitude} lat{stop.latitude}")
         stop.save(update_fields=['pickup_time', 'dropoff_time'])
-        stop_num = stop_num+1
+        stop_num = stop_num + 1
     return response
 
 
@@ -170,6 +178,7 @@ def update_all_stops_related_to_school(school: School):
         stops = Stop.objects.filter(route=route).distinct().order_by('stop_number')
         if stops:
             update_bus_times_for_stops_related_to_stop(stops[0])
+
 
 class StopPlannerAPI(generics.GenericAPIView):
     serializer_class = CheckInrangeSerializer
@@ -243,7 +252,6 @@ class StopViewSet(viewsets.ModelViewSet):
     # #     update_bus_times_for_stops_related_to_stop(stop)
     #     content = parse_repr(repr(StopSerializer()))
     #     return Response(content)
-
 
     def get_serializer_class(self):
         return StopSerializer
@@ -325,6 +333,14 @@ class StudentViewSet(viewsets.ModelViewSet):
     filterset_fields = get_filter_dict(Student)
     ordering_fields = ['school__name', 'student_id', 'full_name', 'id']
     ordering = 'id'
+
+    def update(self, request, *args, **kwargs):
+        super().update(request, *args, **kwargs)
+        # patch already handled by initial serializer, so we allow maximum flexibility here
+        serializer = FormatStudentSerializer(self.get_object(), data={}, partial=True,
+                                             context=self.get_serializer_context())
+        serializer.is_valid(raise_exception=True)
+        return Response(serializer.data)
 
     def get_serializer_class(self):
         if self.action == 'list' or self.action == 'retrieve':
