@@ -18,7 +18,7 @@ export const STUDENT_MULTIPLE_MARKER = {
     //url: 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg),
     stroke: '#000000',
     fillOpacity: 1,
-    anchor: [15, 30],
+    anchor: [15, 27.5],
 }
 
 export const STUDENT_MARKER = {
