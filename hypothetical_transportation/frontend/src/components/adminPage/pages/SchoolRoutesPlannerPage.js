@@ -48,6 +48,7 @@ function SchoolRoutesPlannerPage(props) {
 
   useEffect(() => {
     props.getRoutes({school: param.school_id});
+    props.getRouteInfo(searchParams.get('route'))
   }, [param, searchParams]);
 
   useEffect(() => {
@@ -113,6 +114,7 @@ function SchoolRoutesPlannerPage(props) {
     })
     props.createMessageDispatch({ student: "Route Stops Updated"})
     setDeletedStops([])
+    props.getRouteInfo(searchParams.get("route"))
   }
 
   
@@ -184,8 +186,10 @@ function SchoolRoutesPlannerPage(props) {
           <h2>This school has no routes. Please create a route to continue.</h2>
 
           <br></br>
-
-          <CreateRouteModal setCreateSearchParam={setCreateSearchParam} show={searchParams.get(IS_CREATE_PARAM) == "true"} onInfoSubmit={onInfoSubmit} />
+          <Container className='d-flex flex-row justify-content-center'>
+            <CreateRouteModal setCreateSearchParam={setCreateSearchParam} show={searchParams.get(IS_CREATE_PARAM) == "true"} onInfoSubmit={onInfoSubmit} />
+          </Container>
+        
         </Container>
       </>
     )
@@ -209,20 +213,12 @@ function SchoolRoutesPlannerPage(props) {
         <RoutePlannerInstructions/>
 
         <br></br>
+        <br></br>
 
-        <CreateRouteModal setCreateSearchParam={setCreateSearchParam} show={searchParams.get(IS_CREATE_PARAM) == "true"} onInfoSubmit={onInfoSubmit} />
-
-        <Card>
-          <Card.Body>
-            <Form.Group className="mb-3">
-              <Form.Label as="h5">Select an Existing Route to Edit</Form.Label>
-              <Form.Select size="sm" value={searchParams.get(ROUTE_PARAM)} onChange={onDropdownChange} style={{width: "800px"}}>
-                      {getRouteOptions()}
-              </Form.Select>
-            </Form.Group>
-          </Card.Body>
-        </Card>
-
+        <Container className='d-flex flex-row justify-content-center'>
+          <CreateRouteModal setCreateSearchParam={setCreateSearchParam} show={searchParams.get(IS_CREATE_PARAM) == "true"} onInfoSubmit={onInfoSubmit} />
+        </Container>
+        
         <ButtonGroup>
         {ROUTE_PLANNER_VIEWS.map((radio, idx) => (
             <ToggleButton
@@ -242,31 +238,46 @@ function SchoolRoutesPlannerPage(props) {
         ))}
         </ButtonGroup>
 
-        {searchParams.get(VIEW_PARAM) == 0 ? <RoutePlanner 
-                                                currentRoute={props.currentRoute} 
-                                                currentRouteID={searchParams.get(ROUTE_PARAM)} 
-                                                school={props.school} 
-                                                routes={props.routes}
-                                                onInfoSubmit={onInfoSubmit}
-                                              /> 
-                                              : null
-                                              }
+        <Container>
+          <Card>
+            <Card.Body>
+              <Form.Group className="mb-3">
+                <Form.Label as="h5">Select an Existing Route to Edit</Form.Label>
+                <Form.Select size="sm" value={searchParams.get(ROUTE_PARAM)} onChange={onDropdownChange} style={{width: "800px"}}>
+                        {getRouteOptions()}
+                </Form.Select>
+              </Form.Group>
+            </Card.Body>
+          </Card>
+        </Container>
+        
+          <Container>
+            {searchParams.get(VIEW_PARAM) == 0 ? <RoutePlanner 
+              currentRoute={props.currentRoute} 
+              currentRouteID={searchParams.get(ROUTE_PARAM)} 
+              school={props.school} 
+              routes={props.routes}
+              onInfoSubmit={onInfoSubmit}
+            /> 
+            : null
+            }
 
 
-        {searchParams.get(VIEW_PARAM) == 1 ? <RouteStopsPlanner
-                                                route_id={searchParams.get(ROUTE_PARAM)}
-                                                currentRoute={props.currentRoute} 
-                                                school={props.school} 
-                                                routes={props.routes}
-                                                initStops={props.stops}
-                                                stops={stops}
-                                                setStopsWithProperInds={setStopsWithProperInds}
-                                                deletedStops={deletedStops}
-                                                setDeletedStops={setDeletedStops}
-                                                submit={submitStopPlanner}
-                                              /> 
-                                              : null
-                                              }
+            {searchParams.get(VIEW_PARAM) == 1 ? <RouteStopsPlanner
+            route_id={searchParams.get(ROUTE_PARAM)}
+            currentRoute={props.currentRoute} 
+            school={props.school} 
+            routes={props.routes}
+            initStops={props.stops}
+            stops={stops}
+            setStopsWithProperInds={setStopsWithProperInds}
+            deletedStops={deletedStops}
+            setDeletedStops={setDeletedStops}
+            submit={submitStopPlanner}
+          /> 
+          : null
+          }
+        </Container>
 
         
       </Container>

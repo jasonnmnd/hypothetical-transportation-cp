@@ -129,11 +129,11 @@ function GeneralAdminRouteDetails(props) {
         <Container className="container-main d-flex flex-column" style={{gap: "20px"}}>
         <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
             <Row>
-                <Col>
+                {/* <Col>
                     <Link to={`/admin/stop/plan/${props.route.school.id}/${props.route.id}`}>
                         <Button variant="yellowLong" size="lg">Stop Planner</Button>
                     </Link>
-                </Col>
+                </Col> */}
 
                 <Col>
                     <Button variant="yellowLong" size="lg" onClick={() => {

@@ -55,6 +55,11 @@ function StopPlannerMap(props){
 
 
     const getStudentGroupsPinData = () => {
+
+        const studentsWStop = getStudentsWStop();
+        const studentsWOStop = getStudentsWOStop();
+
+        props.setComplete(studentsWOStop.length == 0);
         
         return [
             {
@@ -64,7 +69,7 @@ function StopPlannerMap(props){
                     onClick: onStudentClick,
                     onRightClick: onStudentClick,
                 },
-                pins: getStudentsWStop().map(student => {return getStudentPin(student)})
+                pins: studentsWStop.map(student => {return getStudentPin(student)})
             },
             {
                 iconColor: "red",
@@ -73,7 +78,7 @@ function StopPlannerMap(props){
                     onClick: onStudentClick,
                     onRightClick: onStudentClick,
                 },
-                pins: getStudentsWOStop().map(student => {return getStudentPin(student)})
+                pins: studentsWOStop.map(student => {return getStudentPin(student)})
             },
         ]
     }
@@ -95,9 +100,9 @@ function StopPlannerMap(props){
     }
     
     const getPinData = () => {
-        let pinData = getStopPinData();
+        let pinData = getStudentGroupsPinData();
+        pinData = pinData.concat(getStopPinData());
         addSchoolPin(pinData, props.school, onSchoolClick)
-        pinData = pinData.concat(getStudentGroupsPinData());
         return pinData;
     }
 
@@ -110,7 +115,8 @@ StopPlannerMap.propTypes = {
     school: PropTypes.object,
     stops: PropTypes.array,
     onStopDragEnd: PropTypes.func,
-    deleteStop: PropTypes.func
+    deleteStop: PropTypes.func,
+    setComplete: PropTypes.func
 }
 
 // StopPlannerMap.defaultProps = {

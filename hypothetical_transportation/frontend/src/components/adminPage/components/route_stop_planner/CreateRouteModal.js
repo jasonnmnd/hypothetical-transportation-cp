@@ -16,7 +16,7 @@ function CreateRouteModal(props){
 
     return (
         <>
-            <Button variant='yellowsubmit' onClick={() => props.setCreateSearchParam("true")}>Add New Route</Button>
+            <Button variant='yellow' onClick={() => props.setCreateSearchParam("true")}>Add New Route</Button>
             <Modal show={props.show} onHide={() => props.setCreateSearchParam("false")} >
                 <Modal.Header closeButton>
                     <Modal.Title>Create Route</Modal.Title>
