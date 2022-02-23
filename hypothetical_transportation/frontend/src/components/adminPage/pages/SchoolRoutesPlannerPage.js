@@ -184,8 +184,10 @@ function SchoolRoutesPlannerPage(props) {
           <h2>This school has no routes. Please create a route to continue.</h2>
 
           <br></br>
-
-          <CreateRouteModal setCreateSearchParam={setCreateSearchParam} show={searchParams.get(IS_CREATE_PARAM) == "true"} onInfoSubmit={onInfoSubmit} />
+          <Container className='d-flex flex-row justify-content-center'>
+            <CreateRouteModal setCreateSearchParam={setCreateSearchParam} show={searchParams.get(IS_CREATE_PARAM) == "true"} onInfoSubmit={onInfoSubmit} />
+          </Container>
+        
         </Container>
       </>
     )
@@ -209,19 +211,9 @@ function SchoolRoutesPlannerPage(props) {
         <RoutePlannerInstructions/>
 
         <br></br>
-
-        <CreateRouteModal setCreateSearchParam={setCreateSearchParam} show={searchParams.get(IS_CREATE_PARAM) == "true"} onInfoSubmit={onInfoSubmit} />
-
-        <Card>
-          <Card.Body>
-            <Form.Group className="mb-3">
-              <Form.Label as="h5">Select an Existing Route to Edit</Form.Label>
-              <Form.Select size="sm" value={searchParams.get(ROUTE_PARAM)} onChange={onDropdownChange} style={{width: "800px"}}>
-                      {getRouteOptions()}
-              </Form.Select>
-            </Form.Group>
-          </Card.Body>
-        </Card>
+        <Container className='d-flex flex-row justify-content-center'>
+          <CreateRouteModal setCreateSearchParam={setCreateSearchParam} show={searchParams.get(IS_CREATE_PARAM) == "true"} onInfoSubmit={onInfoSubmit} />
+        </Container>
 
         <ButtonGroup>
         {ROUTE_PLANNER_VIEWS.map((radio, idx) => (
@@ -241,6 +233,17 @@ function SchoolRoutesPlannerPage(props) {
             </ToggleButton>
         ))}
         </ButtonGroup>
+
+        <Card>
+          <Card.Body>
+            <Form.Group className="mb-3">
+              <Form.Label as="h5">Select an Existing Route to Edit</Form.Label>
+              <Form.Select size="sm" value={searchParams.get(ROUTE_PARAM)} onChange={onDropdownChange} style={{width: "800px"}}>
+                      {getRouteOptions()}
+              </Form.Select>
+            </Form.Group>
+          </Card.Body>
+        </Card>
 
         {searchParams.get(VIEW_PARAM) == 0 ? <RoutePlanner 
                                                 currentRoute={props.currentRoute} 
