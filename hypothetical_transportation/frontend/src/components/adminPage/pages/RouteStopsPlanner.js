@@ -207,7 +207,7 @@ RouteStopsPlanner.propTypes = {
     stops: PropTypes.array,
     initStops: PropTypes.array,
     createMessageDispatch: PropTypes.func.isRequired,
-    route_id: PropTypes.number,
+    route_id: PropTypes.string,
     school: PropTypes.object
 }
 
