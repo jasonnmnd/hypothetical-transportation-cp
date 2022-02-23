@@ -48,6 +48,7 @@ function SchoolRoutesPlannerPage(props) {
 
   useEffect(() => {
     props.getRoutes({school: param.school_id});
+    props.getRouteInfo(searchParams.get('route'))
   }, [param, searchParams]);
 
   useEffect(() => {
