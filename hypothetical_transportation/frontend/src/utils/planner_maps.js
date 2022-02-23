@@ -59,3 +59,14 @@ export const getStudentRouteName = (studentId, studentRouteObj, studentChanges, 
     }
     return routeName;
 }
+
+export const compareStopLists = (stops1, stops2) => {
+    if(stops1.length != stops2.length){
+        return false;
+    }
+
+    return stops1.every(stop1 => {
+        const stop2 = stops2.find(stop => stop1.id == stop.id);
+        return stop2 != undefined && stop1.name == stop2.name && stop1.location == stop2.location && stop1.stop_number == stop2.stop_number
+    })
+}

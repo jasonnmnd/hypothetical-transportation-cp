@@ -24,7 +24,7 @@ const ROUTE_PARAM = 'route';
 
 function RoutePlanner(props) {
 
-  const [studentChanges, setStudentChanges] = useState({});
+  
 
   useEffect(() => {
     props.getStudents({school: props.school.id})
@@ -34,31 +34,19 @@ function RoutePlanner(props) {
 
   const changeStudentRoute = (pinStuff, position) => {
     let newID = "";
-    if(getCurRouteFromStudent(pinStuff, studentChanges) == props.currentRouteID){
+    if(getCurRouteFromStudent(pinStuff, props.studentChanges) == props.currentRouteID){
       newID = NO_ROUTE
     }
     else {
       newID = props.currentRouteID
     }
-    setStudentChanges({
-      ...studentChanges,
+    props.setStudentChanges({
+      ...props.studentChanges,
       [pinStuff.id]: newID
     })
   }
 
-  const saveRoutePlannerMapChanges = () => {
-    Object.keys(studentChanges).forEach(student => {
-      const routeVal = studentChanges[student] == NO_ROUTE ? null : studentChanges[student]
-      props.patchStudent({
-        routes: routeVal
-      }, student);
-    });
-    resetStudentChanges();
-  }
-
-  const resetStudentChanges = () => {
-    setStudentChanges({})
-  }
+  
 
 
   return (
@@ -75,15 +63,15 @@ function RoutePlanner(props) {
                     school={props.school} 
                     currentRoute={props.currentRouteID} 
                     changeStudentRoute={changeStudentRoute}
-                    studentChanges={studentChanges}
+                    studentChanges={props.studentChanges}
                     allRoutes={props.routes}
                 />
 
                 <br></br>
 
                 <Container className="d-flex flex-row justify-content-center" style={{gap: "20px"}}>
-                    <Button variant='yellowsubmit' onClick={saveRoutePlannerMapChanges}>Save Map Changes</Button>
-                    <Button variant='yellowsubmit' onClick={resetStudentChanges}>Reset Map Changes</Button>
+                    <Button variant='yellowsubmit' onClick={props.saveRoutePlannerMapChanges}>Save Map Changes</Button>
+                    <Button variant='yellowsubmit' onClick={props.resetStudentChanges}>Reset Map Changes</Button>
                 </Container>
 
             </Container>
@@ -112,8 +100,11 @@ RoutePlanner.propTypes = {
     school: PropTypes.object,
     routes: PropTypes.array,
     onInfoSubmit: PropTypes.func,
-    clickedAway: PropTypes.bool,
-    
+    studentChanges: PropTypes.object,
+    setStudentChanges: PropTypes.func,
+    resetStudentChanges: PropTypes.func,
+    saveRoutePlannerMapChanges: PropTypes.func
+
 }
 
 const mapStateToProps = (state) => ({
