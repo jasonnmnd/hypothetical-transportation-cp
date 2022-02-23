@@ -134,10 +134,44 @@ function RoutePlannerMap(props){
         return [overlappingStudents, normalStudents]
     }
 
+    const getOverlappingStudentsGrouped = (overlappingStudents) => {
+        let allInCurRoute = []
+        let allInNoRoute = []
+        let allInOtherRoute = []
+        let mixedOverlap = []
+        overlappingStudents.forEach(studentGroup => {
+            if(studentGroup.pins.every(student => getCurRouteFromStudent(student, props.studentChanges) == props.currentRoute)){
+                allInCurRoute.push(studentGroup);
+            }
+            else if(studentGroup.pins.every(student => getCurRouteFromStudent(student, props.studentChanges) == null)){
+                allInNoRoute.push(studentGroup);
+            }
+            else if(studentGroup.pins.every(student => getCurRouteFromStudent(student, props.studentChanges) != null &&  getCurRouteFromStudent(student, props.studentChanges) != props.currentRoute)){
+                allInOtherRoute.push(studentGroup);
+            }
+            else{
+                mixedOverlap.push(studentGroup);
+            }
+        })
+        return [allInCurRoute, allInOtherRoute, allInNoRoute, mixedOverlap]
+    }
+
+    const getOverlapPinGroup = (pinInfo, color) => {
+        return {
+            iconColor: color,
+            iconType: "studentMultiple",
+            markerProps: {
+                onRightClick: onMultipleStudentClick,
+                onClick: multipleStudentsChange
+            },
+            pins: pinInfo
+        }
+    }
+
     const getStudentGroupsPinData = () => {
         //const normalStudents = props.students;
         const [overlappingStudents, normalStudents] = getMarkerOverlaps(props.students);
-        
+        const [allInCurRoute, allInOtherRoute, allInNoRoute, mixedOverlap] = getOverlappingStudentsGrouped(overlappingStudents);
         return [
             {
                 iconColor: "green",
@@ -159,22 +193,17 @@ function RoutePlannerMap(props){
             },
             {
                 iconColor: "grey",
-                iconType: "studentCheck",
+                iconType: "student",
                 markerProps: {
                     onRightClick: onStudentClick,
                     onClick: props.changeStudentRoute
                 },
                 pins: getStudentsWOtherRoute(normalStudents).map(student => {return getStudentPin(student)})
             },
-            {
-                iconColor: "purple",
-                iconType: "studentMultiple",
-                markerProps: {
-                    onRightClick: onMultipleStudentClick,
-                    onClick: multipleStudentsChange
-                },
-                pins: overlappingStudents
-            },
+            getOverlapPinGroup(mixedOverlap, "purple"),
+            getOverlapPinGroup(allInCurRoute, "green"),
+            getOverlapPinGroup(allInOtherRoute, "grey"),
+            getOverlapPinGroup(allInNoRoute, "red")
         ]
     }
     
