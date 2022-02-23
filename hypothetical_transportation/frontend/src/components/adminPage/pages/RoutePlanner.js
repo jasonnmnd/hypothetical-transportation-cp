@@ -96,7 +96,7 @@ RoutePlanner.propTypes = {
     resetPosted: PropTypes.func.isRequired,
     createMessageDispatch: PropTypes.func.isRequired,
     currentRoute: PropTypes.object,
-    currentRouteID: PropTypes.number,
+    currentRouteID: PropTypes.string,
     school: PropTypes.object,
     routes: PropTypes.array,
     onInfoSubmit: PropTypes.func,
