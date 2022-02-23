@@ -337,7 +337,7 @@ class StudentViewSet(viewsets.ModelViewSet):
     def update(self, request, *args, **kwargs):
         super().update(request, *args, **kwargs)
         # patch already handled by initial serializer, so we allow maximum flexibility here
-        serializer = FormatStudentSerializer(self.get_object(), data=request.data, partial=True,
+        serializer = FormatStudentSerializer(self.get_object(), data={}, partial=True,
                                              context=self.get_serializer_context())
         serializer.is_valid(raise_exception=True)
         return Response(serializer.data)
