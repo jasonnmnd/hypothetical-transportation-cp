@@ -1,5 +1,5 @@
 import axios from "axios";
-import { GET_STOPS, GET_STOP, DELETE_STOP, POPULATE_TABLE } from "./types"; 
+import { GET_STOPS, GET_STOP, DELETE_STOP, POPULATE_TABLE, ADD_STOP } from "./types"; 
 import { tokenConfig } from './auth';
 
 import { createMessage, returnErrors } from './messages';
@@ -56,6 +56,10 @@ axios
       .post('/api/stop/', stop, tokenConfig(getState))
       .then((res) => {
         // dispatch(createMessage({ student: 'Stop Created' }));
+        dispatch({
+          type: ADD_STOP,
+          payload: res.data
+      });
       })
       .catch((err) => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
   };
@@ -65,6 +69,14 @@ axios
             .put(`/api/stop/${id}/`,stop, tokenConfig(getState))
             .then(res =>{
               // dispatch(createMessage({ student: 'Stop Updated' }));
+              dispatch({
+                type: DELETE_STOP,
+                payload: parseInt(id)
+            });
+            dispatch({
+              type: ADD_STOP,
+              payload: res.data
+          });
                 
             }).catch(err => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});
   }
