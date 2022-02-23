@@ -46,9 +46,17 @@ function AdminRouteStopsPlanner(props) {
   }, [props.stops]);
 
   useEffect(() => {
+    props.getRouteInfo(param.route_id)
     props.getSchool(param.school_id);
     props.getStudents({routes: param.route_id})
   }, []);
+
+  const [complete,setComplete] = useState(true)
+  useEffect(() => {
+    props.getSchool(param.school_id);
+    props.getStudents({routes: param.route_id})
+    setComplete(props.currentRoute.is_complete)
+  }, [props.currentRoute]);
 
   const setStops = (newStops) => {
     let tempStopsData = Array.from(newStops);
@@ -130,6 +138,7 @@ function AdminRouteStopsPlanner(props) {
     setDeletedStops([])
   }
 
+
   const [openInstruc, setOpenInstruc] = useState(false);
 
   return (
@@ -142,7 +151,7 @@ function AdminRouteStopsPlanner(props) {
           <h1>{`${props.currentRoute.name} Stop Planner`}</h1>
         </div>
 
-        { props.currentRoute.is_complete ?
+        { complete ?
         <Alert variant="success">
         <Alert.Heading>Success: This route is complete!</Alert.Heading>
         <p>
