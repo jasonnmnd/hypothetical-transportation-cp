@@ -6,16 +6,54 @@ from django.test import Client
 from .models import Student, School, Route, Stop
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
+from .geo_utils import get_straightline_distance
 
 
 class TestStudentInRange(TransactionTestCase):
     reset_sequences = True
 
-    def test_routes_without_students_are_complete(self):
+    def test_route_all_students_have_inrange(self):
         """
-        Route 1 should be complete at the start
+        All students are required to have an in-range stop for the route to be complete.  If Decker tower is removed,
+        only student 1 haas an in-range stop, and the route becomes incomplete.
+
         :return: None
         """
+
+        self.client.delete('/api/stop/1/', HTTP_AUTHORIZATION=f'Token {self.admin_token}')
+        student_response = self.client.get('/api/student/1/', HTTP_AUTHORIZATION=f'Token {self.admin_token}')
+        self.assertEqual(student_response.data['has_inrange_stop'], True)
+        student_response = self.client.get('/api/student/2/', HTTP_AUTHORIZATION=f'Token {self.admin_token}')
+        self.assertEqual(student_response.data['has_inrange_stop'], False)
+        response = self.client.get('/api/route/1/', HTTP_AUTHORIZATION=f'Token {self.admin_token}')
+        self.assertEqual(response.data['is_complete'], False)
+
+    def test_route_is_complete(self):
+        """
+        Student one is in range of the Perkins stop, Student two is in range of the Pitch stop
+
+        :return: None
+        """
+        distance = get_straightline_distance(*self.wilkinson_loc, *self.perkins_loc)
+        self.assertLessEqual(distance, 0.3)
+        student_response = self.client.get('/api/student/1/', HTTP_AUTHORIZATION=f'Token {self.admin_token}')
+        self.assertEqual(student_response.data['has_inrange_stop'], True)
+
+        distance = get_straightline_distance(*self.decker_loc, *self.pitch_loc)
+        self.assertLessEqual(distance, 0.3)
+        student_response = self.client.get('/api/student/2/', HTTP_AUTHORIZATION=f'Token {self.admin_token}')
+        self.assertEqual(student_response.data['has_inrange_stop'], True)
+
+        response = self.client.get('/api/route/1/', HTTP_AUTHORIZATION=f'Token {self.admin_token}')
+        self.assertEqual(response.data['is_complete'], True)
+
+    def test_routes_without_students_are_complete(self):
+        """
+        Route 1 should be complete after students are deleted
+        :return: None
+        """
+        self.client.delete('/api/student/1/', HTTP_AUTHORIZATION=f'Token {self.admin_token}')
+        self.client.delete('/api/student/2/', HTTP_AUTHORIZATION=f'Token {self.admin_token}')
         response = self.client.get('/api/route/1/', HTTP_AUTHORIZATION=f'Token {self.admin_token}')
         self.assertEqual(response.data['is_complete'], True)
 
@@ -58,7 +96,7 @@ class TestStudentInRange(TransactionTestCase):
                                                                      full_name='user', address='Pitchforks',
                                                                      latitude=self.decker_loc[0],
                                                                      longitude=self.decker_loc[1])
-        school = School.objects.create(address='dummy origin', longitude=0, latitude=0, name='example school')
+        school = School.objects.create(address='Duke University', longitude=0, latitude=0, name='example school')
         route = Route.objects.create(name='Route 1', description='', school=school)
         Stop.objects.create(name='Stop 1', location='Decker Tower', latitude=self.decker_loc[0],
                             longitude=self.decker_loc[1], route=route, pickup_time="00:00:00", dropoff_time="00:00:00",
@@ -71,10 +109,10 @@ class TestStudentInRange(TransactionTestCase):
                             stop_number=3)
 
         Student.objects.create(full_name='student 1', active=True,
-                               school=school, routes=None, guardian=self.parent1,
+                               school=school, routes=route, guardian=self.parent1,
                                student_id=1)
         Student.objects.create(full_name='student 2', active=True,
-                               school=school, routes=None, guardian=self.parent2,
+                               school=school, routes=route, guardian=self.parent2,
                                student_id=2)
 
 
@@ -126,7 +164,7 @@ class TestModels(TestCase):
         stops = Stop.objects.all()
         old_dropoff, old_pickup = [], []
         for stop in stops:
-            print(f"stop_name: {stop.name}, dropoff time:{stop.dropoff_time}, pickup time:{stop.pickup_time}")
+            # print(f"stop_name: {stop.name}, dropoff time:{stop.dropoff_time}, pickup time:{stop.pickup_time}")
             old_dropoff.append(stop.dropoff_time)
             old_pickup.append(stop.pickup_time)
             self.assertIsNot(stop.dropoff_time, "12:11:00")
@@ -155,6 +193,29 @@ class TestModels(TestCase):
         #     print(f"stop_name: {stop.name}, dropoff time:{stop.dropoff_time}, pickup time:{stop.pickup_time}")
         #     if stop.dropoff_time in old_dropoff2 or stop.pickup_time in old_pickup2:
         #         self.assertFalse
+
+    def test_single_stop_dropoff_and_pickup(self):
+        school = School.objects.create(
+            address='2211 Hillsborough Road Durham, NC 27705',
+            longitude=36.009121,
+            latitude=-78.926017,
+            name='Test Single Stop',
+            bus_arrival_time=datetime.time(9, 0, 0),
+            bus_departure_time=datetime.time(16, 0, 0)
+        )
+        route = Route.objects.create(
+            name='Test Single Stop Route',
+            description='test route',
+            school=school,
+        )
+        stop = Stop.objects.create(
+            name='Test Single Stop',
+            latitude=35.996996,
+            longitude=-78.944668,
+            stop_number=1,
+            route=route,
+        )
+        self.assertNotEqual(Stop.objects.filter(route=route).order_by('id')[0].pickup_time, school.bus_arrival_time)
 
 
 # Create your tests here.
