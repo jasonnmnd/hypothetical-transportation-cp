@@ -15,7 +15,7 @@ import { NO_ROUTE } from '../../../utils/utils';
 import { Container, ButtonGroup, ToggleButton, Card, Button, Form, Collapse, Modal } from 'react-bootstrap';
 import PageNavigateModal from '../components/modals/PageNavigateModal';
 import IconLegend from '../../common/IconLegend';
-import { getCurRouteFromStudent } from '../../../utils/planner_maps';
+import { compareStopLists, getCurRouteFromStudent } from '../../../utils/planner_maps';
 import { createMessageDispatch } from '../../../actions/messages';
 import SaveChangesModal from '../components/modals/SaveChangesModal';
 import RouteStopsPlanner from './RouteStopsPlanner';
@@ -118,6 +118,36 @@ function SchoolRoutesPlannerPage(props) {
     props.getRouteInfo(searchParams.get("route"))
   }
 
+  const onRoutePlannerClickAway = (continueFunc) => {
+    if(Object.keys(studentChanges).length > 0){
+      setShowSaveChangesModal(true);
+      setSaveChangesModalProps({
+        text: "Would you like to save your changes to this route?",
+        onSave: saveRoutePlannerMapChanges,
+        onContinue: continueFunc
+      })
+    }
+    else{
+      console.log("NO CHANGES")
+      continueFunc();
+    }
+  }
+
+  const onStopPlannerClickAway = (continueFunc) => {
+    if(!compareStopLists(props.stops, stops)){
+      setShowSaveChangesModal(true);
+      setSaveChangesModalProps({
+        text: "Would you like to save your changes to this route?",
+        onSave: submitStopPlanner,
+        onContinue: continueFunc
+      })
+    }
+    else{
+      console.log("NO CHANGES")
+      continueFunc();
+    }
+  }
+
   const saveRoutePlannerMapChanges = () => {
     Object.keys(studentChanges).forEach(student => {
       const routeVal = studentChanges[student] == NO_ROUTE ? null : studentChanges[student]
@@ -164,17 +194,33 @@ function SchoolRoutesPlannerPage(props) {
   }
   
   const onDropdownChange = (e) => {
-    changePlanningRoute(e.target.value);
+    if(searchParams.get(VIEW_PARAM) == 1){
+      const temp = e.target.value // I'm not sure why i need to clone it but i do
+      onStopPlannerClickAway(() => changePlanningRoute(temp));
+    }
+    else {
+      changePlanningRoute(e.target.value);
+    }
+    
   }
 
 
-  
-
-  const handleRouteSelection = (e) => {
+  const changeView = (newView) => {
     setSearchParams({
       ...Object.fromEntries([...searchParams]),
-      [VIEW_PARAM]: e.target.value
+      [VIEW_PARAM]: newView
     });
+  }
+  
+
+  const handleViewChange = (e) => {
+    const temp = e.target.value;
+    if(searchParams.get(VIEW_PARAM) == 0){
+      onRoutePlannerClickAway(() => changeView(temp))
+    }
+    else {
+      onStopPlannerClickAway(() => changeView(temp));
+    }
   }
 
   const navToRoutes = ()=>{
@@ -214,11 +260,11 @@ function SchoolRoutesPlannerPage(props) {
   return (
     
     <>      
-      {/* <SaveChangesModal 
+      <SaveChangesModal 
         show={showSaveChangesModal} 
         onCancel={() => {setShowSaveChangesModal(false);setSaveChangesModalProps(null)}}
         {...saveChangesModalProps}
-      /> */}
+      />
       <Header shouldShowOptions={true}></Header>
       <Container className="container-main d-flex flex-column" style={{gap: "10px"}}>
         <div className="shadow-sm p-3 mb-5 bg-white rounded d-flex flex-row justify-content-center">
@@ -245,7 +291,7 @@ function SchoolRoutesPlannerPage(props) {
                 value={radio.value}
                 checked={searchParams.get(VIEW_PARAM) == radio.value}
                 onChange={(e)=>{
-                    handleRouteSelection(e);
+                    handleViewChange(e);
                 }}
             >
                 {radio.name}
