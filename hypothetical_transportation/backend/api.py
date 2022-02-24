@@ -23,7 +23,7 @@ from .geo_utils import get_straightline_distance, LEN_OF_MILE
 MAX_STOPS_IN_ONE_CALL = 1
 
 os.environ['DISTANCE_MATRIX_API_URL'] = 'https://maps.googleapis.com/maps/api/distancematrix/json'
-os.environ['DISTANCE_MATRIX_API_KEY'] = 'AIzaSyAs_8cqVS3l_q4lxKLiTgyrjRCN8aWN28g'
+os.environ['DISTANCE_MATRIX_API_KEY'] = 'AIzaSyAvdhlh9wi-jrCK8fmHRChW5qhIpHByv7U'
 
 def get_filter_dict(model):
     """
