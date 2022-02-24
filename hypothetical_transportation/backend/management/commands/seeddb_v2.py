@@ -10,10 +10,10 @@ import csv
 School = apps.get_model('backend', 'School')
 Student = apps.get_model('backend', 'Student')
 path = "backend/management/commands"
-geolocator = Nominatim(user_agent="Hypothetical Transportation Database Seeder")
+#geolocator = Nominatim(user_agent="Hypothetical Transportation Database Seeder")
 
 
-# geolocator = GoogleV3(api_key=os.environ.get("GOOGLE_GEOCODER_API_KEY"))
+geolocator = GoogleV3(api_key=os.environ.get("AIzaSyA6nIh9bWUWFOD_y7hEZ7UQh_KmPn5Sq58"))
 
 
 class Command(BaseCommand):
