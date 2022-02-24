@@ -10,7 +10,7 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('--email', nargs='?', type=str, default='admin@example.com')
         parser.add_argument('--fullname', nargs='?', type=str, default='admin')
-        parser.add_argument('--password', nargs='?', type=str, default='password')
+        parser.add_argument('--password', nargs='?', type=str, default='mangoalphabetbubble51')
         parser.add_argument('--address', nargs='?', type=str, default='534 Research Dr, Durham, NC 27705')
 
     def handle(self, *args, **options):
