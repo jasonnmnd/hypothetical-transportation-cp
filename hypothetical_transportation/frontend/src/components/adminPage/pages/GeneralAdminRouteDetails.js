@@ -221,7 +221,7 @@ function GeneralAdminRouteDetails(props) {
         <Card>
             <Card.Header as="h5">Associated Stops</Card.Header>
             <Card.Body>
-                <GeneralAdminTableView title='Associated Stops' tableType='stop' values={props.stops} search="" extraRow={extra} totalCount={props.stopCount + 1}/>
+                <GeneralAdminTableView title='Associated Stops' tableType='stop' values={props.stops} search="stop" extraRow={extra} totalCount={props.stopCount + 1}/>
             </Card.Body>
         </Card>
         </Container>

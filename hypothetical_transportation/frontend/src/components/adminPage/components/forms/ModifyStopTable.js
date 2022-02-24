@@ -56,7 +56,7 @@ function ModifyStopTable(props) {
         changingElement.location = newLocation;
         changingElement.latitude = newLat;
         changingElement.longitude = newLng;
-        props.setStopsWithProperInds(tempData);
+        props.setStops(tempData);
     }
 
     const handleKeyDownName = (e) => {
