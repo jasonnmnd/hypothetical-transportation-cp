@@ -30,6 +30,7 @@ function Alerts(props) {
             if (error.msg.student_id) alert(`Student ID: ${error.msg.student_id.join()}`);
             if (error.msg.address) alert(`Parent/Address: ${error.msg.address.join()}`);
             if (error.msg.school) alert(`School: ${error.msg.school.join()}`);
+            if (error.msg.guardian) alert(`Guardian: ${error.msg.guardian.join()}`);
             // if (error.msg.message) alert.error(`Message: ${error.msg.message.join()}`);
             // if (error.msg.non_field_errors) alert.error(error.msg.non_field_errors.join());
             // if (error.msg.username) alert.error(error.msg.username.join());

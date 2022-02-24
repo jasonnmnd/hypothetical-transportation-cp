@@ -105,3 +105,18 @@
 .btn-yellowclose:hover {
   background-color: #ffdd99;
 }
+
+.btn-saveModal {
+  display: inline-block;
+  padding: 8px 10px;
+  background-color: rgb(244, 177, 75);
+  transition: 0.4s;
+  color: #000;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.btn-saveModal:hover {
+  background-color: #ffdd99;
+}

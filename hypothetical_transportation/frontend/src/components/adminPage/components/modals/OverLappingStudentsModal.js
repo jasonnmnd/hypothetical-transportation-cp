@@ -4,6 +4,7 @@ import { Button, Container, Modal, Table } from 'react-bootstrap';
 import PropTypes, { string } from 'prop-types';
 import { getCurRouteFromStudent, getStudentRouteName } from '../../../../utils/planner_maps';
 import "./modal.css";
+import { NO_ROUTE } from '../../../../utils/utils';
 
 
 
@@ -12,13 +13,20 @@ import "./modal.css";
 function OverlappingStudentsModal(props){
 
     const getInstructionsString = (routeName) => {
-        if(routeName == "none"){
+        if(routeName == NO_ROUTE){
             return "Please select which students you would like to remove from their routes."
         }
         if(routeName == null || routeName == "" || props.allRoutes.length == 0){
             return null
         }
         return `Please select which students you would like to add to ${props.allRoutes.find(route => route.id == parseInt(routeName)).name}.`
+    }
+
+    const getButtonText = (student) => {
+        if(getCurRouteFromStudent(student, props.studentChanges) == props.currentRoute){
+            return "remove";
+        }
+        return "add"
     }
 
     const getStudentRows = () => {
@@ -28,7 +36,7 @@ function OverlappingStudentsModal(props){
                 <td>{student.guardian.address}</td>
                 <td>{getStudentRouteName(student.id, student.routes, props.studentChanges, props.allRoutes)}</td>
                 <td>
-                    <Button variant="yellowTableSm" onClick={() => props.changeStudentRoute(student, null)}>{props.currentRoute == "none" ? "remove" : "add"}</Button>
+                    <Button variant="yellowTableSm" onClick={() => props.changeStudentRoute(student, null)}>{getButtonText(student)}</Button>
                 </td>
             </tr>
         ))
