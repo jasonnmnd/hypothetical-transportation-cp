@@ -85,7 +85,7 @@ function ModifyRouteInfo(props) {
               <Form.Group className="mb-3" controlId="formGridDescription">
                 <Form.Label as="h5">Route Description</Form.Label>
                 <Form.Control 
-                  required type="text"
+                  type="text"
                   as="textarea"
                   placeholder="Enter route description..." 
                   style={{ height: '100px', maxHeight: "300px" }}

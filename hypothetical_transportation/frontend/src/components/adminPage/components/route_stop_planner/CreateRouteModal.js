@@ -8,15 +8,20 @@ import "../modals/modal.css";
 import ModifyRouteInfo from '../forms/ModifyRouteInfo';
 
 
-
-
-
 function CreateRouteModal(props){
 
 
     return (
         <>
-            <Button variant='yellow' onClick={() => props.setCreateSearchParam("true")}>Add New Route</Button>
+            <Container className='d-flex flex-row justify-content-center' style={{gap: '10px'}}>
+               <Button variant='yellow2' onClick={() => props.setCreateSearchParam("true")}>Add New Route</Button>
+                {props.showRouteDetailsButton ? 
+                <Button variant='yellow2' onClick={() => props.handleRouteDetailClick()}>View Details for This Route</Button>
+                :
+                <></>
+                } 
+            </Container>
+            
             <Modal show={props.show} onHide={() => props.setCreateSearchParam("false")} >
                 <Modal.Header closeButton>
                     <Modal.Title>Create Route</Modal.Title>
@@ -30,7 +35,9 @@ function CreateRouteModal(props){
 CreateRouteModal.propTypes = {
     show: PropTypes.bool,
     setCreateSearchParam: PropTypes.func,
-    onInfoSubmit: PropTypes.func
+    onInfoSubmit: PropTypes.func,
+    showRouteDetailsButton: PropTypes.bool,
+    handleRouteDetailClick: PropTypes.func
 }
 
 
