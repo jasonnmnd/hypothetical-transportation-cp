@@ -179,8 +179,8 @@ function MapComponent(props) {
     const [set,setSet] = useState(false)
     const [curZoom, setCurZoom]= useState(0)
     useEffect(()=>{
-        console.log(props.center)
-        console.log(set)
+        // console.log(props.center)
+        // console.log(set)
         if(!isNaN(props.center.lat) && !isNaN(props.center.lng) && pos.lng!==props.center.lng && !set){
             setPos(props.center)
             // setSet(true)
