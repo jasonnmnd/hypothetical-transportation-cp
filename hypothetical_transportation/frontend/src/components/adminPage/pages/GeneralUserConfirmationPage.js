@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import PlainHeader from '../../header/PlainHeader';
 import { Container, Form, Button } from 'react-bootstrap';
 import "../NEWadminPage.css";
@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { useNavigate, useParams } from "react-router-dom";
 import axios from 'axios';
-
+import { logout } from '../../../actions/auth'
 
 function GeneralUserConfirmationPage(props) {
   const param = useParams();
@@ -24,6 +24,7 @@ function GeneralUserConfirmationPage(props) {
             code: param.code,
             password: values.new
         }
+
         //Make backend call
         if (props.action == "new") {
         axios.post('/api/auth/invite/verified', payload)
@@ -51,6 +52,10 @@ function GeneralUserConfirmationPage(props) {
 
     setValidated(true);
   }
+
+  useEffect(() => {
+    props.logout();
+  }, []);
 
   return (
     <>
@@ -97,4 +102,4 @@ const mapStateToProps = (state) => ({
 });
 
 
-export default connect(mapStateToProps)(GeneralUserConfirmationPage);
+export default connect(mapStateToProps, {logout})(GeneralUserConfirmationPage);

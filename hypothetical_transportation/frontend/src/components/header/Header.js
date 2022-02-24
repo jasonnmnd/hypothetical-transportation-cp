@@ -56,7 +56,7 @@ function Header( props ) {
                         <Navbar.Brand width="200" height="50">
                         </Navbar.Brand>
                     <Nav.Link as={Link} to={`/account`}> Account</Nav.Link>
-                    <Nav.Link  onClick={props.logout}> Logout</Nav.Link>
+                    <Nav.Link onClick={props.logout}> Logout</Nav.Link>
                     
                 </Nav>
             </Navbar.Collapse>

@@ -1,8 +1,6 @@
-from turtle import distance
 from urllib import response
 from django.contrib.auth import get_user_model
 from django_filters.rest_framework import DjangoFilterBackend
-from numpy import mat
 from rest_framework import filters, status
 from rest_framework import viewsets, permissions, generics
 from rest_framework.decorators import action
@@ -21,9 +19,11 @@ from .permissions import is_admin, IsAdminOrReadOnly, IsAdmin
 from django.shortcuts import get_object_or_404
 from .geo_utils import get_straightline_distance, LEN_OF_MILE
 
-os.environ['DISTANCE_MATRIX_API_URL']='https://maps.googleapis.com/maps/api/distancematrix/json'
-os.environ['DISTANCE_MATRIX_API_KEY']='AIzaSyAs_8cqVS3l_q4lxKLiTgyrjRCN8aWN28g'
+
 MAX_STOPS_IN_ONE_CALL = 1
+
+os.environ['DISTANCE_MATRIX_API_URL'] = 'https://maps.googleapis.com/maps/api/distancematrix/json'
+os.environ['DISTANCE_MATRIX_API_KEY'] = 'AIzaSyAs_8cqVS3l_q4lxKLiTgyrjRCN8aWN28g'
 
 def get_filter_dict(model):
     """
@@ -61,13 +61,14 @@ def parse_repr(repr_str: str) -> dict:
         repr_fields[key] = value
     return repr_fields
 
+
 def datetime_h_m_s_to_sec(date: datetime) -> int:
     """
     Change a datetime object into a value in seconds
     :param date: datetime object
     :return: integer value representing seconds
     """
-    return date.hour*3600 + date.minute*60 + date.second
+    return date.hour * 3600 + date.minute * 60 + date.second
 
 
 def sec_to_datetime_h_m_s(seconds: int) -> datetime:
@@ -76,9 +77,9 @@ def sec_to_datetime_h_m_s(seconds: int) -> datetime:
     :param seconds: seconds
     :return: datetime object
     """
-    h = seconds//3600
-    m = (seconds%3600)//60
-    s = seconds%60
+    h = seconds // 3600
+    m = (seconds % 3600) // 60
+    s = seconds % 60
     return time(h, m, s)
 
 
@@ -93,7 +94,7 @@ def distance_matrix_api(matrix: list) -> json:
     params = {'key': key, 'origins': matrix, 'destinations': matrix}
     req = requests.get(url=url, params=params)
     return json.loads(req.content)
-    
+
 
 def get_information_related_to_a_stop(stop: Stop):
     """
@@ -111,21 +112,16 @@ def get_information_related_to_a_stop(stop: Stop):
     matrices = []
     stops = Stop.objects.filter(route=route).distinct().order_by('stop_number')
     if len(stops) == 0:
-        return 0,0,0,0, False
-    # print(f'stops: {stops}')
+        return 0,0,0,0, False # this is stupid
     stop_count = 1
     starting = True
 
     for stop in stops:
-        # print(f"stop name: {stop.name}")
-        # print(f"stop_count: {stop_count}")
         if stop_count == 1 and starting:
             matrix = school.address + f'|{stop.latitude}, {stop.longitude}'
             starting = False
         elif stop_count == 1 and not starting:
-            # print(f"entered: {stop_count}")
             matrices.append(matrix)
-            # print(f"last stop's name:{hold.name}")
             matrix = f'|{hold.latitude}, {hold.longitude}' + f'|{stop.latitude}, {stop.longitude}'
         else:
             matrix = matrix + f'|{stop.latitude}, {stop.longitude}'
@@ -134,10 +130,10 @@ def get_information_related_to_a_stop(stop: Stop):
         else:
             stop_count = stop_count + 1
         hold = stop
-        # print(hold.name)
     matrices.append(matrix)
 
     return school_start_time, school_letout_time, stops, matrices, True
+
 
 def update_bus_times_for_stops_related_to_stop(stop: Stop):
     """
@@ -150,7 +146,6 @@ def update_bus_times_for_stops_related_to_stop(stop: Stop):
     if not actions:
         return response
     
-
     times = {}
     starting = True
     for group in matrices:
@@ -159,7 +154,7 @@ def update_bus_times_for_stops_related_to_stop(stop: Stop):
             times['rows'] = res['rows']
             starting = False
         else:
-            times['rows'] = times['rows'] + (res['rows'])
+            times['rows'] = times['rows'] + res['rows']
 
 
     school_to_stop_1 = times['rows'][0]['elements'][1]['duration']['value']
@@ -202,15 +197,16 @@ def update_bus_times_for_stops_related_to_stop(stop: Stop):
     for time in desc_times:
         time_in_day = sec_to_datetime_h_m_s((school_start_time-time)%(24*3600))
         pickup_times.append(time_in_day)
-
+        
     stop_num = 0
     for stop in stops:
-        stop.pickup_time=pickup_times[stop_num]
-        stop.dropoff_time=dropoff_times[stop_num]
+        stop.pickup_time = pickup_times[stop_num]
+        stop.dropoff_time = dropoff_times[stop_num]
         stop.save(update_fields=['pickup_time', 'dropoff_time'])
-        stop_num = stop_num+1
+        stop_num = stop_num + 1
 
     return response
+
 
 def update_all_stops_related_to_school(school: School):
     """
@@ -223,6 +219,7 @@ def update_all_stops_related_to_school(school: School):
         stops = Stop.objects.filter(route=route).distinct().order_by('stop_number')
         if stops:
             update_bus_times_for_stops_related_to_stop(stops[0])
+
 
 class StopPlannerAPI(generics.GenericAPIView):
     serializer_class = CheckInrangeSerializer
@@ -296,7 +293,6 @@ class StopViewSet(viewsets.ModelViewSet):
     # #     update_bus_times_for_stops_related_to_stop(stop)
     #     content = parse_repr(repr(StopSerializer()))
     #     return Response(content)
-
 
     def get_serializer_class(self):
         return StopSerializer
@@ -378,6 +374,14 @@ class StudentViewSet(viewsets.ModelViewSet):
     filterset_fields = get_filter_dict(Student)
     ordering_fields = ['school__name', 'student_id', 'full_name', 'id']
     ordering = 'id'
+
+    def update(self, request, *args, **kwargs):
+        super().update(request, *args, **kwargs)
+        # patch already handled by initial serializer, so we allow maximum flexibility here
+        serializer = FormatStudentSerializer(self.get_object(), data={}, partial=True,
+                                             context=self.get_serializer_context())
+        serializer.is_valid(raise_exception=True)
+        return Response(serializer.data)
 
     def get_serializer_class(self):
         if self.action == 'list' or self.action == 'retrieve':

@@ -9,20 +9,39 @@
 <h1>You are recieving this email as part of an announcement.</h1>
 
 {{ body }}
+
+{% if student_info  %}
 <h4>Your Students</h4>
+
 {% for student in student_info %}
+
+   
     <div>
         <strong>Student:</strong> {{ student.full_name }}
     </div>
+
     <div>
         <strong>School:</strong> {{ student.school }}
     </div>
+
+    {% if student.routes == None %}
+    <div>
+        <strong>Your student does not belong to a route.</strong>
+    </div>
+    
+    {% else %}
+    
     <div>
         <strong>Route:</strong> {{ student.routes.route_name }}
     </div>
+
     <div>
         <strong>Route Description:</strong> {{ student.routes.description }}
     </div>
+    {% endif %}
+
+    {% if student.stops %}
+    <h4>The following stops are in range of your student: </h4>
 
     <table>
         <tr>
@@ -40,9 +59,21 @@
             </tr>
         {% endfor %}
     </table>
+
+    {% else %}
+    <div>
+        <strong>Your student has no in-range stops.</strong>
+    </div>
+    {% endif %}
+
     <br>
 {% endfor %}
-{#{% for student in student_info %}#}
-{#{% endfor %}#}
+
+{% else %}
+    <div>
+        <strong>You currently have no students</strong>
+    </div>
+    {% endif %}
+
 </body>
 </html>

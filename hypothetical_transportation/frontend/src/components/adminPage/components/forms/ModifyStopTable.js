@@ -56,7 +56,7 @@ function ModifyStopTable(props) {
         changingElement.location = newLocation;
         changingElement.latitude = newLat;
         changingElement.longitude = newLng;
-        props.setStopsWithProperInds(tempData);
+        props.setStops(tempData);
     }
 
     const handleKeyDownName = (e) => {
@@ -117,7 +117,7 @@ function ModifyStopTable(props) {
 
     const getStopsInMapTableBody = () => {
         let tempData = Array.from(props.stops);
-        tempData.sort((a, b) => a.stop_num - b.stop_num);
+        tempData.sort((a, b) => a.stop_number - b.stop_number);
         return tempData.map((stop, index) => (
             <Draggable
                 key={stop.id}
