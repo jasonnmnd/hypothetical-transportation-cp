@@ -45,7 +45,11 @@ function SchoolRoutesPlannerPage(props) {
 
 
 
-
+  useEffect(() => {
+    if(props.school.id != parseInt(param.school_id)){
+      props.getRoutes({school: param.school_id});
+    }
+  }, [props.school]);
 
   useEffect(() => {
     props.getRoutes({school: param.school_id});
@@ -322,6 +326,7 @@ function SchoolRoutesPlannerPage(props) {
               setStudentChanges={setStudentChanges}
               resetStudentChanges={resetStudentChanges}
               saveRoutePlannerMapChanges={saveRoutePlannerMapChanges}
+              school_id={param.school_id}
             /> 
             : null
             }

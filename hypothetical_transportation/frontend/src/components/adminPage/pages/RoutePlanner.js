@@ -27,8 +27,8 @@ function RoutePlanner(props) {
   
 
   useEffect(() => {
-    props.getStudents({school: props.school.id})
-  }, []);
+    props.getStudents({school: props.school_id})
+  }, [props.school_id]);
 
   
 
@@ -98,6 +98,7 @@ RoutePlanner.propTypes = {
     currentRoute: PropTypes.object,
     currentRouteID: PropTypes.string,
     school: PropTypes.object,
+    school_id: PropTypes.string,
     routes: PropTypes.array,
     onInfoSubmit: PropTypes.func,
     studentChanges: PropTypes.object,
