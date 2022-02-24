@@ -29,11 +29,6 @@ class TestModels(TestCase):
             description='test route', 
             school=school,
         )
-        route2 = route = Route.objects.create(
-            name='Test Blank Stop Name Route 2', 
-            description='test route', 
-            school=school,
-        )
         stop1 = Stop.objects.create(
             name='dummy 1',
             latitude=35.996996,
@@ -52,7 +47,7 @@ class TestModels(TestCase):
             dropoff_time="12:11:00",
             route=route,
         )
-        stops = Stop.objects.all()
+        stops = Stop.objects.filter(route=route).order_by('id')
         old_dropoff, old_pickup = [],[] 
         for stop in stops:
             # print(f"stop_name: {stop.name}, dropoff time:{stop.dropoff_time}, pickup time:{stop.pickup_time}")
@@ -66,7 +61,7 @@ class TestModels(TestCase):
         school.save()
         
         old_dropoff2, old_pickup2 = [],[] 
-        for stop in Stop.objects.all():
+        for stop in Stop.objects.filter(route=route).order_by('id'):
             old_dropoff2.append(stop.dropoff_time)
             old_pickup2.append(stop.pickup_time)
             if stop.dropoff_time in old_dropoff or stop.pickup_time in old_pickup:
@@ -106,7 +101,109 @@ class TestModels(TestCase):
             stop_number=1,
             route=route,
         )
+        # print(Stop.objects.filter(route=route).order_by('id')[0].pickup_time)
         self.assertNotEqual(Stop.objects.filter(route=route).order_by('id')[0].pickup_time, school.bus_arrival_time)
+
+    def test_over_limit_stops(self):
+        school = School.objects.create(
+            address='2211 Hillsborough Road Durham, NC 27705', 
+            longitude=36.009121, 
+            latitude=-78.926017, 
+            name='Test 26 Stops',
+            bus_arrival_time=datetime.time(9,0,0),
+            bus_departure_time=datetime.time(16,0,0)
+        )
+        route = Route.objects.create(
+            name='Test 26 Stops Route', 
+            description='test route', 
+            school=school,
+        )
+        stop1 = Stop.objects.create(
+            name='Test 26 Stops Stop 1',
+            latitude=35.896996,
+            longitude=-78.944668,
+            stop_number=1,
+            route=route,
+        )
+        stop2 = Stop.objects.create(
+            name='Test 26 Stops Stop 2',
+            latitude=35.796996,
+            longitude=-78.944668,
+            stop_number=2,
+            route=route,
+        )
+        stop3 = Stop.objects.create(
+            name='Test 26 Stops Stop 3',
+            latitude=35.926996,
+            longitude=-78.944668,
+            stop_number=3,
+            route=route,
+        )
+        stop4 = Stop.objects.create(
+            name='Test 26 Stops Stop 4',
+            latitude=35.916996,
+            longitude=-78.944668,
+            stop_number=4,
+            route=route,
+        )
+        stop5 = Stop.objects.create(
+            name='Test 26 Stops Stop 5',
+            latitude=35.396996,
+            longitude=-78.944668,
+            stop_number=5,
+            route=route,
+        )
+        stop6 = Stop.objects.create(
+            name='Test 26 Stops Stop 6',
+            latitude=35.976996,
+            longitude=-78.944668,
+            stop_number=6,
+            route=route,
+        )
+        stop7 = Stop.objects.create(
+            name='Test 26 Stops Stop 7',
+            latitude=35.994996,
+            longitude=-78.944668,
+            stop_number=7,
+            route=route,
+        )
+        stop8 = Stop.objects.create(
+            name='Test 26 Stops Stop 8',
+            latitude=35.926996,
+            longitude=-78.944668,
+            stop_number=8,
+            route=route,
+        )
+        stop9 = Stop.objects.create(
+            name='Test 26 Stops Stop 9',
+            latitude=35.996996,
+            longitude=-78.944668,
+            stop_number=1,
+            route=route,
+        )
+        stop10 = Stop.objects.create(
+            name='Test 26 Stops Stop 10',
+            latitude=35.996996,
+            longitude=-78.944668,
+            stop_number=1,
+            route=route,
+        )
+        stop11 = Stop.objects.create(
+            name='Test 26 Stops Stop 11',
+            latitude=35.996996,
+            longitude=-78.944668,
+            stop_number=1,
+            route=route,
+        )
+        stop12 = Stop.objects.create(
+            name='Test 26 Stops Stop 12',
+            latitude=35.996996,
+            longitude=-78.944668,
+            stop_number=1,
+            route=route,
+        )
+
+
 
 # Create your tests here.
 class StopConsistency(TestCase):

@@ -137,9 +137,6 @@ def get_information_related_to_a_stop(stop: Stop):
         # print(hold.name)
     matrices.append(matrix)
 
-    # times = distance_matrix_api(matrix)
-    # print(times)
-    # print(f"matrices: {matrices}")
     return school_start_time, school_letout_time, stops, matrices, True
 
 def update_bus_times_for_stops_related_to_stop(stop: Stop):
@@ -152,152 +149,68 @@ def update_bus_times_for_stops_related_to_stop(stop: Stop):
     school_start_time, school_letout_time, stops, matrices, actions = get_information_related_to_a_stop(stop)
     if not actions:
         return response
+    
+
     times = {}
     starting = True
     for group in matrices:
         res = distance_matrix_api(group)
-        # print(res)
-        # print(f"status: {res['status']!='OK'}")
-        # if res['status'] is not 'OK':
-        print(res['status'])
-        #     print('u messed up')
-        #     return response
         if starting:
             times['rows'] = res['rows']
             starting = False
         else:
             times['rows'] = times['rows'] + (res['rows'])
 
-    # print(times)
-
-    #     edge = True
-    # for group in matrices:
-    #     res = distance_matrix_api(group)
-    #     # print(res)
-    #     # print(f"status: {res['status']!='OK'}")
-    #     # if res['status'] is not 'OK':
-    #     #     print(res['status'])
-    #     #     print('u messed up')
-    #     #     return response
-    #     if starting:
-    #         times['rows'] = res['rows']
-    #         starting = False
-    #     else:
-    #         times['rows'] = times['rows'] + res['rows']
-
-    #     # if len(matrices)>1:
-    #     #     times['rows'][MAX_STOPS_IN_ONE_CALL]['elements'] = times['rows'][MAX_STOPS_IN_ONE_CALL]['elements'] + res['rows'][0]['elements']
-    #     #     times['rows'] = times['rows'] + (res['rows'][1:MAX_STOPS_IN_ONE_CALL])
-        
-            
-        
-            
-
 
     school_to_stop_1 = times['rows'][0]['elements'][1]['duration']['value']
-    # print(f"length:{len(times['rows'])}")
-    # print(f"calls+stops: {len(stops)+len(matrices)}")
     stop_n_to_school = times['rows'][len(stops)+len(matrices)-1]['elements'][0]['duration']['value']
-    # print('hey')
-    # stop_1_to_school = times['rows']
-    # print(times)
     # setup, handle the edge case of leaving the school
     desc_times, asc_times = [], [school_to_stop_1]
     running_desc_time, running_asc_time = 0, school_to_stop_1
-    # print(len(stops))
     call_count = 0
     for stop_num in range(1, len(stops)):
         if (stop_num-1)%MAX_STOPS_IN_ONE_CALL==0 and stop_num>1:
             call_count = call_count+1
-        print(f"call_count: {call_count}")
-        # print(f"stop_num:{stop_num}")
-
-        # print(f"potentials:\n\nA prev_row: {stop_num+call_count} prev_element: {MAX_STOPS_IN_ONE_CALL-1}\nB prev_row: {stop_num+call_count} prev_element: {stop_num%MAX_STOPS_IN_ONE_CALL-1}")
-        # print(f"potentials:\n\nA next_row: {stop_num+call_count+1} next_element: {1}\nB next_row: {stop_num+call_count} next_element: {(stop_num+call_count)%(MAX_STOPS_IN_ONE_CALL)+1}")
-        
         if stop_num%(MAX_STOPS_IN_ONE_CALL)==0:
-            # print('hi')
             prev_element = MAX_STOPS_IN_ONE_CALL-1
             prev_row = stop_num+call_count
-
             next_element = 1
             next_row = stop_num+call_count+1
-            
-            print("A")
-            # print(f"A prev_row: {prev_row}, prev_element: {prev_element}")
         else:
             prev_element = stop_num%MAX_STOPS_IN_ONE_CALL-1
             prev_row = stop_num+call_count
             next_row = stop_num+call_count
             next_element = (stop_num+call_count)%(MAX_STOPS_IN_ONE_CALL)+1
-            print("B")
-            # # # # print(f"B prev_row:{prev_row}, prev_element: {prev_element}")
-
-        print(f"accessing the {prev_element}th element in the {prev_row}th row for prev stop")
+            
         prev_stop = times['rows'][prev_row]['elements'][prev_element]['duration']['value']
-
-        print(f"P: stop number: {stop_num}, from stop {stop_num} to stop {stop_num-1} it takes {sec_to_datetime_h_m_s(prev_stop)}")
         running_desc_time = running_desc_time + prev_stop # this is stop i to stop i-1
         desc_times.append(running_desc_time)
         
-
-        
-
-        # print(f'stop_num:{stop_num}')
-    
-        # next_row = stop_num+call_count
-        # next_element = (stop_num+call_count)%(MAX_STOPS_IN_ONE_CALL)+1
-        # print(f'next_row:{next_row}')
-        # print(f'next_element:{next_element}')
-
-        print(f"accessing the {next_element}th element in the {next_row}th row for next stop")
         next_stop = times['rows'][next_row]['elements'][next_element]['duration']['value']
-
-
-        # print(f"accessing the {(stop_num+call_count)%(MAX_STOPS_IN_ONE_CALL)+1}th element in the {stop_num+call_count} elements for next stop")
-        # next_stop = times['rows'][stop_num+call_count]['elements'][(stop_num+call_count)%(MAX_STOPS_IN_ONE_CALL)+1]['duration']['value']
-        print(f"N: stop number: {stop_num}, from stop {stop_num} to stop {stop_num+1} it takes {sec_to_datetime_h_m_s(next_stop)}")
-        
-        
-        
-        
-        
         running_asc_time = running_asc_time + next_stop # this is stop i to stop i+1        
         asc_times.append(running_asc_time)   
 
-# desc_times: [403, 581, 649, 796, 1055, 1573, 1711, 1925, 2370, 2485, 2930], asc_times[527, 680, 751, 885, 1149, 1661, 1855, 2205, 2572, 3040, 3485]
-
-
-    # print(f"call_count: {call_count}")
-    # handle the edge case of arriving to the school
     if len(stops)==1:
-        # print("hiiii")
         # ok, because of how we handle creating pickup times, this needs to be a negative value
         desc_times.append(-1*times['rows'][1]['elements'][0]['duration']['value'])
-        # print(running_desc_time)
     else:
         running_desc_time = running_desc_time + stop_n_to_school
         desc_times.append(running_desc_time)
-        
-    print(f"desc_times: {desc_times}, asc_times{asc_times}, running_desc_time: {running_desc_time}")
+    
     dropoff_times = [sec_to_datetime_h_m_s((school_letout_time+time)%(24*3600)) for time in asc_times]
+
     pickup_times = []
     for time in desc_times:
-        # print(f"HIIII: {time}")
         time_in_day = sec_to_datetime_h_m_s((school_start_time-time)%(24*3600))
         pickup_times.append(time_in_day)
-        # print(f"LOOO: {time_in_day}")
-    # pickup_times = [sec_to_datetime_h_m_s((school_start_time+time-running_desc_time-stop_n_to_school)%(24*3600)) for time in desc_times]
-    print(f"dropoffs: {dropoff_times}, pickups: {pickup_times}")
+
     stop_num = 0
-    # print(stops)
     for stop in stops:
         stop.pickup_time=pickup_times[stop_num]
         stop.dropoff_time=dropoff_times[stop_num]
-        # print(f"internal stop_name: {stop.name}, dropoff time:{stop.dropoff_time}, pickup time:{stop.pickup_time}, long{stop.longitude} lat{stop.latitude}")
         stop.save(update_fields=['pickup_time', 'dropoff_time'])
         stop_num = stop_num+1
-    print("goodbye")
+
     return response
 
 def update_all_stops_related_to_school(school: School):
