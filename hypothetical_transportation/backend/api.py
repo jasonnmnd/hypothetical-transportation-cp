@@ -150,6 +150,7 @@ def update_bus_times_for_stops_related_to_stop(stop: Stop):
     starting = True
     for group in matrices:
         res = distance_matrix_api(group)
+        print(res)
         if starting:
             times['rows'] = res['rows']
             starting = False
