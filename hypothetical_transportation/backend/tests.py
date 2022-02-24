@@ -9,6 +9,39 @@ from django.contrib.auth.models import Group
 from .geo_utils import get_straightline_distance
 
 
+class TestMultipleStopDelete(TransactionTestCase):
+    reset_sequences = True
+
+    def setUp(self):
+        self.wilkinson_loc = (36.00352740209603, -78.93814858774756)
+        admin_group = Group.objects.create(name='Administrator')
+        admin_user = get_user_model().objects.create_verified_user(email='admin@example.com', password='wordpass',
+                                                                   full_name='admin user', address='loc0', latitude=0,
+                                                                   longitude=0)
+        admin_user.groups.add(admin_group)
+        login_response = self.client.post('/api/auth/login',
+                                          json.dumps(
+                                              {'email': 'admin@example.com', 'password': 'wordpass'}),
+                                          content_type='application/json')
+        self.admin_token = login_response.data['token']
+
+        school = School.objects.create(address='Duke University', longitude=self.wilkinson_loc[0],
+                                       latitude=self.wilkinson_loc[1], name='example school')
+        route = Route.objects.create(name='Route 1', description='', school=school)
+        for stop_num in range(1, 9):
+            Stop.objects.create(name='Stop 1', location='Decker Tower', latitude=self.wilkinson_loc[0],
+                                longitude=self.wilkinson_loc[1], route=route, pickup_time="00:00:00",
+                                dropoff_time="00:00:00",
+                                stop_number=stop_num)
+
+    def test_mass_stop_deletion(self):
+        for stop_num in range(1, 9):
+            self.client.delete(f'/api/stop/{stop_num}/', HTTP_AUTHORIZATION=f'Token {self.admin_token}')
+        response = self.client.get('/api/stop/', HTTP_AUTHORIZATION=f'Token {self.admin_token}')
+        self.assertEqual(response.data['count'], 0)
+
+
+
 class TestStudentInRange(TransactionTestCase):
     reset_sequences = True
 
