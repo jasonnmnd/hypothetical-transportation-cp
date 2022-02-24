@@ -3,7 +3,7 @@
 python /code/manage.py makemigrations 
 python /code/manage.py migrate 
 cd code
-python manage.py flush
+python manage.py flush --noinput
 python manage.py loaddata backend/fixtures/hypodata.json
 python manage.py initadmin
 export AUTHEMAIL_EMAIL_HOST_USER=hypotheticaltransportations@gmail.com
