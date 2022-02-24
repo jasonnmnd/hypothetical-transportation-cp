@@ -191,8 +191,7 @@ def update_bus_times_for_stops_related_to_stop(stop: Stop):
         asc_times.append(running_asc_time)   
 
     if len(stops)==1:
-        # ok, because of how we handle creating pickup times, this needs to be a negative value
-        desc_times.append(-1*times['rows'][1]['elements'][0]['duration']['value'])
+        desc_times.append(times['rows'][1]['elements'][0]['duration']['value'])
     else:
         running_desc_time = running_desc_time + stop_n_to_school
         desc_times.append(running_desc_time)
