@@ -210,7 +210,7 @@ function ParentStudentDetails(props){
         <Card>
             <Card.Header as="h5">In Range Stops</Card.Header>
             <Card.Body>
-                <GeneralAdminTableView title='In Range Stops' tableType='stop' values={props.stops} search="" action={doNothing} totalCount={props.stopCount}/>
+                <GeneralAdminTableView title='In Range Stops' tableType='stop' search="stop" values={props.stops} action={doNothing} totalCount={props.stopCount}/>
             </Card.Body>
         </Card>
 
