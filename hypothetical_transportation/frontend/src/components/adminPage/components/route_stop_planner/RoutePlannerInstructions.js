@@ -32,16 +32,19 @@ function RoutePlannerInstructions(props) {
                     <p>Within this interface, you can interactively modify and create routes.</p>
                     <ul>
                         <li>Select "Add New Route" to make a new route with name and description.</li>
-                        <li>Select "Add/Remove Students" to add or remove any student to the currently selected route from the dropdown. Right click to see the student's info. Left click to add/remove a student.</li>
+                        <li>Select "Add/Remove Students" to add or remove any student to the currently selected route from the dropdown. </li>
+                            <ul>
+                                <li>Right Click: Show marker info </li>
+                                <li>Left Click: Add/remove a student to/from the current route</li>
+                            </ul>
                         <li>Select "Stop Planner" to plan stops for the selected route.</li>
-                    </ul>
-
-                    <br></br>
-
-                    <p>Additionally you can interface with the stop planner to modify and create stops.</p>
-                    <ul>
-                        <li>Drag and drop stops to reposition. Right click to remove stop. Left click to view info.</li>
-                        <li>You can edit stop names, stop descriptions, and reorder stops with the table.</li>
+                            <ul>
+                                <li>Drag and drop stops to reposition.</li>
+                                <li>Right Click: Remove stop</li>
+                                <li>Left Click: View info</li>
+                                <li>Drag and drop (=) in table to reorder stops.</li>
+                                <li>Click stop name or location in table to edit. Click enter to save.</li>
+                            </ul>
                     </ul>
                 </div>
                 </Card.Body>
