@@ -57,16 +57,16 @@ function RoutePlanner(props) {
 
             <Container className='d-flex flex-column' style={{width: "2000px"}}>
 
-                <IconLegend legendType='routePlanner'></IconLegend>
-                <RoutePlannerMap 
-                    students={props.students} 
-                    school={props.school} 
-                    currentRoute={props.currentRouteID} 
-                    changeStudentRoute={changeStudentRoute}
-                    studentChanges={props.studentChanges}
-                    allRoutes={props.routes}
-                />
-
+                  <IconLegend legendType='routePlanner'></IconLegend>
+                  <RoutePlannerMap 
+                      students={props.students} 
+                      school={props.school} 
+                      currentRoute={props.currentRouteID} 
+                      changeStudentRoute={changeStudentRoute}
+                      studentChanges={props.studentChanges}
+                      allRoutes={props.routes}
+                  />
+                
                 <br></br>
 
                 <Container className="d-flex flex-row justify-content-center" style={{gap: "20px"}}>

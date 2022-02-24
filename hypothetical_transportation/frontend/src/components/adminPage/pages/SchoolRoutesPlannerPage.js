@@ -166,9 +166,19 @@ function SchoolRoutesPlannerPage(props) {
     setStudentChanges({})
   }
 
-  const handleRouteDetailClick = () => {
-    console.log("HI")
+  const navToRouteDetail = () => {
     navigate(`/admin/route/${searchParams.get(ROUTE_PARAM)}`);
+  }
+
+  const handleRouteDetailClick = () => {
+    if(searchParams.get(VIEW_PARAM) == 1){
+      onStopPlannerClickAway(navToRouteDetail);
+    }
+    else {
+      onRoutePlannerClickAway(navToRouteDetail)
+    }
+    
+
   }
   
   const onInfoSubmit = (e, isCreateRoute) => {
@@ -319,18 +329,20 @@ function SchoolRoutesPlannerPage(props) {
         </Container>
         
           <Container>
-            {searchParams.get(VIEW_PARAM) == 0 ? <RoutePlanner 
-              currentRoute={props.currentRoute} 
-              currentRouteID={searchParams.get(ROUTE_PARAM)} 
-              school={props.school} 
-              routes={props.routes}
-              onInfoSubmit={onInfoSubmit}
-              studentChanges={studentChanges}
-              setStudentChanges={setStudentChanges}
-              resetStudentChanges={resetStudentChanges}
-              saveRoutePlannerMapChanges={saveRoutePlannerMapChanges}
-              school_id={param.school_id}
-            /> 
+            {searchParams.get(VIEW_PARAM) == 0 ? 
+            
+                <RoutePlanner 
+                currentRoute={props.currentRoute} 
+                currentRouteID={searchParams.get(ROUTE_PARAM)} 
+                school={props.school} 
+                routes={props.routes}
+                onInfoSubmit={onInfoSubmit}
+                studentChanges={studentChanges}
+                setStudentChanges={setStudentChanges}
+                resetStudentChanges={resetStudentChanges}
+                saveRoutePlannerMapChanges={saveRoutePlannerMapChanges}
+                school_id={param.school_id}
+              />             
             : null
             }
 
