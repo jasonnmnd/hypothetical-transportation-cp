@@ -111,7 +111,6 @@ function RouteStopsPlanner(props) {
 
   const resetStopChanges = () => {
     setStops(JSON.parse(JSON.stringify(props.stops)));
-    setStudents(JSON.parse(JSON.stringify(props.students)));
     props.setDeletedStops([])
   }
 
