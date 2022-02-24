@@ -166,7 +166,10 @@ function SchoolRoutesPlannerPage(props) {
     setStudentChanges({})
   }
 
-  
+  const handleRouteDetailClick = () => {
+    console.log("HI")
+    navigate(`/admin/route/${searchParams.get(ROUTE_PARAM)}`);
+  }
   
   const onInfoSubmit = (e, isCreateRoute) => {
     const routeInfo = {
@@ -245,14 +248,14 @@ function SchoolRoutesPlannerPage(props) {
         <Header shouldShowOptions={true}></Header>
         <Container className="container-main d-flex flex-column" style={{gap: "10px"}}>
           <div className="shadow-sm p-3 mb-5 bg-white rounded d-flex flex-row justify-content-center">
-            <h1>{`${props.school.name} List of Routes`}</h1>
+            <h1>{`${props.school.name} Route Planner`}</h1>
           </div>
 
           <h2>This school has no routes. Please create a route to continue.</h2>
 
           <br></br>
           <Container className='d-flex flex-row justify-content-center'>
-            <CreateRouteModal setCreateSearchParam={setCreateSearchParam} show={searchParams.get(IS_CREATE_PARAM) == "true"} onInfoSubmit={onInfoSubmit} />
+            <CreateRouteModal handleRouteDetailClick={handleRouteDetailClick} showRouteDetailsButton={false} setCreateSearchParam={setCreateSearchParam} show={searchParams.get(IS_CREATE_PARAM) == "true"} onInfoSubmit={onInfoSubmit} />
           </Container>
         
         </Container>
@@ -272,7 +275,7 @@ function SchoolRoutesPlannerPage(props) {
       <Header shouldShowOptions={true}></Header>
       <Container className="container-main d-flex flex-column" style={{gap: "10px"}}>
         <div className="shadow-sm p-3 mb-5 bg-white rounded d-flex flex-row justify-content-center">
-          <h1>{`${props.school.name} List of Routes`}</h1>
+          <h1>{`${props.school.name} Route Planner`}</h1>
         </div>
 
         <RoutePlannerInstructions/>
@@ -280,7 +283,7 @@ function SchoolRoutesPlannerPage(props) {
         <br></br>
 
         <Container className='d-flex flex-row justify-content-center'>
-          <CreateRouteModal setCreateSearchParam={setCreateSearchParam} show={searchParams.get(IS_CREATE_PARAM) == "true"} onInfoSubmit={onInfoSubmit} />
+          <CreateRouteModal handleRouteDetailClick={handleRouteDetailClick} showRouteDetailsButton={true} setCreateSearchParam={setCreateSearchParam} show={searchParams.get(IS_CREATE_PARAM) == "true"} onInfoSubmit={onInfoSubmit} />
         </Container>
         
         <ButtonGroup>

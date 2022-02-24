@@ -111,7 +111,6 @@ function RouteStopsPlanner(props) {
 
   const resetStopChanges = () => {
     setStops(JSON.parse(JSON.stringify(props.stops)));
-    setStudents(JSON.parse(JSON.stringify(props.students)));
     props.setDeletedStops([])
   }
 
@@ -176,7 +175,14 @@ function RouteStopsPlanner(props) {
           <Card>
             <Card.Header as="h5">Reorganize Stops - Drag Row to Reorder</Card.Header>
             <Card.Body>
-              <ModifyStopTable stops={props.stops} setStops={setStops} setStopsWithProperInds={props.setStopsWithProperInds} deletedStops={props.deletedStops} readdStop={readdStop} />
+              <ModifyStopTable 
+                stops={props.stops} 
+                setStops={setStops} 
+                setStopsWithProperInds={props.setStopsWithProperInds} 
+                deletedStops={props.deletedStops} 
+                readdStop={readdStop} 
+                deleteStop={deleteStopFromTable}
+            />
             </Card.Body>
           </Card>
         </Container>        
