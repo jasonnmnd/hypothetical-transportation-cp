@@ -183,7 +183,7 @@ function ParentStudentDetails(props){
         <Card>
             <Card.Header as="h5">Route</Card.Header>
             <Card.Body>
-                <Card.Text>{(student.routes !==undefined && student.routes!==null) ? student.routes.name : "NONE"}</Card.Text>
+                <Card.Text>{(student.routes !==undefined && student.routes!==null) ? student.routes.name : "Your child has no route"}</Card.Text>
                 <Form.Group className="mb-3" controlId="formGridDescription">
                     <Form.Control 
                     type="text"
@@ -198,19 +198,25 @@ function ParentStudentDetails(props){
 
         <Card>
             <Card.Header as="h5">Map View of Stops</Card.Header>
+            {(student.routes !==undefined && student.routes!==null) ?
             <Container className='d-flex flex-column justify-content-center' style={{marginTop: "20px"}}>
                 <IconLegend legendType='parentStudent'></IconLegend>
                 <Card.Body>
                     <MapComponent pinData={pinData} otherMapComponents={extraComponents} center={{lng: Number(props.student.guardian.longitude),lat: Number(props.student.guardian.latitude)}}></MapComponent>
                 </Card.Body>    
             </Container>
+            :
+            <Card.Body>
+                Your child has no route currently
+            </Card.Body>
+            }
         </Card>
 
 
         <Card>
             <Card.Header as="h5">In Range Stops</Card.Header>
             <Card.Body>
-                <GeneralAdminTableView title='In Range Stops' tableType='stop' values={props.stops} search="" action={doNothing} totalCount={props.stopCount}/>
+                <GeneralAdminTableView title='In Range Stops' tableType='stop' search="stop" values={props.stops} action={doNothing} totalCount={props.stopCount}/>
             </Card.Body>
         </Card>
 
