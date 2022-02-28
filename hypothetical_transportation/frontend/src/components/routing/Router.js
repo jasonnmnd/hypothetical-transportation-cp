@@ -19,7 +19,6 @@ import GeneralAdminSchoolDetails from "../adminPage/pages/GeneralAdminSchoolDeta
 import GeneralAdminRouteDetails from "../adminPage/pages/GeneralAdminRouteDetails";
 import GeneralAdminStopDetails from '../adminPage/pages/GeneralAdminStopDetails';
 
-import GeneralAdminRoutePlanner from "../adminPage/pages/GeneralAdminRoutePlanner";
 import GeneralManageStudentPage from "../adminPage/pages/GeneralManageStudentPage";
 
 import GeneralAdminEmailPage from '../adminPage/pages/GeneralAdminEmailPage';
@@ -32,13 +31,9 @@ import Alerts from "../alerts/Alerts";
 import ForgotPasswordForm from '../loginPage/ForgotPasswordForm';
 import MapComponent from '../maps/MapComponent';
 import ExampleMapUsage from '../maps/ExampleMapUsage';
-import AdminSchoolRoutesPlanner from '../adminPage/pages/AdminSchoolRoutesPlanner';
-
 import LinkBasePasswordResetForm from '../loginPage/LinkBasePasswordResetForm';
 import GeneralUserConfirmationPage from '../adminPage/pages/GeneralUserConfirmationPage';
-import AdminRouteStopsPlanner from '../adminPage/pages/AdminRouteStopsPlanner';
-import StopPlannerMap from '../adminPage/pages/StopPlannerMap';
-import SchoolRoutesPlannerPage from '../adminPage/pages/SchoolRoutesPlannerPage';
+import SchoolRoutesPlannerPage from '../adminPage/pages/GeneralSchoolRoutesPlannerPage';
 
 
 const Router = (props) => {
@@ -46,7 +41,6 @@ const Router = (props) => {
         <BrowserRouter>
         <Alerts/>
         <Routes>
-          <Route exact path="/testingMap" element={<StopPlannerMap/>}></Route>
           <Route exact path="/" element={<LoginForm />}></Route>
           <Route exact path="/forgot_password" element={<ForgotPasswordForm />}></Route>
           <Route exact path="/testingMap" element={<ExampleMapUsage />}></Route>
@@ -79,7 +73,6 @@ const Router = (props) => {
           <Route exact path="/admin/route/:id" element={<PrivateRoute><GeneralAdminRouteDetails /></PrivateRoute>}/>
           <Route exact path="/admin/stop/:route_id/:stop_id" element={<PrivateRoute><GeneralAdminStopDetails/></PrivateRoute>}/>
           
-          {/* <Route exact path="/admin/route/plan/:school_id" element={<PrivateRoute><GeneralAdminRoutePlanner action={"new"}/></PrivateRoute>}/> */}
           <Route exact path="/admin/route/plan/:school_id" element={<PrivateRoute><SchoolRoutesPlannerPage/></PrivateRoute>}/>
           <Route exact path="/admin/stop/plan/:school_id/:route_id" element={<PrivateRoute><AdminRouteStopsPlanner/></PrivateRoute>}/>
           <Route exact path="/admin/route/edit/:school_id/:route_id" element={<PrivateRoute><GeneralAdminRoutePlanner action={"edit"}/></PrivateRoute>}/>

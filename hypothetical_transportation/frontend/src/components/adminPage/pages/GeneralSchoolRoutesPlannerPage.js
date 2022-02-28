@@ -10,7 +10,7 @@ import { getRouteInfo, getRoutes, resetViewedRoute } from '../../../actions/rout
 import { updateRoute, createRoute,resetPosted } from '../../../actions/routeplanner';
 import { getSchool } from '../../../actions/schools';
 import { getStudents, patchStudent } from '../../../actions/students';
-import RoutePlannerMap from './RoutePlannerMap';
+import RoutePlannerMap from '../../maps/RoutePlannerMap';
 import { NO_ROUTE } from '../../../utils/utils';
 import { Container, ButtonGroup, ToggleButton, Card, Button, Form, Collapse, Modal } from 'react-bootstrap';
 import PageNavigateModal from '../components/modals/PageNavigateModal';
