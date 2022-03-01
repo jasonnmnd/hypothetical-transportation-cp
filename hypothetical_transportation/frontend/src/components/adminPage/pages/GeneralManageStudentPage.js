@@ -278,7 +278,7 @@ useEffect(()=>{
             <Form.Group className="mb-3" controlId="">
                 <Form.Label as="h5">Parent</Form.Label>
                 <Form.Select size="sm" value={obj.guardian} onChange={setParent}>
-                <option value={""}>{"-----"}</option>
+                <option value={""}>{"-----------------------"}</option>
                 <option value={"new"}>{"---Create New User---"}</option>
                 {props.users!==null && props.users!==undefined && props.users.length!==0?props.users.map((u,i)=>{
                     return <option value={u.id} key={i}>{u.email}</option>
@@ -290,7 +290,7 @@ useEffect(()=>{
             <Form.Group className="mb-3" controlId="">
                 <Form.Label as="h5">School</Form.Label>
                 <Form.Select size="sm" value={obj.school} onChange={changeSchool}>
-                  <option value={""} >{"-----"}</option>
+                  <option value={""} >{"-----------------------"}</option>
                     {props.schoollist!==null && props.schoollist!==undefined && props.schoollist.length!==0?props.schoollist.map((u,i)=>{
                         return <option value={u.id} key={i}>{u.name}</option>
                     }):null}
