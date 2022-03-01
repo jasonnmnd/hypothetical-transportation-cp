@@ -107,17 +107,17 @@ function GeneralAdminStudentDetails(props) {
                     }
 
                     {
-                        (student.has_inrange_stop ? <></> : 
+                        (student.routes!==undefined && student.routes!==null && !student.has_inrange_stop ? 
                         <Alert variant="danger">
                             <Alert.Heading>No In-range Stop for this Student</Alert.Heading>
                             <p>
                             This student has no stop that is in range. Please use the stop planner to assign an appropriate stop.
                             </p>
                             <hr />
-                            {/* <Link to={`/`}>
+                            <Link to={`/admin/route/plan/${student.school.id}?route=${student.routes.id}&view=1`}>
                                 <Button variant='yellow'>Plan a Stop</Button>
-                            </Link> */}
-                        </Alert>
+                            </Link>
+                        </Alert>:<></>
                         )
                     }
                     </Container>
