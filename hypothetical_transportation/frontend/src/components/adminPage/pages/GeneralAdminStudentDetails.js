@@ -114,9 +114,9 @@ function GeneralAdminStudentDetails(props) {
                             This student has no stop that is in range. Please use the stop planner to assign an appropriate stop.
                             </p>
                             <hr />
-                            <Link to={`/`}>
+                            {/* <Link to={`/`}>
                                 <Button variant='yellow'>Plan a Stop</Button>
-                            </Link>
+                            </Link> */}
                         </Alert>
                         )
                     }
