@@ -12,6 +12,7 @@ import SchoolPic from '../assets/schoolPic.jpg';
 import RoutesPic from '../assets/routesPic.jpg';
 import StopsPic from '../assets/stopsPic.jpg';
 import EmailPic from '../assets/emailPic.jpg';
+import isAdmin from "../../utils/user";
 
 //This page will be used for the admin page to declutter App.js
 function AdminPage( props ) {
@@ -33,7 +34,7 @@ function AdminPage( props ) {
                     <Card.Body>
                       <Card.Title><strong>Users Portal</strong></Card.Title>
                       <Card.Text>
-                        View and modify existing users.
+                        View {isAdmin(props.user)? "and modify" :""} existing users.
                       </Card.Text>
                         <Link to={`/admin/users?pageNum=1`}>
                           <Button variant="yellow" size="lg">View Users</Button>
@@ -47,7 +48,7 @@ function AdminPage( props ) {
                     <Card.Body>
                       <Card.Title><strong>Students Portal</strong></Card.Title>
                       <Card.Text>
-                        View and modify existing students.
+                        View {isAdmin(props.user)? "and modify" :""} existing students.
                       </Card.Text>
                         <Link to={`/admin/students?pageNum=1`}>
                           <Button variant="yellow" size="lg">View Students</Button>
@@ -64,7 +65,7 @@ function AdminPage( props ) {
                     <Card.Body>
                       <Card.Title><strong>Schools Portal</strong></Card.Title>
                       <Card.Text>
-                        View and modify existing schools.
+                        View {isAdmin(props.user)? "and modify" :""} existing schools.
                       </Card.Text>
                       <Link to={`/admin/schools?pageNum=1`}>
                         <Button variant="yellow" size="lg">View Schools</Button>
@@ -78,7 +79,7 @@ function AdminPage( props ) {
                     <Card.Body>
                       <Card.Title><strong>Routes Portal</strong></Card.Title>
                       <Card.Text>
-                        View and modify existing routes.
+                        View {isAdmin(props.user)? "and modify" :""} existing routes.
                       </Card.Text>
                         <Link to={`/admin/routes?pageNum=1`}>
                           <Button variant="yellow" size="lg">View Routes</Button>
@@ -87,22 +88,8 @@ function AdminPage( props ) {
                   </Card>
                 </Col>
               </Row>
-
+              {isAdmin(props.user)?
               <Row>
-                {/* <Col>
-                  <Card className="text-center" style={{ width: '35rem' }}>
-                    <Card.Img variant="top" src={StopsPic} />
-                    <Card.Body>
-                      <Card.Title>Stops Portal</Card.Title>
-                      <Card.Text>
-                        View and modify existing stops.
-                      </Card.Text>
-                      <Link to={`/`}>
-                        <Button variant="yellow" size="lg">View Stops</Button>
-                      </Link>  
-                    </Card.Body>
-                  </Card>
-                </Col> */}
                 <Col>
                   <Card className="text-center" style={{ width: '35rem' }}>
                     <Card.Img variant="top" src={EmailPic} />
@@ -117,7 +104,9 @@ function AdminPage( props ) {
                     </Card.Body>
                   </Card>
                 </Col>
-              </Row>
+              </Row>:
+              <></>
+              }
             </Container>
 
             <br></br>

@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { getStudentInfo, deleteStudent } from '../../../actions/students';
 import { Container, Card, Button, Row, Col, Alert, ButtonGroup } from 'react-bootstrap'
+import isAdmin from '../../../utils/user'
 
 function GeneralAdminStudentDetails(props) {
   const navigate = useNavigate();
@@ -29,6 +30,7 @@ function GeneralAdminStudentDetails(props) {
         <div>{openModal && <DeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}</div>
         <Header></Header>
         <Container className="container-main d-flex flex-column" style={{gap: "20px"}}>
+            {isAdmin(props.user)?
             <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
                 <Row>
                     <Col>
@@ -44,6 +46,7 @@ function GeneralAdminStudentDetails(props) {
                     </Col>
                 </Row>
             </Container>
+            :<></>}
 
             
             
@@ -100,9 +103,10 @@ function GeneralAdminStudentDetails(props) {
                             This student has not been assigned a route. Please use the route planner to assign an appropriate route.
                             </p>
                             <hr />
-                            <Link to={`/admin/routes?pageNum=1`}>
-                                <Button variant='yellow'>View Routes</Button>
-                            </Link>
+                            {isAdmin(props.user)?
+                            <Link to={`/admin/route/plan/${student.school.id}?view=0&create=true&route=null`}>
+                                <Button variant='yellow'>Create a Route</Button>
+                            </Link>:<></>}
                         </Alert>
                     }
 
@@ -114,9 +118,11 @@ function GeneralAdminStudentDetails(props) {
                             This student has no stop that is in range. Please use the stop planner to assign an appropriate stop.
                             </p>
                             <hr />
+                            {isAdmin(props.user)?
                             <Link to={`/admin/route/plan/${student.school.id}?route=${student.routes.id}&view=1`}>
                                 <Button variant='yellow'>Plan a Stop</Button>
-                            </Link>
+                            </Link>:<></>
+                            }
                         </Alert>:<></>
                         )
                     }
@@ -136,6 +142,7 @@ GeneralAdminStudentDetails.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
+  user: state.auth.user,
   student: state.students.viewedStudent
 });
 

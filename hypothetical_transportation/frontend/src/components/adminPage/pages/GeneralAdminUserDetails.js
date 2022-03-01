@@ -48,6 +48,7 @@ function AdminUserDetails(props) {
       <div>{openModal && <DeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}</div>
       <Header></Header>
       <Container className="container-main d-flex flex-column" style={{gap: "20px"}}>
+        {isAdmin(props.curUser)?
         <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
             <Row>
                 <Col>
@@ -62,7 +63,7 @@ function AdminUserDetails(props) {
                     }}>Delete User</Button>
                 </Col>
             </Row>
-        </Container>
+        </Container>:<></>}
         
         <Card>
             <Card.Header as="h5">Name</Card.Header>
@@ -111,6 +112,7 @@ AdminUserDetails.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
+  curUser: state.auth.user,
   user: state.users.viewedUser,
   token: state.auth.token,
   students: state.students.students.results,

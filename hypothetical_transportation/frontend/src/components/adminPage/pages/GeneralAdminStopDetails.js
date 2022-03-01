@@ -9,6 +9,7 @@ import { getRouteInfo } from '../../../actions/routes';
 import { getStopInfo, deleteStop } from '../../../actions/stops';
 import { getStudents } from '../../../actions/students';
 import { Container, Card, Button, Row, Col } from 'react-bootstrap'
+import isAdmin from '../../../utils/user'
 
 function GeneralAdminStopDetails(props) {
 
@@ -43,8 +44,9 @@ function GeneralAdminStopDetails(props) {
   return (
     <div>  
       <div>{openModal && <DeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}</div>
-      <Header></Header>
+      <Header></Header>      
       <Container className="container-main d-flex flex-column" style={{gap: "20px"}}>
+      {isAdmin(props.user)?
         <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
             <Row>
                 <Col>
@@ -58,7 +60,7 @@ function GeneralAdminStopDetails(props) {
                     }}>Delete Stop</Button>
                 </Col>
             </Row>
-        </Container>
+        </Container>:<></>}
         
         <Card>
             <Card.Header as="h5">Name</Card.Header>
@@ -120,6 +122,7 @@ GeneralAdminStopDetails.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
+  user: state.auth.user,
   stop: state.stop.viewedStop,
   viewedRoute: state.routes.viewedRoute,
   students: state.students.students.results

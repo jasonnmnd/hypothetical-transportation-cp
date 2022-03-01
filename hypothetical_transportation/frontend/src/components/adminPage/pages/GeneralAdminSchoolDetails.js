@@ -11,6 +11,7 @@ import { getRoutes } from '../../../actions/routes';
 import GeneralAdminTableView from '../components/views/GeneralAdminTableView';
 import { filterObjectForKeySubstring } from '../../../utils/utils';
 import { Container, Card, Button, Row, Col } from 'react-bootstrap'
+import isAdmin from '../../../utils/user'
 
 function GeneralAdminSchoolDetails(props) {
   const navigate = useNavigate();
@@ -71,6 +72,7 @@ function GeneralAdminSchoolDetails(props) {
       {openModal && <FormDeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}
       <Header></Header>
       <Container className="container-main d-flex flex-column" style={{gap: "20px"}}>
+      {isAdmin(props.user) ? <>
         <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
             <Row>
               <Col>
@@ -103,6 +105,7 @@ function GeneralAdminSchoolDetails(props) {
                 
             </Row>
         </Container>
+        </> : <></>}
         
         <Card>
             <Card.Header as="h5">Name</Card.Header>

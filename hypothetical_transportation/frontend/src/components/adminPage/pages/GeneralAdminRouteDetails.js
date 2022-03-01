@@ -16,7 +16,7 @@ import MapComponent from '../../maps/MapComponent';
 import { getStudentPin, addSchoolPin, getStopPin } from '../../../utils/planner_maps';
 import {InfoWindow} from '@react-google-maps/api';
 import IconLegend from '../../common/IconLegend';
-
+import isAdmin from '../../../utils/user'
 
 function GeneralAdminRouteDetails(props) {
 
@@ -126,7 +126,10 @@ function GeneralAdminRouteDetails(props) {
     <div>          
         <div>{openModal && <DeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}</div>
         <Header></Header>
+        
         <Container className="container-main d-flex flex-column" style={{gap: "20px"}}>
+        {isAdmin(props.user) ? 
+        <>
         <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
             <Row>
                 {/* <Col>
@@ -155,7 +158,8 @@ function GeneralAdminRouteDetails(props) {
                     </Link>
                 </Col>
             </Row>
-        </Container>
+        </Container></>: <></>
+        }
         
         <Card>
             <Card.Header as="h5">Name</Card.Header>
