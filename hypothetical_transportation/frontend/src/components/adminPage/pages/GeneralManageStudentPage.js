@@ -137,6 +137,9 @@ function GeneralManageStudentPage(props) {
     if(obj.guardian=="new"){
       setNewParent(true)
     }
+    else{
+      setNewParent(false)
+    }
   },[obj.guardian])
 
   const [fieldValues, setFieldValues] = useState({
