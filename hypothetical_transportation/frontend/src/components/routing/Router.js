@@ -74,8 +74,8 @@ const Router = (props) => {
           <Route exact path="/admin/stop/:route_id/:stop_id" element={<PrivateRoute><GeneralAdminStopDetails/></PrivateRoute>}/>
           
           <Route exact path="/admin/route/plan/:school_id" element={<PrivateRoute><SchoolRoutesPlannerPage/></PrivateRoute>}/>
-          <Route exact path="/admin/stop/plan/:school_id/:route_id" element={<PrivateRoute><AdminRouteStopsPlanner/></PrivateRoute>}/>
-          <Route exact path="/admin/route/edit/:school_id/:route_id" element={<PrivateRoute><GeneralAdminRoutePlanner action={"edit"}/></PrivateRoute>}/>
+          {/* <Route exact path="/admin/stop/plan/:school_id/:route_id" element={<PrivateRoute><AdminRouteStopsPlanner/></PrivateRoute>}/> */}
+          {/* <Route exact path="/admin/route/edit/:school_id/:route_id" element={<PrivateRoute><GeneralAdminRoutePlanner action={"edit"}/></PrivateRoute>}/> */}
 
           <Route exact path="/admin/email" element={<PrivateRoute><GeneralAdminEmailPage/></PrivateRoute>}/>
           <Route exact path="/admin/school_email/:school_id" element={<PrivateRoute><GeneralAdminEmailPage/></PrivateRoute>}/>
