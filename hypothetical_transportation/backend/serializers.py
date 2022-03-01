@@ -116,16 +116,17 @@ class CheckInrangeSerializer(serializers.Serializer):
 class LoadStudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
-        fields = ["full_name", "student_id", "school"]
+        fields = ("full_name", "student_id", "school")
 
 
 class LoadUserSerializer(serializers.ModelSerializer):
     students = LoadStudentSerializer(many=True)
 
     class Meta:
-        model = Student
-        fields = ["email", "full_name", "address", "students"]
+        model = get_user_model()
+        fields = ("email", "full_name", "address", "students")
 
 
 class LoadModelDataSerializer(serializers.Serializer):
-    users = LoadUserSerializer(many=True)
+    # users = LoadUserSerializer(many=True, required=False)
+    file = serializers.FileField()

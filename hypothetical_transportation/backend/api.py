@@ -426,22 +426,23 @@ class VerifyLoadedDataAPI(APIView):
     ]
 
     def get(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data, many=True)
+        serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             content = {}
             return Response(content, status.HTTP_200_OK)
         return Response(serializer.errors)
 
 
-class SubmitLoadedDataAPI(APIView):
+class SubmitLoadedDataAPI(generics.GenericAPIView):
     serializer_class = LoadModelDataSerializer
     permission_classes = [
         permissions.AllowAny
     ]
 
-    def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data, many=True)
+    def post(self, request, format=None):
+        serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
+            print(serializer.validated_data)
             content = {}
             return Response(content, status.HTTP_200_OK)
         return Response(serializer.errors)
