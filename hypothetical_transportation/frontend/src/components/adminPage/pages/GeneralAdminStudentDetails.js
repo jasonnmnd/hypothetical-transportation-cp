@@ -108,7 +108,7 @@ function GeneralAdminStudentDetails(props) {
 
                     {
                         (student.routes!==undefined && student.routes!==null && !student.has_inrange_stop ? 
-                        <Alert variant="danger">
+                        <Alert variant="primary">
                             <Alert.Heading>No In-range Stop for this Student</Alert.Heading>
                             <p>
                             This student has no stop that is in range. Please use the stop planner to assign an appropriate stop.
