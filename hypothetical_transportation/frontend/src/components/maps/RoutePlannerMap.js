@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import {InfoWindow} from '@react-google-maps/api';
 import { connect } from 'react-redux';
-import MapComponent from "../../maps/MapComponent";
+import MapComponent from "./MapComponent";
 import PropTypes, { string } from 'prop-types';
 import { useSearchParams } from 'react-router-dom';
-import { NO_ROUTE } from '../../../utils/utils';
-import { getStudentPin, addSchoolPin, getStudentRouteName, getCurRouteFromStudent } from '../../../utils/planner_maps';
-import { getDistance } from '../../../utils/geocode';
+import { NO_ROUTE } from '../../utils/utils';
+import { getStudentPin, addSchoolPin, getStudentRouteName, getCurRouteFromStudent } from '../../utils/planner_maps';
+import { getDistance } from '../../utils/geocode';
 import { Button, Modal } from 'react-bootstrap';
-import OverLappingStudentsModal from '../components/modals/OverLappingStudentsModal';
+import OverLappingStudentsModal from '../adminPage/components/modals/OverLappingStudentsModal';
 
 
 const MARKER_OVERLAP_DISTANCE = 0.01; //miles
