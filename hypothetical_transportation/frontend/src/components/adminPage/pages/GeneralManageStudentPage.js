@@ -6,10 +6,12 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { getSchools } from '../../../actions/schools';
 import { getUsers, getUser } from '../../../actions/users';
-import { getStudent, addStudent, updateStudent } from '../../../actions/students';
+import { getStudent, addStudent, updateStudent, addStudentWithParent, updateStudentWithParent } from '../../../actions/students';
 import { getRoutesByID } from '../../../actions/routes';
 import { Form, Button, Row, Col, Container, InputGroup, ButtonGroup, ToggleButton} from 'react-bootstrap';
 import { resetPostedUser } from '../../../actions/users';
+import AssistedLocationMap from "../../maps/AssistedLocationMap";
+
 
 function GeneralManageStudentPage(props) {
     const param = useParams()
@@ -17,6 +19,8 @@ function GeneralManageStudentPage(props) {
 
     const [openModal, setOpenModal] = useState(false);
     const [validated, setValidated] = useState(false);
+    const[coord,setCoord]=useState({lat:36.0016944, lng:-78.9480547});
+
 
     const emptyStudent={
       student_id: "",
@@ -33,7 +37,9 @@ function GeneralManageStudentPage(props) {
 
 
   const setParent = (e)=>{
-    props.getUser(e.target.value);
+    if(e.target.value!=="new"){
+      props.getUser(e.target.value);
+    }
     setObj({ ...obj, ["guardian"]: e.target.value});
   }
 
@@ -46,11 +52,35 @@ function GeneralManageStudentPage(props) {
       event.stopPropagation();
     } else {
       if(props.action==="new"){
-        props.addStudent(obj)
+        if(obj.guardian!=="new"){
+          props.addStudent(obj)
+        }
+        else{
+          const createVals = {
+            ...fieldValues,
+            groups: [fieldValues.groups],
+            address: address,
+            longitude: coord.lng.toFixed(6),
+            latitude: coord.lat.toFixed(6),
+          }
+          props.addStudentWithParent(createVals, obj)
+        }
         navigate(`/admin/students/`)
       }
       else{
-        props.updateStudent(obj,param.id);
+        if(obj.guardian!=="new"){
+          props.updateStudent(obj,param.id);
+        }
+        else{
+          const createVals = {
+            ...fieldValues,
+            groups: [fieldValues.groups],
+            address: address,
+            longitude: coord.lng.toFixed(6),
+            latitude: coord.lat.toFixed(6),
+          }
+          props.updateStudentWithParent(createVals, obj)
+        }
         navigate(`/admin/students/`)
       }
     }
@@ -99,6 +129,29 @@ function GeneralManageStudentPage(props) {
       setObj({ ...obj, ["guardian"]: props.selectedUser.id});
     }
   },[props.selectedUser])
+
+
+  const [newParent, setNewParent] = useState(false)
+  useEffect(()=>{
+    // console.log(props.selectedUser)
+    if(obj.guardian=="new"){
+      setNewParent(true)
+    }
+  },[obj.guardian])
+
+  const [fieldValues, setFieldValues] = useState({
+    id: 0,
+    full_name: "",
+    address: "",
+    email: "",
+    groups: 2,
+});
+const [address, setAddress] = useState("");
+
+const groupTypes = [
+  {name: "Administrator", value: 1},
+  {name: "Guardian", value: 2}
+]
 
 
   useEffect(()=>{
@@ -225,12 +278,114 @@ useEffect(()=>{
             <Form.Group className="mb-3" controlId="">
                 <Form.Label as="h5">Parent</Form.Label>
                 <Form.Select size="sm" value={obj.guardian} onChange={setParent}>
-                <option value={""}>{"-----"}</option>:
+                <option value={""}>{"-----"}</option>
+                <option value={"new"}>{"---Create New User---"}</option>
                 {props.users!==null && props.users!==undefined && props.users.length!==0?props.users.map((u,i)=>{
                     return <option value={u.id} key={i}>{u.email}</option>
                 }):null}
                 </Form.Select>
             </Form.Group>
+
+            { newParent===true ? 
+              <>
+
+              <Row className="mb-3">
+                  <Form.Group as={Col} controlId="formGridAddress2">
+                      <Form.Label as="h5">Full Name</Form.Label>
+                      <Form.Control 
+                      required 
+                      type="text"
+                      placeholder="Enter name..." 
+                      value={fieldValues.full_name}
+                      onChange={(e)=>{
+                          setFieldValues({...fieldValues, full_name: e.target.value});
+                      }}
+                      />
+                      <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                      <Form.Control.Feedback type="invalid">Please provide a valid name.</Form.Control.Feedback>
+                  </Form.Group>
+                  <Form.Group as={Col}>
+                      <Form.Label as="h5">User Type</Form.Label>
+                      <InputGroup className="mb-3">
+                      <ButtonGroup>
+                          {groupTypes.map((radio, idx) => (
+                          <ToggleButton
+                              key={idx}
+                              id={`radio-${idx}`}
+                              type="radio"
+                              variant={'outline-warning'}
+                              name="radio"
+                              value={radio.value}
+                              checked={fieldValues.groups == radio.value}
+                              onChange={(e)=>{
+                                  setFieldValues({...fieldValues, groups: e.target.value});
+                              }}
+                          >
+                              {radio.name}
+                          </ToggleButton>
+                          ))}
+                      </ButtonGroup>
+                      </InputGroup>
+                  </Form.Group>
+              </Row>
+
+              <Row className="mb-3">
+                  <Form.Group as={Col} controlId="formGridEmail">
+                  <Form.Label as="h5">Email</Form.Label>
+                  <Form.Control 
+                  required 
+                  type="email" 
+                  placeholder="Enter email..." 
+                  value={fieldValues.email}
+                  onChange={
+                    (e)=>{
+                      setFieldValues({...fieldValues, email: e.target.value});
+                      }
+                  }/>
+                  <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                  <Form.Control.Feedback type="invalid">Please provide a valid email.</Form.Control.Feedback>
+                  </Form.Group>
+
+                  {/* <Form.Group as={Col} controlId="formGridPassword">
+                  <Form.Label as="h5">Password</Form.Label>
+                  <Form.Control 
+                  type="password" 
+                  placeholder="Enter password..." 
+                  value={fieldValues.password}
+                  onChange={
+                    (e)=>{
+                      setFieldValues({...fieldValues, password: e.target.value});
+                      }
+                  }
+                  />
+                  </Form.Group> */}
+              </Row>
+                                      
+              <Form.Group className="mb-3" controlId="formGridAddress1">
+                  <Form.Label as="h5">Address</Form.Label>
+                  <Form.Control 
+                  required
+                  type="text"
+                  placeholder="Enter address..." 
+                  value={address}
+                  onChange={
+                    (e)=>{
+                      setAddress(e.target.value);
+                      getItemCoord(e.target.value,setCoord);
+                      }
+                  }
+                  />
+                  <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                  <Form.Control.Feedback type="invalid">Please provide a valid address.</Form.Control.Feedback>
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                  <Form.Label as="h5">Location Assistance</Form.Label>
+                  <AssistedLocationMap address={address} coord={coord} setAddress={setAddress} setCoord={setCoord}></AssistedLocationMap>
+
+              </Form.Group>
+            </> : <></>
+            }
             
             <Form.Group className="mb-3" controlId="">
                 <Form.Label as="h5">School</Form.Label>
@@ -263,7 +418,9 @@ GeneralManageStudentPage.propTypes = {
     getUser: PropTypes.func.isRequired,
     addStudent: PropTypes.func.isRequired,
     updateStudent: PropTypes.func.isRequired,
-    resetPostedUser: PropTypes.func.isRequired
+    resetPostedUser: PropTypes.func.isRequired,
+    addStudentWithParent: PropTypes.func.isRequired,
+    updateStudentWithParent: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => ({
@@ -276,4 +433,4 @@ const mapStateToProps = (state) => ({
   selectedUser: state.users.postedUser
 });
 
-export default connect(mapStateToProps, {getSchools, getUsers, getStudent, getRoutesByID, getUser, addStudent, updateStudent,resetPostedUser})(GeneralManageStudentPage)
+export default connect(mapStateToProps, {getSchools, getUsers, getStudent, getRoutesByID, getUser, addStudent, updateStudent,resetPostedUser,addStudentWithParent,updateStudentWithParent})(GeneralManageStudentPage)

@@ -75,6 +75,60 @@ export const addStudent = (student) => (dispatch, getState) => {
     .catch((err) => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});
 };
 
+//addStudentWithParent, updateStudentWithParent
+
+export const addStudentWithParent = (parent, student) => (dispatch, getState) => {
+
+  axios
+      .post('/api/auth/invite', parent, tokenConfig(getState))
+      .then((res) => {
+        console.log("ey")
+        console.log(res)
+        const stu = ({ ...student, ["guardian"]: res.data.id})
+        console.log(stu)
+        axios
+        .post('/api/student/', stu, tokenConfig(getState))
+        .then((res) => {
+          dispatch(createMessage({ student: 'Student Created' }));
+          dispatch({
+            type: ADD_STUDENT,
+            payload: res.data,
+          });
+        })
+        .catch((err) => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});    
+      })
+      .catch((err) => {
+        dispatch(returnErrors(err.response.data, err.response.status));
+      });
+};
+
+export const updateStudentWithParent = (parent, student) => (dispatch, getState) => {
+  axios
+      .post('/api/auth/invite', parent, tokenConfig(getState))
+      .then((res) => {
+        const stu = ({ ...student, ["guardian"]: res.data.id})
+        console.log(res)
+        console.log(stu)
+        axios
+        .put(`/api/student/${stu.id}/`,stu, tokenConfig(getState))
+        .then((res) => {
+          dispatch(createMessage({ student: 'Student Updated' }));
+          dispatch({
+            type: DELETE_STUDENT,
+            payload: parseInt(stu.id)
+          })
+          dispatch({
+            type: ADD_STUDENT,
+            payload: res.data
+          })
+        })
+        .catch((err) => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});    
+      })
+      .catch((err) => {
+        dispatch(returnErrors(err.response.data, err.response.status));
+      });
+};
+
 export const updateStudent = (student, id) => (dispatch, getState) => {
   axios
           .put(`/api/student/${id}/`,student, tokenConfig(getState))
