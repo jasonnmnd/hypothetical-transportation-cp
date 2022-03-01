@@ -104,8 +104,8 @@ function GeneralAdminStudentDetails(props) {
                             </p>
                             <hr />
                             {isAdmin(props.user)?
-                            <Link to={`/admin/route/plan/${student.school.id}?view=0&create=true&route=null`}>
-                                <Button variant='yellow'>Create a Route</Button>
+                            <Link to={`/admin/school/${student.school.id}`}>
+                                <Button variant='yellow'>View School Details Page for Route Planner</Button>
                             </Link>:<></>}
                         </Alert>
                     }
