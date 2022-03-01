@@ -8,7 +8,7 @@ import { getSchools } from '../../../actions/schools';
 import { getUsers, getUser } from '../../../actions/users';
 import { getStudent, addStudent, updateStudent, addStudentWithParent, updateStudentWithParent } from '../../../actions/students';
 import { getRoutesByID } from '../../../actions/routes';
-import { Form, Button, Row, Col, Container, InputGroup, ButtonGroup, ToggleButton} from 'react-bootstrap';
+import { Form, Button, Row, Col, Container, InputGroup, ButtonGroup, ToggleButton, Card} from 'react-bootstrap';
 import { resetPostedUser } from '../../../actions/users';
 import AssistedLocationMap from "../../maps/AssistedLocationMap";
 
@@ -302,7 +302,11 @@ useEffect(()=>{
 
             { newParent===true ? 
               <>
-
+              <br></br>
+              <Card>
+              <br></br>
+              <h4>Create Users</h4>
+              <br></br>
               <Row className="mb-3">
                   <Form.Group as={Col} controlId="formGridAddress2">
                       <Form.Label as="h5">Full Name</Form.Label>
@@ -398,9 +402,12 @@ useEffect(()=>{
                   <AssistedLocationMap address={address} coord={coord} setAddress={setAddress} setCoord={setCoord}></AssistedLocationMap>
 
               </Form.Group>
+              </Card>
+              <p> </p>
             </> : <></>
             }
             
+            <br></br>
 
             <Button variant="yellowsubmit" type="submit">
                 Submit
