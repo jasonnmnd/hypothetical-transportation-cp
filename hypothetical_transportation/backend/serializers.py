@@ -46,7 +46,6 @@ class RouteSerializer(serializers.ModelSerializer):
 
 
 class StopSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Stop
         fields = '__all__'
@@ -112,3 +111,21 @@ class StudentLocationSerializer(serializers.Serializer):
 class CheckInrangeSerializer(serializers.Serializer):
     stops = StopLocationSerializer(many=True)
     students = StudentLocationSerializer(many=True)
+
+
+class LoadStudentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Student
+        fields = ["full_name", "student_id", "school"]
+
+
+class LoadUserSerializer(serializers.ModelSerializer):
+    students = LoadStudentSerializer(many=True)
+
+    class Meta:
+        model = Student
+        fields = ["email", "full_name", "address", "students"]
+
+
+class LoadModelDataSerializer(serializers.Serializer):
+    users = LoadUserSerializer(many=True)
