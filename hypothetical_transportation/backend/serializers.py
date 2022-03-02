@@ -114,9 +114,11 @@ class CheckInrangeSerializer(serializers.Serializer):
 
 
 class LoadStudentSerializer(serializers.ModelSerializer):
+    school_name = serializers.CharField(required=True)
+
     class Meta:
         model = Student
-        fields = ("full_name", "student_id", "school")
+        fields = ("full_name", "student_id", "school_name")
 
 
 class LoadUserSerializer(serializers.ModelSerializer):
@@ -128,5 +130,9 @@ class LoadUserSerializer(serializers.ModelSerializer):
 
 
 class LoadModelDataSerializer(serializers.Serializer):
-    # users = LoadUserSerializer(many=True, required=False)
-    file = serializers.FileField()
+    users = LoadUserSerializer(many=True, required=False)
+
+
+class SubmitFileSerializer(serializers.Serializer):
+    user_file = serializers.FileField()
+    student_file = serializers.FileField()
