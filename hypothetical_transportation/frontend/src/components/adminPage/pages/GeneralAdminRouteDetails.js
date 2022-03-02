@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Header from '../../header/Header';
+import Header from '../../header/AdminHeader';
 import "../adminPage.css";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import DeleteModal from '../components/modals/DeleteModal';
@@ -132,11 +132,11 @@ function GeneralAdminRouteDetails(props) {
         <>
         <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
             <Row>
-                {/* <Col>
-                    <Link to={`/admin/stop/plan/${props.route.school.id}/${props.route.id}`}>
-                        <Button variant="yellowLong" size="lg">Stop Planner</Button>
+                <Col>
+                    <Link to={`/admin/route/plan/${props.route.school.id}?route=${props.route.id}&view=0`}>
+                        <Button variant="yellowLong" size="lg">Route Planner</Button>
                     </Link>
-                </Col> */}
+                </Col>
 
                 <Col>
                     <Button variant="yellowLong" size="lg" onClick={() => {
@@ -148,10 +148,11 @@ function GeneralAdminRouteDetails(props) {
         <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
             <Row>
                 <Col>
-                    <Link to={`/admin/route/plan/${props.route.school.id}?route=${props.route.id}&view=0`}>
-                        <Button variant="yellowLong" size="lg">Route Planner</Button>
+                    <Link to={`/print/${props.route.id}`} target="_blank">
+                        <Button variant="yellowLong" size="lg">Print Route Roster</Button>
                     </Link>
                 </Col>
+                
                 <Col>
                     <Link to={`/admin/route_email/${props.route.school.id}/${props.route.id}`}>
                         <Button variant="yellowLong" size="lg">Send Route-wide Email</Button>

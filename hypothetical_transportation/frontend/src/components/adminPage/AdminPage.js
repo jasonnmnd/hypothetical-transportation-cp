@@ -4,7 +4,7 @@ import { Navigate, Link } from "react-router-dom";
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { logout } from "../../actions/auth";
-import Header from "../header/Header.js";
+import Header from "../header/AdminHeader.js";
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import AdminPic from '../assets/adminPic.jpg';
 import StudentsPic from '../assets/studentsPic.jpg';
@@ -12,6 +12,7 @@ import SchoolPic from '../assets/schoolPic.jpg';
 import RoutesPic from '../assets/routesPic.jpg';
 import StopsPic from '../assets/stopsPic.jpg';
 import EmailPic from '../assets/emailPic.jpg';
+import DataPic from '../assets/data.jpg';
 import isAdmin from "../../utils/user";
 
 //This page will be used for the admin page to declutter App.js
@@ -29,10 +30,10 @@ function AdminPage( props ) {
 
               <Row>
                 <Col>
-                  <Card className="text-center" style={{ width: '35rem' }}>
-                    <Card.Img variant="top" src={AdminPic} />
+                  <Card className="text-center" style={{height:'500px'}}>
+                    <Card.Img variant="top" src={AdminPic} style={{height: '350px'}}/>
                     <Card.Body>
-                      <Card.Title><strong>Users Portal</strong></Card.Title>
+                      <Card.Title><strong>Users</strong></Card.Title>
                       <Card.Text>
                         View {isAdmin(props.user)? "and modify" :""} existing users.
                       </Card.Text>
@@ -43,10 +44,10 @@ function AdminPage( props ) {
                   </Card>
                 </Col>
                 <Col>
-                  <Card className="text-center" style={{ width: '35rem' }}>
-                    <Card.Img variant="top" src={StudentsPic} />
+                  <Card className="text-center" style={{height:'500px'}}>
+                    <Card.Img variant="top" src={StudentsPic} style={{height: '350px'}}/>
                     <Card.Body>
-                      <Card.Title><strong>Students Portal</strong></Card.Title>
+                      <Card.Title><strong>Students</strong></Card.Title>
                       <Card.Text>
                         View {isAdmin(props.user)? "and modify" :""} existing students.
                       </Card.Text>
@@ -56,14 +57,11 @@ function AdminPage( props ) {
                     </Card.Body>
                   </Card>
                 </Col>
-              </Row>
-
-              <Row>
                 <Col>
-                  <Card className="text-center" style={{ width: '35rem' }}>
-                    <Card.Img variant="top" src={SchoolPic} />
+                  <Card className="text-center" style={{height:'500px'}}>
+                    <Card.Img variant="top" src={SchoolPic} style={{height: '350px'}}/>
                     <Card.Body>
-                      <Card.Title><strong>Schools Portal</strong></Card.Title>
+                      <Card.Title><strong>Schools</strong></Card.Title>
                       <Card.Text>
                         View {isAdmin(props.user)? "and modify" :""} existing schools.
                       </Card.Text>
@@ -73,11 +71,14 @@ function AdminPage( props ) {
                     </Card.Body>
                   </Card>
                 </Col>
+              </Row>
+
+              <Row>
                 <Col>
-                  <Card className="text-center" style={{ width: '35rem' }}>
-                    <Card.Img variant="top" src={RoutesPic} />
+                  <Card className="text-center" style={{height:'500px'}}>
+                    <Card.Img variant="top" src={RoutesPic} style={{height: '350px'}}/>
                     <Card.Body>
-                      <Card.Title><strong>Routes Portal</strong></Card.Title>
+                      <Card.Title><strong>Routes</strong></Card.Title>
                       <Card.Text>
                         View {isAdmin(props.user)? "and modify" :""} existing routes.
                       </Card.Text>
@@ -87,28 +88,47 @@ function AdminPage( props ) {
                     </Card.Body>
                   </Card>
                 </Col>
+                {isAdmin(props.user)?
+                  <Col>
+                    <Card className="text-center" style={{height:'500px'}}>
+                      <Card.Img variant="top" src={EmailPic} style={{height: '350px'}}/>
+                      <Card.Body>
+                        <Card.Title><strong>Email</strong></Card.Title>
+                        <Card.Text>
+                          Send an email to users.
+                        </Card.Text>
+                          <Link to={`/admin/email`}>
+                            <Button variant="yellow" size="lg">Send Email</Button>
+                          </Link>
+                      </Card.Body>
+                    </Card>
+                  </Col>
+                  :
+                  <></>
+                }
+
+                {isAdmin(props.user)?
+                  <Col>
+                    <Card className="text-center" style={{height:'500px'}}>
+                      <Card.Img variant="top" src={DataPic} style={{height: '350px'}}/>
+                      <Card.Body>
+                        <Card.Title><strong>Data</strong></Card.Title>
+                        <Card.Text>
+                          Bulk Upload Data.
+                        </Card.Text>
+                          <Link to={`/upload_data`}>
+                            <Button variant="yellow" size="lg">Upload Data</Button>
+                          </Link>
+                      </Card.Body>
+                    </Card>
+                  </Col>
+                  :
+                  <></>
+                }
               </Row>
-              {isAdmin(props.user)?
-              <Row>
-                <Col>
-                  <Card className="text-center" style={{ width: '35rem' }}>
-                    <Card.Img variant="top" src={EmailPic} />
-                    <Card.Body>
-                      <Card.Title><strong>Email Portal</strong></Card.Title>
-                      <Card.Text>
-                        Send an email to users.
-                      </Card.Text>
-                        <Link to={`/admin/email`}>
-                          <Button variant="yellow" size="lg">Send Email</Button>
-                        </Link>
-                    </Card.Body>
-                  </Card>
-                </Col>
-              </Row>:
-              <></>
-              }
             </Container>
 
+            <br></br>
             <br></br>
           </div>
         </div>

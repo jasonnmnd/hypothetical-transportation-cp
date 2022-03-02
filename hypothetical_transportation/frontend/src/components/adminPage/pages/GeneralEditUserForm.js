@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import "../NEWadminPage.css"
-import Header from "../../header/Header";
+import Header from "../../header/AdminHeader";
 import { getUser, updateUser } from "../../../actions/users";
 import { register } from "../../../actions/auth";
 import AssistedLocationMap from "../../maps/AssistedLocationMap";
@@ -218,34 +218,37 @@ function GeneralEditUserForm(props) {
 
                         <Row className="mb-3">
                             <Form.Group as={Col} controlId="formGridEmail">
-                            <Form.Label as="h5">Email</Form.Label>
-                            <Form.Control 
-                            required 
-                            type="email" 
-                            placeholder="Enter email..." 
-                            value={fieldValues.email}
-                            onChange={
-                              (e)=>{
-                                setFieldValues({...fieldValues, email: e.target.value});
-                                }
-                            }/>
-                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                            <Form.Control.Feedback type="invalid">Please provide a valid email.</Form.Control.Feedback>
+                                <Form.Label as="h5">Email</Form.Label>
+                                    <Form.Control 
+                                    required 
+                                    type="email" 
+                                    placeholder="Enter email..." 
+                                    value={fieldValues.email}
+                                    onChange={
+                                    (e)=>{
+                                        setFieldValues({...fieldValues, email: e.target.value});
+                                        }
+                                    }/>
+                                    <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                                <Form.Control.Feedback type="invalid">Please provide a valid email.</Form.Control.Feedback>
                             </Form.Group>
 
-                            {/* <Form.Group as={Col} controlId="formGridPassword">
-                            <Form.Label as="h5">Password</Form.Label>
-                            <Form.Control 
-                            type="password" 
-                            placeholder="Enter password..." 
-                            value={fieldValues.password}
-                            onChange={
-                              (e)=>{
-                                setFieldValues({...fieldValues, password: e.target.value});
-                                }
-                            }
-                            />
-                            </Form.Group> */}
+                            <Form.Group as={Col} md="3" controlId="validationCustom">
+                                <Form.Label>Phone Number</Form.Label>
+                                <Form.Control 
+                                required
+                                type="text" 
+                                placeholder="Phone number..."  
+                                // value={fieldValues.email}
+                                // onChange={
+                                //     (e) => setFieldValues({...fieldValues, phoneNumber: e.target.value})
+                                // }
+                                />
+                                <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                                <Form.Control.Feedback type="invalid">
+                                    Please provide a valid phone number.
+                                </Form.Control.Feedback>
+                            </Form.Group>
                         </Row>
                                                 
                         <Form.Group className="mb-3" controlId="formGridAddress1">

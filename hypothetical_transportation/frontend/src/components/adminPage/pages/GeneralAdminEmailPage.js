@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Header from '../../header/Header';
+import Header from '../../header/AdminHeader';
 import "../NEWadminPage.css";
 import { Container, Form, Button, ButtonGroup, ToggleButton,Collapse, Card } from 'react-bootstrap'; 
 import { connect } from 'react-redux';

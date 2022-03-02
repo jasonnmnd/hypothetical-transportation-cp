@@ -1,5 +1,5 @@
 import React, { useEffect} from 'react';
-import Header from '../../header/Header';
+import Header from '../../header/AdminHeader';
 import "../NEWadminPage.css";
 import { useSearchParams } from 'react-router-dom';
 import { connect } from 'react-redux';
