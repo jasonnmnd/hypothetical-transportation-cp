@@ -23,7 +23,7 @@ function GeneralManageStudentPage(props) {
 
 
     const emptyStudent={
-      student_id: "",
+      student_id: null,
       full_name: "",
       guardian: "",
       routes: "",
