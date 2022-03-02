@@ -145,7 +145,7 @@ function GeneralAdminEmailPage(props) {
     ]
 
     useEffect(() => {
-        props.getSchools();
+        props.getSchools({ordering:"name"});
         if(param.school_id!==null && param.school_id!==undefined){
             setCurrSchool(param.school_id);
             routeSearchParams.school = param.school_id;

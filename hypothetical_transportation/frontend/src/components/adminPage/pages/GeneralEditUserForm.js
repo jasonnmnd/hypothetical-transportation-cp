@@ -11,6 +11,7 @@ import { Form, Button, Row, Col, Container, InputGroup, ButtonGroup, ToggleButto
 import { getItemCoord } from "../../../utils/geocode";
 import PageNavigateModal from "../components/modals/PageNavigateModal";
 import { resetPostedUser } from "../../../actions/users";
+import { getSchools } from "../../../actions/schools";
 
 //Edit/New user form
 function GeneralEditUserForm(props) {
@@ -31,6 +32,7 @@ function GeneralEditUserForm(props) {
 
 
     useEffect(() => {
+        props.getSchools({ordering:"name"});
         if(props.action == "edit"){
             props.getUser(param.id);
             setFieldValues({
@@ -105,7 +107,9 @@ function GeneralEditUserForm(props) {
 
     const groupTypes = [
         {name: "Administrator", value: 1},
-        {name: "Guardian", value: 2}
+        {name: "Guardian", value: 2},
+        {name: "Driver", value: 3},
+        {name: "Staff", value: 4}
     ]
 
 
@@ -127,6 +131,23 @@ function GeneralEditUserForm(props) {
         resetPostedUser();
         navigate(`/admin/users`);
     }
+
+    const [val, setVal] = useState([])
+
+    useEffect(()=>{
+        console.log(val)
+    },[val])
+
+    const handleChange = (e)=>{
+        var options = e.target.options;
+        var value = [];
+        for (var i = 0, l = options.length; i < l; i++) {
+          if (options[i].selected) {
+            value.push(options[i].value);
+          }
+        }
+        setVal(value);
+      }
     
     return (
         <div> 
@@ -177,6 +198,23 @@ function GeneralEditUserForm(props) {
                                 </InputGroup>
                             </Form.Group>
                         </Row>
+                        {fieldValues.groups ==4 ?
+                        <Row className="mb-3">
+                            <Form.Group >
+                                <Form.Label>Please select schools that this user can manage</Form.Label>
+                                <Form.Control
+                                    as="select"
+                                    multiple
+                                    value={val}
+                                    onChange={handleChange}
+                                >
+                                    {props.schoollist!==null && props.schoollist!==undefined && props.schoollist.length!==0?props.schoollist.map((u,i)=>{
+                                    return <option value={u.id} key={i}>{u.name}</option>
+                                    }):null}
+                                </Form.Control>
+                                <Form.Text muted> hold ctrl or command for multiple select</Form.Text>
+                            </Form.Group>
+                        </Row>:<></>}
 
                         <Row className="mb-3">
                             <Form.Group as={Col} controlId="formGridEmail">
@@ -248,13 +286,14 @@ GeneralEditUserForm.propTypes = {
     updateUser: PropTypes.func.isRequired,
     //addSchool: PropTypes.func.isRequired,
     action: PropTypes.string,
-    register: PropTypes.func.isRequired
+    register: PropTypes.func.isRequired,
+    getSchools: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = (state) => ({
-    curUser: state.users.viewedUser
-
+    curUser: state.users.viewedUser,
+    schoollist: state.schools.schools.results,
 });
 
-export default connect(mapStateToProps, {getUser, updateUser, register})(GeneralEditUserForm)
+export default connect(mapStateToProps, {getSchools, getUser, updateUser, register})(GeneralEditUserForm)
 

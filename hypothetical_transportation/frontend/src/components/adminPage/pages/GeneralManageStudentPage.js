@@ -100,8 +100,8 @@ function GeneralManageStudentPage(props) {
 
 
   useEffect(() => {
-    props.getSchools();
-    props.getUsers();
+    props.getSchools({ordering:"name"});
+    props.getUsers({ordering:"email"});
     if(props.action==="edit"){
       props.getStudent(param.id);
       setObj({...props.student, ["guardian"]:props.student.guardian.id,["school"]:props.student.school.id,["routes"]:props.student.routes?props.student.routes.id:null})
