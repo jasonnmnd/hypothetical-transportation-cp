@@ -35,6 +35,7 @@ import LinkBasePasswordResetForm from '../loginPage/LinkBasePasswordResetForm';
 import GeneralUserConfirmationPage from '../adminPage/pages/GeneralUserConfirmationPage';
 import SchoolRoutesPlannerPage from '../adminPage/pages/GeneralSchoolRoutesPlannerPage';
 
+import GeneralPrintableRoster from '../adminPage/pages/GeneralPrintableRoster';
 
 const Router = (props) => {
     return (
@@ -91,6 +92,8 @@ const Router = (props) => {
           <Route exact path="/admin/stop/:stop_id" element={<PrivateRoute><GeneralAdminStopDetails/></PrivateRoute>}/>
 
           <Route exact path="/*" element={<LoginForm />}></Route>
+
+          <Route exact path="/print/:route_id" element={<GeneralPrintableRoster/>}></Route>
         </Routes>
       </BrowserRouter>
     )
