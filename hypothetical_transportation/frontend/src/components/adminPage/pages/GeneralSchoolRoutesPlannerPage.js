@@ -47,12 +47,12 @@ function SchoolRoutesPlannerPage(props) {
 
   useEffect(() => {
     if(props.school.id != parseInt(param.school_id)){
-      props.getRoutes({school: param.school_id});
+      props.getRoutes({school: param.school_id, ordering: "name"});
     }
   }, [props.school]);
 
   useEffect(() => {
-    props.getRoutes({school: param.school_id});
+    props.getRoutes({school: param.school_id, ordering: "name"});
     props.getRouteInfo(searchParams.get('route'))
   }, [param, searchParams]);
 
