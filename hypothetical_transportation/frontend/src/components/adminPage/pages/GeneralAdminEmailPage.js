@@ -48,6 +48,7 @@ function GeneralAdminEmailPage(props) {
     const setSchool = (e) => {
         setCurrSchool(e.target.value);
         routeSearchParams.school = e.target.value
+        routeSearchParams.ordering = "name"
         props.getRoutes(routeSearchParams);
     }
     
