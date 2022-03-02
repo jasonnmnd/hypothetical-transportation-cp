@@ -13,7 +13,7 @@ class GroupSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = ('id', 'email', 'full_name', 'address', 'latitude', 'longitude', 'groups')
+        fields = ('id', 'email', 'full_name', 'address', 'latitude', 'longitude', 'groups', 'managed_schools')
         # fields = ('email', 'password')
 
     def validate(self, data):
@@ -23,7 +23,7 @@ class UserSerializer(serializers.ModelSerializer):
 class EditUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = ('id', 'email', 'full_name', 'address', 'latitude', 'longitude', 'groups')
+        fields = ('id', 'email', 'full_name', 'address', 'latitude', 'longitude', 'groups', 'managed_schools')
 
 
 class FormatUserSerializer(UserSerializer):
