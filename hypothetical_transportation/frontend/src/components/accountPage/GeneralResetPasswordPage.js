@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { Link, Navigate, useNavigate } from 'react-router-dom';
-import Header from "../header/Header";
+import Header from "../header/AdminHeader";
 import ParentHeader from "../header/ParentHeader";
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';

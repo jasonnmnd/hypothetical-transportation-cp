@@ -1,0 +1,73 @@
+import React from 'react';
+import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
+import logo from '../assets/headerLogo.png';
+import { Link } from 'react-router-dom';
+import "./header.css";
+import * as FaIcons from "react-icons/fa";
+import * as AiIcons from "react-icons/ai";
+import * as IoIcons from "react-icons/io";
+import * as IoIcons5 from "react-icons/io5";
+import * as GiIcons from "react-icons/gi";
+import { logout } from '../../actions/auth';
+import { connect } from 'react-redux';
+
+
+function AdminHeader( props ) {
+  return (
+      <div className='Header'>
+          <Navbar bg="dark" variant="dark" sticky="top" expand="sm" collapseOnSelect>
+            <Nav.Link as={Link} to={`/`}> 
+                <Navbar.Brand>
+                    <img src={logo} alt="Hypothetical Transportation Logo" width="60" height="50"></img>
+                        Hypothetical Transportation
+                </Navbar.Brand>
+            </Nav.Link>
+            <Navbar.Toggle/>
+            
+            <Navbar.Collapse>
+                <Nav>
+                    <NavDropdown title="Users" href='/admin/users?pageNum=1'>
+                        <NavDropdown.Item as={Link} to={`/admin/users?pageNum=1`}><IoIcons.IoIosWoman /> View Users</NavDropdown.Item>
+                        <NavDropdown.Divider/>
+                        <NavDropdown.Item as={Link} to={`/admin/new/user/`}><IoIcons5.IoCreate /> Create Users</NavDropdown.Item>
+                    </NavDropdown>
+                    <NavDropdown title="Students">
+                        <NavDropdown.Item as={Link} to={`/admin/students?pageNum=1`}><IoIcons.IoIosBody /> View Students</NavDropdown.Item>
+                        <NavDropdown.Divider/>
+                        <NavDropdown.Item as={Link} to={`/admin/new_student/`}><IoIcons5.IoCreate /> Create Students</NavDropdown.Item>
+                    </NavDropdown>
+                    <NavDropdown title="Schools">
+                        <NavDropdown.Item as={Link} to={`/admin/schools?pageNum=1`}><FaIcons.FaSchool /> View Schools</NavDropdown.Item>
+                        <NavDropdown.Divider/>
+                        <NavDropdown.Item as={Link} to={`/admin/new/school/`}><IoIcons5.IoCreate /> Create Schools</NavDropdown.Item>
+                    </NavDropdown>
+                    <NavDropdown title="Routes">
+                        <NavDropdown.Item as={Link} to={`/admin/routes?pageNum=1`}><GiIcons.GiPathDistance /> View Routes</NavDropdown.Item>
+                        <NavDropdown.Divider/>
+                        <NavDropdown.Item as={Link} to={`/admin/new/route/`}><IoIcons5.IoCreate /> Create Routes</NavDropdown.Item>
+                    </NavDropdown>
+                    {/* <NavDropdown title="Stops">
+                        <NavDropdown.Item as={Link} to={`/`}><GiIcons.GiBusStop /> View Stops</NavDropdown.Item>
+                        <NavDropdown.Divider/>
+                        <NavDropdown.Item as={Link} to={`/`}><IoIcons5.IoCreate /> Create Stops</NavDropdown.Item>
+                    </NavDropdown> */}
+                    <Nav.Link as={Link} to={`/admin/email`}> Send Email</Nav.Link>
+                    <Nav.Link as={Link} to={`/`}> Upload Data</Nav.Link>
+                    <Nav.Link as={Link} to={`/parent?pageNum=1`}> Your Parent Portal</Nav.Link>
+
+                        <Navbar.Brand width="200" height="50">
+                        </Navbar.Brand>
+                    <Nav.Link as={Link} to={`/account`}> Account</Nav.Link>
+                    <Nav.Link onClick={props.logout}> Logout</Nav.Link>
+                    
+                </Nav>
+            </Navbar.Collapse>
+          </Navbar>
+      </div>
+  );
+}
+
+const mapStateToProps = state => ({
+});
+
+export default connect(mapStateToProps, {logout})(AdminHeader);

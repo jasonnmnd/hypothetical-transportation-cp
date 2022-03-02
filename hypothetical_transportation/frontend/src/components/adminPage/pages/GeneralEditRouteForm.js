@@ -1,5 +1,5 @@
 import React from 'react';
-import Header from '../../header/Header';
+import Header from '../../header/AdminHeader';
 import { Container, Form, Button, Alert } from 'react-bootstrap';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';

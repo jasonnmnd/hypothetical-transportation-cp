@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Header from '../../header/Header';
+import Header from '../../header/AdminHeader';
 import "../adminPage.css";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import DeleteModal from '../components/modals/DeleteModal';

@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import "../NEWadminPage.css"
-import Header from "../../header/Header";
+import Header from "../../header/AdminHeader";
 import { getUser, updateUser } from "../../../actions/users";
 import { register } from "../../../actions/auth";
 import AssistedLocationMap from "../../maps/AssistedLocationMap";

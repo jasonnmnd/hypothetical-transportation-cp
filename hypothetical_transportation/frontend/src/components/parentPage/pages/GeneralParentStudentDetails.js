@@ -9,7 +9,7 @@ import { getStudentInfo,getInRangeStop } from '../../../actions/students';
 import { Container, Card, Button, Row, Col, Form } from 'react-bootstrap';
 import GeneralAdminTableView from "../../adminPage/components/views/GeneralAdminTableView";
 import isAdmin from "../../../utils/user";
-import Header from "../../header/Header";
+import Header from "../../header/AdminHeader";
 import MapComponent from "../../maps/MapComponent";
 import { InfoWindow } from "@react-google-maps/api";
 import IconLegend from "../../common/IconLegend";

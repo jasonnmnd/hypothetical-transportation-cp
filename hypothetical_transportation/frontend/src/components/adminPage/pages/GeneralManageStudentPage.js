@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Header from '../../header/Header';
+import Header from '../../header/AdminHeader';
 import "../adminPage.css";
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { connect } from 'react-redux';

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import ParentHeader from "../header/ParentHeader";
-import Header from "../header/Header";
+import Header from "../header/AdminHeader";
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
