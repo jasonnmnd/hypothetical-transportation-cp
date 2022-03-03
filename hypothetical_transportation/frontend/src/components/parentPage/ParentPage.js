@@ -10,7 +10,7 @@ import { getStudents } from '../../actions/students';
 import GeneralParentTableView from "./views/GeneralParentTableView";
 import { Container, Row, Col } from 'react-bootstrap';
 import GeneralAdminTableView from "../adminPage/components/views/GeneralAdminTableView";
-
+import getType from "../../utils/user2";
 function ParentPage(props) {
 
   const title = "Students"
@@ -63,7 +63,7 @@ function ParentPage(props) {
         // </div>
         <div>
           {
-            isAdmin(props.user) ? <Header></Header> : <ParentHeader></ParentHeader>
+            getType(props.user)!=="parent" ? <Header></Header> : <ParentHeader></ParentHeader>
           }
           <Container>
               <div className="shadow-sm p-3 mb-5 bg-white rounded d-flex flex-row justify-content-center">

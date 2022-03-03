@@ -6,6 +6,7 @@ import django.contrib.postgres.fields.citext
 import django.core.validators
 from django.db import migrations, models
 import django.db.models.deletion
+from django.contrib.postgres.operations import CITextExtension
 
 
 class Migration(migrations.Migration):
@@ -17,6 +18,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        CITextExtension(),
         migrations.CreateModel(
             name='Route',
             fields=[
