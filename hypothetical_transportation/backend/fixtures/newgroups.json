@@ -1,0 +1,17 @@
+[{
+    "model": "auth.group",
+    "pk": 3,
+    "fields": {
+        "name": "SchoolStaff",
+        "permissions": []
+    }
+},
+{
+    "model": "auth.group",
+    "pk": 4,
+    "fields": {
+        "name": "Driver",
+        "permissions": []
+    }
+}
+]
