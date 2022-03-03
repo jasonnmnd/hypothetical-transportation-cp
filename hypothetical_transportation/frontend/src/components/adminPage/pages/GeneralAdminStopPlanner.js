@@ -11,6 +11,7 @@ import { Container, Card, Button, Form } from 'react-bootstrap';
 import { updateStop } from '../../../actions/stopplanner';
 import { getStopByRoute } from '../../../actions/stops';
 import '../NEWadminPage.css';
+import getType from '../../../utils/user2';
 
 //url: stop_planner/:route_id
 function GeneralAdminStopPlanner(props) {
@@ -49,7 +50,7 @@ function GeneralAdminStopPlanner(props) {
         <Card>
             <Card.Header as="h5">Route</Card.Header>
             <Card.Body>
-              <Link to={`/admin/school/${param.route_id}`}>
+              <Link to={`/${getType(props.user)}/school/${param.route_id}`}>
                   <Button variant='yellow'><h3>{props.route.name}</h3></Button>
               </Link>
             </Card.Body>
@@ -92,6 +93,7 @@ GeneralAdminStopPlanner.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
+  user: state.auth.user,
   route: state.routes.viewedRoute, 
   studentsInRoute:state.routeplanner.studentsInRoute.results,
   stops: state.stop.stops.results,

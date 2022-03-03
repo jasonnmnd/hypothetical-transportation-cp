@@ -16,7 +16,8 @@ import MapComponent from '../../maps/MapComponent';
 import { getStudentPin, addSchoolPin, getStopPin } from '../../../utils/planner_maps';
 import {InfoWindow} from '@react-google-maps/api';
 import IconLegend from '../../common/IconLegend';
-import isAdmin from '../../../utils/user'
+import isAdmin from '../../../utils/user';
+import getType from '../../../utils/user2';
 
 function GeneralAdminRouteDetails(props) {
 
@@ -33,7 +34,7 @@ function GeneralAdminRouteDetails(props) {
     //Replace with API call to delete school and all its associated routes/students
     //Route back to students page
     props.deleteRoute(parseInt(param.id));
-    navigate(`/admin/routes/`);
+    navigate(`/${getType(props.user)}/routes/`);
   }
   
   const navigate = useNavigate();
@@ -133,7 +134,7 @@ function GeneralAdminRouteDetails(props) {
         <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
             <Row>
                 <Col>
-                    <Link to={`/admin/route/plan/${props.route.school.id}?route=${props.route.id}&view=0`}>
+                    <Link to={`/${getType(props.user)}/route/plan/${props.route.school.id}?route=${props.route.id}&view=0`}>
                         <Button variant="yellowLong" size="lg">Route Planner</Button>
                     </Link>
                 </Col>
@@ -154,7 +155,7 @@ function GeneralAdminRouteDetails(props) {
                 </Col>
                 
                 <Col>
-                    <Link to={`/admin/route_email/${props.route.school.id}/${props.route.id}`}>
+                    <Link to={`/${getType(props.user)}/route_email/${props.route.school.id}/${props.route.id}`}>
                         <Button variant="yellowLong" size="lg">Send Route-wide Email</Button>
                     </Link>
                 </Col>
@@ -198,7 +199,7 @@ function GeneralAdminRouteDetails(props) {
         <Card>
             <Card.Header as="h5">School </Card.Header>
             <Card.Body>
-                <Link to={`/admin/school/${props.route.school.id}`}>
+                <Link to={`/${getType(props.user)}/school/${props.route.school.id}`}>
                     <Button variant='yellow'><h5>{props.route.school.name}</h5></Button>
                 </Link>
             </Card.Body>

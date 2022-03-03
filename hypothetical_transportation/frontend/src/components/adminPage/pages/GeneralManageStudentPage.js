@@ -11,7 +11,7 @@ import { getRoutesByID } from '../../../actions/routes';
 import { Form, Button, Row, Col, Container, InputGroup, ButtonGroup, ToggleButton, Card} from 'react-bootstrap';
 import { resetPostedUser } from '../../../actions/users';
 import AssistedLocationMap from "../../maps/AssistedLocationMap";
-
+import getType from '../../../utils/user2';
 
 function GeneralManageStudentPage(props) {
     const param = useParams()
@@ -65,7 +65,7 @@ function GeneralManageStudentPage(props) {
           }
           props.addStudentWithParent(createVals, obj)
         }
-        navigate(`/admin/students/`)
+        navigate(`/${getType(props.user)}/students/`)
       }
       else{
         if(obj.guardian!=="new"){
@@ -81,7 +81,7 @@ function GeneralManageStudentPage(props) {
           }
           props.updateStudentWithParent(createVals, obj)
         }
-        navigate(`/admin/students/`)
+        navigate(`/${getType(props.user)}/students/`)
       }
     }
     setValidated(true);

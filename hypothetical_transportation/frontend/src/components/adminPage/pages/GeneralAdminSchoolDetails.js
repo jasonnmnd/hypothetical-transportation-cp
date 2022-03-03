@@ -10,8 +10,9 @@ import { getStudents } from '../../../actions/students';
 import { getRoutes } from '../../../actions/routes';
 import GeneralAdminTableView from '../components/views/GeneralAdminTableView';
 import { filterObjectForKeySubstring } from '../../../utils/utils';
-import { Container, Card, Button, Row, Col } from 'react-bootstrap'
-import isAdmin from '../../../utils/user'
+import { Container, Card, Button, Row, Col } from 'react-bootstrap';
+import isAdmin from '../../../utils/user';
+import getType from '../../../utils/user2'
 
 function GeneralAdminSchoolDetails(props) {
   const navigate = useNavigate();
@@ -24,7 +25,7 @@ function GeneralAdminSchoolDetails(props) {
   const handleConfirmDelete = (schoolName) => {
     if (props.school.name === schoolName) {
       props.deleteSchool(param.id)
-      navigate(`/admin/schools/`)
+      navigate(`/${getType(props.user)}/schools/`)
     } else {
       alert("School name does not match")
     }
@@ -76,7 +77,7 @@ function GeneralAdminSchoolDetails(props) {
         <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
             <Row>
               <Col>
-                <Link to={`/admin/edit/school/${props.school.id}`}>
+                <Link to={`/${getType(props.user)}/edit/school/${props.school.id}`}>
                   <Button variant="yellowLong" size="lg">Edit School</Button>
                 </Link>
               </Col>
@@ -91,14 +92,14 @@ function GeneralAdminSchoolDetails(props) {
             <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
             <Row>
               <Col>
-                <Link to={`/admin/route/plan/${props.school.id}?view=0&create=true`}>
+                <Link to={`/${getType(props.user)}/route/plan/${props.school.id}?view=0&create=true`}>
                   <Button variant="yellowLong" size="lg">New/Edit Route for this School</Button>
                 </Link>
 
               </Col>
 
               <Col>
-                <Link to={`/admin/school_email/${props.school.id}`}>
+                <Link to={`/${getType(props.user)}/school_email/${props.school.id}`}>
                   <Button variant="yellowLong" size="lg">Send School-wide Email</Button>
                 </Link>
               </Col>

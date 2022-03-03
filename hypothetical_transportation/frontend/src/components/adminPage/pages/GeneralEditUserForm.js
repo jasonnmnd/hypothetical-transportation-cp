@@ -12,6 +12,7 @@ import { getItemCoord } from "../../../utils/geocode";
 import PageNavigateModal from "../components/modals/PageNavigateModal";
 import { resetPostedUser } from "../../../actions/users";
 import { getSchools } from "../../../actions/schools";
+import getType from "../../../utils/user2";
 
 //Edit/New user form
 function GeneralEditUserForm(props) {
@@ -93,12 +94,10 @@ function GeneralEditUserForm(props) {
         } else {
             if(props.action == "edit"){
                 props.updateUser(createVals, param.id).then(console.log("EDITED"));
-                // setOpenModal(true)
-                navigate(`/admin/users`)
+                navigate(`/${getType(props.user)}/users`)
             }
             else{
                 props.register(createVals);
-                // navigate(`/admin/new_student`)
                 setOpenModal(true)
             }
         }
@@ -124,12 +123,12 @@ function GeneralEditUserForm(props) {
     //   }
 
     const navToNewStudent = ()=>{
-        navigate(`/admin/new_student`);
+        navigate(`/${getType(props.user)}/new_student`);
     }
 
     const navToUsers = ()=>{
         resetPostedUser();
-        navigate(`/admin/users`);
+        navigate(`/${getType(props.user)}/users`);
     }
 
     const [val, setVal] = useState([])
@@ -294,6 +293,7 @@ GeneralEditUserForm.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
+    user: state.auth.user,
     curUser: state.users.viewedUser,
     schoollist: state.schools.schools.results,
 });

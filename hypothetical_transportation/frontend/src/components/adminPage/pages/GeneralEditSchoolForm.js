@@ -8,7 +8,7 @@ import AssistedLocationMap from "../../maps/AssistedLocationMap";
 import { getSchool, updateSchool, addSchool } from "../../../actions/schools";
 import { Container, Form, Button, Row, Col } from 'react-bootstrap';
 import { getItemCoord } from "../../../utils/geocode";
-
+import getType from "../../../utils/user2";
 //input1: title of form
 //input2: list of fields?
 //input3: a typed object matching the fields
@@ -111,7 +111,7 @@ function GeneralEditSchoolForm(props) {
                     bus_departure_time: busDepartureTime.hour + ":" + busDepartureTime.minute + ":00"
                 })
             }
-            navigate(`/admin/schools`)
+            navigate(`/${getType(props.user)}/schools`)
         }
     
         setValidated(true);
@@ -235,6 +235,7 @@ GeneralEditSchoolForm.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
+    user: state.auth.user,
     curSchool: state.schools.viewedSchool
 
 });

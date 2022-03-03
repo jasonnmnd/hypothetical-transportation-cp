@@ -6,8 +6,9 @@ import DeleteModal from '../components/modals/DeleteModal';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { getStudentInfo, deleteStudent } from '../../../actions/students';
-import { Container, Card, Button, Row, Col, Alert, ButtonGroup } from 'react-bootstrap'
-import isAdmin from '../../../utils/user'
+import { Container, Card, Button, Row, Col, Alert, ButtonGroup } from 'react-bootstrap';
+import isAdmin from '../../../utils/user';
+import getType from '../../../utils/user2';
 
 function GeneralAdminStudentDetails(props) {
   const navigate = useNavigate();
@@ -18,7 +19,7 @@ function GeneralAdminStudentDetails(props) {
 
   const handleConfirmDelete = () => {
     props.deleteStudent(param.id);
-    navigate(`/admin/students/`)
+    navigate(`/${getType(props.user)}/students/`)
   }
 
   useEffect(() => {
@@ -34,7 +35,7 @@ function GeneralAdminStudentDetails(props) {
             <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
                 <Row>
                     <Col>
-                        <Link to={`/admin/edit_student/${student.id}`}>
+                        <Link to={`/${getType(props.user)}/edit_student/${student.id}`}>
                             <Button variant="yellowLong" size="lg">Edit Student</Button>
                         </Link>
                     </Col>
@@ -74,7 +75,7 @@ function GeneralAdminStudentDetails(props) {
             <Card>
                 <Card.Header as="h5">School </Card.Header>
                 <Card.Body>
-                    <Link to={`/admin/school/${student.school.id}`}>
+                    <Link to={`/${getType(props.user)}/school/${student.school.id}`}>
                         <Button variant='yellow'><h5>{student.school.name}</h5></Button>
                     </Link>
                 </Card.Body>
@@ -83,7 +84,7 @@ function GeneralAdminStudentDetails(props) {
             <Card>
                 <Card.Header as="h5">Parent </Card.Header>
                 <Card.Body>
-                    <Link to={`/admin/user/${student.guardian.id}`}>
+                    <Link to={`/${getType(props.user)}/user/${student.guardian.id}`}>
                         <Button variant='yellow'><h5>{student.guardian.full_name}</h5></Button>
                     </Link>
                 </Card.Body>
@@ -94,7 +95,7 @@ function GeneralAdminStudentDetails(props) {
                 <Card.Body>
                     <Container className='d-flex flex-column' style={{gap: "20px"}}>
                     {(student.routes!==undefined && student.routes!==null) ?
-                        <Link to={`/admin/route/${student.routes.id}`}>
+                        <Link to={`/${getType(props.user)}/route/${student.routes.id}`}>
                             <Button variant='yellow'><h5>{student.routes.name}</h5></Button>
                         </Link>:
                         <Alert variant="danger">
@@ -104,7 +105,7 @@ function GeneralAdminStudentDetails(props) {
                             </p>
                             <hr />
                             {isAdmin(props.user)?
-                            <Link to={`/admin/school/${student.school.id}`}>
+                            <Link to={`/${getType(props.user)}/school/${student.school.id}`}>
                                 <Button variant='yellow'>View School Details Page for Route Planner</Button>
                             </Link>:<></>}
                         </Alert>
@@ -119,7 +120,7 @@ function GeneralAdminStudentDetails(props) {
                             </p>
                             <hr />
                             {isAdmin(props.user)?
-                            <Link to={`/admin/route/plan/${student.school.id}?route=${student.routes.id}&view=1`}>
+                            <Link to={`/${getType(props.user)}/route/plan/${student.school.id}?route=${student.routes.id}&view=1`}>
                                 <Button variant='yellow'>Plan a Stop</Button>
                             </Link>:<></>
                             }

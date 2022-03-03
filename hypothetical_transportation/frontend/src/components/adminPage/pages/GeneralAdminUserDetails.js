@@ -10,6 +10,7 @@ import { getStudents } from '../../../actions/students';
 import GeneralAdminTableView from '../components/views/GeneralAdminTableView';
 import isAdmin from '../../../utils/user';
 import { Container, Card, Button, Row, Col } from 'react-bootstrap'
+import getType from '../../../utils/user2'
 
 function AdminUserDetails(props) {
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ function AdminUserDetails(props) {
 
   const handleConfirmDelete = () => {
     props.deleteUser(parseInt(param.id))
-    navigate(`/admin/users/`)
+    navigate(`/${getType(props.curUser)}/users/`)
   }
 
 
@@ -52,7 +53,7 @@ function AdminUserDetails(props) {
         <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
             <Row>
                 <Col>
-                    <Link to={`/admin/edit/user/${props.user.id}`}>
+                    <Link to={`/${getType(props.curUser)}/edit/user/${props.user.id}`}>
                         <Button variant="yellowLong" size="lg">Edit User</Button>
                     </Link>
                 </Col>
