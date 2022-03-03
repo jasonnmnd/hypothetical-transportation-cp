@@ -107,48 +107,54 @@ function GeneralAdminSchoolDetails(props) {
             </Row>
         </Container>
         </> : <></>}
-        
-        <Card>
-            <Card.Header as="h5">Name</Card.Header>
-            <Card.Body>
-                <Card.Text>{props.school.name}</Card.Text>
-            </Card.Body>
-        </Card>
+        <Row  style={{gap: "10px"}}> 
+          <Card as={Col} style={{padding: "0px"}}>
+              <Card.Header as="h5">Name</Card.Header>
+              <Card.Body>
+                  <Card.Text>{props.school.name}</Card.Text>
+              </Card.Body>
+          </Card>
 
-        <Card>
-            <Card.Header as="h5">Address </Card.Header>
-            <Card.Body>
-                <Card.Text>{props.school.address}</Card.Text>
-            </Card.Body>
-        </Card>
+          <Card as={Col} style={{padding: "0px"}}>
+              <Card.Header as="h5">Address </Card.Header>
+              <Card.Body>
+                  <Card.Text>{props.school.address}</Card.Text>
+              </Card.Body>
+          </Card>
+        </Row>
+        <Row  style={{gap: "10px"}}> 
+          <Card as={Col} style={{padding: "0px"}}>
+              <Card.Header as="h5">Bus Arrival Time </Card.Header>
+              <Card.Body>
+                  <Card.Text>{props.school.bus_arrival_time}</Card.Text>
+              </Card.Body>
+          </Card>
 
-        <Card>
-            <Card.Header as="h5">Bus Arrival Time </Card.Header>
-            <Card.Body>
-                <Card.Text>{props.school.bus_arrival_time}</Card.Text>
-            </Card.Body>
-        </Card>
+          <Card as={Col} style={{padding: "0px"}}>
+              <Card.Header as="h5">Bus Departure Time </Card.Header>
+              <Card.Body>
+                  <Card.Text>{props.school.bus_departure_time}</Card.Text>
+              </Card.Body>
+          </Card>
+        </Row>
 
-        <Card>
-            <Card.Header as="h5">Bus Departure Time </Card.Header>
-            <Card.Body>
-                <Card.Text>{props.school.bus_departure_time}</Card.Text>
-            </Card.Body>
-        </Card>
+        <Row  style={{gap: "10px"}}> 
+          <Card as={Col} style={{padding: "0px"}}>
+              <Card.Header as="h5">Associated Students </Card.Header>
+                  <Card.Body>
+                      <GeneralAdminTableView values={props.students} tableType='student' title='Associated Students' search={STUDENT_PREFIX} pagination={STUDENT_PREFIX} totalCount={props.studentCount}/>
+                  </Card.Body>
+          </Card>
+        </Row>
 
-        <Card>
-            <Card.Header as="h5">Associated Students </Card.Header>
-                <Card.Body>
-                    <GeneralAdminTableView values={props.students} tableType='student' title='Associated Students' search={STUDENT_PREFIX} pagination={STUDENT_PREFIX} totalCount={props.studentCount}/>
-                </Card.Body>
-        </Card>
-
-        <Card>
-            <Card.Header as="h5">Associated Routes </Card.Header>
-            <Card.Body>
-                <GeneralAdminTableView values={props.routes} tableType='route' title='Associated Routes' search={ROUTE_PREFIX} pagination={ROUTE_PREFIX} totalCount={props.routeCount}/>
-            </Card.Body>
-        </Card>
+        <Row  style={{gap: "10px"}}> 
+          <Card as={Col} style={{padding: "0px"}}>
+              <Card.Header as="h5">Associated Routes </Card.Header>
+              <Card.Body>
+                  <GeneralAdminTableView values={props.routes} tableType='route' title='Associated Routes' search={ROUTE_PREFIX} pagination={ROUTE_PREFIX} totalCount={props.routeCount}/>
+              </Card.Body>
+          </Card>
+        </Row>
       </Container>
 
       <br></br>
