@@ -49,48 +49,54 @@ function GeneralAdminStudentDetails(props) {
             </Container>
             :<></>}
 
-            
-            
-            <Card>
+            <Row  style={{gap: "10px"}}>
+            <Card as={Col} style={{padding: "0px"}}>
                 <Card.Header as="h5">Name</Card.Header>
                 <Card.Body>
                     <Card.Text>{student.full_name}</Card.Text>
                 </Card.Body>
             </Card>
 
-            <Card>
+            <br></br>
+            <Card as={Col} style={{padding: "0px"}}>
                 <Card.Header as="h5">StudentID </Card.Header>
                 <Card.Body>
                     <Card.Text>{student.student_id}</Card.Text>
                 </Card.Body>
             </Card>
+            </Row>
 
-            <Card>
+            <Row  style={{gap: "10px"}}>
+            <Card as={Col} style={{padding: "0px"}}>
+                <Card.Header as="h5">Parent </Card.Header>
+                <Card.Body>
+                    <Link to={`/${getType(props.user)}/user/${student.guardian.id}`}>
+                        <h5>{student.guardian.full_name}</h5>
+                    </Link>
+                </Card.Body>
+            </Card>
+
+            <br></br>
+            <Card as={Col} style={{padding: "0px"}}>
                 <Card.Header as="h5">Address </Card.Header>
                 <Card.Body>
                     <Card.Text>{student.guardian.address}</Card.Text>
                 </Card.Body>
             </Card>
-
-            <Card>
+            </Row>
+            <Row style={{gap: "10px"}}>
+            <Card as={Col} style={{padding: "0px"}}>
                 <Card.Header as="h5">School </Card.Header>
                 <Card.Body>
                     <Link to={`/${getType(props.user)}/school/${student.school.id}`}>
-                        <Button variant='yellow'><h5>{student.school.name}</h5></Button>
+                        <h5>{student.school.name}</h5>
                     </Link>
                 </Card.Body>
             </Card>
 
-            <Card>
-                <Card.Header as="h5">Parent </Card.Header>
-                <Card.Body>
-                    <Link to={`/${getType(props.user)}/user/${student.guardian.id}`}>
-                        <Button variant='yellow'><h5>{student.guardian.full_name}</h5></Button>
-                    </Link>
-                </Card.Body>
-            </Card>
+            <br></br>
 
-            <Card>
+            <Card as={Col} style={{padding: "0px"}}>
                 <Card.Header as="h5">Route</Card.Header>
                 <Card.Body>
                     <Container className='d-flex flex-column' style={{gap: "20px"}}>
@@ -106,7 +112,7 @@ function GeneralAdminStudentDetails(props) {
                             <hr />
                             {isAdmin(props.user)?
                             <Link to={`/${getType(props.user)}/school/${student.school.id}`}>
-                                <Button variant='yellow'>View School Details Page for Route Planner</Button>
+                                View School Details Page for Route Planner
                             </Link>:<></>}
                         </Alert>
                     }
@@ -121,7 +127,7 @@ function GeneralAdminStudentDetails(props) {
                             <hr />
                             {isAdmin(props.user)?
                             <Link to={`/${getType(props.user)}/route/plan/${student.school.id}?route=${student.routes.id}&view=1`}>
-                                <Button variant='yellow'>Plan a Stop</Button>
+                                Plan a Stop
                             </Link>:<></>
                             }
                         </Alert>:<></>
@@ -130,6 +136,7 @@ function GeneralAdminStudentDetails(props) {
                     </Container>
                 </Card.Body>
             </Card>
+            </Row>
         </Container>
 
         <br></br>
