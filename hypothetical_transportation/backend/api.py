@@ -12,18 +12,19 @@ from datetime import time, datetime
 
 from .models import School, Route, Student, Stop
 from .serializers import UserSerializer, StudentSerializer, RouteSerializer, SchoolSerializer, FormatStudentSerializer, \
-    FormatRouteSerializer, FormatUserSerializer, EditUserSerializer, StopSerializer, CheckInrangeSerializer
+    FormatRouteSerializer, FormatUserSerializer, EditUserSerializer, StopSerializer, CheckInrangeSerializer, \
+    LoadUserSerializer, LoadModelDataSerializer
 from .search import DynamicSearchFilter
 from .customfilters import StudentCountShortCircuitFilter
 from .permissions import is_admin, IsAdminOrReadOnly, IsAdmin
 from django.shortcuts import get_object_or_404
 from .geo_utils import get_straightline_distance, LEN_OF_MILE
 
-
 MAX_STOPS_IN_ONE_CALL = 1
 
 os.environ['DISTANCE_MATRIX_API_URL'] = 'https://maps.googleapis.com/maps/api/distancematrix/json'
 os.environ['DISTANCE_MATRIX_API_KEY'] = 'AIzaSyAvdhlh9wi-jrCK8fmHRChW5qhIpHByv7U'
+
 
 def get_filter_dict(model):
     """
@@ -112,7 +113,7 @@ def get_information_related_to_a_stop(stop: Stop):
     matrices = []
     stops = Stop.objects.filter(route=route).distinct().order_by('stop_number')
     if len(stops) == 0:
-        return 0,0,0,0, False # this is stupid
+        return 0, 0, 0, 0, False  # this is stupid
     stop_count = 1
     starting = True
 
@@ -145,7 +146,7 @@ def update_bus_times_for_stops_related_to_stop(stop: Stop):
     school_start_time, school_letout_time, stops, matrices, actions = get_information_related_to_a_stop(stop)
     if not actions:
         return response
-    
+
     times = {}
     starting = True
     for group in matrices:
@@ -157,48 +158,47 @@ def update_bus_times_for_stops_related_to_stop(stop: Stop):
         else:
             times['rows'] = times['rows'] + res['rows']
 
-
     school_to_stop_1 = times['rows'][0]['elements'][1]['duration']['value']
-    stop_n_to_school = times['rows'][len(stops)+len(matrices)-1]['elements'][0]['duration']['value']
+    stop_n_to_school = times['rows'][len(stops) + len(matrices) - 1]['elements'][0]['duration']['value']
     # setup, handle the edge case of leaving the school
     desc_times, asc_times = [], [school_to_stop_1]
     running_desc_time, running_asc_time = 0, school_to_stop_1
     call_count = 0
     for stop_num in range(1, len(stops)):
-        if (stop_num-1)%MAX_STOPS_IN_ONE_CALL==0 and stop_num>1:
-            call_count = call_count+1
-        if stop_num%(MAX_STOPS_IN_ONE_CALL)==0:
-            prev_element = MAX_STOPS_IN_ONE_CALL-1
-            prev_row = stop_num+call_count
+        if (stop_num - 1) % MAX_STOPS_IN_ONE_CALL == 0 and stop_num > 1:
+            call_count = call_count + 1
+        if stop_num % (MAX_STOPS_IN_ONE_CALL) == 0:
+            prev_element = MAX_STOPS_IN_ONE_CALL - 1
+            prev_row = stop_num + call_count
             next_element = 1
-            next_row = stop_num+call_count+1
+            next_row = stop_num + call_count + 1
         else:
-            prev_element = stop_num%MAX_STOPS_IN_ONE_CALL-1
-            prev_row = stop_num+call_count
-            next_row = stop_num+call_count
-            next_element = (stop_num+call_count)%(MAX_STOPS_IN_ONE_CALL)+1
-            
-        prev_stop = times['rows'][prev_row]['elements'][prev_element]['duration']['value']
-        running_desc_time = running_desc_time + prev_stop # this is stop i to stop i-1
-        desc_times.append(running_desc_time)
-        
-        next_stop = times['rows'][next_row]['elements'][next_element]['duration']['value']
-        running_asc_time = running_asc_time + next_stop # this is stop i to stop i+1        
-        asc_times.append(running_asc_time)   
+            prev_element = stop_num % MAX_STOPS_IN_ONE_CALL - 1
+            prev_row = stop_num + call_count
+            next_row = stop_num + call_count
+            next_element = (stop_num + call_count) % (MAX_STOPS_IN_ONE_CALL) + 1
 
-    if len(stops)==1:
+        prev_stop = times['rows'][prev_row]['elements'][prev_element]['duration']['value']
+        running_desc_time = running_desc_time + prev_stop  # this is stop i to stop i-1
+        desc_times.append(running_desc_time)
+
+        next_stop = times['rows'][next_row]['elements'][next_element]['duration']['value']
+        running_asc_time = running_asc_time + next_stop  # this is stop i to stop i+1
+        asc_times.append(running_asc_time)
+
+    if len(stops) == 1:
         desc_times.append(times['rows'][1]['elements'][0]['duration']['value'])
     else:
         running_desc_time = running_desc_time + stop_n_to_school
         desc_times.append(running_desc_time)
-    
-    dropoff_times = [sec_to_datetime_h_m_s((school_letout_time+time)%(24*3600)) for time in asc_times]
+
+    dropoff_times = [sec_to_datetime_h_m_s((school_letout_time + time) % (24 * 3600)) for time in asc_times]
 
     pickup_times = []
     for time in desc_times:
-        time_in_day = sec_to_datetime_h_m_s((school_start_time-time)%(24*3600))
+        time_in_day = sec_to_datetime_h_m_s((school_start_time - time) % (24 * 3600))
         pickup_times.append(time_in_day)
-        
+
     stop_num = 0
     for stop in stops:
         stop.pickup_time = pickup_times[stop_num]
@@ -417,3 +417,32 @@ class StudentViewSet(viewsets.ModelViewSet):
     def fields(self, request):
         content = parse_repr(repr(StudentSerializer()))
         return Response(content)
+
+
+class VerifyLoadedDataAPI(generics.GenericAPIView):
+    serializer_class = LoadModelDataSerializer
+    permission_classes = [
+        permissions.AllowAny
+    ]
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid()
+        print(serializer.errors)
+        print(serializer.validated_data)
+        return Response(serializer.errors)
+
+
+class SubmitLoadedDataAPI(generics.GenericAPIView):
+    serializer_class = LoadModelDataSerializer
+    permission_classes = [
+        permissions.AllowAny
+    ]
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            print(serializer.validated_data)
+            content = {}
+            return Response(content, status.HTTP_200_OK)
+        return Response(serializer.errors)

@@ -13,7 +13,7 @@ class GroupSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = ('id', 'email', 'full_name', 'address', 'latitude', 'longitude', 'groups')
+        fields = ('id', 'email', 'full_name', 'address', 'latitude', 'longitude', 'groups', 'managed_schools')
         # fields = ('email', 'password')
 
     def validate(self, data):
@@ -23,7 +23,7 @@ class UserSerializer(serializers.ModelSerializer):
 class EditUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = ('id', 'email', 'full_name', 'address', 'latitude', 'longitude', 'groups')
+        fields = ('id', 'email', 'full_name', 'address', 'latitude', 'longitude', 'groups', 'managed_schools')
 
 
 class FormatUserSerializer(UserSerializer):
@@ -46,7 +46,6 @@ class RouteSerializer(serializers.ModelSerializer):
 
 
 class StopSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Stop
         fields = '__all__'
@@ -112,3 +111,22 @@ class StudentLocationSerializer(serializers.Serializer):
 class CheckInrangeSerializer(serializers.Serializer):
     stops = StopLocationSerializer(many=True)
     students = StudentLocationSerializer(many=True)
+
+
+class LoadStudentSerializer(serializers.ModelSerializer):
+    school_name = serializers.CharField(required=True)
+
+    class Meta:
+        model = Student
+        fields = ("full_name", "student_id", "school_name")
+
+
+class LoadUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = get_user_model()
+        fields = ("email", "full_name", "address", "phone_number")
+
+
+class LoadModelDataSerializer(serializers.Serializer):
+    users = LoadUserSerializer(many=True, required=False)
+    students = LoadStudentSerializer(many=True, required=False)
