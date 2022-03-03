@@ -21,7 +21,6 @@ function GeneralAdminEmailPage(props) {
     const [currRoute, setCurrRoute] = useState("");
     const [emailSelection, setEmailSelection] = useState(1);
     const [thisIsRouteAnnouncement, setThisIsRouteAnnouncement] = React.useState(false);
-    const [openInstruc, setOpenInstruc] = useState(false);
 
     const ROUTE_PREFIX = "rou";
     let [searchParams, setSearchParams] = useSearchParams();
@@ -202,37 +201,6 @@ function GeneralAdminEmailPage(props) {
         <Container className="container-main">
             <div className="shadow-sm p-3 mb-5 bg-white rounded d-flex flex-row justify-content-center">
                 <h1>Send Email</h1>
-            </div>
-
-            <div>
-            <div className='d-flex flex-row justify-content-center'>
-                <Button
-                onClick={() => setOpenInstruc(!openInstruc)}
-                aria-controls="example-collapse-text"
-                aria-expanded={openInstruc}
-                variant="instrucToggle"
-                >
-                    Email Instructions {openInstruc ? "▲" : "▼"}
-                </Button>
-            </div>
-            
-            <br></br>
-            <Collapse in={openInstruc}>
-                <Card>
-                    <Card.Body>
-                    <div id="example-collapse-text">
-                        <div className='d-flex flex-row justify-content-center'>
-                        <strong>Welcome to the email interface.</strong>
-                        </div>
-                        <p>Within this interface, you can send emails to different groups of users.</p>
-                        <p>You can choose to send the email to all parents, parents whose children belong to a specific school, or parents whose children belong to a specific route within a specific school by using the toggle selection and dropdown menu.</p>
-                        <p>Normal general announcement will contain only the subject line and the email body you input.</p>
-                        <p>Route announcement will include an additional attachment that compiles all information a user will see on their parent interface into text form. Check the box to include route announcement information to achieve that.</p>
-
-                    </div>
-                    </Card.Body>
-                </Card>
-            </Collapse>
             </div>
             <br></br>
             <Form className="shadow-lg p-3 mb-5 bg-white rounded">

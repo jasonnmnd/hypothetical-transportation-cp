@@ -7,20 +7,20 @@ import ParentPage from '../parentPage/ParentPage';
 import GeneralEditUserForm from "../adminPage/pages/GeneralEditUserForm";
 import GeneralEditSchoolForm from "../adminPage/pages/GeneralEditSchoolForm";
 
-import GeneralAdminRoutesPage from "../adminPage/pages/GeneralAdminRoutesPage";
-import GeneralAdminSchoolsPage from "../adminPage/pages/GeneralAdminSchoolsPage";
-import GeneralAdminStudentsPage from "../adminPage/pages/GeneralAdminStudentsPage";
-import GeneralAdminUsersPage from "../adminPage/pages/GeneralAdminUsersPage";
+import GeneralAdminRoutesPage from "../adminPage/pages/GeneralRoutesPage";
+import GeneralAdminSchoolsPage from "../adminPage/pages/GeneralSchoolsPage";
+import GeneralAdminStudentsPage from "../adminPage/pages/GeneralStudentsPage";
+import GeneralAdminUsersPage from "../adminPage/pages/GeneralUsersPage";
 
-import GeneralAdminUserDetails from "../adminPage/pages/GeneralAdminUserDetails";
-import GeneralAdminStudentDetails from "../adminPage/pages/GeneralAdminStudentDetails";
-import GeneralAdminSchoolDetails from "../adminPage/pages/GeneralAdminSchoolDetails";
-import GeneralAdminRouteDetails from "../adminPage/pages/GeneralAdminRouteDetails";
-import GeneralAdminStopDetails from '../adminPage/pages/GeneralAdminStopDetails';
+import GeneralAdminUserDetails from "../adminPage/pages/GeneralUserDetails";
+import GeneralAdminStudentDetails from "../adminPage/pages/GeneralStudentDetails";
+import GeneralAdminSchoolDetails from "../adminPage/pages/GeneralSchoolDetails";
+import GeneralAdminRouteDetails from "../adminPage/pages/GeneralRouteDetails";
+import GeneralAdminStopDetails from '../adminPage/pages/GeneralStopDetails';
 
 import GeneralManageStudentPage from "../adminPage/pages/GeneralManageStudentPage";
 
-import GeneralAdminEmailPage from '../adminPage/pages/GeneralAdminEmailPage';
+import GeneralAdminEmailPage from '../adminPage/pages/GeneralEmailPage';
 
 import GeneralResetPasswordPage from "../accountPage/GeneralResetPasswordPage";
 import AdminPage from "../adminPage/AdminPage";
