@@ -131,105 +131,111 @@ function GeneralAdminRouteDetails(props) {
         <Container className="container-main d-flex flex-column" style={{gap: "20px"}}>
         {isAdmin(props.user) ? 
         <>
-        <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
-            <Row>
-                <Col>
-                    <Link to={`/${getType(props.user)}/route/plan/${props.route.school.id}?route=${props.route.id}&view=0`}>
-                        <Button variant="yellowLong" size="lg">Route Planner</Button>
-                    </Link>
-                </Col>
+            <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
+                <Row>
+                    <Col>
+                        <Link to={`/${getType(props.user)}/route/plan/${props.route.school.id}?route=${props.route.id}&view=0`}>
+                            <Button variant="yellowLong" size="lg">Route Planner</Button>
+                        </Link>
+                    </Col>
 
-                <Col>
-                    <Button variant="yellowLong" size="lg" onClick={() => {
-                    setOpenModal(true);
-                    }}>Delete Route</Button>
-                </Col>
-            </Row>
-        </Container>
-        <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
-            <Row>
-                <Col>
-                    <Link to={`/print/${props.route.id}`} target="_blank">
-                        <Button variant="yellowLong" size="lg">Print Route Roster</Button>
-                    </Link>
-                </Col>
-                
-                <Col>
-                    <Link to={`/${getType(props.user)}/route_email/${props.route.school.id}/${props.route.id}`}>
-                        <Button variant="yellowLong" size="lg">Send Route-wide Email</Button>
-                    </Link>
-                </Col>
-            </Row>
-        </Container></>: <></>
-        }
-        
-        <Card>
-            <Card.Header as="h5">Name</Card.Header>
-            <Card.Body>
-                <Card.Text>{props.route.name}</Card.Text>
-                { props.route.is_complete ?
-                <></>
-                :
-                <Alert variant="danger">
-                {/* <Alert.Heading>Warning: This route is incomplete!</Alert.Heading> */}
-                <p>
-                    Warning: This route is incomplete! There are students on this route who currently do not have an in-range stop.
-                    Use the Stop Planner to plan stops for these student(s).
-                </p>
-                </Alert>
-                }
-            </Card.Body>
-        </Card>
-
-        <Card>
-            <Card.Header as="h5">Description </Card.Header>
-            <Card.Body>
-                <Form.Group className="mb-3" controlId="formGridDescription">
-                    <Form.Control 
-                    type="text"
-                    as="textarea"
-                    value={props.route.description}
-                    style={{height: '200px',pointerEvents: "none"}}
-                    readOnly
-                  />
-              </Form.Group>
-            </Card.Body>
-        </Card>
-
-        <Card>
-            <Card.Header as="h5">School </Card.Header>
-            <Card.Body>
-                <Link to={`/${getType(props.user)}/school/${props.route.school.id}`}>
-                    <Button variant='yellow'><h5>{props.route.school.name}</h5></Button>
-                </Link>
-            </Card.Body>
-        </Card>
-
-        <Card>
-            <Card.Header as="h5">Map View of School, Students, and Stops</Card.Header>
-            <Container className='d-flex flex-column justify-content-center' style={{marginTop: "20px"}}>
-                <IconLegend legendType='routeDetails'></IconLegend>
-                <Card.Body>
-                    {props.route.school.id===-1?
-                        <></>:
-                        <MapComponent pinData={pinData} otherMapComponents={extraComponents} center={{lng: Number(props.route.school.longitude),lat: Number(props.route.school.latitude)}}></MapComponent>}
-                </Card.Body>    
+                    <Col>
+                        <Button variant="yellowLong" size="lg" onClick={() => {
+                        setOpenModal(true);
+                        }}>Delete Route</Button>
+                    </Col>
+                </Row>
             </Container>
-        </Card>
+            <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
+                <Row>
+                    <Col>
+                        <Link to={`/print/${props.route.id}`} target="_blank">
+                            <Button variant="yellowLong" size="lg">Print Route Roster</Button>
+                        </Link>
+                    </Col>
+                    
+                    <Col>
+                        <Link to={`/${getType(props.user)}/route_email/${props.route.school.id}/${props.route.id}`}>
+                            <Button variant="yellowLong" size="lg">Send Route-wide Email</Button>
+                        </Link>
+                    </Col>
+                </Row>
+            </Container></>: <></>
+        }
+            <Row  style={{gap: "10px"}}>
+                <Card as={Col} style={{padding: "0px"}}>
+                    <Card.Header as="h5">Name</Card.Header>
+                    <Card.Body>
+                        <Card.Text>{props.route.name}</Card.Text>
+                        { props.route.is_complete ?
+                        <></>
+                        :
+                        <Alert variant="danger">
+                        {/* <Alert.Heading>Warning: This route is incomplete!</Alert.Heading> */}
+                        <p>
+                            Warning: This route is incomplete! There are students on this route who currently do not have an in-range stop.
+                            Use the Stop Planner to plan stops for these student(s).
+                        </p>
+                        </Alert>
+                        }
+                    </Card.Body>
+                </Card>
+                <Card as={Col} style={{padding: "0px"}}>
+                    <Card.Header as="h5">School </Card.Header>
+                    <Card.Body>
+                        <Link to={`/${getType(props.user)}/school/${props.route.school.id}`}>
+                            <h5>{props.route.school.name}</h5>
+                        </Link>
+                    </Card.Body>
+                </Card>
+            </Row>
 
-        <Card>
-            <Card.Header as="h5">Associated Students</Card.Header>
-            <Card.Body>
-                <GeneralAdminTableView title='Associated Students' tableType='student' values={props.students} search="" totalCount={props.studentCount} />
-            </Card.Body>
-        </Card>
-
-        <Card>
-            <Card.Header as="h5">Associated Stops</Card.Header>
-            <Card.Body>
-                <GeneralAdminTableView title='Associated Stops' tableType='stop' values={props.stops} search="stop" extraRow={extra} totalCount={props.stopCount + 1}/>
-            </Card.Body>
-        </Card>
+            <Row  style={{gap: "10px"}}>
+                <Card as={Col} style={{padding: "0px"}}>
+                    <Card.Header as="h5">Description </Card.Header>
+                    <Card.Body>
+                        <Form.Group className="mb-3" controlId="formGridDescription">
+                            <Form.Control 
+                            type="text"
+                            as="textarea"
+                            value={props.route.description}
+                            style={{height: '200px',pointerEvents: "none"}}
+                            readOnly
+                        />
+                    </Form.Group>
+                    </Card.Body>
+                </Card>
+            </Row>
+            
+            <Row  style={{gap: "10px"}}>
+                <Card as={Col} style={{padding: "0px"}}>
+                    <Card.Header as="h5">Map View of School, Students, and Stops</Card.Header>
+                    <Container className='d-flex flex-column justify-content-center' style={{marginTop: "20px"}}>
+                        <IconLegend legendType='routeDetails'></IconLegend>
+                        <Card.Body>
+                            {props.route.school.id===-1?
+                                <></>:
+                                <MapComponent pinData={pinData} otherMapComponents={extraComponents} center={{lng: Number(props.route.school.longitude),lat: Number(props.route.school.latitude)}}></MapComponent>}
+                        </Card.Body>    
+                    </Container>
+                </Card>
+            </Row>
+            <Row  style={{gap: "10px"}}>
+                <Card as={Col} style={{padding: "0px"}}>
+                    <Card.Header as="h5">Associated Students</Card.Header>
+                    <Card.Body>
+                        <GeneralAdminTableView title='Associated Students' tableType='student' values={props.students} search="" totalCount={props.studentCount} />
+                    </Card.Body>
+                </Card>
+            </Row>
+            <Row  style={{gap: "10px"}}>
+                <Card as={Col} style={{padding: "0px"}}>
+                    <Card.Header as="h5">Associated Stops</Card.Header>
+                    <Card.Body>
+                        <GeneralAdminTableView title='Associated Stops' tableType='stop' values={props.stops} search="stop" extraRow={extra} totalCount={props.stopCount + 1}/>
+                    </Card.Body>
+                </Card>
+            </Row>
         </Container>
 
         <br></br>

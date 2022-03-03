@@ -50,92 +50,92 @@ function GeneralAdminStudentDetails(props) {
             :<></>}
 
             <Row  style={{gap: "10px"}}>
-            <Card as={Col} style={{padding: "0px"}}>
-                <Card.Header as="h5">Name</Card.Header>
-                <Card.Body>
-                    <Card.Text>{student.full_name}</Card.Text>
-                </Card.Body>
-            </Card>
+                <Card as={Col} style={{padding: "0px"}}>
+                    <Card.Header as="h5">Name</Card.Header>
+                    <Card.Body>
+                        <Card.Text>{student.full_name}</Card.Text>
+                    </Card.Body>
+                </Card>
 
-            <br></br>
-            <Card as={Col} style={{padding: "0px"}}>
-                <Card.Header as="h5">StudentID </Card.Header>
-                <Card.Body>
-                    <Card.Text>{student.student_id}</Card.Text>
-                </Card.Body>
-            </Card>
+                <br></br>
+                <Card as={Col} style={{padding: "0px"}}>
+                    <Card.Header as="h5">StudentID </Card.Header>
+                    <Card.Body>
+                        <Card.Text>{student.student_id}</Card.Text>
+                    </Card.Body>
+                </Card>
             </Row>
 
             <Row  style={{gap: "10px"}}>
-            <Card as={Col} style={{padding: "0px"}}>
-                <Card.Header as="h5">Parent </Card.Header>
-                <Card.Body>
-                    <Link to={`/${getType(props.user)}/user/${student.guardian.id}`}>
-                        <h5>{student.guardian.full_name}</h5>
-                    </Link>
-                </Card.Body>
-            </Card>
+                <Card as={Col} style={{padding: "0px"}}>
+                    <Card.Header as="h5">Parent </Card.Header>
+                    <Card.Body>
+                        <Link to={`/${getType(props.user)}/user/${student.guardian.id}`}>
+                            <h5>{student.guardian.full_name}</h5>
+                        </Link>
+                    </Card.Body>
+                </Card>
 
-            <br></br>
-            <Card as={Col} style={{padding: "0px"}}>
-                <Card.Header as="h5">Address </Card.Header>
-                <Card.Body>
-                    <Card.Text>{student.guardian.address}</Card.Text>
-                </Card.Body>
-            </Card>
+                <br></br>
+                <Card as={Col} style={{padding: "0px"}}>
+                    <Card.Header as="h5">Address </Card.Header>
+                    <Card.Body>
+                        <Card.Text>{student.guardian.address}</Card.Text>
+                    </Card.Body>
+                </Card>
             </Row>
             <Row style={{gap: "10px"}}>
-            <Card as={Col} style={{padding: "0px"}}>
-                <Card.Header as="h5">School </Card.Header>
-                <Card.Body>
-                    <Link to={`/${getType(props.user)}/school/${student.school.id}`}>
-                        <h5>{student.school.name}</h5>
-                    </Link>
-                </Card.Body>
-            </Card>
+                <Card as={Col} style={{padding: "0px"}}>
+                    <Card.Header as="h5">School </Card.Header>
+                    <Card.Body>
+                        <Link to={`/${getType(props.user)}/school/${student.school.id}`}>
+                            <h5>{student.school.name}</h5>
+                        </Link>
+                    </Card.Body>
+                </Card>
 
-            <br></br>
+                <br></br>
 
-            <Card as={Col} style={{padding: "0px"}}>
-                <Card.Header as="h5">Route</Card.Header>
-                <Card.Body>
-                    <Container className='d-flex flex-column' style={{gap: "20px"}}>
-                    {(student.routes!==undefined && student.routes!==null) ?
-                        <Link to={`/${getType(props.user)}/route/${student.routes.id}`}>
-                            <Button variant='yellow'><h5>{student.routes.name}</h5></Button>
-                        </Link>:
-                        <Alert variant="danger">
-                            <Alert.Heading>No Route for this Student</Alert.Heading>
-                            <p>
-                            This student has not been assigned a route. Please use the route planner to assign an appropriate route.
-                            </p>
-                            <hr />
-                            {isAdmin(props.user)?
-                            <Link to={`/${getType(props.user)}/school/${student.school.id}`}>
-                                View School Details Page for Route Planner
-                            </Link>:<></>}
-                        </Alert>
-                    }
+                <Card as={Col} style={{padding: "0px"}}>
+                    <Card.Header as="h5">Route</Card.Header>
+                    <Card.Body>
+                        <Container className='d-flex flex-column' style={{gap: "20px"}}>
+                        {(student.routes!==undefined && student.routes!==null) ?
+                            <Link to={`/${getType(props.user)}/route/${student.routes.id}`}>
+                                <h5>{student.routes.name}</h5>
+                            </Link>:
+                            <Alert variant="danger">
+                                <Alert.Heading>No Route for this Student</Alert.Heading>
+                                <p>
+                                This student has not been assigned a route. Please use the route planner to assign an appropriate route.
+                                </p>
+                                <hr />
+                                {isAdmin(props.user)?
+                                <Link to={`/${getType(props.user)}/school/${student.school.id}`}>
+                                    View School Details Page for Route Planner
+                                </Link>:<></>}
+                            </Alert>
+                        }
 
-                    {
-                        (student.routes!==undefined && student.routes!==null && !student.has_inrange_stop ? 
-                        <Alert variant="primary">
-                            <Alert.Heading>No In-range Stop for this Student</Alert.Heading>
-                            <p>
-                            This student has no stop that is in range. Please use the stop planner to assign an appropriate stop.
-                            </p>
-                            <hr />
-                            {isAdmin(props.user)?
-                            <Link to={`/${getType(props.user)}/route/plan/${student.school.id}?route=${student.routes.id}&view=1`}>
-                                Plan a Stop
-                            </Link>:<></>
-                            }
-                        </Alert>:<></>
-                        )
-                    }
-                    </Container>
-                </Card.Body>
-            </Card>
+                        {
+                            (student.routes!==undefined && student.routes!==null && !student.has_inrange_stop ? 
+                            <Alert variant="primary">
+                                <Alert.Heading>No In-range Stop for this Student</Alert.Heading>
+                                <p>
+                                This student has no stop that is in range. Please use the stop planner to assign an appropriate stop.
+                                </p>
+                                <hr />
+                                {isAdmin(props.user)?
+                                <Link to={`/${getType(props.user)}/route/plan/${student.school.id}?route=${student.routes.id}&view=1`}>
+                                    Plan a Stop
+                                </Link>:<></>
+                                }
+                            </Alert>:<></>
+                            )
+                        }
+                        </Container>
+                    </Card.Body>
+                </Card>
             </Row>
         </Container>
 
