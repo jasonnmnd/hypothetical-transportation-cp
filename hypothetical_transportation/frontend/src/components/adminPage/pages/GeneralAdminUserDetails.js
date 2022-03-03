@@ -65,41 +65,44 @@ function AdminUserDetails(props) {
                 </Col>
             </Row>
         </Container>:<></>}
-        
-        <Card>
-            <Card.Header as="h5">Name</Card.Header>
-            <Card.Body>
-                <Card.Text>{props.user.full_name}</Card.Text>
-            </Card.Body>
-        </Card>
+        <Row  style={{gap: "10px"}}> 
+          <Card  as={Col} style={{padding: "0px"}}>
+              <Card.Header as="h5">Name</Card.Header>
+              <Card.Body>
+                  <Card.Text>{props.user.full_name}</Card.Text>
+              </Card.Body>
+          </Card>
 
-        <Card>
-            <Card.Header as="h5">Email </Card.Header>
-            <Card.Body>
-                <Card.Text>{props.user.email}</Card.Text>
-            </Card.Body>
-        </Card>
+          <Card  as={Col} style={{padding: "0px"}}>
+              <Card.Header as="h5">Email </Card.Header>
+              <Card.Body>
+                  <Card.Text>{props.user.email}</Card.Text>
+              </Card.Body>
+          </Card>
+        </Row>
+        <Row  style={{gap: "10px"}}> 
+          <Card as={Col} style={{padding: "0px"}}>
+              <Card.Header as="h5">Address </Card.Header>
+              <Card.Body>
+                  <Card.Text>{props.user.address}</Card.Text>
+              </Card.Body>
+          </Card>
 
-        <Card>
-            <Card.Header as="h5">Address </Card.Header>
-            <Card.Body>
-                <Card.Text>{props.user.address}</Card.Text>
-            </Card.Body>
-        </Card>
-
-        <Card>
-            <Card.Header as="h5">Admin </Card.Header>
-            <Card.Body>
-                <Card.Text>{isAdmin(props.user) ? "true":"false"}</Card.Text>
-            </Card.Body>
-        </Card>
-
-        <Card>
-            <Card.Header as="h5">List of Students</Card.Header>
-            <Card.Body>
-                <GeneralAdminTableView values={props.students} tableType='student' title='Students' search={null} totalCount={props.studentCount} />
-            </Card.Body>
-        </Card>
+          <Card as={Col} style={{padding: "0px"}}>
+              <Card.Header as="h5">Admin </Card.Header>
+              <Card.Body>
+                  <Card.Text>{isAdmin(props.user) ? "true":"false"}</Card.Text>
+              </Card.Body>
+          </Card>
+        </Row>
+        <Row  style={{gap: "10px"}}> 
+          <Card  as={Col} style={{padding: "0px"}}>
+              <Card.Header as="h5">List of Students</Card.Header>
+              <Card.Body>
+                  <GeneralAdminTableView values={props.students} tableType='student' title='Students' search={null} totalCount={props.studentCount} />
+              </Card.Body>
+          </Card>
+        </Row>
       </Container>
 
       <br></br>
