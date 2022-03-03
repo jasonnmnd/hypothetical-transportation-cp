@@ -13,7 +13,7 @@ router.register('student', StudentViewSet, 'student')
 
 additional_patterns = [
     path('stopplanner/inrangecheck', StopPlannerAPI.as_view()),
-    path('loaded-data/verify/', VerifyLoadedDataAPI.as_view()),
+    path('loaded-data/validate/', VerifyLoadedDataAPI.as_view()),
     path('loaded-data/', SubmitLoadedDataAPI.as_view()),
 ]
 

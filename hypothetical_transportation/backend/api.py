@@ -419,17 +419,17 @@ class StudentViewSet(viewsets.ModelViewSet):
         return Response(content)
 
 
-class VerifyLoadedDataAPI(APIView):
+class VerifyLoadedDataAPI(generics.GenericAPIView):
     serializer_class = LoadModelDataSerializer
     permission_classes = [
         permissions.AllowAny
     ]
 
-    def get(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
-        if serializer.is_valid():
-            content = {}
-            return Response(content, status.HTTP_200_OK)
+        serializer.is_valid()
+        print(serializer.errors)
+        print(serializer.validated_data)
         return Response(serializer.errors)
 
 
@@ -439,7 +439,7 @@ class SubmitLoadedDataAPI(generics.GenericAPIView):
         permissions.AllowAny
     ]
 
-    def post(self, request, format=None):
+    def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             print(serializer.validated_data)

@@ -122,17 +122,11 @@ class LoadStudentSerializer(serializers.ModelSerializer):
 
 
 class LoadUserSerializer(serializers.ModelSerializer):
-    students = LoadStudentSerializer(many=True)
-
     class Meta:
         model = get_user_model()
-        fields = ("email", "full_name", "address", "students")
+        fields = ("email", "full_name", "address", "phone_number")
 
 
 class LoadModelDataSerializer(serializers.Serializer):
     users = LoadUserSerializer(many=True, required=False)
-
-
-class SubmitFileSerializer(serializers.Serializer):
-    user_file = serializers.FileField()
-    student_file = serializers.FileField()
+    students = LoadStudentSerializer(many=True, required=False)
