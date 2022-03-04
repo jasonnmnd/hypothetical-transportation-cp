@@ -19,6 +19,7 @@ from .customfilters import StudentCountShortCircuitFilter
 from .permissions import is_admin, IsAdminOrReadOnly, IsAdmin
 from django.shortcuts import get_object_or_404
 from .geo_utils import get_straightline_distance, LEN_OF_MILE
+from collections import defaultdict
 
 MAX_STOPS_IN_ONE_CALL = 1
 
@@ -425,11 +426,89 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
         permissions.AllowAny
     ]
 
+    class UserRepresentation:
+        def __init__(self, uuid: int, full_name: str, email: str, phone_number: str, address: str, in_db=False):
+            self.uuid = f"{uuid}" if not in_db else f"indb{uuid}"
+            self.full_name = full_name
+            self.email = email
+            self.phone_number = phone_number
+            self.address = address
+
+        def __eq__(self, other):
+            return isinstance(other, self.__class__) and self.uuid == other.uuid
+
+        def get_representation(self):
+            return {"full_name": self.full_name, "email": self.email, "phone_number": self.phone_number,
+                    "address": self.address}
+
+    class StudentRepresentation:
+        def __init__(self, usid: int, full_name: str, student_id: int, school_name: str, in_db=False):
+            self.usid = f"{usid}" if not in_db else f"indb{usid}"
+            self.full_name = full_name
+            self.student_id = student_id
+            self.school_name = school_name
+
+        def __eq__(self, other):
+            return isinstance(other, self.__class__) and self.usid == other.usid
+
+        def get_representation(self):
+            return {"full_name": self.full_name, "student_id": self.student_id, "school_name": self.school_name}
+
+    def get_repr_of_users_with_email(self, email: str):
+        matching_users = get_user_model().objects.filter(email=email)
+        return [self.UserRepresentation(uuid=user.id, full_name=user.full_name, email=user.email,
+                                        phone_number=user.phone_number, address=user.address, in_db=True) for user in
+                matching_users]
+
+    def get_repr_of_users_with_name(self, full_name: str):
+        matching_users = get_user_model().objects.filter(full_name=full_name)
+        return [self.UserRepresentation(uuid=user.id, full_name=user.full_name, email=user.email,
+                                        phone_number=user.phone_number, address=user.address, in_db=True) for user in
+                matching_users]
+
+    def get_val_field_response_format(self, field: str, value: str, error: list, duplicates: list):
+        return {"field": field, "value": value, "error": error, "duplicates": duplicates}
+
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid()
-        print(serializer.errors)
-        print(serializer.validated_data)
+
+        user_email_duplication = defaultdict(set)
+        user_name_duplication = defaultdict(set)
+        user_representations = list()
+        users_response = list()
+        for user_dex, user in enumerate(serializer.data["users"]):
+            email = user.get("email")
+            full_name = user.get("full_name")
+            representation = self.UserRepresentation(uuid=user_dex, full_name=user.get("full_name"),
+                                                     email=user.get("email"), phone_number=user.get("phone_number"),
+                                                     address=user.get("address"))
+            user_representations.append(representation)
+            user_email_duplication[email].add(representation)
+            user_email_duplication[email].update(self.get_repr_of_users_with_email(email))
+            user_name_duplication[full_name].add(representation)
+            user_email_duplication[email].update(self.get_repr_of_users_with_name(full_name))
+        for user_dex, user in enumerate(user_representations):
+            user_object_response = list()
+            user_object_response.append(self.get_val_field_response_format("email", user.email,
+                                                                           serializer.errors["users"][user_dex][
+                                                                               "email"],
+                                                                           [dup.get_representation() for dup in
+                                                                            user_email_duplication[user.email] if
+                                                                            dup != user]))
+            user_object_response.append(self.get_val_field_response_format("full_name", user.full_name,
+                                                                           serializer.errors["users"][user_dex][
+                                                                               "full_name"],
+                                                                           [dup.get_representation() for dup in
+                                                                            user_name_duplication[user.full_name] if
+                                                                            dup != user]))
+            user_object_response.append(self.get_val_field_response_format("phone_number", user.phone_number,
+                                                                           serializer.errors["users"][user_dex][
+                                                                               "phone_number"], []))
+            user_object_response.append(self.get_val_field_response_format("address", user.address,
+                                                                           serializer.errors["users"][user_dex][
+                                                                               "address"], []))
+            users_response.append(user_object_response)
         return Response(serializer.errors)
 
 
