@@ -437,6 +437,9 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
         def __eq__(self, other):
             return isinstance(other, self.__class__) and self.uuid == other.uuid
 
+        def __hash__(self):
+            return hash(self.uuid)
+
         def get_representation(self):
             return {"full_name": self.full_name, "email": self.email, "phone_number": self.phone_number,
                     "address": self.address}
@@ -447,6 +450,9 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
             self.full_name = full_name
             self.student_id = student_id
             self.school_name = school_name
+
+        def __hash__(self):
+            return hash(self.usid)
 
         def __eq__(self, other):
             return isinstance(other, self.__class__) and self.usid == other.usid
@@ -477,6 +483,7 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
         user_name_duplication = defaultdict(set)
         user_representations = list()
         users_response = list()
+        # TODO: add error here if users and list are not present
         for user_dex, user in enumerate(serializer.data["users"]):
             email = user.get("email")
             full_name = user.get("full_name")
@@ -491,25 +498,25 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
         for user_dex, user in enumerate(user_representations):
             user_object_response = list()
             user_object_response.append(self.get_val_field_response_format("email", user.email,
-                                                                           serializer.errors["users"][user_dex][
-                                                                               "email"],
+                                                                           serializer.errors["users"][user_dex].get(
+                                                                               "email"),
                                                                            [dup.get_representation() for dup in
                                                                             user_email_duplication[user.email] if
                                                                             dup != user]))
             user_object_response.append(self.get_val_field_response_format("full_name", user.full_name,
-                                                                           serializer.errors["users"][user_dex][
-                                                                               "full_name"],
+                                                                           serializer.errors["users"][user_dex].get(
+                                                                               "full_name"),
                                                                            [dup.get_representation() for dup in
                                                                             user_name_duplication[user.full_name] if
                                                                             dup != user]))
             user_object_response.append(self.get_val_field_response_format("phone_number", user.phone_number,
-                                                                           serializer.errors["users"][user_dex][
-                                                                               "phone_number"], []))
+                                                                           serializer.errors["users"][user_dex].get(
+                                                                               "phone_number"), []))
             user_object_response.append(self.get_val_field_response_format("address", user.address,
-                                                                           serializer.errors["users"][user_dex][
-                                                                               "address"], []))
+                                                                           serializer.errors["users"][user_dex].get(
+                                                                               "address"), []))
             users_response.append(user_object_response)
-        return Response(serializer.errors)
+        return Response({"users": users_response}, status.HTTP_200_OK)
 
 
 class SubmitLoadedDataAPI(generics.GenericAPIView):
