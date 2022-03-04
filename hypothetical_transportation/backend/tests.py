@@ -7,6 +7,26 @@ from .models import Student, School, Route, Stop
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from .geo_utils import get_straightline_distance
+from .serializers import find_school_match_candidates, school_names_match
+
+
+class TestMatchingUtilities(TestCase):
+    def setUp(self):
+        self.wilkinson_loc = (36.00352740209603, -78.93814858774756)
+        school = School.objects.create(address='Duke University', longitude=self.wilkinson_loc[0],
+                                       latitude=self.wilkinson_loc[1], name='abcd efgh ijkl')
+        school = School.objects.create(address='Duke University', longitude=self.wilkinson_loc[0],
+                                       latitude=self.wilkinson_loc[1], name='ABCD xyz')
+
+    def test_case_insensitive(self):
+        self.assertEqual(find_school_match_candidates('   abCd   ').count(), 2)
+        self.assertEqual(find_school_match_candidates('   abCd   efGh   ').count(), 1)
+        self.assertEqual(find_school_match_candidates('   efGh  abcD ').count(), 1)
+        self.assertEqual(find_school_match_candidates('   xyz   ').count(), 1)
+
+    def test_matching(self):
+        self.assertTrue(school_names_match(" AbC   dEf", "aBc def"))
+        self.assertFalse(school_names_match(" AbC   dEf g", "aBc def"))
 
 
 class TestMultipleStopDelete(TransactionTestCase):
@@ -39,7 +59,6 @@ class TestMultipleStopDelete(TransactionTestCase):
             self.client.delete(f'/api/stop/{stop_num}/', HTTP_AUTHORIZATION=f'Token {self.admin_token}')
         response = self.client.get('/api/stop/', HTTP_AUTHORIZATION=f'Token {self.admin_token}')
         self.assertEqual(response.data['count'], 0)
-
 
 
 class TestStudentInRange(TransactionTestCase):
@@ -190,7 +209,7 @@ class TestModels(TestCase):
             route=route,
         )
         stops = Stop.objects.filter(route=route).order_by('id')
-        old_dropoff, old_pickup = [],[] 
+        old_dropoff, old_pickup = [], []
 
         for stop in stops:
             # print(f"stop_name: {stop.name}, dropoff time:{stop.dropoff_time}, pickup time:{stop.pickup_time}")
@@ -202,8 +221,8 @@ class TestModels(TestCase):
         school.bus_arrival_time = datetime.time(10, 0, 0)
         school.bus_departure_time = datetime.time(17, 0, 0)
         school.save()
- 
-        old_dropoff2, old_pickup2 = [],[] 
+
+        old_dropoff2, old_pickup2 = [], []
         for stop in Stop.objects.filter(route=route).order_by('id'):
 
             old_dropoff2.append(stop.dropoff_time)
@@ -250,16 +269,16 @@ class TestModels(TestCase):
 
     def test_over_limit_stops(self):
         school = School.objects.create(
-            address='2211 Hillsborough Road Durham, NC 27705', 
-            longitude=36.009121, 
-            latitude=-78.926017, 
+            address='2211 Hillsborough Road Durham, NC 27705',
+            longitude=36.009121,
+            latitude=-78.926017,
             name='Test 26 Stops',
-            bus_arrival_time=datetime.time(9,0,0),
-            bus_departure_time=datetime.time(16,0,0)
+            bus_arrival_time=datetime.time(9, 0, 0),
+            bus_departure_time=datetime.time(16, 0, 0)
         )
         route = Route.objects.create(
-            name='Test 26 Stops Route', 
-            description='test route', 
+            name='Test 26 Stops Route',
+            description='test route',
             school=school,
         )
         stop1 = Stop.objects.create(
@@ -346,6 +365,7 @@ class TestModels(TestCase):
             stop_number=1,
             route=route,
         )
+
 
 # Create your tests here.
 class StopConsistency(TestCase):
