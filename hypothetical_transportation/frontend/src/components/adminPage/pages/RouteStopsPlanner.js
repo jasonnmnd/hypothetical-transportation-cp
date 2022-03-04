@@ -21,7 +21,7 @@ import { createMessageDispatch } from '../../../actions/messages';
 
 function RouteStopsPlanner(props) {
 
-  const [students, setStudents] = useState(props.students);
+  const [students, setStudents] = useState(JSON.parse(JSON.stringify(props.students)));
 
   const [newStopID, setNewStopID] = useState(-1);
 
@@ -214,7 +214,9 @@ RouteStopsPlanner.propTypes = {
     initStops: PropTypes.array,
     createMessageDispatch: PropTypes.func.isRequired,
     route_id: PropTypes.string,
-    school: PropTypes.object
+    school: PropTypes.object,
+    setStops: PropTypes.func,
+    resetStopChanges: PropTypes.func
 }
 
 const mapStateToProps = (state) => ({
