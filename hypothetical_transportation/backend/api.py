@@ -472,8 +472,15 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
                                         phone_number=user.phone_number, address=user.address, in_db=True) for user in
                 matching_users]
 
-    def get_val_field_response_format(self, field: str, value: str, error: list, duplicates: list):
-        return {"field": field, "value": value, "error": error, "duplicates": duplicates}
+    def get_repr_of_students_with_name(self, full_name: str):
+        matching_students = Student.objects.filter(full_name=full_name)
+        return [
+            self.StudentRepresentation(usid=student.id, full_name=student.full_name, student_id=student.school_id,
+                                       school_name=student.school.name,
+                                       in_db=True) for student in matching_students]
+
+    def get_val_field_response_format(self, value: str, error: list, duplicates: list):
+        return {"value": value, "error": error, "duplicates": duplicates}
 
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
@@ -494,29 +501,69 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
             user_email_duplication[email].add(representation)
             user_email_duplication[email].update(self.get_repr_of_users_with_email(email))
             user_name_duplication[full_name].add(representation)
-            user_email_duplication[email].update(self.get_repr_of_users_with_name(full_name))
+            user_name_duplication[full_name].update(self.get_repr_of_users_with_name(full_name))
         for user_dex, user in enumerate(user_representations):
-            user_object_response = list()
-            user_object_response.append(self.get_val_field_response_format("email", user.email,
-                                                                           serializer.errors["users"][user_dex].get(
-                                                                               "email"),
-                                                                           [dup.get_representation() for dup in
-                                                                            user_email_duplication[user.email] if
-                                                                            dup != user]))
-            user_object_response.append(self.get_val_field_response_format("full_name", user.full_name,
-                                                                           serializer.errors["users"][user_dex].get(
-                                                                               "full_name"),
-                                                                           [dup.get_representation() for dup in
-                                                                            user_name_duplication[user.full_name] if
-                                                                            dup != user]))
-            user_object_response.append(self.get_val_field_response_format("phone_number", user.phone_number,
-                                                                           serializer.errors["users"][user_dex].get(
-                                                                               "phone_number"), []))
-            user_object_response.append(self.get_val_field_response_format("address", user.address,
-                                                                           serializer.errors["users"][user_dex].get(
-                                                                               "address"), []))
+            user_object_response = dict()
+            user_object_response["email"] = self.get_val_field_response_format(user.email,
+                                                                               serializer.errors["users"][user_dex].get(
+                                                                                   "email", []),
+                                                                               [dup.get_representation() for dup in
+                                                                                user_email_duplication[user.email] if
+                                                                                dup != user])
+            user_object_response["full_name"] = self.get_val_field_response_format(user.full_name,
+                                                                                   serializer.errors["users"][
+                                                                                       user_dex].get(
+                                                                                       "full_name", []),
+                                                                                   [dup.get_representation() for dup in
+                                                                                    user_name_duplication[
+                                                                                        user.full_name] if
+                                                                                    dup != user])
+            user_object_response["phone_number"] = self.get_val_field_response_format(user.phone_number,
+                                                                                      serializer.errors["users"][
+                                                                                          user_dex].get(
+                                                                                          "phone_number", []), [])
+            user_object_response["address"] = self.get_val_field_response_format(user.address,
+                                                                                 serializer.errors["users"][
+                                                                                     user_dex].get(
+                                                                                     "address", []), [])
             users_response.append(user_object_response)
-        return Response({"users": users_response}, status.HTTP_200_OK)
+
+        student_name_duplication = defaultdict(set)
+        student_representations = list()
+        student_response = list()
+
+        for student_dex, student in enumerate(serializer.data["students"]):
+            full_name = student.get("full_name")
+            representation = self.StudentRepresentation(usid=student_dex, full_name=student.get("full_name"),
+                                                        student_id=student.get("student_id"),
+                                                        school_name=student.get("school_name"))
+            student_representations.append(representation)
+            student_name_duplication[full_name].add(representation)
+            student_name_duplication[full_name].update(self.get_repr_of_students_with_name(full_name))
+
+        for student_dex, student in enumerate(student_representations):
+            student_object_response = dict()
+            student_object_response["full_name"] = self.get_val_field_response_format(student.full_name,
+                                                                                      serializer.errors["students"][
+                                                                                          student_dex].get(
+                                                                                          "full_name", []),
+                                                                                      [dup.get_representation() for dup
+                                                                                       in
+                                                                                       student_name_duplication[
+                                                                                           student.full_name] if
+                                                                                       dup != student])
+            student_object_response["student_id"] = self.get_val_field_response_format(student.full_name,
+                                                                                       serializer.errors["students"][
+                                                                                           student_dex].get(
+                                                                                           "full_name", []),
+                                                                                       [dup.get_representation() for dup
+                                                                                        in
+                                                                                        student_name_duplication[
+                                                                                            student.full_name] if
+                                                                                        dup != student])
+            student_response.append(student_object_response)
+
+        return Response({"users": users_response, "students": student_response}, status.HTTP_200_OK)
 
 
 class SubmitLoadedDataAPI(generics.GenericAPIView):
