@@ -1,5 +1,6 @@
 from urllib import response
 from django.contrib.auth import get_user_model
+from django.db import transaction, IntegrityError
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, status
 from rest_framework import viewsets, permissions, generics
@@ -9,11 +10,12 @@ from rest_framework.views import APIView
 import requests, json
 import os
 from datetime import time, datetime
-
+from geopy.geocoders import Nominatim, GoogleV3
+from django.core.exceptions import ObjectDoesNotExist
 from .models import School, Route, Student, Stop
 from .serializers import UserSerializer, StudentSerializer, RouteSerializer, SchoolSerializer, FormatStudentSerializer, \
     FormatRouteSerializer, FormatUserSerializer, EditUserSerializer, StopSerializer, CheckInrangeSerializer, \
-    LoadUserSerializer, LoadModelDataSerializer
+    LoadUserSerializer, LoadModelDataSerializer, find_school_match_candidates, school_names_match
 from .search import DynamicSearchFilter
 from .customfilters import StudentCountShortCircuitFilter
 from .permissions import is_admin, IsAdminOrReadOnly, IsAdmin
@@ -417,6 +419,35 @@ class StudentViewSet(viewsets.ModelViewSet):
         return Response(content)
 
 
+# SERIALIZER UTILITIES
+
+def populate_serializer_errors(serializer_errors: dict, data):
+    """
+    Populates error keys to avoid errors.
+
+    Kludge method that populates empty errors to prevent missing key situations.  Attached to the bulk import serializer only.
+
+    Converts {} to {"users": [{}, {}, ... , {}], "students": [{}, {}, ... , {}]}, and places remaining field checks as the
+    responsibility of the calling program.
+
+    :param serializer_errors: intended for serializer.errors dictionary
+    :param data: data to obtain keys from
+    """
+    fields = ["users", "students"]
+    for field in fields:
+        if field not in serializer_errors:
+            serializer_errors[field] = list()
+        if len(serializer_errors[field]) == 0:
+            for _ in range(len(data.get(field, []))):
+                serializer_errors[field].append({})
+
+
+def add_error(error_object: dict, field: str, message: str):
+    if field not in error_object:
+        error_object[field] = list()
+    error_object[field].append(message)
+
+
 class VerifyLoadedDataAPI(generics.GenericAPIView):
     serializer_class = LoadModelDataSerializer
     permission_classes = [
@@ -486,6 +517,8 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid()
+        serializer_errors = serializer.errors
+        populate_serializer_errors(serializer_errors, request.data)
 
         user_email_duplication = defaultdict(set)
         user_name_duplication = defaultdict(set)
@@ -506,13 +539,13 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
         for user_dex, user in enumerate(user_representations):
             user_object_response = dict()
             user_object_response["email"] = self.get_val_field_response_format(user.email,
-                                                                               serializer.errors["users"][user_dex].get(
+                                                                               serializer_errors["users"][user_dex].get(
                                                                                    "email", []),
                                                                                [dup.get_representation() for dup in
                                                                                 user_email_duplication[user.email] if
                                                                                 dup != user])
             user_object_response["full_name"] = self.get_val_field_response_format(user.full_name,
-                                                                                   serializer.errors["users"][
+                                                                                   serializer_errors["users"][
                                                                                        user_dex].get(
                                                                                        "full_name", []),
                                                                                    [dup.get_representation() for dup in
@@ -520,11 +553,11 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
                                                                                         user.full_name] if
                                                                                     dup != user])
             user_object_response["phone_number"] = self.get_val_field_response_format(user.phone_number,
-                                                                                      serializer.errors["users"][
+                                                                                      serializer_errors["users"][
                                                                                           user_dex].get(
                                                                                           "phone_number", []), [])
             user_object_response["address"] = self.get_val_field_response_format(user.address,
-                                                                                 serializer.errors["users"][
+                                                                                 serializer_errors["users"][
                                                                                      user_dex].get(
                                                                                      "address", []), [])
             users_response.append(user_object_response)
@@ -536,12 +569,14 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
         for student_dex, student in enumerate(serializer.data["students"]):
             full_name = student.get("full_name")
             parent_email = student.get("parent_email", "")
-            if parent_email not in user_email_duplication and get_user_model().objects.filter(
-                    email=parent_email).count() == 0:
-                if "parent_email" not in serializer.errors["students"][student_dex]:
-                    serializer.errors["students"][student_dex]["parent_email"] = list()
-                serializer.errors["students"][student_dex]["parent_email"].append(
-                    "parent email does not exist in database or loaded data")
+
+            # TODO: fix this code to initialize ectual empty serializer
+            # if parent_email not in user_email_duplication and get_user_model().objects.filter(
+            #         email=parent_email).count() == 0:
+            #     if "parent_email" not in serializer.errors["students"][student_dex]:
+            #         serializer.errors["students"][student_dex]["parent_email"] = list()
+            #     serializer.errors["students"][student_dex]["parent_email"].append(
+            #         "parent email does not exist in database or loaded data")
 
             representation = self.StudentRepresentation(usid=student_dex, full_name=student.get("full_name"),
                                                         student_id=student.get("student_id"),
@@ -554,7 +589,7 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
         for student_dex, student in enumerate(student_representations):
             student_object_response = dict()
             student_object_response["full_name"] = self.get_val_field_response_format(student.full_name,
-                                                                                      serializer.errors["students"][
+                                                                                      serializer_errors["students"][
                                                                                           student_dex].get(
                                                                                           "full_name", []),
                                                                                       [dup.get_representation() for dup
@@ -563,20 +598,19 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
                                                                                            student.full_name] if
                                                                                        dup != student])
             student_object_response["student_id"] = self.get_val_field_response_format(student.student_id,
-                                                                                       serializer.errors["students"][
+                                                                                       serializer_errors["students"][
                                                                                            student_dex].get(
                                                                                            "student_id", []), [])
             student_object_response["parent_email"] = self.get_val_field_response_format(student.parent_email,
-                                                                                         serializer.errors[
+                                                                                         serializer_errors[
                                                                                              "students"][
                                                                                              student_dex].get(
                                                                                              "parent_email", []), [])
             student_object_response["school_name"] = self.get_val_field_response_format(student.school_name,
-                                                                                        serializer.errors["students"][
+                                                                                        serializer_errors["students"][
                                                                                             student_dex].get(
                                                                                             "school_name", []), [])
             students_response.append(student_object_response)
-
         return Response({"users": users_response, "students": students_response}, status.HTTP_200_OK)
 
 
@@ -587,9 +621,42 @@ class SubmitLoadedDataAPI(generics.GenericAPIView):
     ]
 
     def post(self, request, *args, **kwargs):
+        geolocator = Nominatim(user_agent="bulk data importer")
         serializer = self.serializer_class(data=request.data)
-        if serializer.is_valid():
-            print(serializer.validated_data)
-            content = {}
-            return Response(content, status.HTTP_200_OK)
-        return Response(serializer.errors)
+        serializer.is_valid(raise_exception=True)
+        serializer_errors = serializer.errors
+        populate_serializer_errors(serializer_errors, request.data)
+
+        try:
+            with transaction.atomic():
+                user_email_set = set()
+                for user_dex, user_data in enumerate(serializer.validated_data["users"]):
+
+                    user_email = user_data["email"]
+                    if user_email in user_email_set:
+                        add_error(serializer_errors["users"][user_dex], "email",
+                                  "user email already exists in imported data")
+                    user_email_set.add(user_email)
+
+                    location = geolocator.geocode(user_data["address"])
+                    user = get_user_model().objects.create_verified_user(**user_data, latitude=location.latitude,
+                                                                         longitude=location.longitude,
+                                                                         password="DUMMY_PASSWORD")
+                    user.set_unusable_password()
+                for student_data in serializer.validated_data["students"]:
+                    candidates = find_school_match_candidates(student_data["school_name"])
+                    school = None
+                    for candidate in candidates:
+                        if school_names_match(candidate.name, student_data["school_name"]):
+                            school = candidate
+                            break
+                    guardian = get_user_model().objects.get(email=student_data["parent_email"])
+
+                    user = Student.objects.create(full_name=student_data["full_name"], active=True, school=school,
+                                                  guardian=guardian, routes=None, student_id=student_data["student_id"])
+        except (IntegrityError, ObjectDoesNotExist):
+            return Response(serializer_errors, status=status.HTTP_400_BAD_REQUEST)
+
+        content = {"num_users": len(serializer.validated_data["users"]),
+                   "num_students": len(serializer.validated_data["students"])}
+        return Response(content, status=status.HTTP_201_CREATED)
