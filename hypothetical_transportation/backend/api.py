@@ -284,9 +284,6 @@ class StopViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
     filterset_fields = ['route']
 
-    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
-    filterset_fields = ['route']
-
     # @override
     # def create(self, request):
     #     res = self.create()
@@ -445,10 +442,12 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
                     "address": self.address}
 
     class StudentRepresentation:
-        def __init__(self, usid: int, full_name: str, student_id: int, school_name: str, in_db=False):
+        def __init__(self, usid: int, full_name: str, student_id: int, parent_email: str, school_name: str,
+                     in_db=False):
             self.usid = f"{usid}" if not in_db else f"indb{usid}"
             self.full_name = full_name
             self.student_id = student_id
+            self.parent_email = parent_email
             self.school_name = school_name
 
         def __hash__(self):
@@ -458,7 +457,8 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
             return isinstance(other, self.__class__) and self.usid == other.usid
 
         def get_representation(self):
-            return {"full_name": self.full_name, "student_id": self.student_id, "school_name": self.school_name}
+            return {"full_name": self.full_name, "student_id": self.student_id, "parent_email": self.parent_email,
+                    "school_name": self.school_name}
 
     def get_repr_of_users_with_email(self, email: str):
         matching_users = get_user_model().objects.filter(email=email)
@@ -476,10 +476,11 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
         matching_students = Student.objects.filter(full_name=full_name)
         return [
             self.StudentRepresentation(usid=student.id, full_name=student.full_name, student_id=student.school_id,
+                                       parent_email=student.guardian.email,
                                        school_name=student.school.name,
                                        in_db=True) for student in matching_students]
 
-    def get_val_field_response_format(self, value: str, error: list, duplicates: list):
+    def get_val_field_response_format(self, value, error: list, duplicates: list):
         return {"value": value, "error": error, "duplicates": duplicates}
 
     def post(self, request, *args, **kwargs):
@@ -530,12 +531,21 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
 
         student_name_duplication = defaultdict(set)
         student_representations = list()
-        student_response = list()
+        students_response = list()
 
         for student_dex, student in enumerate(serializer.data["students"]):
             full_name = student.get("full_name")
+            parent_email = student.get("parent_email", "")
+            if parent_email not in user_email_duplication and get_user_model().objects.filter(
+                    email=parent_email).count() == 0:
+                if "parent_email" not in serializer.errors["students"][student_dex]:
+                    serializer.errors["students"][student_dex]["parent_email"] = list()
+                serializer.errors["students"][student_dex]["parent_email"].append(
+                    "parent email does not exist in database or loaded data")
+
             representation = self.StudentRepresentation(usid=student_dex, full_name=student.get("full_name"),
                                                         student_id=student.get("student_id"),
+                                                        parent_email=student.get("parent_email"),
                                                         school_name=student.get("school_name"))
             student_representations.append(representation)
             student_name_duplication[full_name].add(representation)
@@ -552,18 +562,22 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
                                                                                        student_name_duplication[
                                                                                            student.full_name] if
                                                                                        dup != student])
-            student_object_response["student_id"] = self.get_val_field_response_format(student.full_name,
+            student_object_response["student_id"] = self.get_val_field_response_format(student.student_id,
                                                                                        serializer.errors["students"][
                                                                                            student_dex].get(
-                                                                                           "full_name", []),
-                                                                                       [dup.get_representation() for dup
-                                                                                        in
-                                                                                        student_name_duplication[
-                                                                                            student.full_name] if
-                                                                                        dup != student])
-            student_response.append(student_object_response)
+                                                                                           "student_id", []), [])
+            student_object_response["parent_email"] = self.get_val_field_response_format(student.parent_email,
+                                                                                         serializer.errors[
+                                                                                             "students"][
+                                                                                             student_dex].get(
+                                                                                             "parent_email", []), [])
+            student_object_response["school_name"] = self.get_val_field_response_format(student.school_name,
+                                                                                        serializer.errors["students"][
+                                                                                            student_dex].get(
+                                                                                            "school_name", []), [])
+            students_response.append(student_object_response)
 
-        return Response({"users": users_response, "students": student_response}, status.HTTP_200_OK)
+        return Response({"users": users_response, "students": students_response}, status.HTTP_200_OK)
 
 
 class SubmitLoadedDataAPI(generics.GenericAPIView):

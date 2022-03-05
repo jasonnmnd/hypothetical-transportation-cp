@@ -138,6 +138,7 @@ def school_names_match(school_name1: str, school_name2: str):
 
 class LoadStudentSerializer(serializers.ModelSerializer):
     school_name = serializers.CharField(required=True)
+    parent_email = serializers.CharField(required=True)
 
     def validate_school_name(self, value):
         candidates = find_school_match_candidates(value)
@@ -148,7 +149,7 @@ class LoadStudentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Student
-        fields = ("full_name", "student_id", "school_name")
+        fields = ("full_name", "student_id", "parent_email", "school_name")
 
 
 class LoadUserSerializer(serializers.ModelSerializer):
