@@ -25,12 +25,14 @@ function GeneralEditSchoolForm(props) {
     const [address, setAddress] = useState("");
     const [busArrivalTime, setBusArrivalTime] = useState({
         hour: "00",
-        minute: "00"
+        minute: "00",
+        time: "AM"
     })
 
     const [busDepartureTime, setBusDepartureTime] = useState({
         hour: "00",
-        minute: "00"
+        minute: "00",
+        time: "PM"
     })
 
 
@@ -48,6 +50,37 @@ function GeneralEditSchoolForm(props) {
         "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51",
         "52", "53", "54", "55", "56", "57", "58", "59"
     ]
+
+    const time = [
+        "AM", "PM"
+    ]
+
+    const convertTo24Hr = (hour) => {
+        hour = parseInt(hour);
+        hour += 12;
+        return String(hour)
+    }
+
+    const convertTo12Hr = (hour, isArrival) => {
+        hour = parseInt(hour)
+        if (hour > 12) {
+
+            if (isArrival) {
+                setBusArrivalTime({time: "PM"});
+            } else {
+                setBusDepartureTime({time: "PM"});
+            }
+
+            hour -= 12;
+            return String(hour)
+        } else {
+            if (isArrival) {
+                setBusArrivalTime({time: "AM"});
+            } else {
+                setBusDepartureTime({time: "AM"});
+            }
+        }
+    }
 
     useEffect(() => {
         if(props.action == "edit"){
@@ -92,6 +125,15 @@ function GeneralEditSchoolForm(props) {
             event.stopPropagation();
           }
         else {
+
+            // if (busArrivalTime.time == "PM") {
+            //     busArrivalTime.hour = convertTo24Hr(busArrivalTime.hour);
+            // }
+
+            // if (busDepartureTime.time == "PM") {
+            //     busDepartureTime.hour = convertTo24Hr(busDepartureTime.hour);
+            // }
+
             if(props.action == "edit"){
                 props.updateSchool({
                     name: name,
@@ -101,6 +143,8 @@ function GeneralEditSchoolForm(props) {
                     bus_arrival_time: busArrivalTime.hour + ":" + busArrivalTime.minute + ":00",
                     bus_departure_time: busDepartureTime.hour + ":" + busDepartureTime.minute + ":00"
                 }, param.id);
+                console.log(busArrivalTime);
+                console.log(busDepartureTime);
             } else {
                 props.addSchool({
                     name: name,
@@ -110,6 +154,8 @@ function GeneralEditSchoolForm(props) {
                     bus_arrival_time: busArrivalTime.hour + ":" + busArrivalTime.minute + ":00",
                     bus_departure_time: busDepartureTime.hour + ":" + busDepartureTime.minute + ":00"
                 })
+                console.log(busArrivalTime);
+                console.log(busDepartureTime);
             }
             navigate(`/${getType(props.user)}/schools`)
         }
@@ -171,6 +217,15 @@ function GeneralEditSchoolForm(props) {
                                                 })
                                             }
                                         </Form.Select>
+                                        
+                                        <Form.Select size="sm" style={{width: "65px"}} value={busArrivalTime.time} onChange={(e) => setBusArrivalTime({...busArrivalTime, time: e.target.value})}>
+                                            {
+                                                time.map((val, i) => {
+                                                    return <option value={val} key={i}>{val}</option>
+                                                })
+                                            }
+                                        </Form.Select>
+
                                     </div>
                             </Form.Group>
 
@@ -192,6 +247,15 @@ function GeneralEditSchoolForm(props) {
                                             })
                                         }
                                     </Form.Select>
+
+                                    <Form.Select size="sm" style={{width: "65px"}} value={busDepartureTime.time} onChange={(e) => setBusDepartureTime({...busDepartureTime, time: e.target.value})}>
+                                        {
+                                            time.map((val, i) => {
+                                                return <option value={val} key={i}>{val}</option>
+                                            })
+                                        }
+                                    </Form.Select>
+
                                 </div>
                             </Form.Group>
 
