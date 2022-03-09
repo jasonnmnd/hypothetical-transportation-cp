@@ -46,7 +46,7 @@ function GeneralPrintableRoster(props) {
             <td>{student.guardian.address}</td>
             <td>{student.guardian.full_name}</td>
             <td>{student.guardian.email}</td>
-            <td>{"PHONE NUMBER HERE"}</td>
+            <td>{"REPLACE WITH GUARDIAN PHONE"}</td>
           </tr>
         </Fragment>
         
