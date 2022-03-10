@@ -21,6 +21,7 @@ from .geo_utils import get_straightline_distance, LEN_OF_MILE
 
 
 MAX_STOPS_IN_ONE_CALL = 1
+MAX_STOPS_IN_ONE_NAV_LINK = 9
 
 os.environ['DISTANCE_MATRIX_API_URL'] = 'https://maps.googleapis.com/maps/api/distancematrix/json'
 os.environ['DISTANCE_MATRIX_API_KEY'] = 'AIzaSyAvdhlh9wi-jrCK8fmHRChW5qhIpHByv7U'
@@ -94,6 +95,35 @@ def distance_matrix_api(matrix: list) -> json:
     params = {'key': key, 'origins': matrix, 'destinations': matrix}
     req = requests.get(url=url, params=params)
     return json.loads(req.content)
+
+
+def navigation_link(route: Route):
+    waypoint = ""
+    waypoints = []
+
+    stops = route.stops
+    starting = True
+    if(len(stops) == 0) return waypoints
+    stop_count = 1
+
+    for stop in stops:
+        if stop_count == 1 and starting:
+            waypoint = school.address + f'|@{stop.latitude},{stop.longitude}/'
+            starting = False
+        elif stop_count == 1 and not starting:
+            waypoints.append(f"https://www.google.com/maps/dir/{waypoint}")
+            waypoint = f'|@{hold.latitude},{hold.longitude}/' + f'|@{stop.latitude},{stop.longitude}/'
+        else:
+            waypoint = waypoint + f'|@{stop.latitude},{stop.longitude}/'
+        if stop_count == MAX_STOPS_IN_ONE_NAV_LINK:
+            stop_count = 1
+        else:
+            stop_count = stop_count + 1
+        hold = stop
+    waypoints.append(f"https://www.google.com/maps/dir/{waypoint}")
+
+    # print(waypoints)
+    return waypoints
 
 
 def get_information_related_to_a_stop(stop: Stop):
@@ -336,6 +366,11 @@ class RouteViewSet(viewsets.ModelViewSet):
     def fields(self, request):
         content = parse_repr(repr(RouteSerializer()))
         return Response(content)
+
+    @action(detail=False, methods=['get'], permission_classes=[permissions.AllowAny])
+    def nav_link(self, request):
+        route = get_object_or_404(self.get_queryset())
+        return navigation_link(route)
 
 
 class SchoolViewSet(viewsets.ModelViewSet):
