@@ -524,7 +524,6 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
         user_name_duplication = defaultdict(set)
         user_representations = list()
         users_response = list()
-        # TODO: add error here if users and list are not present
         for user_dex, user in enumerate(serializer.data["users"]):
             email = user.get("email")
             full_name = user.get("full_name")
@@ -570,13 +569,12 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
             full_name = student.get("full_name")
             parent_email = student.get("parent_email", "")
 
-            # TODO: fix this code to initialize ectual empty serializer
-            # if parent_email not in user_email_duplication and get_user_model().objects.filter(
-            #         email=parent_email).count() == 0:
-            #     if "parent_email" not in serializer.errors["students"][student_dex]:
-            #         serializer.errors["students"][student_dex]["parent_email"] = list()
-            #     serializer.errors["students"][student_dex]["parent_email"].append(
-            #         "parent email does not exist in database or loaded data")
+            if parent_email not in user_email_duplication and get_user_model().objects.filter(
+                    email=parent_email).count() == 0:
+                if "parent_email" not in serializer.errors["students"][student_dex]:
+                    serializer.errors["students"][student_dex]["parent_email"] = list()
+                serializer.errors["students"][student_dex]["parent_email"].append(
+                    "parent email does not exist in database or loaded data")
 
             representation = self.StudentRepresentation(usid=student_dex, full_name=student.get("full_name"),
                                                         student_id=student.get("student_id"),
@@ -643,15 +641,19 @@ class SubmitLoadedDataAPI(generics.GenericAPIView):
                                                                          longitude=location.longitude,
                                                                          password="DUMMY_PASSWORD")
                     user.set_unusable_password()
-                for student_data in serializer.validated_data["students"]:
+                for student_dex, student_data in enumerate(serializer.validated_data["students"]):
                     candidates = find_school_match_candidates(student_data["school_name"])
                     school = None
                     for candidate in candidates:
                         if school_names_match(candidate.name, student_data["school_name"]):
                             school = candidate
                             break
-                    guardian = get_user_model().objects.get(email=student_data["parent_email"])
-
+                    guardians = get_user_model().objects.filter(email=student_data["parent_email"])
+                    if guardians.count() == 0:
+                        add_error(serializer_errors["students"][student_dex], "parent_email",
+                                  "parent email does not exist")
+                        raise ObjectDoesNotExist("parent email does not exist for ths student")
+                    guardian = guardians[0]
                     user = Student.objects.create(full_name=student_data["full_name"], active=True, school=school,
                                                   guardian=guardian, routes=None, student_id=student_data["student_id"])
         except (IntegrityError, ObjectDoesNotExist):
