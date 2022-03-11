@@ -8,6 +8,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from .geo_utils import get_straightline_distance
 from .serializers import find_school_match_candidates, school_names_match
+from django.test import tag
 
 
 class TestMatchingUtilities(TestCase):
@@ -168,6 +169,7 @@ class TestStudentInRange(TransactionTestCase):
                                student_id=2)
 
 
+@tag('ext-api')
 class TestModels(TestCase):
 
     def test_school_name(self):
@@ -367,7 +369,6 @@ class TestModels(TestCase):
         )
 
 
-# Create your tests here.
 class StopConsistency(TestCase):
     def setUp(self):
         self.parent1 = get_user_model().objects.create_verified_user(email='user1@example.com',
@@ -391,17 +392,6 @@ class StopConsistency(TestCase):
         self.student1 = Student.objects.create(full_name='student 1', active=True,
                                                school=self.school, routes=self.route1, guardian=self.parent1,
                                                student_id=1)
-
-    # def test_closest_stop(self):
-    #     print(self.stop4.pickup_time)
-    #     print(self.stop3.pickup_time)
-    #     print(self.stop2.pickup_time)
-    #     print(self.stop1.pickup_time)
-    #     print(self.stop4.dropoff_time)
-    #     print(self.stop3.dropoff_time)
-    #     print(self.stop2.dropoff_time)
-    #     print(self.stop1.dropoff_time)
-    #     print(self.student1.has_inrange_stop)
 
 
 class AuthenticationObjectConsistency(TestCase):
