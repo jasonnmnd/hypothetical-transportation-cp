@@ -18,7 +18,7 @@ from .serializers import UserSerializer, StudentSerializer, RouteSerializer, Sch
     LoadUserSerializer, LoadModelDataSerializer, find_school_match_candidates, school_names_match
 from .search import DynamicSearchFilter
 from .customfilters import StudentCountShortCircuitFilter
-from .permissions import is_admin, IsAdminOrReadOnly, IsAdmin
+from .permissions import is_admin, is_school_staff, is_driver, IsAdminOrReadOnly, IsAdmin
 from django.shortcuts import get_object_or_404
 from .geo_utils import get_straightline_distance, LEN_OF_MILE
 from collections import defaultdict
@@ -268,8 +268,15 @@ class UserViewSet(viewsets.ModelViewSet):
         return UserSerializer
 
     def get_queryset(self):
-        if is_admin(self.request.user):
+        if is_admin(self.request.user) or is_driver(self.request.user):
             return get_user_model().objects.all().distinct().order_by('id')
+        elif is_school_staff(self.request.user):
+            managed_schools = self.request.user.managed_schools
+            students_queryset = Student.objects.none()
+            for school in managed_schools:
+                students_queryset = (students_queryset | school.students).distinct()
+            return get_user_model().objects.filter(id__in=students_queryset.values('guardian_id')).distinct().order_by(
+                'id')
         else:
             return get_user_model().objects.filter(id=self.request.user.id).distinct().order_by('id')
 
@@ -299,12 +306,17 @@ class StopViewSet(viewsets.ModelViewSet):
         return StopSerializer
 
     def get_queryset(self):
-        return Stop.objects.all()
-
-    # @action(detail=False, permission_classes=[permissions.AllowAny])
-    # def fields(self, request):
-    #     content = parse_repr(repr(StopSerializer()))
-    #     return Response(content)
+        if is_admin(self.request.user) or is_driver(self.request.user):
+            return Stop.objects.all()
+        elif is_school_staff(self.request.user):
+            managed_schools = self.request.user.managed_schools
+            stops_queryset = Stop.objects.none()
+            for school in managed_schools:
+                for route in school.routes:
+                    stops_queryset = (stops_queryset | route.stops).distinct()
+            return stops_queryset
+        else:
+            return Stop.objects.none()
 
 
 class RouteViewSet(viewsets.ModelViewSet):
@@ -325,17 +337,17 @@ class RouteViewSet(viewsets.ModelViewSet):
     # TODO: noticed this method is getting called twice for every actual request?
     def get_queryset(self):
         # Only return routes associated with children of current user
-        if is_admin(self.request.user):
+        if is_admin(self.request.user) or is_driver(self.request.user):
             return Route.objects.all().distinct().order_by('id')
+        elif is_school_staff(self.request.user):
+            managed_schools = self.request.user.managed_schools
+            routes_queryset = Route.objects.none()
+            for school in managed_schools:
+                routes_queryset = (routes_queryset | school.routes).distinct()
+            return routes_queryset.order_by('id')
         else:
             students_queryset = self.request.user.students
             return Route.objects.filter(id__in=students_queryset.values('routes_id')).distinct().order_by('id')
-            # return Route.objects.all().distinct()
-
-    @action(detail=False, permission_classes=[permissions.AllowAny])
-    def fields(self, request):
-        content = parse_repr(repr(RouteSerializer()))
-        return Response(content)
 
 
 class SchoolViewSet(viewsets.ModelViewSet):
@@ -352,17 +364,14 @@ class SchoolViewSet(viewsets.ModelViewSet):
     # search_fields = [self.request.querystring]
 
     def get_queryset(self):
-        if is_admin(self.request.user):
+        if is_admin(self.request.user) or is_driver(self.request.user):
             return School.objects.all().distinct().order_by('id')
+        elif is_school_staff(self.request.user):
+            return self.request.user.managed_schools.distinct().order_by('id')
         else:
             # Only return schools associated with children of current user
             students_queryset = self.request.user.students
             return School.objects.filter(id__in=students_queryset.values('school_id')).distinct().order_by('id')
-
-    @action(detail=False, permission_classes=[permissions.AllowAny])
-    def fields(self, request):
-        content = parse_repr(repr(SchoolSerializer()))
-        return Response(content)
 
 
 class StudentViewSet(viewsets.ModelViewSet):
@@ -391,8 +400,14 @@ class StudentViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         # return Student.objects.all().distinct()
-        if is_admin(self.request.user):
+        if is_admin(self.request.user) or is_driver(self.request.user):
             return Student.objects.all().distinct().order_by('id')
+        elif is_school_staff(self.request.user):
+            managed_schools = self.request.user.managed_schools
+            students_queryset = Student.objects.none()
+            for school in managed_schools:
+                students_queryset = (students_queryset | school.routes).distinct()
+            return students_queryset.order_by('id')
         else:
             return self.request.user.students.all().distinct().order_by('id')
 
@@ -412,11 +427,6 @@ class StudentViewSet(viewsets.ModelViewSet):
                                                            stop.longitude) < 0.3 * LEN_OF_MILE]
         page = self.paginator.paginate_queryset(student_inrange_stops, request)
         return self.paginator.get_paginated_response(StopSerializer(page, many=True).data)
-
-    @action(detail=False, permission_classes=[permissions.AllowAny])
-    def fields(self, request):
-        content = parse_repr(repr(StudentSerializer()))
-        return Response(content)
 
 
 # SERIALIZER UTILITIES

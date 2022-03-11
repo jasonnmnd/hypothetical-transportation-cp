@@ -5,6 +5,18 @@ def is_admin(user):
     return user.groups.filter(name='Administrator').exists()
 
 
+def is_guardian(user):
+    return user.groups.filter(name='Guardian')
+
+
+def is_school_staff(user):
+    return user.groups.filter(name='SchoolStaff')
+
+
+def is_driver(user):
+    return user.groups.filter(name='Driver')
+
+
 def is_write_action(action):
     if action in ['retrieve', 'update', 'partial_update', 'destroy', 'create']:
         return True
@@ -45,7 +57,6 @@ class IsAdminOrReadOnly(permissions.BasePermission):
         if request.method == 'GET':
             return True
         return False
-
 
 # Source: https://stackoverflow.com/questions/19313314/django-rest-framework-viewset-per-action-permissions
 # class IsAdminOrReadOnlyParent(permissions.BasePermission):
