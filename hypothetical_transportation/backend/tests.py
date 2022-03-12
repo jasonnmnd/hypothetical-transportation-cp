@@ -11,6 +11,149 @@ from .serializers import find_school_match_candidates, school_names_match
 from django.test import tag
 
 
+class TestGroupViewFiltering(TransactionTestCase):
+    """
+    This test suite examines the access permissions of new user groups in evolution 3
+    """
+
+    reset_sequences = True
+
+    def setUp(self) -> None:
+        """
+        Test case has one student, one school, one route, and three stops.  All locations are the same
+
+        Users:
+        driver_1
+        school_staff_1
+        school_staff_2
+        parent_1: student_1, student_2
+        parent_2: student_3
+        parent_3: student_4
+
+        school_1:
+            staff: school_staff_1, school_staff_2
+            route_1: student_1
+                stop_1
+            route_2:
+                stop_2
+        school_2:
+            staff: school_staff_1
+            route_3: student_3, student_2
+                stop_3:
+        school_3:
+            staff: None
+            route_4: student_4
+                stop_4:
+
+        :return:  None
+        """
+        # Location of Wilkinson building
+
+        self.loc = (36.00352740209603, -78.93814858774756)
+
+        staff_group = Group.objects.create(name='SchoolStaff')
+        driver_group = Group.objects.create(name='Driver')
+
+        self.driver_1 = get_user_model().objects.create_verified_user(email='driver1@example.com', password='wordpass',
+                                                                      full_name='driver 1', address='Duke University',
+                                                                      latitude=self.loc[0],
+                                                                      longitude=self.loc[1])
+        self.driver_1.groups.add(driver_group)
+        login_response = self.client.post('/api/auth/login',
+                                          json.dumps(
+                                              {'email': 'driver1@example.com', 'password': 'wordpass'}),
+                                          content_type='application/json')
+        self.driver_1_token = login_response.data['token']
+
+        self.school_staff_1 = get_user_model().objects.create_verified_user(email='staff1@example.com',
+                                                                            password='wordpass',
+                                                                            full_name='staff 1',
+                                                                            address='Duke University',
+                                                                            latitude=self.loc[0],
+                                                                            longitude=self.loc[1])
+        self.school_staff_1.groups.add(staff_group)
+        login_response = self.client.post('/api/auth/login',
+                                          json.dumps(
+                                              {'email': 'staff1@example.com', 'password': 'wordpass'}),
+                                          content_type='application/json')
+        self.staff_1_token = login_response.data['token']
+
+        self.school_staff_2 = get_user_model().objects.create_verified_user(email='staff2@example.com',
+                                                                            password='wordpass',
+                                                                            full_name='staff 2',
+                                                                            address='Duke University',
+                                                                            latitude=self.loc[0],
+                                                                            longitude=self.loc[1])
+        self.school_staff_2.groups.add(staff_group)
+        login_response = self.client.post('/api/auth/login',
+                                          json.dumps(
+                                              {'email': 'staff2@example.com', 'password': 'wordpass'}),
+                                          content_type='application/json')
+        self.staff_2_token = login_response.data['token']
+
+        self.parent_1 = get_user_model().objects.create_verified_user(email='parent1@gmail.com',
+                                                                      password='password',
+                                                                      full_name='parent 1', address='Duke University',
+                                                                      latitude=self.loc[0], longitude=self.loc[1])
+        self.parent_2 = get_user_model().objects.create_verified_user(email='parent2@gmail.com',
+                                                                      password='password',
+                                                                      full_name='parent 2', address='Duke University',
+                                                                      latitude=self.loc[0], longitude=self.loc[1])
+        self.parent_3 = get_user_model().objects.create_verified_user(email='parent3@gmail.com',
+                                                                      password='password',
+                                                                      full_name='parent 3', address='Duke University',
+                                                                      latitude=self.loc[0], longitude=self.loc[1])
+
+        school_1 = School.objects.create(address='Duke University', longitude=self.loc[0], latitude=self.loc[1],
+                                         name='school 1')
+        school_2 = School.objects.create(address='Duke University', longitude=self.loc[0], latitude=self.loc[1],
+                                         name='school 2')
+        school_3 = School.objects.create(address='Duke University', longitude=self.loc[0], latitude=self.loc[1],
+                                         name='school 3')
+
+        route_1 = Route.objects.create(name='route 1', description='', school=school_1)
+        route_2 = Route.objects.create(name='route 2', description='', school=school_1)
+        route_3 = Route.objects.create(name='route 3', description='', school=school_2)
+        route_4 = Route.objects.create(name='route 4', description='', school=school_3)
+
+        Student.objects.create(full_name='student 1', active=True,
+                               school=school_1, routes=route_1, guardian=self.parent_1,
+                               student_id=None)
+        Student.objects.create(full_name='student 2', active=True,
+                               school=school_2, routes=route_3, guardian=self.parent_1,
+                               student_id=None)
+        Student.objects.create(full_name='student 3', active=True,
+                               school=school_2, routes=route_3, guardian=self.parent_2,
+                               student_id=None)
+        Student.objects.create(full_name='student 4', active=True,
+                               school=school_2, routes=route_4, guardian=self.parent_3,
+                               student_id=None)
+
+        self.school_staff_1.managed_schools.add(school_1)
+        self.school_staff_1.managed_schools.add(school_2)
+        self.school_staff_2.managed_schools.add(school_1)
+
+    def test_school_list_permissions(self):
+        """
+        Driver should be able to view all schools, staff 1 should be able to see 2, and staff 2 should only be able to
+        see one school.
+        """
+        response = self.client.get('/api/school/', HTTP_AUTHORIZATION=f'Token {self.driver_1_token}')
+        self.assertEqual(response.data['count'], 3)
+        response = self.client.get('/api/school/', HTTP_AUTHORIZATION=f'Token {self.staff_1_token}')
+        self.assertEqual(response.data['count'], 2)
+        response = self.client.get('/api/school/', HTTP_AUTHORIZATION=f'Token {self.staff_2_token}')
+        self.assertEqual(response.data['count'], 1)
+
+    def test_route_list_permissions(self):
+        response = self.client.get('/api/route/', HTTP_AUTHORIZATION=f'Token {self.driver_1_token}')
+        self.assertEqual(response.data['count'], 4)
+        response = self.client.get('/api/route/', HTTP_AUTHORIZATION=f'Token {self.staff_1_token}')
+        self.assertEqual(response.data['count'], 3)
+        response = self.client.get('/api/route/', HTTP_AUTHORIZATION=f'Token {self.staff_2_token}')
+        self.assertEqual(response.data['count'], 1)
+
+
 class TestMatchingUtilities(TestCase):
     def setUp(self):
         self.wilkinson_loc = (36.00352740209603, -78.93814858774756)
