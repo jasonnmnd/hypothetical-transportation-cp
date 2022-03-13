@@ -27,6 +27,12 @@ class EditUserSerializer(serializers.ModelSerializer):
         fields = ('id', 'email', 'full_name', 'address', 'latitude', 'longitude', 'groups', 'managed_schools')
 
 
+class StaffEditUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = get_user_model()
+        fields = ('id', 'email', 'full_name', 'address', 'latitude', 'longitude', 'managed_schools')
+
+
 class FormatUserSerializer(UserSerializer):
     groups = GroupSerializer(many=True)
 
@@ -35,6 +41,12 @@ class SchoolSerializer(serializers.ModelSerializer):
     class Meta:
         model = School
         fields = '__all__'
+
+
+class StaffSchoolSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = School
+        fields = ['bus_arrival_time', 'bus_departure_time']
 
 
 class RouteSerializer(serializers.ModelSerializer):

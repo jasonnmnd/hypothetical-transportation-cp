@@ -268,6 +268,7 @@ class UserViewSet(viewsets.ModelViewSet):
         if is_admin(self.request.user) or is_driver(self.request.user):
             return get_user_model().objects.all().distinct().order_by('id')
         elif is_school_staff(self.request.user):
+            # return get_user_model().objects.filter(id=self.request.user.id).distinct().order_by('id')
             managed_schools = self.request.user.managed_schools.all()
             students_queryset = Student.objects.none()
             for school in managed_schools:
@@ -387,8 +388,7 @@ class StudentViewSet(viewsets.ModelViewSet):
             managed_schools = self.request.user.managed_schools.all()
             students_queryset = Student.objects.none()
             for school in managed_schools:
-                for route in school.routes.all():
-                    students_queryset = (students_queryset | route.students.all())
+                students_queryset = (students_queryset | school.students.all())
             return students_queryset.distinct().order_by('id')
         else:
             return self.request.user.students.all().distinct().order_by('id')
