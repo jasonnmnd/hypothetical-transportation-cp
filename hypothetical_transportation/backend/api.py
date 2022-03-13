@@ -263,7 +263,6 @@ class UserViewSet(viewsets.ModelViewSet):
             user_to_delete = get_user_model().objects.get(email=instance)
             for student in user_to_delete.students.all():
                 if student.school not in self.request.user.managed_schools.all():
-                    # return Response(data={"message": "User has a student outside of your managed schools"})
                     raise serializers.ValidationError("User has a student outside of your managed schools")
         super().perform_destroy(instance)
 

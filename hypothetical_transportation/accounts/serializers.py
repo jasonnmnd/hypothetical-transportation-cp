@@ -18,6 +18,14 @@ class InviteSerializer(serializers.ModelSerializer):
         fields = ('id', 'email', 'full_name', 'address', 'latitude', 'longitude', 'groups')
 
 
+class StaffInviteSerializer(serializers.ModelSerializer):
+    groups = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+
+    class Meta:
+        model = get_user_model()
+        fields = ('id', 'email', 'full_name', 'address', 'latitude', 'longitude', 'groups')
+
+
 class InviteVerifiedSerializer(serializers.Serializer):
     code = serializers.CharField(max_length=255)
     password = serializers.CharField(required=True, min_length=1)
@@ -41,7 +49,8 @@ class UserSerializer(serializers.ModelSerializer):
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = ('id', 'email', 'full_name', 'password', 'address', 'latitude', 'longitude', 'groups', 'managed_schools')
+        fields = (
+            'id', 'email', 'full_name', 'password', 'address', 'latitude', 'longitude', 'groups', 'managed_schools')
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):

@@ -3,18 +3,22 @@ from rest_framework.response import Response
 from rest_framework import status
 from knox.models import AuthToken
 from .serializers import UserSerializer, RegisterSerializer, LoginSerializer, ChangePasswordSerializer, \
-    InviteVerifiedSerializer, InviteSerializer
+    InviteVerifiedSerializer, InviteSerializer, StaffInviteSerializer
 from django.contrib.auth import get_user_model
-from .permissions import IsAdmin
+from django.contrib.auth.models import Group
+from backend.permissions import IsAdmin, IsSchoolStaff, is_school_staff
 from .models import InvitationCode
 
 
 # Invite API
 class InviteAPI(generics.GenericAPIView):
     serializer_class = InviteSerializer
-    permission_classes = [
-        IsAdmin,
-    ]
+    permission_classes = [IsAdmin | IsSchoolStaff]
+
+    def get_serializer_class(self):
+        if is_school_staff(self.request.user):
+            return StaffInviteSerializer
+        return InviteSerializer
 
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
@@ -35,6 +39,9 @@ class InviteAPI(generics.GenericAPIView):
             user.set_unusable_password()
             user.address = address
             user.full_name = full_name
+            if not groups and Group.objects.filter(pk=2).count() > 0:
+                # Default case for staff privileges
+                user.groups.add(2)
             user.groups.add(*groups)
             user.save()
             ipaddr = self.request.META.get('REMOTE_ADDR', '0.0.0.0')
