@@ -2,7 +2,7 @@ from urllib import response
 from django.contrib.auth import get_user_model
 from django.db import transaction, IntegrityError
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters, status
+from rest_framework import filters, status, serializers
 from rest_framework import viewsets, permissions, generics
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -16,7 +16,7 @@ from .models import School, Route, Student, Stop
 from .serializers import UserSerializer, StudentSerializer, RouteSerializer, SchoolSerializer, FormatStudentSerializer, \
     FormatRouteSerializer, FormatUserSerializer, EditUserSerializer, StopSerializer, CheckInrangeSerializer, \
     LoadUserSerializer, LoadModelDataSerializer, find_school_match_candidates, school_names_match, \
-    StaffEditUserSerializer, StaffEditSchoolSerializer
+    StaffEditUserSerializer, StaffEditSchoolSerializer, StaffStudentSerializer
 from .search import DynamicSearchFilter
 from .customfilters import StudentCountShortCircuitFilter
 from .permissions import is_admin, is_school_staff, is_driver, IsAdminOrReadOnly, IsAdmin, IsSchoolStaff
@@ -258,6 +258,15 @@ class UserViewSet(viewsets.ModelViewSet):
     ordering_fields = ['email', 'full_name', 'id']
     ordering = 'id'
 
+    def perform_destroy(self, instance):
+        if is_school_staff(self.request.user):
+            user_to_delete = get_user_model().objects.get(email=instance)
+            for student in user_to_delete.students.all():
+                if student.school not in self.request.user.managed_schools.all():
+                    # return Response(data={"message": "User has a student outside of your managed schools"})
+                    raise serializers.ValidationError("User has a student outside of your managed schools")
+        super().perform_destroy(instance)
+
     def get_serializer_class(self):
         if is_school_staff(self.request.user) and (
                 self.action == 'partial_update' or self.action == 'update' or self.action == 'create'):
@@ -386,6 +395,8 @@ class StudentViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action == 'list' or self.action == 'retrieve':
             return FormatStudentSerializer
+        if is_school_staff(self.request.user):
+            return StaffStudentSerializer
         return StudentSerializer
 
     def get_queryset(self):

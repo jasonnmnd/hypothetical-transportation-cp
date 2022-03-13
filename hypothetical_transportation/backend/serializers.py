@@ -28,9 +28,13 @@ class EditUserSerializer(serializers.ModelSerializer):
 
 
 class StaffEditUserSerializer(serializers.ModelSerializer):
+    def validate(self, attrs):
+        print(self.context['request'].user)
+        return attrs
+
     class Meta:
         model = get_user_model()
-        fields = ('id', 'email', 'full_name', 'address', 'latitude', 'longitude', 'managed_schools')
+        fields = ('id', 'email', 'full_name', 'address', 'latitude', 'longitude')
 
 
 class FormatUserSerializer(UserSerializer):
@@ -101,6 +105,15 @@ class StudentSerializer(serializers.ModelSerializer):
             if data['guardian'] and len(data['guardian'].address) == 0:
                 raise serializers.ValidationError("User does not have an address configured")
         return data
+
+
+class StaffStudentSerializer(StudentSerializer):
+    def validate_school(self, data):
+        staff_email = self.context['request'].user
+        staff_user = get_user_model().objects.get(email=staff_email)
+        if data in staff_user.managed_schools.all():
+            return data
+        raise serializers.ValidationError("Student school is not among schools that you manage!")
 
 
 class FormatStudentSerializer(StudentSerializer):

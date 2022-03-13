@@ -209,6 +209,18 @@ class TestGroupViewFiltering(TransactionTestCase):
         response = self.client.delete('/api/route/3/', HTTP_AUTHORIZATION=f'Token {self.staff_1_token}')
         self.assertEqual(response.status_code, 404)
 
+    def test_staff_user_delete_on_all_students(self):
+        """
+        Tests that staff can only delete a user if all children of that user attend schools within that staff's managed
+        schools.
+        :return: None
+        """
+        response = self.client.delete(f'/api/user/{self.parent_1.id}/',
+                                      HTTP_AUTHORIZATION=f'Token {self.staff_2_token}')
+        self.assertEqual(response.status_code, 400)
+        response = self.client.delete(f'/api/user/{self.parent_1.id}/',
+                                      HTTP_AUTHORIZATION=f'Token {self.staff_1_token}')
+        self.assertEqual(response.status_code, 204)
 
 
 class TestMatchingUtilities(TestCase):
