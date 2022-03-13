@@ -187,6 +187,28 @@ class TestGroupViewFiltering(TransactionTestCase):
         response = self.client.get('/api/user/', HTTP_AUTHORIZATION=f'Token {self.staff_2_token}')
         self.assertEqual(response.data['count'], 1)
 
+    def test_staff_cannot_delete_school(self):
+        response = self.client.delete('/api/school/1/', HTTP_AUTHORIZATION=f'Token {self.staff_1_token}')
+        self.assertEqual(response.status_code, 403)
+
+    def test_staff_can_delete_assoc_student(self):
+        response = self.client.delete('/api/student/1/', HTTP_AUTHORIZATION=f'Token {self.staff_1_token}')
+        self.assertEqual(response.status_code, 204)
+        response = self.client.delete('/api/student/4/', HTTP_AUTHORIZATION=f'Token {self.staff_1_token}')
+        self.assertEqual(response.status_code, 404)
+
+    def test_staff_can_delete_assoc_route(self):
+        response = self.client.delete('/api/route/1/', HTTP_AUTHORIZATION=f'Token {self.staff_1_token}')
+        self.assertEqual(response.status_code, 204)
+        response = self.client.delete('/api/route/2/', HTTP_AUTHORIZATION=f'Token {self.staff_1_token}')
+        self.assertEqual(response.status_code, 204)
+        response = self.client.delete('/api/route/3/', HTTP_AUTHORIZATION=f'Token {self.staff_2_token}')
+        self.assertEqual(response.status_code, 404)
+        response = self.client.delete('/api/route/3/', HTTP_AUTHORIZATION=f'Token {self.staff_1_token}')
+        self.assertEqual(response.status_code, 204)
+        response = self.client.delete('/api/route/3/', HTTP_AUTHORIZATION=f'Token {self.staff_1_token}')
+        self.assertEqual(response.status_code, 404)
+
 
 
 class TestMatchingUtilities(TestCase):

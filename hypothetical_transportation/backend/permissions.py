@@ -39,7 +39,27 @@ class IsAdmin(permissions.BasePermission):
         return True
 
 
+class IsSchoolStaff(permissions.BasePermission):
+    """
+    SchoolStaff permission is almost identical to Admin permissions.
+
+    This permission should be revoked for:
+    - Creating/Deleting schools
+    """
+
+    def has_permission(self, request, view):
+        if not request.user.is_authenticated or not is_school_staff(request.user):
+            return False
+        return True
+
+    def has_object_permission(self, request, view, obj):
+        if not request.user.is_authenticated or not is_school_staff(request.user):
+            return False
+        return True
+
+
 class IsAdminOrReadOnly(permissions.BasePermission):
+
     def has_permission(self, request, view):
         if not request.user.is_authenticated:
             return False

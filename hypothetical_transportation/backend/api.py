@@ -18,7 +18,7 @@ from .serializers import UserSerializer, StudentSerializer, RouteSerializer, Sch
     LoadUserSerializer, LoadModelDataSerializer, find_school_match_candidates, school_names_match
 from .search import DynamicSearchFilter
 from .customfilters import StudentCountShortCircuitFilter
-from .permissions import is_admin, is_school_staff, is_driver, IsAdminOrReadOnly, IsAdmin
+from .permissions import is_admin, is_school_staff, is_driver, IsAdminOrReadOnly, IsAdmin, IsSchoolStaff
 from django.shortcuts import get_object_or_404
 from .geo_utils import get_straightline_distance, LEN_OF_MILE
 from collections import defaultdict
@@ -251,10 +251,7 @@ class StopPlannerAPI(generics.GenericAPIView):
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    permission_classes = [
-        # permissions.IsAuthenticated
-        IsAdminOrReadOnly
-    ]
+    permission_classes = [IsAdminOrReadOnly | IsSchoolStaff]
     filter_backends = [DjangoFilterBackend, DynamicSearchFilter, filters.OrderingFilter]
     filterset_fields = get_filter_dict(get_user_model())
     ordering_fields = ['email', 'full_name', 'id']
@@ -287,20 +284,9 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
 class StopViewSet(viewsets.ModelViewSet):
-    permission_classes = [
-        IsAdminOrReadOnly
-    ]
+    permission_classes = [IsAdminOrReadOnly | IsSchoolStaff]
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
     filterset_fields = ['route']
-
-    # @override
-    # def create(self, request):
-    #     res = self.create()
-    #     stop = self.get_object()
-    #     print(f'stop: {stop}\n')
-    # #     update_bus_times_for_stops_related_to_stop(stop)
-    #     content = parse_repr(repr(StopSerializer()))
-    #     return Response(content)
 
     def get_serializer_class(self):
         return StopSerializer
@@ -320,10 +306,7 @@ class StopViewSet(viewsets.ModelViewSet):
 
 
 class RouteViewSet(viewsets.ModelViewSet):
-    permission_classes = [
-        IsAdminOrReadOnly
-        # permissions.IsAuthenticated
-    ]
+    permission_classes = [IsAdminOrReadOnly | IsSchoolStaff]
     filter_backends = [DjangoFilterBackend, DynamicSearchFilter, StudentCountShortCircuitFilter]
     filterset_fields = get_filter_dict(Route)
     ordering_fields = ['school__name', 'name', 'students', 'id']
@@ -352,16 +335,18 @@ class RouteViewSet(viewsets.ModelViewSet):
 
 class SchoolViewSet(viewsets.ModelViewSet):
     serializer_class = SchoolSerializer
-    permission_classes = [
-        # permissions.IsAuthenticated
-        IsAdminOrReadOnly
-    ]
+    permission_classes = [IsSchoolStaff | IsAdminOrReadOnly]
     filter_backends = [DjangoFilterBackend, DynamicSearchFilter, filters.OrderingFilter]
     filterset_fields = get_filter_dict(School)
     ordering_fields = ['name', 'id', 'bus_arrival_time', 'bus_departure_time']
     ordering = 'id'
 
     # search_fields = [self.request.querystring]
+    def get_permissions(self):
+        # Remove School Staff Create/Destroy permissions
+        if self.action == 'create' or self.action == 'destroy':
+            return [IsAdminOrReadOnly(), ]
+        return super().get_permissions()
 
     def get_queryset(self):
         if is_admin(self.request.user) or is_driver(self.request.user):
@@ -375,11 +360,7 @@ class SchoolViewSet(viewsets.ModelViewSet):
 
 
 class StudentViewSet(viewsets.ModelViewSet):
-    permission_classes = [
-        # permissions.IsAuthenticated
-        # permissions.AllowAny
-        IsAdminOrReadOnly
-    ]
+    permission_classes = [IsAdminOrReadOnly | IsSchoolStaff]
     filter_backends = [DjangoFilterBackend, DynamicSearchFilter, filters.OrderingFilter]
     filterset_fields = get_filter_dict(Student)
     ordering_fields = ['school__name', 'student_id', 'full_name', 'id']
