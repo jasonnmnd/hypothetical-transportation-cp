@@ -271,10 +271,10 @@ class UserViewSet(viewsets.ModelViewSet):
         if is_admin(self.request.user) or is_driver(self.request.user):
             return get_user_model().objects.all().distinct().order_by('id')
         elif is_school_staff(self.request.user):
-            managed_schools = self.request.user.managed_schools
+            managed_schools = self.request.user.managed_schools.all()
             students_queryset = Student.objects.none()
             for school in managed_schools:
-                students_queryset = (students_queryset | school.students).distinct()
+                students_queryset = (students_queryset | school.students.all())
             return get_user_model().objects.filter(id__in=students_queryset.values('guardian_id')).distinct().order_by(
                 'id')
         else:
@@ -288,7 +288,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
 class StopViewSet(viewsets.ModelViewSet):
     permission_classes = [
-        IsAdmin
+        IsAdminOrReadOnly
     ]
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
     filterset_fields = ['route']
@@ -309,12 +309,12 @@ class StopViewSet(viewsets.ModelViewSet):
         if is_admin(self.request.user) or is_driver(self.request.user):
             return Stop.objects.all()
         elif is_school_staff(self.request.user):
-            managed_schools = self.request.user.managed_schools
+            managed_schools = self.request.user.managed_schools.all()
             stops_queryset = Stop.objects.none()
             for school in managed_schools:
-                for route in school.routes:
-                    stops_queryset = (stops_queryset | route.stops).distinct()
-            return stops_queryset
+                for route in school.routes.all():
+                    stops_queryset = (stops_queryset | route.stops.all())
+            return stops_queryset.distinct()
         else:
             return Stop.objects.none()
 
@@ -340,11 +340,11 @@ class RouteViewSet(viewsets.ModelViewSet):
         if is_admin(self.request.user) or is_driver(self.request.user):
             return Route.objects.all().distinct().order_by('id')
         elif is_school_staff(self.request.user):
-            managed_schools = self.request.user.managed_schools
+            managed_schools = self.request.user.managed_schools.all()
             routes_queryset = Route.objects.none()
             for school in managed_schools:
-                routes_queryset = (routes_queryset | school.routes).distinct()
-            return routes_queryset.order_by('id')
+                routes_queryset = (routes_queryset | school.routes.all())
+            return routes_queryset.distinct().order_by('id')
         else:
             students_queryset = self.request.user.students
             return Route.objects.filter(id__in=students_queryset.values('routes_id')).distinct().order_by('id')
@@ -403,11 +403,12 @@ class StudentViewSet(viewsets.ModelViewSet):
         if is_admin(self.request.user) or is_driver(self.request.user):
             return Student.objects.all().distinct().order_by('id')
         elif is_school_staff(self.request.user):
-            managed_schools = self.request.user.managed_schools
+            managed_schools = self.request.user.managed_schools.all()
             students_queryset = Student.objects.none()
             for school in managed_schools:
-                students_queryset = (students_queryset | school.routes).distinct()
-            return students_queryset.order_by('id')
+                for route in school.routes.all():
+                    students_queryset = (students_queryset | route.students.all())
+            return students_queryset.distinct().order_by('id')
         else:
             return self.request.user.students.all().distinct().order_by('id')
 

@@ -126,8 +126,17 @@ class TestGroupViewFiltering(TransactionTestCase):
                                school=school_2, routes=route_3, guardian=self.parent_2,
                                student_id=None)
         Student.objects.create(full_name='student 4', active=True,
-                               school=school_2, routes=route_4, guardian=self.parent_3,
+                               school=school_3, routes=route_4, guardian=self.parent_3,
                                student_id=None)
+
+        Stop.objects.create(name='stop 1', latitude=self.loc[0], longitude=self.loc[1], stop_number=1,
+                            pickup_time="11:11:00", dropoff_time="12:11:00", route=route_1)
+        Stop.objects.create(name='stop 2', latitude=self.loc[0], longitude=self.loc[1], stop_number=1,
+                            pickup_time="11:11:00", dropoff_time="12:11:00", route=route_2)
+        Stop.objects.create(name='stop 3', latitude=self.loc[0], longitude=self.loc[1], stop_number=1,
+                            pickup_time="11:11:00", dropoff_time="12:11:00", route=route_3)
+        Stop.objects.create(name='stop 4', latitude=self.loc[0], longitude=self.loc[1], stop_number=1,
+                            pickup_time="11:11:00", dropoff_time="12:11:00", route=route_4)
 
         self.school_staff_1.managed_schools.add(school_1)
         self.school_staff_1.managed_schools.add(school_2)
@@ -151,7 +160,33 @@ class TestGroupViewFiltering(TransactionTestCase):
         response = self.client.get('/api/route/', HTTP_AUTHORIZATION=f'Token {self.staff_1_token}')
         self.assertEqual(response.data['count'], 3)
         response = self.client.get('/api/route/', HTTP_AUTHORIZATION=f'Token {self.staff_2_token}')
+        self.assertEqual(response.data['count'], 2)
+
+    def test_stop_list_permissions(self):
+        response = self.client.get('/api/stop/', HTTP_AUTHORIZATION=f'Token {self.driver_1_token}')
+        self.assertEqual(response.data['count'], 4)
+        response = self.client.get('/api/stop/', HTTP_AUTHORIZATION=f'Token {self.staff_1_token}')
+        self.assertEqual(response.data['count'], 3)
+        response = self.client.get('/api/stop/', HTTP_AUTHORIZATION=f'Token {self.staff_2_token}')
+        self.assertEqual(response.data['count'], 2)
+
+    def test_student_list_permissions(self):
+        response = self.client.get('/api/student/', HTTP_AUTHORIZATION=f'Token {self.driver_1_token}')
+        self.assertEqual(response.data['count'], 4)
+        response = self.client.get('/api/student/', HTTP_AUTHORIZATION=f'Token {self.staff_1_token}')
+        self.assertEqual(response.data['count'], 3)
+        response = self.client.get('/api/student/', HTTP_AUTHORIZATION=f'Token {self.staff_2_token}')
         self.assertEqual(response.data['count'], 1)
+
+    def test_parent_list_permissions(self):
+        # Driver can also see other users
+        response = self.client.get('/api/user/', HTTP_AUTHORIZATION=f'Token {self.driver_1_token}')
+        self.assertEqual(response.data['count'], 6)
+        response = self.client.get('/api/user/', HTTP_AUTHORIZATION=f'Token {self.staff_1_token}')
+        self.assertEqual(response.data['count'], 2)
+        response = self.client.get('/api/user/', HTTP_AUTHORIZATION=f'Token {self.staff_2_token}')
+        self.assertEqual(response.data['count'], 1)
+
 
 
 class TestMatchingUtilities(TestCase):
