@@ -43,7 +43,7 @@ class SchoolSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class StaffSchoolSerializer(serializers.ModelSerializer):
+class StaffEditSchoolSerializer(serializers.ModelSerializer):
     class Meta:
         model = School
         fields = ['bus_arrival_time', 'bus_departure_time']

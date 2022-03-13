@@ -15,7 +15,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from .models import School, Route, Student, Stop
 from .serializers import UserSerializer, StudentSerializer, RouteSerializer, SchoolSerializer, FormatStudentSerializer, \
     FormatRouteSerializer, FormatUserSerializer, EditUserSerializer, StopSerializer, CheckInrangeSerializer, \
-    LoadUserSerializer, LoadModelDataSerializer, find_school_match_candidates, school_names_match
+    LoadUserSerializer, LoadModelDataSerializer, find_school_match_candidates, school_names_match, \
+    StaffEditUserSerializer, StaffEditSchoolSerializer
 from .search import DynamicSearchFilter
 from .customfilters import StudentCountShortCircuitFilter
 from .permissions import is_admin, is_school_staff, is_driver, IsAdminOrReadOnly, IsAdmin, IsSchoolStaff
@@ -258,6 +259,9 @@ class UserViewSet(viewsets.ModelViewSet):
     ordering = 'id'
 
     def get_serializer_class(self):
+        if is_school_staff(self.request.user) and (
+                self.action == 'partial_update' or self.action == 'update' or self.action == 'create'):
+            return StaffEditUserSerializer
         if self.action == 'partial_update' or self.action == 'update':
             return EditUserSerializer
         if self.action == 'list' or self.action == 'retrieve':
@@ -335,7 +339,6 @@ class RouteViewSet(viewsets.ModelViewSet):
 
 
 class SchoolViewSet(viewsets.ModelViewSet):
-    serializer_class = SchoolSerializer
     permission_classes = [IsSchoolStaff | IsAdminOrReadOnly]
     filter_backends = [DjangoFilterBackend, DynamicSearchFilter, filters.OrderingFilter]
     filterset_fields = get_filter_dict(School)
@@ -348,6 +351,11 @@ class SchoolViewSet(viewsets.ModelViewSet):
         if self.action == 'create' or self.action == 'destroy':
             return [IsAdminOrReadOnly(), ]
         return super().get_permissions()
+
+    def get_serializer_class(self):
+        if is_school_staff(self.request.user) and (self.action == 'update' or self.action == 'partial_update'):
+            return StaffEditSchoolSerializer
+        return SchoolSerializer
 
     def get_queryset(self):
         if is_admin(self.request.user) or is_driver(self.request.user):
