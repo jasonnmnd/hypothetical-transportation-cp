@@ -3,6 +3,7 @@ from django.contrib.auth.models import Group
 from rest_framework import serializers
 from .models import Route, School, Student, Stop
 from geopy.geocoders import Nominatim
+from .permissions import is_admin
 
 
 class GroupSerializer(serializers.ModelSerializer):
@@ -22,6 +23,14 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class EditUserSerializer(serializers.ModelSerializer):
+    def update(self, instance, validated_data):
+        user_email = self.context['request'].user
+        user = get_user_model().objects.get(email=user_email)
+        if is_admin(user) and user_email == instance and 'groups' in validated_data and Group.objects.get(
+                name='Administrator') not in validated_data['groups']:
+            raise serializers.ValidationError("You may not revoke your own administrator privileges")
+        return super().update(instance, validated_data)
+
     class Meta:
         model = get_user_model()
         fields = ('id', 'email', 'full_name', 'address', 'latitude', 'longitude', 'groups', 'managed_schools')
@@ -29,7 +38,7 @@ class EditUserSerializer(serializers.ModelSerializer):
 
 class StaffEditUserSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
-        print(self.context['request'].user)
+        # print(self.context['request'].user)
         return attrs
 
     class Meta:
