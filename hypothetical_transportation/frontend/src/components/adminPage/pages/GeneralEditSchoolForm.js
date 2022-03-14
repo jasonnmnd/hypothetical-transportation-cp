@@ -51,10 +51,6 @@ function GeneralEditSchoolForm(props) {
         "52", "53", "54", "55", "56", "57", "58", "59"
     ]
 
-    const time = [
-        "AM", "PM"
-    ]
-
     const convertTo24Hr = (hour) => {
         hour = parseInt(hour);
         hour += 12;
@@ -217,15 +213,6 @@ function GeneralEditSchoolForm(props) {
                                                 })
                                             }
                                         </Form.Select>
-                                        
-                                        <Form.Select size="sm" style={{width: "65px"}} value={busArrivalTime.time} onChange={(e) => setBusArrivalTime({...busArrivalTime, time: e.target.value})}>
-                                            {
-                                                time.map((val, i) => {
-                                                    return <option value={val} key={i}>{val}</option>
-                                                })
-                                            }
-                                        </Form.Select>
-
                                     </div>
                             </Form.Group>
 
@@ -247,15 +234,6 @@ function GeneralEditSchoolForm(props) {
                                             })
                                         }
                                     </Form.Select>
-
-                                    <Form.Select size="sm" style={{width: "65px"}} value={busDepartureTime.time} onChange={(e) => setBusDepartureTime({...busDepartureTime, time: e.target.value})}>
-                                        {
-                                            time.map((val, i) => {
-                                                return <option value={val} key={i}>{val}</option>
-                                            })
-                                        }
-                                    </Form.Select>
-
                                 </div>
                             </Form.Group>
 
