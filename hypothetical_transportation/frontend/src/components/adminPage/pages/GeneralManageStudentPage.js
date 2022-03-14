@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import EditForm from '../components/forms/EditForm';
 import Header from '../../header/Header';
 import "../adminPage.css";
 import { Link, useNavigate, useParams } from 'react-router-dom';
