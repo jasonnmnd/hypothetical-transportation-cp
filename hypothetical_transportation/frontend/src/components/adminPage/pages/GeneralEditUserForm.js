@@ -173,29 +173,31 @@ function GeneralEditUserForm(props) {
                                 <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                                 <Form.Control.Feedback type="invalid">Please provide a valid name.</Form.Control.Feedback>
                             </Form.Group>
-                            <Form.Group as={Col}>
-                                <Form.Label as="h5">User Type</Form.Label>
-                                <InputGroup className="mb-3">
-                                <ButtonGroup>
-                                    {groupTypes.map((radio, idx) => (
-                                    <ToggleButton
-                                        key={idx}
-                                        id={`radio-${idx}`}
-                                        type="radio"
-                                        variant={'outline-warning'}
-                                        name="radio"
-                                        value={radio.value}
-                                        checked={fieldValues.groups == radio.value}
-                                        onChange={(e)=>{
-                                            setFieldValues({...fieldValues, groups: e.target.value});
-                                        }}
-                                    >
-                                        {radio.name}
-                                    </ToggleButton>
-                                    ))}
-                                </ButtonGroup>
-                                </InputGroup>
-                            </Form.Group>
+                            {props.user.groups[0] == 1 ? 
+                                <Form.Group as={Col}>
+                                    <Form.Label as="h5">User Type</Form.Label>
+                                    <InputGroup className="mb-3">
+                                        <ButtonGroup>
+                                            {groupTypes.map((radio, idx) => (
+                                            <ToggleButton
+                                                key={idx}
+                                                id={`radio-${idx}`}
+                                                type="radio"
+                                                variant={'outline-warning'}
+                                                name="radio"
+                                                value={radio.value}
+                                                checked={fieldValues.groups == radio.value}
+                                                onChange={(e)=>{
+                                                    setFieldValues({...fieldValues, groups: e.target.value});
+                                                }}
+                                            >
+                                                {radio.name}
+                                            </ToggleButton>
+                                            ))}
+                                        </ButtonGroup>
+                                    </InputGroup>
+                                </Form.Group> : <></>
+                            }
                         </Row>
                         {fieldValues.groups ==4 ?
                         <Row className="mb-3">
