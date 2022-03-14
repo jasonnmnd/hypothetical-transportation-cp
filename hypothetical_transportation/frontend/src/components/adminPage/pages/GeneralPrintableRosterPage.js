@@ -60,10 +60,10 @@ function GeneralPrintableRoster(props) {
 
         <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
           <Container>
+            <br></br>
             <div className="p-3 mb-5 bg-white rounded d-flex flex-row justify-content-center">
-              <h1>Students for {props.route.name} at {props.route.school.name}</h1>
+              <h1>Students in <b> {props.route.name} </b> at <b>{props.route.school.name}</b></h1>
             </div>
-
             <Table striped bordered size="sm">
               <thead>
                 <tr>
