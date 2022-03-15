@@ -1,6 +1,6 @@
 from django.db.models.signals import post_save
 from ..models import School, Stop
-from ..api import update_bus_times_for_stops_related_to_stop, update_all_stops_related_to_school
+from ..time_utils import update_bus_times_for_stops_related_to_stop, update_all_stops_related_to_school
 import math
 
 LEN_OF_MILE = 1
