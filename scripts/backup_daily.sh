@@ -8,16 +8,14 @@ echo "[BACKUP - DAILY] dumping data from inside web app"
 sudo docker exec -it ece-458_web_1 python3 /code/manage.py dumpdata -o daily.json
 
 echo "[BACKUP - DAILY] copying data dump from db to server host"
-sudo docker cp ece-458_web_1:daily.json /home/vcm/daily-$DOW.json
+sudo docker cp ece-458_web_1:daily.json /home/vcm/daily.json
 
 SSH_CONNECTION=$(ip route get 8.8.8.8 | grep -oP 'src \K[^ ]+')
 echo "i am $SSH_CONNECTION"
 
-cat /home/vcm/.ssh/id_rsa.pub
+ls -la /home/vcm/dev/tty
 cat /home/vcm/.ssh/known_hosts
-echo ""
-echo ""
 env
 
 echo "[BACKUP - DAILY] copying data dump from server host to backup host"
-scp -v -i /home/vcm/.ssh/id_rsa /home/vcm/daily-$DOW.json vcm@vcm-25708.vm.duke.edu:/home/vcm/backups/dev-host/daily/daily-$DOW.json
+scp -v -i /home/vcm/.ssh/id_rsa /home/vcm/daily-Mon.json vcm@vcm-25708.vm.duke.edu:/home/vcm/backups/dev-host/daily/daily-$DOW.json

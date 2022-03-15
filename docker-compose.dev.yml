@@ -38,3 +38,13 @@ services:
       - LETSENCRYPT_EMAIL=dmm107@duke.edu
     depends_on:
       - db
+
+volumes:
+  static_volume:
+  postgres_data:
+  static_volume:
+  media_volume:
+  certs:
+  html:
+  vhost:
+  acme:
