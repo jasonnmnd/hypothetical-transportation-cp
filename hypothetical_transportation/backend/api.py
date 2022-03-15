@@ -549,7 +549,7 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
             user_object_response = dict()
             current_email_duplicates = [dup.get_representation() for dup in user_email_duplication[user.email] if
                                         dup != user]
-            is_valid &= len(current_email_duplicates) > 0
+            is_valid &= len(current_email_duplicates) == 0
             user_object_response["email"] = self.get_val_field_response_format(user.email,
                                                                                serializer_errors["users"][user_dex].get(
                                                                                    "email", []),
