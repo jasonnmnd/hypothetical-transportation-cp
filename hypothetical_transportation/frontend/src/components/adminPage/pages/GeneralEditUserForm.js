@@ -182,7 +182,14 @@ function GeneralEditUserForm(props) {
                 <div className="shadow-sm p-3 mb-5 bg-white rounded d-flex flex-row justify-content-center">
                     {props.action == "edit" ? <h1>Edit User</h1> : <h1>Create User</h1>}
                 </div>
-                    <Form className="shadow-lg p-3 mb-5 bg-white rounded" noValidate validated={validated} onSubmit={handleSubmit}>
+                    <Form className="shadow-lg p-3 mb-5 bg-white rounded" noValidate validated={validated} 
+                    onSubmit={handleSubmit}
+                    onKeyPress={event => {
+                        if (event.key === 'Enter' /* Enter */) {
+                          event.preventDefault();
+                        }
+                      }}
+                    >
 
                         <Row className="mb-3">
                             <Form.Group as={Col} controlId="formGridAddress2">

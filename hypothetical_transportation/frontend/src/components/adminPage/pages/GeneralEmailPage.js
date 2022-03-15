@@ -203,7 +203,13 @@ function GeneralAdminEmailPage(props) {
                 <h1>Send Email</h1>
             </div>
             <br></br>
-            <Form className="shadow-lg p-3 mb-5 bg-white rounded">
+            <Form className="shadow-lg p-3 mb-5 bg-white rounded"
+            onKeyPress={event => {
+                if (event.key === 'Enter' /* Enter */) {
+                  event.preventDefault();
+                }
+              }}
+            >
                 <Container className='d-flex justify-content-center'>
                     <Form.Group className="mb-3" controlId="validationCustom01">
                         <ButtonGroup>

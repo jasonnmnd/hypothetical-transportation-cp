@@ -179,7 +179,13 @@ function GeneralEditSchoolForm(props) {
                     <div className="shadow-sm p-3 mb-5 bg-white rounded d-flex flex-row justify-content-center">
                         {props.action == "edit" ? <h1>Edit School</h1> : <h1>Create School</h1>}
                     </div>
-                    <Form className="shadow-lg p-3 mb-5 bg-white rounded" noValidate validated={validated} onSubmit={handleSubmit}>
+                    <Form className="shadow-lg p-3 mb-5 bg-white rounded" noValidate validated={validated} onSubmit={handleSubmit}
+                    onKeyPress={event => {
+                        if (event.key === 'Enter' /* Enter */) {
+                          event.preventDefault();
+                        }
+                      }}
+                    >
 
                         <Form.Group className="mb-3" controlId="validationCustom01">
                             <Form.Label as="h5">Name of School</Form.Label>

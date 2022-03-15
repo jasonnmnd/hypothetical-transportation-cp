@@ -49,6 +49,7 @@ function GeneralManageStudentPage(props) {
 
   const handleSubmit = (event) => {
     console.log(obj)
+    event.preventDefault();
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
       event.preventDefault();
@@ -283,7 +284,13 @@ useEffect(()=>{
             </form>
         </div> */}
         <Container className="container-main">
-          <Form className="shadow-lg p-3 mb-5 bg-white rounded" noValidate validated={validated} onSubmit={handleSubmit}>
+          <Form className="shadow-lg p-3 mb-5 bg-white rounded" noValidate validated={validated} onSubmit={handleSubmit}
+            onKeyPress={event => {
+              if (event.key === 'Enter' /* Enter */) {
+                event.preventDefault();
+              }
+            }}
+            >
           <Row className="mb-3">
             <Form.Group as={Col} controlId="formGridName" >
                 <Form.Label as="h5">Full Name</Form.Label>
