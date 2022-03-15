@@ -232,7 +232,7 @@ function GeneralEditUserForm(props) {
                                 </Form.Group> : <></>
                             }
                         </Row>
-                        {fieldValues.groups ==4 ?
+                        {fieldValues.groups ==3 ?
                         <Row className="mb-3">
                             <Form.Group >
                                 <Form.Label>Please select schools that this user can manage</Form.Label>
