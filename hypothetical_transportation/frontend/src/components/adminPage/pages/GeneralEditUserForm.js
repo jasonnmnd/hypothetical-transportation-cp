@@ -247,7 +247,7 @@ function GeneralEditUserForm(props) {
                                     }):null}
                                 </Form.Control> */}
                                 <Select isMulti options={getSchoolOPtion()} value={schoolSelected} onChange={setSchoolSelected}/>
-                                {/* <Form.Text muted> hold ctrl or command for multiple select</Form.Text> */}
+                                <Form.Text muted> You can type into the box to filter the options</Form.Text>
                             </Form.Group>
                         </Row>:<></>}
 
