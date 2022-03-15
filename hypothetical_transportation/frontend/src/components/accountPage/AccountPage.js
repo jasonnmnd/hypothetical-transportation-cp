@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import isAdmin from "../../utils/user";
 import '../adminPage/NEWadminPage.css';
 import { Container, Card, Button, Row, Col } from 'react-bootstrap'
+import getType from "../../utils/user2";
 
 function AccountPage(props){
     
@@ -35,8 +36,8 @@ function AccountPage(props){
 
         <div>  
         {
-           isAdmin(props.user) ?  <Header></Header> : <ParentHeader></ParentHeader>
-        }
+            getType(props.user)!=="parent" ? <Header></Header> : <ParentHeader></ParentHeader>
+          }
         <Container className="container-main d-flex flex-column" style={{gap: "20px"}}>
         <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
             <Row>
@@ -46,13 +47,13 @@ function AccountPage(props){
                     </Link>
                 </Col>
 
-                <Col>
+                {/* <Col>
                     {props.user.groups[0]==1 ? <Link to={"/admin"}>
                         <Button variant="yellowLong" size="lg">Back</Button>
                     </Link> : <Link to={"/parent"}>
                         <Button variant="yellowLong" size="lg">Back</Button>
                     </Link>}
-                </Col>
+                </Col> */}
             </Row>
         </Container>
         

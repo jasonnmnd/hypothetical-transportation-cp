@@ -14,6 +14,7 @@ import StopsPic from '../assets/stopsPic.jpg';
 import EmailPic from '../assets/emailPic.jpg';
 import DataPic from '../assets/data.jpg';
 import isAdmin from "../../utils/user";
+import getType from "../../utils/user2";
 
 //This page will be used for the admin page to declutter App.js
 function AdminPage( props ) {
@@ -37,7 +38,7 @@ function AdminPage( props ) {
                       <Card.Text>
                         View {isAdmin(props.user)? "and modify" :""} existing users.
                       </Card.Text>
-                        <Link to={`/admin/users?pageNum=1`}>
+                        <Link to={`/${getType(props.user)}/users?pageNum=1`}>
                           <Button variant="yellow" size="lg">View Users</Button>
                         </Link>
                     </Card.Body>
@@ -51,7 +52,7 @@ function AdminPage( props ) {
                       <Card.Text>
                         View {isAdmin(props.user)? "and modify" :""} existing students.
                       </Card.Text>
-                        <Link to={`/admin/students?pageNum=1`}>
+                        <Link to={`/${getType(props.user)}/students?pageNum=1`}>
                           <Button variant="yellow" size="lg">View Students</Button>
                         </Link>
                     </Card.Body>
@@ -65,7 +66,7 @@ function AdminPage( props ) {
                       <Card.Text>
                         View {isAdmin(props.user)? "and modify" :""} existing schools.
                       </Card.Text>
-                      <Link to={`/admin/schools?pageNum=1`}>
+                      <Link to={`/${getType(props.user)}/schools?pageNum=1`}>
                         <Button variant="yellow" size="lg">View Schools</Button>
                       </Link>  
                     </Card.Body>
@@ -82,7 +83,7 @@ function AdminPage( props ) {
                       <Card.Text>
                         View {isAdmin(props.user)? "and modify" :""} existing routes.
                       </Card.Text>
-                        <Link to={`/admin/routes?pageNum=1`}>
+                        <Link to={`/${getType(props.user)}/routes?pageNum=1`}>
                           <Button variant="yellow" size="lg">View Routes</Button>
                         </Link>
                     </Card.Body>
@@ -97,7 +98,7 @@ function AdminPage( props ) {
                         <Card.Text>
                           Send an email to users.
                         </Card.Text>
-                          <Link to={`/admin/email`}>
+                          <Link to={`/${getType(props.user)}/email`}>
                             <Button variant="yellow" size="lg">Send Email</Button>
                           </Link>
                       </Card.Body>

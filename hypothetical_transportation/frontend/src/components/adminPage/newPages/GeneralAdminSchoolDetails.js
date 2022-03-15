@@ -11,6 +11,7 @@ import { getStudents } from '../../../actions/students';
 import { getRoutes } from '../../../actions/routes';
 import GeneralAdminTableView from '../components/views/GeneralAdminTableView';
 import { filterObjectForKey, filterObjectForKeySubstring } from '../../../utils/utils';
+import getType from '../../../utils/user2';
 
 function GeneralAdminSchoolDetails(props) {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ function GeneralAdminSchoolDetails(props) {
   const handleConfirmDelete = (schoolName) => {
     if (props.school.name === schoolName) {
       props.deleteSchool(param.id)
-      navigate(`/admin/schools/`)
+      navigate(`/${getType(props.user)}/schools/`)
     } else {
       alert("School name does not match")
     }
@@ -73,12 +74,12 @@ function GeneralAdminSchoolDetails(props) {
         <div className='confirm_location'>{openModal && <FormDeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}</div>
         <div className='header-padding'>
         <div className='action-bar'> 
-            <Link to={`/admin/edit/school/${props.school.id}`}><button>Edit School</button></Link>
+            <Link to={`/${getType(props.user)}/edit/school/${props.school.id}`}><button>Edit School</button></Link>
               <button onClick={() => {
                 setOpenModal(true);
               }}>Delete School</button>
 
-              <Link to={`/admin/route/plan/${props.school.id}`}>
+              <Link to={`/${getType(props.user)}/route/plan/${props.school.id}`}>
                 <button>Create New Route for This School</button>
             </Link>
             {/* <button onClick={() => navigate(-1)} className='button'>Go Back</button> */}
@@ -98,11 +99,6 @@ function GeneralAdminSchoolDetails(props) {
               <div className='info-fields'>
                 <h2>Associated students: </h2>
                 <GeneralAdminTableView values={props.students} tableType='student' title='Associated Students' search={STUDENT_PREFIX} pagination={STUDENT_PREFIX}/>
-                {/* {
-                    exampleSchool.students.map((s,i)=>{
-                      return <Link to={`/admin/student/${s.id}`} id={i}><button className='button'>{s.name}</button></Link>
-                    })
-                  } */}
                 <br></br>
               </div>
             </div>
@@ -110,11 +106,6 @@ function GeneralAdminSchoolDetails(props) {
               <div className='info-fields'>
                 <h2>Associated Routes: </h2>
                 <GeneralAdminTableView values={props.routes} tableType='route' title='Associated Routes' search={ROUTE_PREFIX} pagination={ROUTE_PREFIX}/>
-                {/* {
-                    exampleSchool.routes.map((s,i)=>{
-                      return <Link to={`/admin/route/${s.id}`} id={i}><button className='button'>{s.id}</button></Link>
-                    })
-                  } */}
                 <br></br>
               </div>
           </div>
