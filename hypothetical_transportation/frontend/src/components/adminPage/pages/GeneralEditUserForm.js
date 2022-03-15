@@ -93,7 +93,7 @@ function GeneralEditUserForm(props) {
         event.stopPropagation();
 
         console.log(phoneNumber.replace('+', ''));
-        
+
         const finalSchoolList = schoolSelected.map((item)=>{return item.value})
         console.log(finalSchoolList)
         const createVals = {
