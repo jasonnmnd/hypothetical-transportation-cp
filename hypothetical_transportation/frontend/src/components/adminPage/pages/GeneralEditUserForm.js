@@ -117,8 +117,8 @@ function GeneralEditUserForm(props) {
     const groupTypes = [
         {name: "Administrator", value: 1},
         {name: "Guardian", value: 2},
-        {name: "Driver", value: 3},
-        {name: "Staff", value: 4}
+        {name: "Driver", value: 4},
+        {name: "Staff", value: 3}
     ]
 
 
