@@ -124,8 +124,8 @@ function GeneralEditUserForm(props) {
     const groupTypes = [
         {name: "Administrator", value: 1},
         {name: "Guardian", value: 2},
-        {name: "Driver", value: 3},
-        {name: "Staff", value: 4}
+        {name: "Driver", value: 4},
+        {name: "Staff", value: 3}
     ]
 
 
@@ -239,7 +239,7 @@ function GeneralEditUserForm(props) {
                                 </Form.Group> : <></>
                             }
                         </Row>
-                        {fieldValues.groups ==4 ?
+                        {fieldValues.groups ==3 ?
                         <Row className="mb-3">
                             <Form.Group >
                                 <Form.Label>Please select schools that this user can manage</Form.Label>
@@ -254,7 +254,7 @@ function GeneralEditUserForm(props) {
                                     }):null}
                                 </Form.Control> */}
                                 <Select isMulti options={getSchoolOPtion()} value={schoolSelected} onChange={setSchoolSelected}/>
-                                {/* <Form.Text muted> hold ctrl or command for multiple select</Form.Text> */}
+                                <Form.Text muted> You can type into the box to filter the options</Form.Text>
                             </Form.Group>
                         </Row>:<></>}
 

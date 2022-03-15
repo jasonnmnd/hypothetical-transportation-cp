@@ -6,10 +6,10 @@ export default function getType(user){
     if(user.groups[0] == 2){
         return "parent"
     }
-    if(user.groups[0] == 3){
+    if(user.groups[0] == 4){
         return "driver"
     }
-    if(user.groups[0] == 4){
+    if(user.groups[0] == 3){
         return "staff"
     }
 }
