@@ -16,6 +16,9 @@ import getType from "../../../utils/user2";
 
 import Select from 'react-select';
 
+import 'react-phone-number-input/style.css'
+import PhoneInput from 'react-phone-number-input'
+
 //Edit/New user form
 function GeneralEditUserForm(props) {
     const navigate = useNavigate();
@@ -32,6 +35,7 @@ function GeneralEditUserForm(props) {
         email: "",
         groups: 2,
     });
+    const [phoneNumber, setPhoneNumber] = useState()
     const [address, setAddress] = useState("");
 
 
@@ -87,6 +91,9 @@ function GeneralEditUserForm(props) {
     const handleSubmit = (event) => {
         event.preventDefault();
         event.stopPropagation();
+
+        console.log(phoneNumber.replace('+', ''));
+        
         const finalSchoolList = schoolSelected.map((item)=>{return item.value})
         console.log(finalSchoolList)
         const createVals = {
@@ -269,8 +276,8 @@ function GeneralEditUserForm(props) {
                             </Form.Group>
 
                             <Form.Group as={Col} md="3" controlId="validationCustom">
-                                <Form.Label>Phone Number</Form.Label>
-                                <Form.Control 
+                                <Form.Label><strong>Phone Number</strong></Form.Label>
+                                {/* <Form.Control 
                                 required
                                 type="text" 
                                 placeholder="Phone number..."  
@@ -278,12 +285,20 @@ function GeneralEditUserForm(props) {
                                 // onChange={
                                 //     (e) => setFieldValues({...fieldValues, phoneNumber: e.target.value})
                                 // }
-                                />
+                                /> */}
+                                <PhoneInput
+                                    placeholder="Enter phone number"
+                                    defaultCountry="US"
+                                    value={phoneNumber}
+                                    onChange={setPhoneNumber}/>
+                                
                                 <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                                 <Form.Control.Feedback type="invalid">
                                     Please provide a valid phone number.
                                 </Form.Control.Feedback>
                             </Form.Group>
+
+
                         </Row>
                                                 
                         <Form.Group className="mb-3" controlId="formGridAddress1">
