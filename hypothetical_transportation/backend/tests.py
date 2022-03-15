@@ -11,6 +11,66 @@ from .serializers import find_school_match_candidates, school_names_match
 from django.test import tag
 
 
+class TestBulkImport(TestCase):
+    def setUp(self) -> None:
+        """
+        Small prepopulated database that tests error handling of bulk import
+        user1@example.com: John Smith
+            student: Charlie Smith
+            student: Carson Smith
+        user2@example.com: John Smith
+        """
+        self.loc = (36.00352740209603, -78.93814858774756)
+        admin_group = Group.objects.create(name='Administrator')
+        self.admin = get_user_model().objects.create_verified_user(email='admin@example.com', password='wordpass',
+                                                                   full_name='admin', address='Duke University',
+                                                                   latitude=self.loc[0],
+                                                                   longitude=self.loc[1])
+        self.admin.groups.add(admin_group)
+        login_response = self.client.post('/api/auth/login',
+                                          json.dumps(
+                                              {'email': 'admin@example.com', 'password': 'wordpass'}),
+                                          content_type='application/json')
+        self.admin_token = login_response.data['token']
+        parent_1 = get_user_model().objects.create_verified_user(email='user1@example.com', password='wordpass',
+                                                                 full_name='John Smith', address='Duke University',
+                                                                 latitude=self.loc[0], longitude=self.loc[1])
+        get_user_model().objects.create_verified_user(email='user2@example.com', password='wordpass',
+                                                      full_name='John Smith', address='Duke University',
+                                                      latitude=self.loc[0], longitude=self.loc[1])
+        school_1 = School.objects.create(address='Duke University', longitude=self.loc[0], latitude=self.loc[1],
+                                         name='Duke    University')
+        Student.objects.create(full_name='Charlie Smith', active=True,
+                               school=school_1, routes=None, guardian=parent_1,
+                               student_id=None)
+        Student.objects.create(full_name='Carson Smith', active=True,
+                               school=school_1, routes=None, guardian=parent_1,
+                               student_id=None)
+
+    def test_non_conflict_post(self):
+        loaded_data = {
+            "users": [
+                {
+                    "email": "user3@example.com",
+                    "full_name": "Sam Smith",
+                    "address": "4932 Stoney Creek Dr.",
+                    "phone_number": "9999999999"
+                }
+            ],
+            "students": [
+                {
+                    "full_name": "Ronaldo Smith",
+                    "student_id": 3,
+                    "parent_email": "user1@example.com",
+                    "school_name": "duke university"
+                }
+            ]
+        }
+        response = self.client.post('/api/loaded-data/', json.dumps(loaded_data),
+                                    content_type='application/json', HTTP_AUTHORIZATION=f'Token {self.admin_token}')
+        self.assertEqual(response.status_code, 201)
+
+
 class TestGroupViewFiltering(TransactionTestCase):
     """
     This test suite examines the access permissions of new user groups in evolution 3

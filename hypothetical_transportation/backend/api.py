@@ -16,7 +16,7 @@ from .models import School, Route, Student, Stop
 from .serializers import UserSerializer, StudentSerializer, RouteSerializer, SchoolSerializer, FormatStudentSerializer, \
     FormatRouteSerializer, FormatUserSerializer, EditUserSerializer, StopSerializer, CheckInrangeSerializer, \
     LoadUserSerializer, LoadModelDataSerializer, find_school_match_candidates, school_names_match, \
-    StaffEditUserSerializer, StaffEditSchoolSerializer, StaffStudentSerializer
+    StaffEditUserSerializer, StaffEditSchoolSerializer, StaffStudentSerializer, LoadStudentSerializer
 from .search import DynamicSearchFilter
 from .customfilters import StudentCountShortCircuitFilter
 from .permissions import is_admin, is_school_staff, is_driver, IsAdminOrReadOnly, IsAdmin, IsSchoolStaff
@@ -632,38 +632,30 @@ class SubmitLoadedDataAPI(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
         serializer_errors = serializer.errors
         populate_serializer_errors(serializer_errors, request.data)
-
         try:
             with transaction.atomic():
-                user_email_set = set()
                 for user_dex, user_data in enumerate(serializer.validated_data["users"]):
-
-                    user_email = user_data["email"]
-                    if user_email in user_email_set:
-                        add_error(serializer_errors["users"][user_dex], "email",
-                                  "user email already exists in imported data")
-                    user_email_set.add(user_email)
-
+                    user_serializer = LoadUserSerializer(data=user_data)
+                    user_serializer.is_valid(raise_exception=True)
                     location = geolocator.geocode(user_data["address"])
                     user = get_user_model().objects.create_verified_user(**user_data, latitude=location.latitude,
                                                                          longitude=location.longitude,
                                                                          password="DUMMY_PASSWORD")
                     user.set_unusable_password()
+
                 for student_dex, student_data in enumerate(serializer.validated_data["students"]):
+                    student_serializer = LoadStudentSerializer(data=student_data)
+                    student_serializer.is_valid(raise_exception=True)
                     candidates = find_school_match_candidates(student_data["school_name"])
                     school = None
                     for candidate in candidates:
                         if school_names_match(candidate.name, student_data["school_name"]):
                             school = candidate
                             break
-                    guardians = get_user_model().objects.filter(email=student_data["parent_email"])
-                    if guardians.count() == 0:
-                        add_error(serializer_errors["students"][student_dex], "parent_email",
-                                  "parent email does not exist")
-                        raise ObjectDoesNotExist("parent email does not exist for ths student")
-                    guardian = guardians[0]
-                    user = Student.objects.create(full_name=student_data["full_name"], active=True, school=school,
-                                                  guardian=guardian, routes=None, student_id=student_data["student_id"])
+                    guardian = get_user_model().objects.get(email=student_data["parent_email"])
+                    student = Student.objects.create(full_name=student_data["full_name"], active=True, school=school,
+                                                     guardian=guardian, routes=None,
+                                                     student_id=student_data["student_id"])
         except (IntegrityError, ObjectDoesNotExist):
             return Response(serializer_errors, status=status.HTTP_400_BAD_REQUEST)
 
