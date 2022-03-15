@@ -12,6 +12,8 @@ import { Form, Button, Row, Col, Container, InputGroup, ButtonGroup, ToggleButto
 import { resetPostedUser } from '../../../actions/users';
 import AssistedLocationMap from "../../maps/AssistedLocationMap";
 import getType from '../../../utils/user2';
+import Select from 'react-select';
+
 
 function GeneralManageStudentPage(props) {
     const param = useParams()
@@ -37,15 +39,16 @@ function GeneralManageStudentPage(props) {
 
 
   const setParent = (e)=>{
-    if(e.target.value!=="new"){
-      props.getUser(e.target.value);
+    if(e.value!=="new"){
+      props.getUser(e.value);
     }
-    setObj({ ...obj, ["guardian"]: e.target.value});
+    setObj({ ...obj, ["guardian"]: e.value});
+    setGuardianSelected(e)
   }
 
 
   const handleSubmit = (event) => {
-    // console.log(obj)
+    console.log(obj)
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
       event.preventDefault();
@@ -88,8 +91,11 @@ function GeneralManageStudentPage(props) {
 
   }
 
+  const [schoolSelected, setSchoolSelected] = useState(null)
+  const [guardianSelected, setGuardianSelected] = useState(null)
   const changeSchool = (e)=>{
-    setObj({...obj, ["school"]:e.target.value, ["routes"]:""})
+    setSchoolSelected(e)
+    setObj({...obj, ["school"]:e.value, ["routes"]:""})
 
     // props.getRoutesByID({school: e.target.value});
   }
@@ -131,9 +137,36 @@ function GeneralManageStudentPage(props) {
   },[props.selectedUser])
 
 
+  const getSchoolOPtion = ()=>{
+    var opt = [{value: null, label: "-----------------------"}]
+    if(props.schoollist!==null && props.schoollist!==undefined && props.schoollist.length!==0){
+        const x = props.schoollist.map((item)=> {
+            return ({value:item.id, label:item.name})
+        })    
+        opt = [...opt, ...x]
+    }
+    // console.log(opt)
+    return opt
+}
+
+
+const getParentOption = ()=>{
+  var opt = [{value: null, label: "-----------------------"}, {value: "new", label: "---Create New User---"}]
+  if(props.users!==null && props.users!==undefined && props.users.length!==0){
+      const x = props.users.map((item)=> {
+          return ({value:item.id, label:item.full_name})
+      })    
+      opt = [...opt, ...x]
+  }
+  // console.log(opt)
+  return opt
+}
+
+
   const [newParent, setNewParent] = useState(false)
   useEffect(()=>{
     // console.log(props.selectedUser)
+    console.log(obj.guardian)
     if(obj.guardian=="new"){
       setNewParent(true)
     }
@@ -277,8 +310,9 @@ useEffect(()=>{
                 <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                 <Form.Control.Feedback type="invalid">Please provide a valid ID.</Form.Control.Feedback>
             </Form.Group>
+            </Row>
 
-            <Form.Group className="mb-3" controlId="">
+            {/* <Form.Group className="mb-3" controlId="">
                 <Form.Label as="h5">Parent</Form.Label>
                 <Form.Select size="sm" value={obj.guardian} onChange={setParent}>
                 <option value={""}>{"-----------------------"}</option>
@@ -298,6 +332,13 @@ useEffect(()=>{
                         return <option value={u.id} key={i}>{u.name}</option>
                     }):null}
                 </Form.Select>
+            </Form.Group> */}
+            
+            <Form.Group className="mb-3" controlId="">
+              <Select  options={getParentOption()} value={guardianSelected} onChange={setParent}/>
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="">
+              <Select  options={getSchoolOPtion()} value={schoolSelected} onChange={changeSchool}/>
             </Form.Group>
 
             { newParent===true ? 
@@ -407,13 +448,12 @@ useEffect(()=>{
             </> : <></>
             }
             
-            <br></br>
 
             <Button variant="yellowsubmit" type="submit">
                 Submit
             </Button>
 
-          </Row>
+          {/* </Row> */}
           </Form>
 
         </Container>

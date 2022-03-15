@@ -14,6 +14,8 @@ import { resetPostedUser } from "../../../actions/users";
 import { getSchools } from "../../../actions/schools";
 import getType from "../../../utils/user2";
 
+import Select from 'react-select';
+
 //Edit/New user form
 function GeneralEditUserForm(props) {
     const navigate = useNavigate();
@@ -21,6 +23,7 @@ function GeneralEditUserForm(props) {
     const [openModal, setOpenModal] = useState(false);
     const [validated, setValidated] = useState(false);
     const[coord,setCoord]=useState({lat:36.0016944, lng:-78.9480547});
+    const [schoolSelected, setSchoolSelected] = useState([])
     
     const [fieldValues, setFieldValues] = useState({
         id: 0,
@@ -63,6 +66,11 @@ function GeneralEditUserForm(props) {
         }
     },[props.action])
 
+
+    // useEffect(()=>{
+    //     console.log(schoolSelected)
+    // },[schoolSelected])
+
     useEffect(()=>{
         if(props.action == "edit"){
             setFieldValues({
@@ -79,6 +87,8 @@ function GeneralEditUserForm(props) {
     const handleSubmit = (event) => {
         event.preventDefault();
         event.stopPropagation();
+        const finalSchoolList = schoolSelected.map((item)=>{return item.value})
+        console.log(finalSchoolList)
         const createVals = {
             ...fieldValues,
             groups: [fieldValues.groups],
@@ -137,16 +147,32 @@ function GeneralEditUserForm(props) {
         console.log(val)
     },[val])
 
-    const handleChange = (e)=>{
-        var options = e.target.options;
-        var value = [];
-        for (var i = 0, l = options.length; i < l; i++) {
-          if (options[i].selected) {
-            value.push(options[i].value);
-          }
+    // const handleChange = (e)=>{
+    //     // var options = e.target.options;
+    //     // var value = [];
+    //     // for (var i = 0, l = options.length; i < l; i++) {
+    //     //   if (options[i].selected) {
+    //     //     value.push(options[i].value);
+    //     //   }
+    //     // }
+    //     // setVal(value);
+    //     const list = e.map((i)=>{
+    //         return i.value
+    //     })
+    //     setSchoolSelected(list)
+    //   }
+
+    const getSchoolOPtion = ()=>{
+        var opt = []
+        if(props.schoollist!==null && props.schoollist!==undefined && props.schoollist.length!==0){
+            const x = props.schoollist.map((item)=> {
+                return ({value:item.id, label:item.name})
+            })    
+            opt = x  
         }
-        setVal(value);
-      }
+        console.log(opt)
+        return opt
+    }
     
     return (
         <div> 
@@ -203,7 +229,7 @@ function GeneralEditUserForm(props) {
                         <Row className="mb-3">
                             <Form.Group >
                                 <Form.Label>Please select schools that this user can manage</Form.Label>
-                                <Form.Control
+                                {/* <Form.Control
                                     as="select"
                                     multiple
                                     value={val}
@@ -212,8 +238,9 @@ function GeneralEditUserForm(props) {
                                     {props.schoollist!==null && props.schoollist!==undefined && props.schoollist.length!==0?props.schoollist.map((u,i)=>{
                                     return <option value={u.id} key={i}>{u.name}</option>
                                     }):null}
-                                </Form.Control>
-                                <Form.Text muted> hold ctrl or command for multiple select</Form.Text>
+                                </Form.Control> */}
+                                <Select isMulti options={getSchoolOPtion()} value={schoolSelected} onChange={setSchoolSelected}/>
+                                {/* <Form.Text muted> hold ctrl or command for multiple select</Form.Text> */}
                             </Form.Group>
                         </Row>:<></>}
 
