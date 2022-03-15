@@ -526,7 +526,7 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
 
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
-        serializer.is_valid()
+        is_valid = serializer.is_valid()
         serializer_errors = serializer.errors
         populate_serializer_errors(serializer_errors, request.data)
 
@@ -547,20 +547,19 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
             user_name_duplication[full_name].update(self.get_repr_of_users_with_name(full_name))
         for user_dex, user in enumerate(user_representations):
             user_object_response = dict()
+            current_email_duplicates = [dup.get_representation() for dup in user_email_duplication[user.email] if
+                                        dup != user]
+            is_valid &= len(current_email_duplicates) > 0
             user_object_response["email"] = self.get_val_field_response_format(user.email,
                                                                                serializer_errors["users"][user_dex].get(
                                                                                    "email", []),
-                                                                               [dup.get_representation() for dup in
-                                                                                user_email_duplication[user.email] if
-                                                                                dup != user])
+                                                                               current_email_duplicates)
+            current_name_duplicates = [dup.get_representation() for dup in user_name_duplication[user.full_name] if
+                                       dup != user]
             user_object_response["full_name"] = self.get_val_field_response_format(user.full_name,
                                                                                    serializer_errors["users"][
-                                                                                       user_dex].get(
-                                                                                       "full_name", []),
-                                                                                   [dup.get_representation() for dup in
-                                                                                    user_name_duplication[
-                                                                                        user.full_name] if
-                                                                                    dup != user])
+                                                                                       user_dex].get("full_name", []),
+                                                                                   current_name_duplicates)
             user_object_response["phone_number"] = self.get_val_field_response_format(user.phone_number,
                                                                                       serializer_errors["users"][
                                                                                           user_dex].get(
@@ -596,15 +595,13 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
 
         for student_dex, student in enumerate(student_representations):
             student_object_response = dict()
+            current_name_duplicates = [dup.get_representation() for dup in student_name_duplication[student.full_name]
+                                       if dup != student]
             student_object_response["full_name"] = self.get_val_field_response_format(student.full_name,
                                                                                       serializer_errors["students"][
                                                                                           student_dex].get(
                                                                                           "full_name", []),
-                                                                                      [dup.get_representation() for dup
-                                                                                       in
-                                                                                       student_name_duplication[
-                                                                                           student.full_name] if
-                                                                                       dup != student])
+                                                                                      current_name_duplicates)
             student_object_response["student_id"] = self.get_val_field_response_format(student.student_id,
                                                                                        serializer_errors["students"][
                                                                                            student_dex].get(
@@ -619,7 +616,8 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
                                                                                             student_dex].get(
                                                                                             "school_name", []), [])
             students_response.append(student_object_response)
-        return Response({"users": users_response, "students": students_response}, status.HTTP_200_OK)
+        return Response({"users": users_response, "students": students_response},
+                        status.HTTP_200_OK if is_valid else status.HTTP_400_BAD_REQUEST)
 
 
 class SubmitLoadedDataAPI(generics.GenericAPIView):
