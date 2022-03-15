@@ -13,9 +13,5 @@ sudo docker cp ece-458_web_1:daily.json /home/vcm/daily.json
 SSH_CONNECTION=$(ip route get 8.8.8.8 | grep -oP 'src \K[^ ]+')
 echo "i am $SSH_CONNECTION"
 
-ls -la /home/vcm/dev/tty
-cat /home/vcm/.ssh/known_hosts
-env
-
 echo "[BACKUP - DAILY] copying data dump from server host to backup host"
-scp -v -i /home/vcm/.ssh/id_rsa /home/vcm/daily-Mon.json vcm@vcm-25708.vm.duke.edu:/home/vcm/backups/dev-host/daily/daily-$DOW.json
+scp -v -i /home/vcm/.ssh/id_rsa /home/vcm/daily.json vcm@vcm-25708.vm.duke.edu:/home/vcm/backups/dev-host/daily/daily-$DOW.json
