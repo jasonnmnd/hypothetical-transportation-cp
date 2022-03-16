@@ -130,11 +130,16 @@ function GeneralManageStudentPage(props) {
 
       // props.getRoutesByID({school: props.student.school.id}) // Normal to get an api request error on first load
     }
+    else{
+      setSchoolSelected(null)
+      setGuardianSelected(null)
+    }
     // console.log("also")
     // console.log(props.selectedUser)
     if(props.selectedUser!==null && props.selectedUser.id!==0&& props.selectedUser.id!==obj.guardian){
       // console.log("setting obj")
       setObj({ ...obj, ["guardian"]: props.selectedUser.id});
+      setGuardianSelected({value: props.selectedUser.id, label: props.selectedUser.full_name})  
       props.resetPostedUser()
     }
     // else{
@@ -208,7 +213,9 @@ const [address, setAddress] = useState("");
 
 const groupTypes = [
   {name: "Administrator", value: 1},
-  {name: "Guardian", value: 2}
+  {name: "Guardian", value: 2},
+  {name: "Driver", value: 4},
+  {name: "Staff", value: 3}
 ]
 
 
@@ -217,11 +224,14 @@ const groupTypes = [
       if(props.selectedUser!==null && props.selectedUser.id!==0 && props.selectedUser.id!==obj.guardian){
         // console.log("action if")
         setObj({ ...emptyStudent, ["guardian"]: props.selectedUser.id});
+        setGuardianSelected({value: props.selectedUser.id, label: props.selectedUser.full_name})  
         props.resetPostedUser()
       }
       else{
         // console.log("action else")
         setObj({...emptyStudent, ["guardian"]: obj.guardian})
+        setSchoolSelected(null)
+        setGuardianSelected(null)
       }
     }
     else{
