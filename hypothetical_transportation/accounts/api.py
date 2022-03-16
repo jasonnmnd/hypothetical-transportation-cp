@@ -26,6 +26,7 @@ class InviteAPI(generics.GenericAPIView):
         if serializer.is_valid():
             email = serializer.data['email']
             full_name = serializer.data['full_name']
+            phone_number = serializer.data['phone_number']
             address = serializer.data['address']
             latitude = serializer.data['latitude']
             longitude = serializer.data['longitude']
@@ -40,6 +41,7 @@ class InviteAPI(generics.GenericAPIView):
             user.set_unusable_password()
             user.address = address
             user.full_name = full_name
+            user.phone_number = phone_number
             if not groups and Group.objects.filter(pk=2).count() > 0:
                 # Default case for staff privileges
                 user.groups.add(2)
