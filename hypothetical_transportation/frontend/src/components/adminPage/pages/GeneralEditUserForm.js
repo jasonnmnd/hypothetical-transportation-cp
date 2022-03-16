@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import "../NEWadminPage.css"
@@ -7,7 +7,7 @@ import Header from "../../header/AdminHeader";
 import { getUser, updateUser } from "../../../actions/users";
 import { register } from "../../../actions/auth";
 import AssistedLocationMap from "../../maps/AssistedLocationMap";
-import { Form, Button, Row, Col, Container, InputGroup, ButtonGroup, ToggleButton} from 'react-bootstrap';
+import { Form, Button, Row, Col, Container, InputGroup, ButtonGroup, ToggleButton, Alert} from 'react-bootstrap';
 import { getItemCoord } from "../../../utils/geocode";
 import PageNavigateModal from "../components/modals/PageNavigateModal";
 import { resetPostedUser } from "../../../actions/users";
@@ -359,13 +359,26 @@ function GeneralEditUserForm(props) {
                     </Form>
                 </Container> : getType(props.user) == "staff" ? 
                 <Container className="container-main">
-                    <br></br>
-                    <h3>As school staff, you cannot create user with no students attached. </h3>
-                    <br></br>
-                    <h5>Please navigate to create student and select "Create New User" in order to create a new student and user at the same time</h5>
+                <Alert variant="danger">
+                  <Alert.Heading>You cannot create user with no students attached.</Alert.Heading>
+                  <p>
+                    Please navigate to create student and select "Create New User" in order to create a new student and user at the same time
+                  </p>
+                  <hr />
+                  <Link to={`/staff/new_student/`}>
+                    <Button variant='yellow'>
+                        Create New Student
+                    </Button>
+                </Link>
+                  </Alert>
                 </Container>:
                 <Container className="container-main">
-                    <h3>You do not access to this page.</h3>
+                <Alert variant="danger">
+                  <Alert.Heading>Access Denied</Alert.Heading>
+                  <p>
+                    You do not have access to this page. If you believe this is an error, contact an administrator.          
+                    </p>
+                  </Alert>
                 </Container>}
         </div>
     )

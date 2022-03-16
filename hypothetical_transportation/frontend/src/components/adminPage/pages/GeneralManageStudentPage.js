@@ -8,7 +8,7 @@ import { getSchools } from '../../../actions/schools';
 import { getUsers, getUser } from '../../../actions/users';
 import { getStudent, addStudent, updateStudent, addStudentWithParent, updateStudentWithParent } from '../../../actions/students';
 import { getRoutesByID } from '../../../actions/routes';
-import { Form, Button, Row, Col, Container, InputGroup, ButtonGroup, ToggleButton, Card} from 'react-bootstrap';
+import { Form, Button, Row, Col, Container, InputGroup, ButtonGroup, ToggleButton, Card, Alert} from 'react-bootstrap';
 import { resetPostedUser } from '../../../actions/users';
 import AssistedLocationMap from "../../maps/AssistedLocationMap";
 import getType from '../../../utils/user2';
@@ -427,7 +427,12 @@ useEffect(()=>{
 
         </Container>:
         <Container className="container-main">
-            <h3>You do not access to this page.</h3>
+        <Alert variant="danger">
+          <Alert.Heading>Access Denied</Alert.Heading>
+          <p>
+            You do not have access to this page. If you believe this is an error, contact an administrator.          
+            </p>
+          </Alert>
         </Container>}
       </>
         );

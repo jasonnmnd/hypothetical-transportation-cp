@@ -6,7 +6,7 @@ import "../NEWadminPage.css"
 import Header from "../../header/AdminHeader";
 import AssistedLocationMap from "../../maps/AssistedLocationMap";
 import { getSchool, updateSchool, addSchool } from "../../../actions/schools";
-import { Container, Form, Button, Row, Col } from 'react-bootstrap';
+import { Container, Form, Button, Row, Col, Alert } from 'react-bootstrap';
 import { getItemCoord } from "../../../utils/geocode";
 import getType from "../../../utils/user2";
 //input1: title of form
@@ -275,10 +275,20 @@ function GeneralEditSchoolForm(props) {
                     </Form>
                 </Container>:getType(props.user) == "staff" ? 
                 <Container className="container-main">
-                    <h3>As School staff, you do not access to creating new schools.</h3>
+                <Alert variant="danger">
+                  <Alert.Heading>Access Denied</Alert.Heading>
+                  <p>
+                    As School staff, you do not access to creating new schools. If you believe this is an error, contact an administrator.          
+                  </p>
+                  </Alert>
                 </Container>:
                 <Container className="container-main">
-                    <h3>You do not access to this page.</h3>
+                <Alert variant="danger">
+                  <Alert.Heading>Access Denied</Alert.Heading>
+                  <p>
+                    You do not have access to this page. If you believe this is an error, contact an administrator.          
+                    </p>
+                  </Alert>
                 </Container>}
         </div>
     )
