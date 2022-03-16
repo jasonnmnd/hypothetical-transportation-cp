@@ -6,6 +6,7 @@ export default function config(token) {
 const userDefaultCols = [
     "full_name",
     "email",
+    "phone_number",
     "address",
     "group_name"
 ]
