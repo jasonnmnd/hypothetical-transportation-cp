@@ -6,7 +6,7 @@ WEEK_52=$(expr $WEEK_01_53 - 1)
 WEEK=$(expr $WEEK_52 % 4)
 
 echo "[BACKUP - WEEKLY] dumping data"
-sudo docker exec -it ece-458_web_1 python3 /code/manage.py dumpdata -o weekly.json
+sudo docker exec ece-458_web_1 python3 /code/manage.py dumpdata -o weekly.json
 
 echo "[BACKUP - WEEKLY] copying data dump from db to dev server host"
 sudo docker cp ece-458_web_1:weekly.json /home/vcm/weekly-$WEEK.json

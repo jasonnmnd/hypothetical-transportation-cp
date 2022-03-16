@@ -5,7 +5,7 @@ DOW=$(date +%a)
 echo "[BACKUP - DAILY] today is $DOW, starting daily backup"
 
 echo "[BACKUP - DAILY] dumping data from inside web app"
-sudo docker exec -it ece-458_web_1 python3 /code/manage.py dumpdata -o daily.json
+sudo docker exec ece-458_web_1 python3 /code/manage.py dumpdata -o daily.json
 
 echo "[BACKUP - DAILY] copying data dump from db to server host"
 sudo docker cp ece-458_web_1:daily.json /home/vcm/daily.json

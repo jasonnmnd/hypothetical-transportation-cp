@@ -4,7 +4,7 @@
 MONTH=$(date +%m)
 
 echo "[BACKUP - MONTHLY] dumping data"
-sudo docker exec -it ece-458_web_1 python3 /code/manage.py dumpdata -o monthly.json
+sudo docker exec ece-458_web_1 python3 /code/manage.py dumpdata -o monthly.json
 
 echo "[BACKUP - MONTHLY] copying data dump from db to dev server host"
 sudo docker cp ece-458_web_1:monthly.json /home/vcm/monthly-$MONTH.json
