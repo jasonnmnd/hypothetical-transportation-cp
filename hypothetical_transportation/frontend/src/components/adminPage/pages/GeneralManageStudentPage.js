@@ -49,7 +49,7 @@ function GeneralManageStudentPage(props) {
 
 
   const handleSubmit = (event) => {
-    console.log(obj)
+    // console.log(obj)
     event.preventDefault();
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
@@ -62,7 +62,7 @@ function GeneralManageStudentPage(props) {
         }
         else{
           const finalSchoolList = staffSchool.map((item)=>{return item.value})
-          console.log(finalSchoolList)
+          // console.log(finalSchoolList)
           const createVals = fieldValues.groups==3 ? {
               ...fieldValues,
               groups: [fieldValues.groups],
@@ -106,6 +106,7 @@ function GeneralManageStudentPage(props) {
   const [schoolSelected, setSchoolSelected] = useState(null)
   const [guardianSelected, setGuardianSelected] = useState(null)
   const changeSchool = (e)=>{
+    // console.log(e)
     setSchoolSelected(e)
     setObj({...obj, ["school"]:e.value, ["routes"]:""})
 
@@ -123,6 +124,8 @@ function GeneralManageStudentPage(props) {
     if(props.action==="edit"){
       props.getStudent(param.id);
       setObj({...props.student, ["guardian"]:props.student.guardian.id,["school"]:props.student.school.id,["routes"]:props.student.routes?props.student.routes.id:null})
+      setSchoolSelected({value: props.student.school.id, label: props.student.school.name})
+      setGuardianSelected({value: props.student.guardian.id, label: props.student.guardian.full_name})
       props.resetPostedUser()
 
       // props.getRoutesByID({school: props.student.school.id}) // Normal to get an api request error on first load
@@ -139,6 +142,13 @@ function GeneralManageStudentPage(props) {
     // }
     
   }, []);
+
+
+  useEffect(() => {
+      setObj({...props.student, ["guardian"]:props.student.guardian.id,["school"]:props.student.school.id,["routes"]:props.student.routes?props.student.routes.id:null})
+      setSchoolSelected({value: props.student.school.id, label: props.student.school.name})
+      setGuardianSelected({value: props.student.guardian.id, label: props.student.guardian.full_name})
+  }, [props.student]);
 
   useEffect(()=>{
     // console.log(props.selectedUser)
@@ -178,7 +188,7 @@ const getParentOption = ()=>{
   const [newParent, setNewParent] = useState(false)
   useEffect(()=>{
     // console.log(props.selectedUser)
-    console.log(obj.guardian)
+    // console.log(obj.guardian)
     if(obj.guardian=="new"){
       setNewParent(true)
     }

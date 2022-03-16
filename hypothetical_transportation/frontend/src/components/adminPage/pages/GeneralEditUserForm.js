@@ -97,7 +97,7 @@ function GeneralEditUserForm(props) {
 
 
         const finalSchoolList = schoolSelected.map((item)=>{return item.value})
-        console.log(finalSchoolList)
+        // console.log(finalSchoolList)
         const createVals = fieldValues.groups==3 ? {
             ...fieldValues,
             groups: [fieldValues.groups],
@@ -123,7 +123,7 @@ function GeneralEditUserForm(props) {
                 navigate(`/${getType(props.user)}/users`)
             }
             else{
-                console.log(createVals)
+                // console.log(createVals)
                 props.register(createVals);
                 setOpenModal(true)
             }
@@ -160,9 +160,9 @@ function GeneralEditUserForm(props) {
 
     const [val, setVal] = useState([])
 
-    useEffect(()=>{
-        console.log(val)
-    },[val])
+    // useEffect(()=>{
+    //     console.log(val)
+    // },[val])
 
     // const handleChange = (e)=>{
     //     // var options = e.target.options;
@@ -187,7 +187,7 @@ function GeneralEditUserForm(props) {
             })    
             opt = x  
         }
-        console.log(opt)
+        // console.log(opt)
         return opt
     }
     
