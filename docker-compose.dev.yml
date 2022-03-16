@@ -11,23 +11,12 @@ services:
       - POSTGRES_PASSWORD=admin
   web:
     image: dmm107/ece-458:web-dev
-    # command: bash -c "python hypothetical_transportation/manage.py makemigrations && python hypothetical_transportation/manage.py migrate && python hypothetical_transportation/manage.py runserver_plus  0.0.0.0:8000 --cert-file /etc/letsencrypt/live/ht-dev.colab.duke.edu/fullchain.pem --key-file /etc/letsencrypt/live/ht-dev.colab.duke.edu/privkey.pem"
-    # container_name: web
     command: ./entrypoint_dev.sh
-    # command: bash -c "python hypothetical_transportation/manage.py makemigrations && "\
-    #           "python hypothetical_transportation/manage.py migrate && "\
-    #           "python hypothetical_transportation/manage.py loaddata hypothetical_transportation/backend/fixtures/data.json &&"\
-    #           "python hypothetical_transportation/manage.py initadmin && "\
-    #           "python hypothetical_transportation/manage.py runserver_plus 0.0.0.0:8000 --cert-file /etc/letsencrypt/live/ht-dev.colab.duke.edu/fullchain.pem --key-file /etc/letsencrypt/live/ht-dev.colab.duke.edu/privkey.pem"
     volumes:
-      # - .:/code
       - static_volume:/code/staticfiles
       - media_volume:/home/app/web/mediafiles
     expose:
       - "8000"
-        #restart: always
-    # ports:
-    #   - "8000:8000"
     environment:
       - POSTGRES_DB=admin
       - POSTGRES_USER=admin
@@ -38,3 +27,12 @@ services:
       - LETSENCRYPT_EMAIL=dmm107@duke.edu
     depends_on:
       - db
+volumes:
+  static_volume:
+  postgres_data:
+  static_volume:
+  media_volume:
+  certs:
+  html:
+  vhost:
+  acme:

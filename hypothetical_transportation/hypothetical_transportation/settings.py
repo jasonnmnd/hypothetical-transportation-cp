@@ -137,11 +137,11 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'admin',
-        #'NAME': 'ht_db',
+        # 'NAME': 'ht_db',
         'USER': 'admin',
         'PASSWORD': 'admin',
         'HOST': 'db',
-        #'HOST': 'localhost',
+        # 'HOST': 'localhost',
         'PORT': '5432',
     }
 }
