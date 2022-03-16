@@ -55,12 +55,7 @@ function AdminUserDetails(props) {
           return i.id===sch
         })
       }).map((item)=>{
-        if(item[0]!==undefined){
-          return item[0].name
-        }
-        else{
-          return item[0]
-        }
+        return item[0]
       })
       // console.log(schoolList)
       setManagedSchool(schoolList)
@@ -130,7 +125,7 @@ function AdminUserDetails(props) {
                 <Card.Header as="h5">Managed Schools </Card.Header>
                 <Card.Body>
                     <Card.Text>{managed_school.map((sch, i)=>{
-                      return <Fragment key={i}>{sch}<br></br></Fragment>
+                      return <Fragment key={i}>{sch!==undefined? sch.name: null}<br></br></Fragment>
                     })}</Card.Text>
                 </Card.Body>
             </Card> 
