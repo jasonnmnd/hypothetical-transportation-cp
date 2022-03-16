@@ -195,6 +195,7 @@ function GeneralEditUserForm(props) {
         <div> 
             {/* <div>{openModal && <PageNavigateModal closeModal={setOpenModal} yesFunc={navToNewStudent} noFunc={navToUsers} message={`You have created a new User!`} question={`Would you like to navigate to the create a new student for them?`}/>}</div> */}
             <Header></Header>
+                {getType(props.user) == "admin" ?
                 <Container className="container-main">
                 <div className="shadow-sm p-3 mb-5 bg-white rounded d-flex flex-row justify-content-center">
                     {props.action == "edit" ? <h1>Edit User</h1> : <h1>Create User</h1>}
@@ -343,7 +344,16 @@ function GeneralEditUserForm(props) {
                             Submit
                         </Button>
                     </Form>
-                </Container>
+                </Container> : getType(props.user) == "staff" ? 
+                <Container className="container-main">
+                    <br></br>
+                    <h3>As school staff, you cannot create user with no students attached. </h3>
+                    <br></br>
+                    <h5>Please navigate to create student and select "Create New User" in order to create a new student and user at the same time</h5>
+                </Container>:
+                <Container className="container-main">
+                    <h3>You do not access to this page.</h3>
+                </Container>}
         </div>
     )
 }
