@@ -8,7 +8,6 @@ import PropTypes from 'prop-types';
 import { getRouteInfo, deleteRoute } from '../../../actions/routes';
 import { getStudents } from '../../../actions/students';
 import GeneralAdminTableView from '../components/views/GeneralAdminTableView';
-import MapContainer from '../../maps/MapContainer';
 import { getStopByRoute } from '../../../actions/stops';
 import { Container, Card, Button, Row, Col, Alert, Form } from 'react-bootstrap'
 import { filterObjectForKeySubstring } from '../../../utils/utils';
@@ -18,6 +17,9 @@ import {InfoWindow} from '@react-google-maps/api';
 import IconLegend from '../../common/IconLegend';
 import isAdmin from '../../../utils/user';
 import getType from '../../../utils/user2';
+import isBusDriver from '../../../utils/userBusDriver';
+import axios from 'axios';
+import config from '../../../utils/config';
 
 function GeneralAdminRouteDetails(props) {
 
@@ -123,6 +125,18 @@ function GeneralAdminRouteDetails(props) {
         setExtraComponents(<InfoWindow position={position} onCloseClick={setExtraComponents(null)}>{windowComponents}</InfoWindow>)
     }
 
+    const getNavLinks = () => {
+        axios.get(`/route/${param.id}/nav_link_pickup`, config(props.token))
+        .then((res) => {
+            console.log("NAVIGATION SUCCESSFUL");
+            console.log(res);
+            return res;
+        })
+        .catch((err) => {
+            alert('A error ocurred with navigation links. Please try again.')
+        });
+    }
+
   return (
     <div>          
         <div>{openModal && <DeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}</div>
@@ -162,6 +176,17 @@ function GeneralAdminRouteDetails(props) {
                 </Row>
             </Container></>: <></>
         }
+        {isBusDriver(props.user) ? 
+            <Row>
+                <Card style={{padding: "0px"}}>
+                    <Card.Header as="h5">Navigation Links For This Route</Card.Header>
+                    <Card.Body>
+                        {getNavLinks()}
+                    </Card.Body>
+                </Card>
+            </Row>
+                :
+                <></>}
             <Row  style={{gap: "10px"}}>
                 <Card as={Col} style={{padding: "0px"}}>
                     <Card.Header as="h5">Name</Card.Header>
@@ -180,6 +205,7 @@ function GeneralAdminRouteDetails(props) {
                         }
                     </Card.Body>
                 </Card>
+
                 <Card as={Col} style={{padding: "0px"}}>
                     <Card.Header as="h5">School </Card.Header>
                     <Card.Body>
