@@ -96,7 +96,14 @@ function GeneralEditUserForm(props) {
 
         const finalSchoolList = schoolSelected.map((item)=>{return item.value})
         console.log(finalSchoolList)
-        const createVals = {
+        const createVals = fieldValues.groups==3 ? {
+            ...fieldValues,
+            groups: [fieldValues.groups],
+            address: address,
+            longitude: coord.lng.toFixed(6),
+            latitude: coord.lat.toFixed(6),
+            managed_schools: finalSchoolList,
+        }:{
             ...fieldValues,
             groups: [fieldValues.groups],
             address: address,

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {Fragment,useEffect, useState} from 'react';
 import Header from '../../header/AdminHeader';
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import "../adminPage.css";
@@ -11,6 +11,8 @@ import GeneralAdminTableView from '../components/views/GeneralAdminTableView';
 import isAdmin from '../../../utils/user';
 import { Container, Card, Button, Row, Col } from 'react-bootstrap'
 import getType from '../../../utils/user2'
+import { getSchools } from '../../../actions/schools';
+
 
 function AdminUserDetails(props) {
   const navigate = useNavigate();
@@ -41,8 +43,25 @@ function AdminUserDetails(props) {
   }, [searchParams]);
 
   useEffect(() => {
+    props.getSchools({ordering:"name"});
     props.getUser(param.id);
   }, []);
+
+  const [managed_school, setManagedSchool] = useState([])
+  useEffect(() => {
+    if(props.user.groups[0].id==3){
+      const schoolList = props.user.managed_schools.map((sch)=>{
+        return props.schools.filter(i => {
+          return i.id===sch
+        })
+      }).map((item)=>{
+        return item[0]
+      })
+      // console.log(schoolList)
+      setManagedSchool(schoolList)
+    }
+  }, [props.user,props.schools]);
+
 
   return (
     <div>        
@@ -72,7 +91,21 @@ function AdminUserDetails(props) {
                   <Card.Text>{props.user.full_name}</Card.Text>
               </Card.Body>
           </Card>
-
+          <Card as={Col} style={{padding: "0px"}}>
+              <Card.Header as="h5">User Type </Card.Header>
+              <Card.Body>
+                  <Card.Text>{props.user.groups[0].name}</Card.Text>
+              </Card.Body>
+          </Card>
+          
+        </Row>
+        <Row  style={{gap: "10px"}}> 
+          <Card as={Col} style={{padding: "0px"}}>
+              <Card.Header as="h5">Phone Number </Card.Header>
+              <Card.Body>
+                  <Card.Text>{props.user.address}</Card.Text>
+              </Card.Body>
+          </Card>
           <Card  as={Col} style={{padding: "0px"}}>
               <Card.Header as="h5">Email </Card.Header>
               <Card.Body>
@@ -87,13 +120,16 @@ function AdminUserDetails(props) {
                   <Card.Text>{props.user.address}</Card.Text>
               </Card.Body>
           </Card>
-
-          <Card as={Col} style={{padding: "0px"}}>
-              <Card.Header as="h5">Admin </Card.Header>
-              <Card.Body>
-                  <Card.Text>{isAdmin(props.user) ? "true":"false"}</Card.Text>
-              </Card.Body>
-          </Card>
+          {props.user.groups[0].id==3 ? 
+            <Card  as={Col} style={{padding: "0px"}}>
+                <Card.Header as="h5">Managed Schools </Card.Header>
+                <Card.Body>
+                    <Card.Text>{managed_school.map((sch, i)=>{
+                      return <Fragment key={i}>{sch!==undefined? sch.name: null}<br></br></Fragment>
+                    })}</Card.Text>
+                </Card.Body>
+            </Card> 
+            : <></>}
         </Row>
         <Row  style={{gap: "10px"}}> 
           <Card  as={Col} style={{padding: "0px"}}>
@@ -112,7 +148,8 @@ function AdminUserDetails(props) {
 
 AdminUserDetails.propTypes = {
     getUser: PropTypes.func.isRequired,
-    getStudents: PropTypes.func.isRequired
+    getStudents: PropTypes.func.isRequired,
+    getSchools: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = (state) => ({
@@ -120,7 +157,8 @@ const mapStateToProps = (state) => ({
   user: state.users.viewedUser,
   token: state.auth.token,
   students: state.students.students.results,
-  studentCount: state.students.students.count
+  studentCount: state.students.students.count,
+  schools: state.schools.schools.results,
 });
 
-export default connect(mapStateToProps, {getUser, getStudents, deleteUser})(AdminUserDetails)
+export default connect(mapStateToProps, {getSchools,getUser, getStudents, deleteUser})(AdminUserDetails)
