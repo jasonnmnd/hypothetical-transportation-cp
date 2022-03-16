@@ -39,3 +39,8 @@
 .clickable {
   cursor: pointer;
 }
+
+.click-to-delete {
+  cursor: pointer;
+  color: rgb(255, 167, 167);
+}

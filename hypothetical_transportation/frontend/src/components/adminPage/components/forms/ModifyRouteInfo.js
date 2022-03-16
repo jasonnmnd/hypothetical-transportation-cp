@@ -66,7 +66,7 @@ function ModifyRouteInfo(props) {
 
       <Container>
         <Card style={{height: "400px"}}>
-          <Card.Header as="h5">{props.title}</Card.Header>
+          {props.title ? <Card.Header as="h5">{props.title}</Card.Header> : null}
           <Card.Body>
             <Form className="shadow-none p-3 mb-5 bg-white rounded" onSubmit={onSubmit}>
               <Form.Group className="mb-3" controlId="formGridName">
@@ -85,7 +85,7 @@ function ModifyRouteInfo(props) {
               <Form.Group className="mb-3" controlId="formGridDescription">
                 <Form.Label as="h5">Route Description</Form.Label>
                 <Form.Control 
-                  required type="text"
+                  type="text"
                   as="textarea"
                   placeholder="Enter route description..." 
                   style={{ height: '100px', maxHeight: "300px" }}
@@ -117,7 +117,6 @@ ModifyRouteInfo.propTypes = {
 }
 
 ModifyRouteInfo.defaultProps = {
-    title: "Route Modify",
     routeName: "",
     routeDescription: "",
     onSubmitFunc: (fieldValues)=>{},

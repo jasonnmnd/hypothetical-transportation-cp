@@ -81,8 +81,27 @@ function GeneralAdminEmailPage(props) {
         //Make bakend call here
         // console.log("Submit button pressed with school " + currSchool + " and route " + currRoute);
         
+        //Make sure school actually selected
+        if (getIdType(emailSelection) == "SCHOOL") {
+            if (currSchool == "") {
+                alert("Select a school from the dropdown.")
+                return
+            }
+        }
+        //Make sure route actually selected
+        if (getIdType(emailSelection) == "ROUTE") {
+            if (currSchool == "") {
+                alert("Select a school from the dropdown.")
+                return
+            }
+            if (currRoute == "") {
+                alert("Select a route from the dropdown.")
+                return
+            }
+        }
+
         const payload = {
-            object_id: currSchool == "" ? parseInt(currRoute) : parseInt(currSchool),
+            object_id: getIdType(emailSelection) == "SCHOOL" ? parseInt(currSchool) : parseInt(currRoute),
             id_type: getIdType(emailSelection),
             subject: subject,
             body: body

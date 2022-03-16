@@ -56,7 +56,7 @@ function ModifyStopTable(props) {
         changingElement.location = newLocation;
         changingElement.latitude = newLat;
         changingElement.longitude = newLng;
-        props.setStopsWithProperInds(tempData);
+        props.setStops(tempData);
     }
 
     const handleKeyDownName = (e) => {
@@ -117,7 +117,7 @@ function ModifyStopTable(props) {
 
     const getStopsInMapTableBody = () => {
         let tempData = Array.from(props.stops);
-        tempData.sort((a, b) => a.stop_num - b.stop_num);
+        tempData.sort((a, b) => a.stop_number - b.stop_number);
         return tempData.map((stop, index) => (
             <Draggable
                 key={stop.id}
@@ -132,6 +132,7 @@ function ModifyStopTable(props) {
                     {getLocationInputComponent(stop, LOCATION)}
                     {/* <td>{stop.pickup_time}</td>
                     <td>{stop.dropoff_time}</td> */}
+                    <td className='click-to-delete' onClick={() => props.deleteStop(stop, null)}>x</td>
                 </tr>
                 )}
             </Draggable>
@@ -179,13 +180,14 @@ function ModifyStopTable(props) {
             <table className="table borderd">
             <thead>
                 <tr className='tr-header'>
-                    <th colSpan="4">Stops in Route</th>
+                    <th colSpan="5">Stops in Route</th>
                 </tr>
                 <tr>
                 <th />
                 <th>Stop Number</th>
                 <th>Name</th>
                 <th>Location</th>
+                <th></th>
                 {/* <th>Pickup Time</th>
                 <th>Dropoff Time</th> */}
                 </tr>
@@ -217,7 +219,8 @@ ModifyStopTable.propTypes = {
     deletedStops: PropTypes.array,
     readdStop: PropTypes.func, 
     setStopsWithProperInds: PropTypes.func,
-    createMessageDispatch: PropTypes.func.isRequired
+    createMessageDispatch: PropTypes.func.isRequired,
+    deleteStop: PropTypes.func.isRequired
 }
 
 ModifyStopTable.defaultProps = {

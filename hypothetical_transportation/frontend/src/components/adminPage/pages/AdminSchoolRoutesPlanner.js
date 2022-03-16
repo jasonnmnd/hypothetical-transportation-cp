@@ -15,13 +15,18 @@ import { NO_ROUTE } from '../../../utils/utils';
 import { Container, ButtonGroup, ToggleButton, Card, Button, Form, Collapse } from 'react-bootstrap';
 import PageNavigateModal from '../components/modals/PageNavigateModal';
 import IconLegend from '../../common/IconLegend';
+import { getCurRouteFromStudent } from '../../../utils/planner_maps';
 import { createMessageDispatch } from '../../../actions/messages';
+import SaveChangesModal from '../components/modals/SaveChangesModal';
+import RouteStopsPlanner from './RouteStopsPlanner';
 
 
 function AdminSchoolRoutesPlanner(props) {
   const param = useParams();
   const navigate = useNavigate();
   const [openModal, setOpenModal] = useState(false);
+  const [showSaveChangesModal, setShowSaveChangesModal] = useState(false);
+  const [saveChangesModalProps, setSaveChangesModalProps] = useState(null);
   let [searchParams, setSearchParams] = useSearchParams();
 
   const [studentChanges, setStudentChanges] = useState({})
@@ -33,20 +38,13 @@ function AdminSchoolRoutesPlanner(props) {
     return searchParams.get(`route`) == 'new';
   }
 
-  const isDelete = () => {
-    return searchParams.get(`route`) == 'none';
-  }
 
   useEffect(() => {
     props.getRoutes({school: param.school_id});
 
     if (isCreate()) { //This is to make sure the button sets to create/edit/delete
       setRouteSelection(1); 
-    } else if (isDelete()) {
-      setRouteSelection(3);
-    } else {
-      setRouteSelection(2);
-    }
+    } 
 
     if(searchParams.get(`route`) != null && !isCreate()){
       props.getRouteInfo(searchParams.get('route'))
@@ -62,6 +60,7 @@ function AdminSchoolRoutesPlanner(props) {
     props.getStudents({school: param.school_id})
     if(searchParams.get(`route`) == null){
       setSearchParams({
+        ...searchParams,
         [`route`]: 'new',
       })
     }
@@ -70,6 +69,7 @@ function AdminSchoolRoutesPlanner(props) {
   useEffect(()=>{
     if(props.postedRoute.id!==0){
       setSearchParams({
+        ...searchParams,
         [`route`]: props.postedRoute.id,
       })
       props.resetPosted();
@@ -105,11 +105,17 @@ function AdminSchoolRoutesPlanner(props) {
       return <option key={route.id} value={route.id}>{route.name}</option>
     })
   }
-
-  const onDropdownChange = (e) => {
+  
+  
+  const changePlanningRoute = (newRouteId) => {
     setSearchParams({
-      [`route`]: e.target.value,
+      ...setSearchParams,
+      [`route`]: newRouteId,
     })
+  }
+  
+  const onDropdownChange = (e) => {
+    changePlanningRoute(e.target.value);
   }
 
   const getRouteFromSearchParams = () => {
@@ -120,23 +126,41 @@ function AdminSchoolRoutesPlanner(props) {
   }
 
   const changeStudentRoute = (pinStuff, position) => {
-    console.log(pinStuff);
+    let newID = "";
+    if(getCurRouteFromStudent(pinStuff, studentChanges) == searchParams.get('route')){
+      newID = NO_ROUTE
+    }
+    else {
+      newID = searchParams.get('route')
+    }
     setStudentChanges({
       ...studentChanges,
-      [pinStuff.id]: searchParams.get('route')
+      [pinStuff.id]: newID
     })
   }
 
-  const submit = () => {
-    
+  const saveRoutePlannerMapChanges = () => {
     Object.keys(studentChanges).forEach(student => {
       const routeVal = studentChanges[student] == NO_ROUTE ? null : studentChanges[student]
       props.patchStudent({
         routes: routeVal
       }, student);
     });
-    // props.createMessageDispatch({ route: "Route Updated"})
-    setOpenModal(true);
+    resetStudentChanges()
+  }
+
+  const submit = () => {
+    if(Object.keys(studentChanges).length > 0){
+      setShowSaveChangesModal(true);
+      setSaveChangesModalProps({
+        text: "Would you like to save your changes to this route?",
+        onSave: saveRoutePlannerMapChanges,
+        onContinue: () => {}
+      })
+    }
+    else{
+      console.log("NO CHANGES")
+    }
   }
 
   const resetStudentChanges = () => {
@@ -146,7 +170,7 @@ function AdminSchoolRoutesPlanner(props) {
   const routePlannerTypes = [
     {name: "Create New Route", value: 1},
     {name: "Edit Existing Route", value: 2},
-    {name: "Remove Students from Routes", value: 3},
+    {name: "Stop Planner", value: 3},
   ]
 
   const [routeSelect, setRouteSelection] = useState(1);
@@ -155,22 +179,18 @@ function AdminSchoolRoutesPlanner(props) {
     setRouteSelection(e.target.value);
     if (e.target.value == 1) {
       setSearchParams({
+        ...searchParams,
         [`route`]: "new"
       })
     } 
     else if (e.target.value == 2) {
       if(props.routes!==null && props.routes!==undefined && props.routes.length>0){
         setSearchParams({     
+          ...searchParams,
           [`route`]: props.routes[0].id
         })
       }
     }
-    else if (e.target.value == 3) {
-      setSearchParams({
-        [`route`]: "none"
-      })
-    }
-      
   }
 
   const navToRoutes = ()=>{
@@ -186,7 +206,11 @@ function AdminSchoolRoutesPlanner(props) {
   return (
     
     <>      
-      <div>{openModal && <PageNavigateModal closeModal={setOpenModal} yesFunc={navToStopper} noFunc={navToRoutes} message={`You have saved your changes for the routes!`} question={`Would you like to navigate to the stop planner for the route you were viewing?`}/>}</div>
+      <SaveChangesModal 
+        show={showSaveChangesModal} 
+        onCancel={() => {setShowSaveChangesModal(false);setSaveChangesModalProps(null)}}
+        {...saveChangesModalProps}
+      />
       <Header shouldShowOptions={true}></Header>
       <Container className="container-main d-flex flex-column" style={{gap: "10px"}}>
         <div className="shadow-sm p-3 mb-5 bg-white rounded d-flex flex-row justify-content-center">
@@ -247,7 +271,9 @@ function AdminSchoolRoutesPlanner(props) {
         ))}
         </ButtonGroup>
 
-          {routeSelect == 2 ?
+        <Container className="container-main d-flex flex-column" style={{gap: "10px"}}>
+
+          {routeSelect != 1 ?
           <Card>
             <Card.Body>
               <Form.Group className="mb-3">
@@ -262,35 +288,50 @@ function AdminSchoolRoutesPlanner(props) {
           <></>
           }
 
-          <Container className="container-main d-flex flex-row" style={{gap: "10px"}}>
-            {isCreate() || searchParams.get('route') == null ? null : 
-            
-              <Container className='d-flex flex-column' style={{width: "2000px"}}>
-                <IconLegend legendType='routePlanner'></IconLegend>
-                <RoutePlannerMap 
-                  students={props.students} 
-                  school={props.school} 
-                  currentRoute={getRouteFromSearchParams()} 
-                  changeStudentRoute={changeStudentRoute}
-                  studentChanges={studentChanges}
-                  allRoutes={props.routes}/>
+          {routeSelect != 3 ?
 
-                <br></br>
-
-                <Container className="d-flex flex-row justify-content-center" style={{gap: "20px"}}>
-                  <Button variant='yellowsubmit' onClick={submit}>Save Map Changes</Button>
-                  <Button variant='yellowsubmit' onClick={resetStudentChanges}>Reset Map Changes</Button>
-                </Container>
-
-              </Container>
-
+            <Container className="container-main d-flex flex-row" style={{gap: "10px"}}>
+              {routeSelect == 2 ? 
               
-            }
+                <Container className='d-flex flex-column' style={{width: "2000px"}}>
+                  <IconLegend legendType='routePlanner'></IconLegend>
+                  <RoutePlannerMap 
+                    students={props.students} 
+                    school={props.school} 
+                    currentRoute={getRouteFromSearchParams()} 
+                    changeStudentRoute={changeStudentRoute}
+                    studentChanges={studentChanges}
+                    allRoutes={props.routes}/>
+
+                  <br></br>
+
+                  <Container className="d-flex flex-row justify-content-center" style={{gap: "20px"}}>
+                    <Button variant='yellowsubmit' onClick={submit}>Save Map Changes</Button>
+                    <Button variant='yellowsubmit' onClick={resetStudentChanges}>Reset Map Changes</Button>
+                  </Container>
+
+                </Container>
+                :
+                null
+              }
+              
+            {searchParams.get(`route`) == NO_ROUTE || searchParams.get('route') == null ? null : <ModifyRouteInfo title={getInfoTitle()} routeName={props.currentRoute.name} routeDescription={props.currentRoute.description} onSubmitFunc={onInfoSubmit}/>}
+          </Container>
+          :
+                
+          null
+        }
+
+        {routeSelect == 3 ?
+
+        <RouteStopsPlanner route_id={searchParams.get(`route`)} school_id={param.school_id}/>
+        :
             
-          {searchParams.get(`route`) == NO_ROUTE || searchParams.get('route') == null ? null : <ModifyRouteInfo title={getInfoTitle()} routeName={props.currentRoute.name} routeDescription={props.currentRoute.description} onSubmitFunc={onInfoSubmit}/>}
-        </Container>
+        null
+        }
 
         <br></br>
+      </Container>
       </Container>
 
       <br></br>

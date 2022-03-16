@@ -33,7 +33,7 @@ function ForgotPasswordForm( props ) {
             alert('Password reset submitted. Check your email for more instructions!');
           })
           .catch((err) => {
-            console.log(err)
+            alert('Email address not found. Please try again.')
           });
     };
   

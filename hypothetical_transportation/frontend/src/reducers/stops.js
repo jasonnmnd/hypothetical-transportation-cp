@@ -34,6 +34,9 @@ export default function(state = initialState, action) {
         case ADD_STOP:
             return{
                 ...state,
+                stops: {
+                    results: [...state.stops.results, action.payload]
+                },
                 postedStop: action.payload
             }
         default:
