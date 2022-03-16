@@ -45,6 +45,7 @@ function GeneralManageStudentPage(props) {
     setObj({ ...obj, ["guardian"]: e.value});
     setGuardianSelected(e)
   }
+  const [staffSchool, setStaffSchoolSelected] = useState([])
 
 
   const handleSubmit = (event) => {
@@ -60,12 +61,22 @@ function GeneralManageStudentPage(props) {
           props.addStudent(obj)
         }
         else{
-          const createVals = {
-            ...fieldValues,
-            groups: [fieldValues.groups],
-            address: address,
-            longitude: coord.lng.toFixed(6),
-            latitude: coord.lat.toFixed(6),
+          const finalSchoolList = staffSchool.map((item)=>{return item.value})
+          console.log(finalSchoolList)
+          const createVals = fieldValues.groups==3 ? {
+              ...fieldValues,
+              groups: [fieldValues.groups],
+              address: address,
+              longitude: coord.lng.toFixed(6),
+              latitude: coord.lat.toFixed(6),
+              managed_schools: finalSchoolList,
+          }:{
+              ...fieldValues,
+              groups: [fieldValues.groups],
+              address: address,
+              longitude: coord.lng.toFixed(6),
+              latitude: coord.lat.toFixed(6),
+              managed_schools: []
           }
           props.addStudentWithParent(createVals, obj)
         }
@@ -219,70 +230,6 @@ useEffect(()=>{
     return ( 
       <>
         <Header></Header>
-        {/* <div className='admin-edit-page'>
-        <form>
-            <div className="submit-form-content"> 
-                <div className="form-inner">
-                    <h2>{getTitle()}</h2>
-
-                    <div className="form-group">
-                      <label htmlFor={"Full Name"}>Name</label>
-                      <input
-                          className="input"
-                          type={"Full Name"}
-                          name={"Full Name"}
-                          id={"Full Name"}
-                          value={obj.full_name}
-                          onChange={(e)=>{
-                              setObj({...obj, ["full_name"]: e.target.value})
-                          }}
-                      />
-                  </div>
-
-                  <div className="form-group">
-                      <label htmlFor={"Student ID"}>Student ID</label>
-                      <input
-                          className="input"
-                          type={"id"}
-                          name={"Student ID"}
-                          id={"Student ID"}
-                          value={obj.student_id}
-                          onChange={(e)=>{setObj({...obj, ["student_id"]: e.target.value})}}
-                      />
-                  </div>
-
-                  <div className="form-group">
-                      <label>
-                        <label>Parent</label>
-                        <select value={obj.guardian} onChange={setParent}>
-                          <option value={""} >{"-----"}</option>
-                          {props.users!==null && props.users!==undefined && props.users.length!==0?props.users.map((u,i)=>{
-                              return <option value={u.id} key={i}>{u.email}</option>
-                          }):null}
-                        </select>
-                      </label>
-                  </div>
-
-                  <div className="form-group">
-                      <label>
-                        <label>School</label>
-                        <select value={obj.school} onChange={changeSchool}>
-                        <option value={"null"} >{"-----"}</option>
-                        {props.schoollist!==null && props.schoollist!==undefined && props.schoollist.length!==0?props.schoollist.map((u,i)=>{
-                            return <option value={u.id} key={i}>{u.name}</option>
-                        }):null}
-                        </select>
-                      </label>
-                  </div>
-                    <div className="divider15px" />
-                    
-                    <div className="center-buttons">
-                      <button onClick={submit}>Save</button>
-                    </div>
-                </div>
-              </div>
-            </form>
-        </div> */}
         <Container className="container-main">
           <Form className="shadow-lg p-3 mb-5 bg-white rounded" noValidate validated={validated} onSubmit={handleSubmit}
             onKeyPress={event => {
@@ -318,41 +265,20 @@ useEffect(()=>{
                 <Form.Control.Feedback type="invalid">Please provide a valid ID.</Form.Control.Feedback>
             </Form.Group>
             </Row>
-
-            {/* <Form.Group className="mb-3" controlId="">
-                <Form.Label as="h5">Parent</Form.Label>
-                <Form.Select size="sm" value={obj.guardian} onChange={setParent}>
-                <option value={""}>{"-----------------------"}</option>
-                <option value={"new"}>{"---Create New User---"}</option>
-                {props.users!==null && props.users!==undefined && props.users.length!==0?props.users.map((u,i)=>{
-                    return <option value={u.id} key={i}>{u.email}</option>
-                }):null}
-                </Form.Select>
-            </Form.Group>
-
-
-            <Form.Group className="mb-3" controlId="">
-                <Form.Label as="h5">School</Form.Label>
-                <Form.Select size="sm" value={obj.school} onChange={changeSchool}>
-                  <option value={""} >{"-----------------------"}</option>
-                    {props.schoollist!==null && props.schoollist!==undefined && props.schoollist.length!==0?props.schoollist.map((u,i)=>{
-                        return <option value={u.id} key={i}>{u.name}</option>
-                    }):null}
-                </Form.Select>
-            </Form.Group> */}
             
             <Form.Group className="mb-3" controlId="">
+            <Form.Label as="h5">Guardian</Form.Label>
               <Select  options={getParentOption()} value={guardianSelected} onChange={setParent}/>
             </Form.Group>
             <Form.Group className="mb-3" controlId="">
+              <Form.Label as="h5">School</Form.Label>
               <Select  options={getSchoolOPtion()} value={schoolSelected} onChange={changeSchool}/>
             </Form.Group>
 
             { newParent===true ? 
               <>
               <br></br>
-              <Card>
-              <br></br>
+              <Card style={{padding: "20px"}}>
               <h4>Create Users</h4>
               <br></br>
               <Row className="mb-3">
@@ -401,41 +327,45 @@ useEffect(()=>{
                 <Row className="mb-3">
                   <Form.Group >
                       <Form.Label>Please select schools that this user can manage</Form.Label>
-                      <Select isMulti options={getSchoolOPtion()} value={schoolSelected} onChange={setSchoolSelected}/>
+                      <Select isMulti options={getSchoolOPtion()} value={staffSchool} onChange={setStaffSchoolSelected}/>
                       <Form.Text muted> You can type into the box to filter the options</Form.Text>
                   </Form.Group>
                 </Row>:<></>}
 
               <Row className="mb-3">
                   <Form.Group as={Col} controlId="formGridEmail">
-                  <Form.Label as="h5">Email</Form.Label>
-                  <Form.Control 
-                  required 
-                  type="email" 
-                  placeholder="Enter email..." 
-                  value={fieldValues.email}
-                  onChange={
-                    (e)=>{
-                      setFieldValues({...fieldValues, email: e.target.value});
-                      }
-                  }/>
-                  <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                  <Form.Control.Feedback type="invalid">Please provide a valid email.</Form.Control.Feedback>
+                    <Form.Label as="h5">Email</Form.Label>
+                    <Form.Control 
+                    required 
+                    type="email" 
+                    placeholder="Enter email..." 
+                    value={fieldValues.email}
+                    onChange={
+                      (e)=>{
+                        setFieldValues({...fieldValues, email: e.target.value});
+                        }
+                    }/>
+                    <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                    <Form.Control.Feedback type="invalid">Please provide a valid email.</Form.Control.Feedback>
                   </Form.Group>
 
-                  {/* <Form.Group as={Col} controlId="formGridPassword">
-                  <Form.Label as="h5">Password</Form.Label>
-                  <Form.Control 
-                  type="password" 
-                  placeholder="Enter password..." 
-                  value={fieldValues.password}
-                  onChange={
-                    (e)=>{
-                      setFieldValues({...fieldValues, password: e.target.value});
-                      }
-                  }
-                  />
-                  </Form.Group> */}
+                  <Form.Group as={Col} md="3" controlId="validationCustom">
+                    <Form.Label><strong>Phone Number</strong></Form.Label>
+                    <Form.Control 
+                    required
+                    type="text" 
+                    placeholder="Phone number..."  
+                    value={fieldValues.phone_number}
+                    onChange={
+                        (e) => setFieldValues({...fieldValues, phone_number: e.target.value})
+                    }
+                    />
+                    
+                    <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                    <Form.Control.Feedback type="invalid">
+                        Please provide a valid phone number.
+                    </Form.Control.Feedback>
+                </Form.Group>
               </Row>
                                       
               <Form.Group className="mb-3" controlId="formGridAddress1">

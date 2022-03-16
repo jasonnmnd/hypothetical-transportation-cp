@@ -106,9 +106,9 @@ const userColumns = {
     group_name: {
         colTitle: "Group",
         dataPath: "groups.0.name",
-        search_key: "",
+        search_key: "groups",
         sortable: false,
-        filterable: false
+        filterable: true,
     },
 }
 
