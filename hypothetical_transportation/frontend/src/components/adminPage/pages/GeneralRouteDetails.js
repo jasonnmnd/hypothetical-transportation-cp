@@ -50,6 +50,7 @@ function GeneralAdminRouteDetails(props) {
     // stopSearchParams.route = param.id
     // console.log(stopSearchParams)
     props.getStopByRoute(param.id);
+    getNavLinks();
   }, []);
 
   useEffect(() => {
@@ -181,7 +182,7 @@ function GeneralAdminRouteDetails(props) {
                 <Card style={{padding: "0px"}}>
                     <Card.Header as="h5">Navigation Links For This Route</Card.Header>
                     <Card.Body>
-                        {getNavLinks()}
+                        TEST
                     </Card.Body>
                 </Card>
             </Row>
