@@ -16,7 +16,7 @@ const USER_1_DATA = {
         errors: [],
         duplicates: []
     },
-    "phone_num": {
+    "phone_number": {
         value: "9083348450",
         errors: [],
         duplicates: []
@@ -39,7 +39,7 @@ const USER_2_DATA = {
         errors: [],
         duplicates: []
     },
-    "phone_num": {
+    "phone_number": {
         value: "9085005966",
         errors: [],
         duplicates: []
@@ -62,7 +62,7 @@ const USER_3_DATA = {
         errors: [],
         duplicates: []
     },
-    "phone_num": {
+    "phone_number": {
         value: "9088720608",
         errors: [],
         duplicates: []
@@ -157,39 +157,39 @@ export const FAKE_IMPORT_DATA = {
 
 export const USER_COLUMNS = [
     {
-        Header: 'Email',
-        accessor: 'email.value',
+        header: 'Email',
+        accessor: 'email',
     },
     {
-        Header: 'Name',
-        accessor: 'full_name.value',
+        header: 'Name',
+        accessor: 'full_name',
     },
     {
-        Header: 'Address',
-        accessor: 'address.value',
+        header: 'Address',
+        accessor: 'address',
     },
     {
-        Header: 'Phone Number',
-        accessor: 'phone_num.value',
+        header: 'Phone Number',
+        accessor: 'phone_number',
     },
 ]
 
 export const STUDENT_COLUMNS = [
     {
-        Header: 'Name',
-        accessor: 'full_name.value',
+        header: 'Name',
+        accessor: 'full_name',
     },
     {
-        Header: 'Parent Email',
-        accessor: 'parent_email.value',
+        header: 'Parent Email',
+        accessor: 'parent_email',
     },
     {
-        Header: 'School Name',
-        accessor: 'school_name.value',
+        header: 'School Name',
+        accessor: 'school_name',
     },
     {
-        Header: 'Student ID',
-        accessor: 'student_id.value',
+        header: 'Student ID',
+        accessor: 'student_id',
     },
 ]
 

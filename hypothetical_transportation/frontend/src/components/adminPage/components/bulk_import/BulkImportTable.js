@@ -6,43 +6,58 @@ import { USER_COLUMNS } from '../../../../utils/bulk_import';
 import "../forms/forms.css"
 
 function BulkImportTable(props) {
-    const columns = React.useMemo(() => props.colData, [])
-    const data = React.useMemo(() => props.data, [])
-    const {
-        getTableProps,
-        getTableBodyProps,
-        headerGroups,
-        rows,
-        prepareRow,
-      } = useTable({
-        columns,
-        data,
-    })
+
+    
+
+    const getTableHeader = () => {
+        return (
+            <tr className='tr-header' >
+                {props.colData.map((column, ind) => (
+                    <th key={ind}>{column.header}</th>
+                ))}
+            </tr>
+        )
+    }
+
+    const getTableRow = (rowIn, ind) => {
+        let row = rowIn
+        if(ind in props.dataChanges){
+            return (
+                <tr key={ind} onClick={() => {props.setModalType(); props.setModalInfo({...props.dataChanges[ind], index: ind});}}>
+                    {props.colData.map((col, index) => {
+                        return <td key={index} >{props.dataChanges[ind][col.accessor].value}</td>
+                    })}
+                </tr>
+            )
+        }
+        return (
+            <tr key={ind} onClick={() => {props.setModalType(); props.setModalInfo({...row, index: ind});}}>
+                {props.colData.map((col, ind) => {
+                    return <td key={ind} >{row[col.accessor].value}</td>
+                })}
+            </tr>
+        )
+    }
+
+
+    const getTableBody = () => {
+        return (
+            props.data.map((row, ind) => {
+                return (
+                    getTableRow(row, ind)
+                )
+            })
+        )
+    }
 
   
     return (
-        //<></>
-        <table {...getTableProps({className:"table borderd"})} >
+        <table className="table borderd" >
             <thead>
-            {headerGroups.map(headerGroup => (
-                <tr {...headerGroup.getHeaderGroupProps({className:'tr-header'})} >
-                {headerGroup.headers.map(column => (
-                    <th {...column.getHeaderProps()}>{column.render('Header')}</th>
-                ))}
-                </tr>
-            ))}
+            {getTableHeader()}
             </thead>
-            <tbody {...getTableBodyProps()}>
-            {rows.map((row, i) => {
-                prepareRow(row)
-                return (
-                <tr {...row.getRowProps()}>
-                    {row.cells.map(cell => {
-                    return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                    })}
-                </tr>
-                )
-            })}
+            <tbody >
+            {getTableBody()}
             </tbody>
         </table>
     )
@@ -50,7 +65,10 @@ function BulkImportTable(props) {
 
 BulkImportTable.propTypes = {
   colData: PropTypes.array,
-  data: PropTypes.array
+  data: PropTypes.array,
+  setModalInfo: PropTypes.func,
+  setModalType: PropTypes.func,
+  dataChanges: PropTypes.object
 }
 
 BulkImportTable.defaultProps = {

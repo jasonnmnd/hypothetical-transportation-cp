@@ -1,99 +1,108 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Button, Container, Modal, Table } from 'react-bootstrap';
+import { Button, Card, Container, Modal, Row, Table } from 'react-bootstrap';
 import PropTypes, { string } from 'prop-types';
-import { getCurRouteFromStudent, getStudentRouteName } from '../../../../utils/planner_maps';
-import "./modal.css";
-import { NO_ROUTE } from '../../../../utils/utils';
+import EditableTextField from '../../../common/EditableTextField';
+import './bulk_import.css'
+import AddressInputWithMap from '../../../common/AddressInputWithMap';
 
 
+const TYPE_TITLES = {
+    email: "Email",
+    full_name: "Name",
+    address: "Address",
+    phone_number: "Phone Number"
+}
 
 
+function UserDetailsModal(props){
 
-function OverlappingStudentsModal(props){
-
-    const getInstructionsString = (routeName) => {
-        if(routeName == NO_ROUTE){
-            return "Please select which students you would like to remove from their routes."
+    const getUserInfoFromProp = () => {
+        return {
+            email: {value: props.user?.email.value},
+            full_name: {value: props.user?.full_name.value},
+            address: {value: props.user?.address.value},
+            phone_number: {value: props.user?.phone_number.value},
+            index: props.user?.index
         }
-        if(routeName == null || routeName == "" || props.allRoutes.length == 0){
-            return null
-        }
-        return `Please select which students you would like to add to ${props.allRoutes.find(route => route.id == parseInt(routeName)).name}.`
+    }
+    
+    const [userInfo, setUserInfo] = useState(getUserInfoFromProp());
+    
+    useEffect(()=>{
+        //console.log(props.user)
+        setUserInfo(getUserInfoFromProp())
+      },[props.user])
+    
+    
+    
+    const onChange = (change) => {
+        setUserInfo({
+            ...userInfo,
+            [change.key]: {value: change.value}
+        })
     }
 
-    const getButtonText = (student) => {
-        if(getCurRouteFromStudent(student, props.studentChanges) == props.currentRoute){
-            return "remove";
+    const getEditableTextField = (type) => {
+        if(type == 'address'){
+            return <Card>
+            <Card.Header as="h4">{TYPE_TITLES[type]}</Card.Header>
+            <Card.Body>
+                <AddressInputWithMap value={userInfo[type].value} title={TYPE_TITLES[type]} keyType={type} onSubmit={onChange}/>
+            </Card.Body>
+        </Card>
         }
-        return "add"
-    }
-
-    const getStudentRows = () => {
-        return props.students.map((student) => (
-            <tr key={student.id} style={{backgroundColor: getCurRouteFromStudent(student, props.studentChanges) == props.currentRoute ? "rgb(176, 255, 151)" : getCurRouteFromStudent(student, props.studentChanges) == null ? "rgb(255, 136, 136)" : "rgb(200, 200, 200)"}}> 
-                <td>{student.full_name}</td>
-                <td>{student.guardian.address}</td>
-                <td>{getStudentRouteName(student.id, student.routes, props.studentChanges, props.allRoutes)}</td>
-                <td>
-                    <Button variant="yellowTableSm" onClick={() => props.changeStudentRoute(student, null)}>{getButtonText(student)}</Button>
-                </td>
-            </tr>
-        ))
-    }
-
-    const getStudentTable = () => {
         return (
-            <Table striped bordered size="sm">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Address</th>
-                        <th>Route</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {getStudentRows()}  
-                </tbody>
-            </Table>
+            <Card>
+                <Card.Header as="h4">{TYPE_TITLES[type]}</Card.Header>
+                <Card.Body>
+                    <EditableTextField value={userInfo[type].value} title={TYPE_TITLES[type]} keyType={type} onSubmit={onChange}/>
+                </Card.Body>
+            </Card>
         )
     }
 
     return (
-        <Modal show={props.students.length > 0} onHide={props.closeModal}>
+        <Modal dialogClassName="user-modal" show={props.user} onHide={props.closeModal}>
                 <Modal.Header closeButton>
                     <Container className='d-flex flex-row justify-content-center'>
-                        <Modal.Title>Multiple Students</Modal.Title>
+                        <Modal.Title>{props.user?.full_name.value}</Modal.Title>
                     </Container>
                 </Modal.Header>
 
                 <Modal.Body>
-                    <h2>There are multiple students at this marker!</h2>
-                    <h5>{getInstructionsString(props.currentRoute)}</h5>
-                    {getStudentTable()}
+
+                    <Container className="d-flex flex-column justify-content-center">
+                        <Row  style={{gap: "10px"}}> 
+                            {getEditableTextField("email")}
+                            {getEditableTextField("phone_number")}
+                        </Row>
+                        <Row  style={{gap: "10px"}}> 
+                            {getEditableTextField("full_name")}
+                        </Row>
+                        <Row  style={{gap: "10px"}}> 
+                            {getEditableTextField("address")}
+                        </Row>
+                    </Container>
                 </Modal.Body>
 
                 <Modal.Footer>
                     <Container className='d-flex flex-row justify-content-center'>
                         <Button variant="yellowclose" onClick={props.closeModal}>Close</Button>
+                        <Button variant="saveModal" onClick={() => props.saveModal(userInfo)}>Save</Button>
                     </Container>
-                    
                 </Modal.Footer>
         </Modal>  
     )
 }
 
-OverlappingStudentsModal.propTypes = {
-    students: PropTypes.array,
+UserDetailsModal.propTypes = {
+    user: PropTypes.object,
     closeModal: PropTypes.func,
-    studentChanges: PropTypes.object,
-    allRoutes: PropTypes.array,
-    changeStudentRoute: PropTypes.func,
-    currentRoute: PropTypes.string
+    saveModal: PropTypes.func,
 }
 
-OverlappingStudentsModal.defaultProps = {
+UserDetailsModal.defaultProps = {
 }
 
 const mapStateToProps = (state) => ({
@@ -101,4 +110,4 @@ const mapStateToProps = (state) => ({
   
 
 
-export default connect(mapStateToProps)(OverlappingStudentsModal)
+export default connect(mapStateToProps)(UserDetailsModal)
