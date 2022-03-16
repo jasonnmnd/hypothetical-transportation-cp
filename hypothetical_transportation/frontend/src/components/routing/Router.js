@@ -19,7 +19,7 @@ import GeneralAdminRouteDetails from "../adminPage/pages/GeneralRouteDetails";
 import GeneralAdminStopDetails from '../adminPage/pages/GeneralStopDetails';
 
 import GeneralManageStudentPage from "../adminPage/pages/GeneralManageStudentPage";
-
+import GeneralNewRoutePage from '../adminPage/pages/GeneralNewRoutePage';
 import GeneralAdminEmailPage from '../adminPage/pages/GeneralEmailPage';
 
 import GeneralResetPasswordPage from "../accountPage/GeneralResetPasswordPage";
@@ -28,7 +28,6 @@ import GeneralParentStudentDetails from "../parentPage/pages/GeneralParentStuden
 import PrivateRoute from './PrivateRoute';
 import Alerts from "../alerts/Alerts";
 import ForgotPasswordForm from '../loginPage/ForgotPasswordForm';
-import MapComponent from '../maps/MapComponent';
 import ExampleMapUsage from '../maps/ExampleMapUsage';
 import LinkBasePasswordResetForm from '../loginPage/LinkBasePasswordResetForm';
 import GeneralUserConfirmationPage from '../adminPage/pages/GeneralUserConfirmationPage';
@@ -73,18 +72,20 @@ const Router = (props) => {
           <Route exact path="/admin/new/user/" element={<PrivateRoute><GeneralEditUserForm action="new"/></PrivateRoute>}></Route>
           <Route exact path="/admin/new_student/" element={<PrivateRoute><GeneralManageStudentPage action={"new"} /></PrivateRoute>}/>
           <Route exact path="/admin/edit_student/:id" element={<PrivateRoute><GeneralManageStudentPage action={"edit"}/></PrivateRoute>}/>
+          <Route exact path="/admin/new/route/" element={<PrivateRoute><GeneralNewRoutePage></GeneralNewRoutePage></PrivateRoute>}></Route>
+
           <Route exact path="/staff/edit/school/:id" element={<PrivateRoute><GeneralEditSchoolForm action="edit" /></PrivateRoute>}></Route>
           <Route exact path="/staff/new/school/" element={<PrivateRoute><GeneralEditSchoolForm action="new"/></PrivateRoute>}></Route>
           <Route exact path="/staff/edit/user/:id" element={<PrivateRoute><GeneralEditUserForm action="edit" /></PrivateRoute>}></Route>
           <Route exact path="/staff/new/user/" element={<PrivateRoute><GeneralEditUserForm action="new"/></PrivateRoute>}></Route>
           <Route exact path="/staff/new_student/" element={<PrivateRoute><GeneralManageStudentPage action={"new"} /></PrivateRoute>}/>
           <Route exact path="/staff/edit_student/:id" element={<PrivateRoute><GeneralManageStudentPage action={"edit"}/></PrivateRoute>}/>
+          <Route exact path="/staff/new/route/" element={<PrivateRoute><GeneralNewRoutePage></GeneralNewRoutePage></PrivateRoute>}></Route>
 
-
-          <Route exact path="/admin/user/:id" element={<PrivateRoute><GeneralAdminUserDetails /></PrivateRoute>}/>
           <Route exact path="/admin/student/:id" element={<PrivateRoute><GeneralAdminStudentDetails /></PrivateRoute>}/>
           <Route exact path="/admin/school/:id" element={<PrivateRoute><GeneralAdminSchoolDetails /></PrivateRoute>}/>
           <Route exact path="/admin/route/:id" element={<PrivateRoute><GeneralAdminRouteDetails /></PrivateRoute>}/>
+          <Route exact path="/admin/user/:id" element={<PrivateRoute><GeneralAdminUserDetails /></PrivateRoute>}/>
           <Route exact path="/admin/stop/:route_id/:stop_id" element={<PrivateRoute><GeneralAdminStopDetails/></PrivateRoute>}/>
           <Route exact path="/staff/user/:id" element={<PrivateRoute><GeneralAdminUserDetails /></PrivateRoute>}/>
           <Route exact path="/staff/student/:id" element={<PrivateRoute><GeneralAdminStudentDetails /></PrivateRoute>}/>
