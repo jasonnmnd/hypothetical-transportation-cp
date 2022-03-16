@@ -175,6 +175,7 @@ function GeneralEditSchoolForm(props) {
     return (
         <div> 
             <Header></Header>
+            {props.action == "edit" || getType(props.user) == "admin" ?
                 <Container className="container-main">
                     <div className="shadow-sm p-3 mb-5 bg-white rounded d-flex flex-row justify-content-center">
                         {props.action == "edit" ? <h1>Edit School</h1> : <h1>Create School</h1>}
@@ -272,7 +273,13 @@ function GeneralEditSchoolForm(props) {
                             Submit
                         </Button>
                     </Form>
-                </Container>
+                </Container>:getType(props.user) == "staff" ? 
+                <Container className="container-main">
+                    <h3>As School staff, you do not access to creating new schools.</h3>
+                </Container>:
+                <Container className="container-main">
+                    <h3>You do not access to this page.</h3>
+                </Container>}
         </div>
     )
 }

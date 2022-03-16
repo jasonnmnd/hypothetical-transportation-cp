@@ -250,6 +250,7 @@ useEffect(()=>{
     return ( 
       <>
         <Header></Header>
+        {getType(props.user) == "staff"  || getType(props.user) == "admin" ?
         <Container className="container-main">
           <Form className="shadow-lg p-3 mb-5 bg-white rounded" noValidate validated={validated} onSubmit={handleSubmit}
             onKeyPress={event => {
@@ -424,7 +425,10 @@ useEffect(()=>{
           {/* </Row> */}
           </Form>
 
-        </Container>
+        </Container>:
+        <Container className="container-main">
+            <h3>You do not access to this page.</h3>
+        </Container>}
       </>
         );
 }
