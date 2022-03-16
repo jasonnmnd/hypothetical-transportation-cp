@@ -13,6 +13,7 @@ import { filterObjectForKeySubstring } from '../../../utils/utils';
 import { Container, Card, Button, Row, Col } from 'react-bootstrap';
 import isAdmin from '../../../utils/user';
 import getType from '../../../utils/user2'
+import isSchoolStaff from '../../../utils/userSchoolStaff';
 
 function GeneralAdminSchoolDetails(props) {
   const navigate = useNavigate();
@@ -81,12 +82,16 @@ function GeneralAdminSchoolDetails(props) {
                   <Button variant="yellowLong" size="lg">Edit School</Button>
                 </Link>
               </Col>
-
+              {isSchoolStaff(props.user) ? 
+              <></>
+              :
               <Col>
                 <Button variant="yellowLong" size="lg" onClick={() => {
                   setOpenModal(true);
                 }}>Delete School</Button>
               </Col>
+              }
+
             </Row>
             </Container>
             <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
