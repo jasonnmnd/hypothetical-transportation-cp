@@ -33,9 +33,9 @@ function GeneralEditUserForm(props) {
         full_name: "",
         address: "",
         email: "",
+        phone_number: "",
         groups: 2,
     });
-    const [phoneNumber, setPhoneNumber] = useState()
     const [address, setAddress] = useState("");
 
 
@@ -47,6 +47,7 @@ function GeneralEditUserForm(props) {
                 full_name: props.curUser.full_name,
                 address: props.curUser.address,
                 email: props.curUser.email,
+                phone_number: props.curUser.phone_number,
                 groups: props.curUser.groups[0].id
             });
             setAddress(props.curUser.address);
@@ -60,6 +61,7 @@ function GeneralEditUserForm(props) {
                 full_name: "",
                 address: "",
                 email: "",
+                phone_number: "",
                 groups: 2,
             })
             setAddress("")
@@ -81,6 +83,7 @@ function GeneralEditUserForm(props) {
                 full_name: props.curUser.full_name,
                 address: props.curUser.address,
                 email: props.curUser.email,
+                phone_number: props.curUser.phone_number,
                 groups: props.curUser.groups[0].id
             });
             setAddress(props.curUser.address);
@@ -92,7 +95,6 @@ function GeneralEditUserForm(props) {
         event.preventDefault();
         event.stopPropagation();
 
-        console.log(phoneNumber.replace('+', ''));
 
         const finalSchoolList = schoolSelected.map((item)=>{return item.value})
         console.log(finalSchoolList)
@@ -109,8 +111,8 @@ function GeneralEditUserForm(props) {
             address: address,
             longitude: coord.lng.toFixed(6),
             latitude: coord.lat.toFixed(6),
+            managed_schools: []
         }
-        console.log(createVals)
         const form = event.currentTarget;
         if (form.checkValidity() === false) {
             event.preventDefault();
@@ -121,6 +123,7 @@ function GeneralEditUserForm(props) {
                 navigate(`/${getType(props.user)}/users`)
             }
             else{
+                console.log(createVals)
                 props.register(createVals);
                 setOpenModal(true)
             }
@@ -283,20 +286,25 @@ function GeneralEditUserForm(props) {
 
                             <Form.Group as={Col} md="3" controlId="validationCustom">
                                 <Form.Label><strong>Phone Number</strong></Form.Label>
-                                {/* <Form.Control 
+                                <Form.Control 
                                 required
                                 type="text" 
                                 placeholder="Phone number..."  
-                                // value={fieldValues.email}
-                                // onChange={
-                                //     (e) => setFieldValues({...fieldValues, phoneNumber: e.target.value})
-                                // }
-                                /> */}
-                                <PhoneInput
+                                value={fieldValues.phone_number}
+                                onChange={
+                                    (e) => setFieldValues({...fieldValues, phone_number: e.target.value})
+                                }
+                                />
+                                {/* <PhoneInput
                                     placeholder="Enter phone number"
                                     defaultCountry="US"
-                                    value={phoneNumber}
-                                    onChange={setPhoneNumber}/>
+                                    value={fieldValues.phone_number}
+                                    onChange={
+                                    (e)=>{
+                                        setFieldValues({...fieldValues, phone_number: e.target.value});
+                                        }
+                                    }
+                                    /> */}
                                 
                                 <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                                 <Form.Control.Feedback type="invalid">

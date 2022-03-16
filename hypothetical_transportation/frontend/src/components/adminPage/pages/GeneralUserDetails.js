@@ -103,7 +103,7 @@ function AdminUserDetails(props) {
           <Card as={Col} style={{padding: "0px"}}>
               <Card.Header as="h5">Phone Number </Card.Header>
               <Card.Body>
-                  <Card.Text>{props.user.address}</Card.Text>
+                  <Card.Text>{props.user.phone_number}</Card.Text>
               </Card.Body>
           </Card>
           <Card  as={Col} style={{padding: "0px"}}>
