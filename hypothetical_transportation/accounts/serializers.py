@@ -15,7 +15,8 @@ class GroupSerializer(serializers.ModelSerializer):
 class InviteSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = ('id', 'email', 'full_name', 'phone_number', 'address', 'latitude', 'longitude', 'groups')
+        fields = (
+        'id', 'email', 'full_name', 'phone_number', 'address', 'latitude', 'longitude', 'groups', 'managed_schools')
 
 
 class StaffInviteSerializer(serializers.ModelSerializer):
@@ -65,6 +66,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             longitude=validated_data['longitude'],
         )
         user.groups.add(*validated_data['groups'])
+        user.managed_schools.add(*validated_data['managed_schools'])
         user.is_verified = True
         return user
 

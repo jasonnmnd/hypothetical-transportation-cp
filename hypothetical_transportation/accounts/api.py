@@ -30,6 +30,7 @@ class InviteAPI(generics.GenericAPIView):
             latitude = serializer.data['latitude']
             longitude = serializer.data['longitude']
             groups = serializer.data['groups']
+            managed_schools = serializer.data['managed_schools']
             try:
                 user = get_user_model().objects.get(email=email)
                 content = {'detail': 'Email address already taken.'}
@@ -42,7 +43,10 @@ class InviteAPI(generics.GenericAPIView):
             if not groups and Group.objects.filter(pk=2).count() > 0:
                 # Default case for staff privileges
                 user.groups.add(2)
+
             user.groups.add(*groups)
+            user.managed_schools.add(*managed_schools)
+
             user.save()
             ipaddr = self.request.META.get('REMOTE_ADDR', '0.0.0.0')
             invite_code = InvitationCode.objects.create_signup_code(user=user, ipaddr=ipaddr)

@@ -35,7 +35,7 @@ class AuthenticationActions(TestCase):
         invite_response = self.client.post("/api/auth/invite", json.dumps(
             {"email": "georgehong365@gmail.com", "full_name": "George Hong", "phone_number": "0000000000",
              "address": "6466 Cog Hill Lane",
-             "latitude": 0, "longitude": 0, "groups": []}), content_type="application/json",
+             "latitude": 0, "longitude": 0, "groups": [], "managed_schools": []}), content_type="application/json",
                                            HTTP_AUTHORIZATION=f"Token {self.auth_token}")
         new_user_id = invite_response.data["id"]
         self.assertEqual(get_user_model().objects.get(pk=new_user_id).is_verified, False)

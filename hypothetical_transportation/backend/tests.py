@@ -820,6 +820,7 @@ class AuthenticationObjectConsistency(TestCase):
                               'latitude': 0.0,
                               'longitude': 0.0,
                               'groups': [],
+                              'managed_schools': [],
                               }),
                          content_type='application/json', HTTP_AUTHORIZATION=f'Token {self.admin_token}')
         num_users = len(get_user_model().objects.all())
