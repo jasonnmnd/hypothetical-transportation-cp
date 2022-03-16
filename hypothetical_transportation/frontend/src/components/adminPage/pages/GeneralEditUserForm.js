@@ -204,7 +204,6 @@ function GeneralEditUserForm(props) {
                         }
                       }}
                     >
-
                         <Row className="mb-3">
                             <Form.Group as={Col} controlId="formGridAddress2">
                                 <Form.Label as="h5">Full Name</Form.Label>
