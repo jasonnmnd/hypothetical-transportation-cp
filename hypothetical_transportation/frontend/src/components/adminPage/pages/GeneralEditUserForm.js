@@ -72,6 +72,18 @@ function GeneralEditUserForm(props) {
         }
     },[props.action])
 
+    useEffect(()=>{
+        var schoolss = props.schoollist.filter((s)=>{
+            if(props.curUser.managed_schools!==undefined){
+                if(props.curUser.managed_schools.includes(s.id)){
+                    return {value:s.id, label:s.name}
+                }
+            }
+        })
+        var school22 = schoolss.map((i)=>{return {value:i.id, label:i.name}})
+        setSchoolSelected(school22)
+    },[props.schoollist, props.curUser])
+
 
     // useEffect(()=>{
     //     console.log(schoolSelected)
@@ -88,6 +100,7 @@ function GeneralEditUserForm(props) {
             });
             setAddress(props.curUser.address);
             setCoord({lat: Number(props.curUser.latitude), lng: Number(props.curUser.longitude)})
+            
         }
     },[props.curUser])
 
