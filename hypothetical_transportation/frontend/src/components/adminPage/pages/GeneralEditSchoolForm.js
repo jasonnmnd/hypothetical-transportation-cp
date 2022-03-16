@@ -195,6 +195,7 @@ function GeneralEditSchoolForm(props) {
                             placeholder="Enter Name..." 
                             value={name}
                             onChange={(e)=>{setName(e.target.value);}}
+                            disabled={getType(props.user)=="staff" ? true : false}
                             />
                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                             <Form.Control.Feedback type="invalid">Please provide a valid name.</Form.Control.Feedback>
@@ -256,6 +257,7 @@ function GeneralEditSchoolForm(props) {
                                 setAddress(e.target.value)
                                 getItemCoord(e.target.value,setCoord);
                             }}
+                            disabled={getType(props.user)=="staff" ? true : false}
                             />
                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                             <Form.Control.Feedback type="invalid">Please provide a valid address.</Form.Control.Feedback>
@@ -263,7 +265,7 @@ function GeneralEditSchoolForm(props) {
 
                         <Form.Group className="mb-3">
                             <Form.Label as="h5">Location Assistance</Form.Label>
-                            <AssistedLocationMap address={address} coord={coord} setAddress={setAddress} setCoord={setCoord}></AssistedLocationMap>
+                            <AssistedLocationMap draggable={false} address={address} coord={coord} setAddress={setAddress} setCoord={setCoord}></AssistedLocationMap>
                         </Form.Group>
 
                         <Button variant="yellowsubmit" type="submit">
