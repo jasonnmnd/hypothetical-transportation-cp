@@ -814,11 +814,13 @@ class AuthenticationObjectConsistency(TestCase):
                          json.dumps(
                              {'email': 'stanfordpines@mysteryshack.com',
                               'full_name': 'Stanford Pines',
+                              'phone_number': '0000000000',
                               'password': 'mysteryshack',
                               'address': 'Mostly an alternative dimension',
                               'latitude': 0.0,
                               'longitude': 0.0,
                               'groups': [],
+                              'managed_schools': [],
                               }),
                          content_type='application/json', HTTP_AUTHORIZATION=f'Token {self.admin_token}')
         num_users = len(get_user_model().objects.all())
@@ -1088,6 +1090,7 @@ class PermissionViews(TransactionTestCase):
                                        {'email': 'user2@gmail.com',
                                         'full_name': 'Correct Name',
                                         'address': 'address',
+                                        'phone_number': '0000000000',
                                         'latitude': 0,
                                         'longitude': 0,
                                         'groups': [],
@@ -1100,6 +1103,7 @@ class PermissionViews(TransactionTestCase):
                                        {'email': 'user2@gmail.com',
                                         'full_name': 'Should not be set',
                                         'address': 'address',
+                                        'phone_number': '0000000000',
                                         'longitude': 0,
                                         'latitude': 0,
                                         'groups': [],
