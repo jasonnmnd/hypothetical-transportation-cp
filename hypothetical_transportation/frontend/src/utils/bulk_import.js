@@ -85,7 +85,14 @@ const STUDENT_1_DATA = {
     "parent_email": {
         value: "sdfsdfs@example.com",
         errors: [],
-        duplicates: []
+        duplicates: [
+            {
+                parent_email: "duplicate@gmail.com",
+                full_name: "duplicate name",
+                school_name: "duplicate school",
+                student_id: "12"
+            }
+        ]
     },
     "full_name": {
         value: "dsfssdfdsfdsfdsfsfsdffdr",

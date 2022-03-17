@@ -14,6 +14,9 @@ function GeneralUploadDataPage(props) {
   const [data, setData] = useState(props.uploadData);
   const [userDataChanges, setUserDataChanges] = useState({});
   const [studentDataChanges, setStudentDataChanges] = useState({});
+  const [checkedStudents, setCheckedStudents] = useState([]);
+  const [checkedUsers, setCheckedUsers] = useState([]);
+  
 
   useEffect(()=>{
     setData(props.uploadData)
@@ -67,6 +70,8 @@ function GeneralUploadDataPage(props) {
         setModalInfo={setModalInfo}
         setModalType={() => setModalType("user")}
         dataChanges={userDataChanges}
+        checked={checkedUsers}
+        setChecked={setCheckedUsers}
       />
       <h2>Students</h2>
       <BulkImportTable 
@@ -75,6 +80,8 @@ function GeneralUploadDataPage(props) {
         setModalInfo={setModalInfo}
         setModalType={() => setModalType("student")}
         dataChanges={studentDataChanges}
+        checked={checkedStudents}
+        setChecked={setCheckedStudents}
       />
     </>
   )
