@@ -3,18 +3,28 @@
 const USER_1_DATA = {
     "email": {
         value: "Alfredaadswe@example.com",
-        errors: [],
-        duplicates: []
+        errors: ["This is an error"],
+        duplicates: [{
+            "email": "user1@example.com",
+            "full_name": "sebastian",
+            "address": "an address",
+            "phone_number": "9085005966",
+        }]
     },
     "full_name": {
         value: "Alfwerwrwerwred TheButler",
-        errors: [],
+        errors: ["Another error"],
         duplicates: []
     },
     "address": {
         value: "40 Walters Brook Drive, Bridgewater, NJ",
         errors: [],
-        duplicates: []
+        duplicates: [{
+            "email": "user1@example.com",
+            "full_name": "sebastian",
+            "address": "an address",
+            "phone_number": "9085005966",
+        }]
     },
     "phone_number": {
         value: "9083348450",
@@ -120,7 +130,7 @@ const STUDENT_2_DATA = {
 const STUDENT_3_DATA = {
     "parent_email": {
         value: "fdsfsfs@example.com",
-        errors: [],
+        errors: ["Student Error"],
         duplicates: []
     },
     "full_name": {

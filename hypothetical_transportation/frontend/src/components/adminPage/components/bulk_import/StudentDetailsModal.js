@@ -5,6 +5,7 @@ import PropTypes, { string } from 'prop-types';
 import EditableTextField from '../../../common/EditableTextField';
 import './bulk_import.css'
 import AddressInputWithMap from '../../../common/AddressInputWithMap';
+import ErrorSection from './ErrorSection';
 
 
 const TYPE_TITLES = {
@@ -79,6 +80,9 @@ function StudentDetailsModal(props){
                         <Row  style={{gap: "10px"}}> 
                             {getEditableTextField("school_name")}
                             {getEditableTextField("parent_email")}
+                        </Row>
+                        <Row  style={{gap: "10px"}}> 
+                            <ErrorSection transaction={props.student} type='student'/>
                         </Row>
                     </Container>
                 </Modal.Body>
