@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Header from '../../header/Header';
+import Header from '../../header/AdminHeader';
 import { Link, Route, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes, { string } from 'prop-types';

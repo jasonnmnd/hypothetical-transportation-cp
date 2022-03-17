@@ -8,6 +8,7 @@ import isAdmin from "../../utils/user";
 import PlainHeader from "../header/PlainHeader";
 import { Button, Form, Col } from 'react-bootstrap';
 import "./login.css";
+import getType from "../../utils/user2";
 
 function LoginForm( props ) {
     const [details, setDetails] = useState({ email: "", password: "" });
@@ -18,10 +19,8 @@ function LoginForm( props ) {
     };
   
     if (props.isAuthenticated) {
-      if(isAdmin(props.user)){
-        return <Navigate to="/admin" />;
-      }
-      return <Navigate to="/parent" />;
+      const link = "/"+getType(props.user)
+      return <Navigate to={link} />;
     }
     
   

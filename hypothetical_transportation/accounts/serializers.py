@@ -15,7 +15,16 @@ class GroupSerializer(serializers.ModelSerializer):
 class InviteSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = ('id', 'email', 'full_name', 'address', 'latitude', 'longitude', 'groups')
+        fields = (
+        'id', 'email', 'full_name', 'phone_number', 'address', 'latitude', 'longitude', 'groups', 'managed_schools')
+
+
+class StaffInviteSerializer(serializers.ModelSerializer):
+    groups = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+
+    class Meta:
+        model = get_user_model()
+        fields = ('id', 'email', 'full_name', 'phone_number', 'address', 'latitude', 'longitude', 'groups')
 
 
 class InviteVerifiedSerializer(serializers.Serializer):
@@ -34,14 +43,16 @@ class ChangePasswordSerializer(serializers.Serializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = ('id', 'email', 'full_name', 'address', 'latitude', 'longitude', 'groups')
+        fields = ('id', 'email', 'full_name', 'phone_number', 'address', 'latitude', 'longitude', 'groups')
 
 
 # Register Serializer
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = ('id', 'email', 'full_name', 'password', 'address', 'latitude', 'longitude', 'groups')
+        fields = (
+            'id', 'email', 'full_name', 'phone_number', 'password', 'address', 'latitude', 'longitude', 'groups',
+            'managed_schools')
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
@@ -49,11 +60,13 @@ class RegisterSerializer(serializers.ModelSerializer):
             validated_data['email'],
             validated_data['password'],
             full_name=validated_data['full_name'],
+            phone_number=validated_data['phone_number'],
             address=validated_data['address'],
             latitude=validated_data['latitude'],
             longitude=validated_data['longitude'],
         )
         user.groups.add(*validated_data['groups'])
+        user.managed_schools.add(*validated_data['managed_schools'])
         user.is_verified = True
         return user
 

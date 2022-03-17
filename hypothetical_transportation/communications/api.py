@@ -1,4 +1,4 @@
-from rest_framework import generics, permissions, status
+from rest_framework import generics, permissions, status, serializers
 from rest_framework.response import Response
 from .serializers import SendAnnouncementSerializer
 
@@ -12,7 +12,7 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 
 from backend.geo_utils import get_straightline_distance, LEN_OF_MILE
-from backend.permissions import IsAdmin
+from backend.permissions import IsAdmin, IsSchoolStaff, is_school_staff
 
 
 def send_rich_format_email(template: str, template_context: dict, subject: str, to: list, bcc: list):
@@ -69,18 +69,37 @@ def get_recipients_from_email_query(serializer: SendAnnouncementSerializer):
     return recipients
 
 
+def block_staff_emails(user, serializer) -> bool:
+    block = False
+    if is_school_staff(user):
+        id_type = serializer.data.get("id_type")
+        object_id = serializer.data.get("object_id")
+        if id_type == "ROUTE":
+            route = get_object_or_404(Route, id=object_id)
+            if user.managed_schools.filter(id=route.school.id).count() == 0:
+                block = True
+        elif id_type == "SCHOOL":
+            school = get_object_or_404(School, id=object_id)
+            if user.managed_schools.filter(id=school.id).count() == 0:
+                block = True
+        elif id_type == "ALL":
+            block = True
+    return block
+
+
 class SendAnnouncementAPI(generics.GenericAPIView):
     """
     Sends an email announcement to the specified group
     """
     serializer_class = SendAnnouncementSerializer
-    permission_classes = [
-        IsAdmin
-    ]
+    permission_classes = [IsAdmin | IsSchoolStaff]
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        if block_staff_emails(request.user, serializer):
+            content = {'detail': 'This email is not permitted.  Please check your managed schools'}
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
         recipients = get_recipients_from_email_query(serializer)
         custom_context = request.data.get('context', None)
         send_rich_format_email(template=serializer.data.get("template", "announcement_email.html"),
@@ -107,6 +126,9 @@ class SendRouteAnnouncementAPI(generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        if block_staff_emails(request.user, serializer):
+            content = {'detail': 'This email is not permitted.  Please check your managed schools'}
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
         recipients = get_recipients_from_email_query(serializer)
         custom_context = request.data.get('context', None)
         for recipient in recipients:

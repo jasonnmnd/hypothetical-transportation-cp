@@ -10,35 +10,37 @@ import { getColumns, getFilterOptions, getSortOptions } from '../../../../utils/
 import { pageSize } from '../../../../actions/utils';
 import {Button} from 'react-bootstrap';
 import GeneralLegend from '../../../common/GeneralLegend';
+import getType from '../../../../utils/user2';
+
 function GeneralAdminTableView( props ) {
 
     const nav = useNavigate();
 
     const handleExtraColumnClick = (d)=>{
-        nav(`/admin/school/${d.id}`);
+        nav(`/${getType(props.user)}/school/${d.id}`);
     }
 
     const handleViewClick = (d) => {
         //route to /props.title?somethingid=id => props.title determins routing to student, route, school, user
         //console.log(d)
         if (props.tableType == 'user') {
-            nav(`/admin/user/${d.id}`);
+            nav(`/${getType(props.user)}/user/${d.id}`);
         } 
 
         else if (props.tableType ==  'student'){
-            nav(`/admin/student/${d.id}`);
+            nav(`/${getType(props.user)}/student/${d.id}`);
         }
 
         else if (props.tableType ==  'school') {
-            nav(`/admin/school/${d.id}`);
+            nav(`/${getType(props.user)}/school/${d.id}`);
         }
 
         else if (props.tableType == 'route') {
-            nav(`/admin/route/${d.id}`);
+            nav(`/${getType(props.user)}/route/${d.id}`);
         }
 
         else if (props.tableType == 'stop') {
-            nav(`/admin/stop/${d.id}`);
+            nav(`/${getType(props.user)}/stop/${d.id}`);
         }
     };
 
@@ -104,6 +106,7 @@ GeneralAdminTableView.defaultProps = {
 }
 
 const mapStateToProps = (state) => ({
+  user: state.auth.user,
 });
 
 export default connect(mapStateToProps)(GeneralAdminTableView)

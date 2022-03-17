@@ -11,16 +11,21 @@ Using github actions, a developmental server is automatically deployed upon push
 The one thing to watch out for: if you edit a docker-compose file, you have to ssh into every host, `git fetch origin && git pull`
 
 The hosts for these servers are as listed:
+
 #### PRODUCTION
+
 `https://hypothetical-transportation.colab.duke.edu`
 
 #### DEV
+
 `https://ht-dev.colab.duke.edu`
 
 #### TEST ENV (must be deployed manually)
+
 `https://ht-test.colab.duke.edu:8000`
 
 ### Creating a new server
+
 #### Reserve a VCM/obtain a host
 
 ```
@@ -41,12 +46,14 @@ npm install
 npm run dev
 ```
 
-To compile for production, run: 
+To compile for production, run:
+
 ```
 npm run build
 ```
 
 ### Running the Stack
+
 #### First Time Installation
 
 ```
@@ -69,13 +76,21 @@ _Seeding the Database with random data:_
 python3 manage.py flush
 python3 manage.py seeddb /*Optional Flags*/
 ```
+
+_After flushing, to load in json data_
+
+```
+python3 manage.py loaddata backend/fixtures/hypodata.json
+python3 manage.py loaddata backend/fixtures/newgroups.json /* new group fixtures */
+
+```
+
 _To configure email credentials:_
 
 ```
 export AUTHEMAIL_EMAIL_HOST_USER=<GMAIL_ACCOUNT>
 export AUTHEMAIL_EMAIL_HOST_PASSWORD=<PASSWORD>
 ```
-
 
 Optional Flags:
 
@@ -90,11 +105,13 @@ Optional Flags:
 #### Starting the Server
 
 locally:
+
 ```
 python3 manage.py runserver
 ```
 
 within the host:
+
 ```
 sudo docker-compose -f docker-compose.<ENV>.yml up --build
 ```

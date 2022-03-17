@@ -3,6 +3,7 @@ import { withAlert } from 'react-alert';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
+import getType from '../../utils/user2';
 
 
 function Alerts(props) {
@@ -42,10 +43,10 @@ function Alerts(props) {
           if (message.student) alert(message.student);
           if (message.user && message.user.includes("Create")){
             if(confirm(message.user + " Would you like to navigate to create a new student for them?")){
-              navigate(`/admin/new_student`)
+              navigate(`/${getType(props.user)}/new_student`)
             }
             else{
-              navigate(`/admin/users`)
+              navigate(`/${getType(props.user)}/users`)
             }
           }
           if (message.user && message.user.includes("Update")){
@@ -69,6 +70,7 @@ Alerts.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
+  user: state.auth.user,
   error: state.errors,
   message: state.messages,
 });
