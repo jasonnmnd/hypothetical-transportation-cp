@@ -69,7 +69,7 @@ function TestMap(props) {
        {
             location.lat ? 
             <Marker key={"address"} position={location} onDragEnd={(e) => onMarkerDragEnd(e)}
-                draggable={true} /> :
+                draggable={props.draggable} /> :
                 null
        }
        </GoogleMap>
@@ -79,8 +79,12 @@ function TestMap(props) {
 TestMap.propTypes = {
     address: PropTypes.string,
     coord: PropTypes.object,
+    draggable: PropTypes.bool,
     setAddress: PropTypes.func,
     setCoord: PropTypes.func,
+}
+TestMap.defaultProps = {
+  draggable: true,
 }
 
 const mapStateToProps = (state) => ({

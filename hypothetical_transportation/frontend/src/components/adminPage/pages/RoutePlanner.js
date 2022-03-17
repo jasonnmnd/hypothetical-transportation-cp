@@ -1,5 +1,5 @@
 import React, { useEffect, useState, Fragment } from 'react';
-import Header from '../../header/Header';
+import Header from '../../header/AdminHeader';
 import { Link, Route, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes, { string } from 'prop-types';
@@ -10,7 +10,7 @@ import { getRouteInfo, getRoutes, resetViewedRoute } from '../../../actions/rout
 import { updateRoute, createRoute,resetPosted } from '../../../actions/routeplanner';
 import { getSchool } from '../../../actions/schools';
 import { getStudents, patchStudent } from '../../../actions/students';
-import RoutePlannerMap from './RoutePlannerMap';
+import RoutePlannerMap from '../../maps/RoutePlannerMap';
 import { NO_ROUTE } from '../../../utils/utils';
 import { Container, ButtonGroup, ToggleButton, Card, Button, Form, Collapse, Modal } from 'react-bootstrap';
 import IconLegend from '../../common/IconLegend';

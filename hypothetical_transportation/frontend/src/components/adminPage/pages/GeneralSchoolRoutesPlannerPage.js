@@ -1,5 +1,5 @@
 import React, { useEffect, useState, Fragment } from 'react';
-import Header from '../../header/Header';
+import Header from '../../header/AdminHeader';
 import { Link, Route, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes, { string } from 'prop-types';
@@ -10,7 +10,7 @@ import { getRouteInfo, getRoutes, resetViewedRoute } from '../../../actions/rout
 import { updateRoute, createRoute,resetPosted } from '../../../actions/routeplanner';
 import { getSchool } from '../../../actions/schools';
 import { getStudents, patchStudent } from '../../../actions/students';
-import RoutePlannerMap from './RoutePlannerMap';
+import RoutePlannerMap from '../../maps/RoutePlannerMap';
 import { NO_ROUTE } from '../../../utils/utils';
 import { Container, ButtonGroup, ToggleButton, Card, Button, Form, Collapse, Modal } from 'react-bootstrap';
 import PageNavigateModal from '../components/modals/PageNavigateModal';
@@ -23,6 +23,7 @@ import RoutePlannerInstructions from '../components/route_stop_planner/RoutePlan
 import CreateRouteModal from '../components/route_stop_planner/CreateRouteModal';
 import RoutePlanner from './RoutePlanner';
 import { getStopByRoute, deleteStop, createStop, updateStop } from '../../../actions/stops';
+import getType from '../../../utils/user2';
 
 const IS_CREATE_PARAM = 'create';
 const VIEW_PARAM = 'view';
@@ -47,12 +48,12 @@ function SchoolRoutesPlannerPage(props) {
 
   useEffect(() => {
     if(props.school.id != parseInt(param.school_id)){
-      props.getRoutes({school: param.school_id});
+      props.getRoutes({school: param.school_id, ordering: "name"});
     }
   }, [props.school]);
 
   useEffect(() => {
-    props.getRoutes({school: param.school_id});
+    props.getRoutes({school: param.school_id, ordering: "name"});
     props.getRouteInfo(searchParams.get('route'))
   }, [param, searchParams]);
 
@@ -167,8 +168,7 @@ function SchoolRoutesPlannerPage(props) {
   }
 
   const handleRouteDetailClick = () => {
-    console.log("HI")
-    navigate(`/admin/route/${searchParams.get(ROUTE_PARAM)}`);
+    navigate(`/${getType(props.user)}/route/${searchParams.get(ROUTE_PARAM)}`);
   }
   
   const onInfoSubmit = (e, isCreateRoute) => {
@@ -231,11 +231,11 @@ function SchoolRoutesPlannerPage(props) {
   }
 
   const navToRoutes = ()=>{
-    navigate(`/admin/routes/`);
+    navigate(`/${getType(props.user)}/routes/`);
   }
 
   const navToStopper = ()=>{
-    navigate(`/admin/stop/plan/${param.school_id}/${props.currentRoute.id}`);
+    navigate(`/${getType(props.user)}/stop/plan/${param.school_id}/${props.currentRoute.id}`);
   }
 
   const setCreateSearchParam = (val) => {
@@ -377,6 +377,7 @@ SchoolRoutesPlannerPage.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
+  user: state.auth.user,
   students: state.students.students.results,
   routes: state.routes.routes.results, 
   currentRoute: state.routes.viewedRoute,

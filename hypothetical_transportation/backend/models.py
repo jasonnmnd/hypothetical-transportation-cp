@@ -4,7 +4,7 @@ from django.core.validators import MinLengthValidator
 from django.contrib.postgres.fields import CICharField
 from django.conf import settings
 import datetime
-from .geo_utils import get_straightline_distance, get_time_between, add_time_with_delta, LEN_OF_MILE
+from .geo_utils import get_straightline_distance, LEN_OF_MILE
 
 
 class School(models.Model):

@@ -2,6 +2,8 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from rest_framework import serializers
 from .models import Route, School, Student, Stop
+from geopy.geocoders import Nominatim
+from .permissions import is_admin
 
 
 class GroupSerializer(serializers.ModelSerializer):
@@ -13,7 +15,8 @@ class GroupSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = ('id', 'email', 'full_name', 'address', 'latitude', 'longitude', 'groups')
+        fields = (
+            'id', 'email', 'full_name', 'phone_number', 'address', 'latitude', 'longitude', 'groups', 'managed_schools')
         # fields = ('email', 'password')
 
     def validate(self, data):
@@ -21,9 +24,28 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class EditUserSerializer(serializers.ModelSerializer):
+    def update(self, instance, validated_data):
+        user_email = self.context['request'].user
+        user = get_user_model().objects.get(email=user_email)
+        if is_admin(user) and user_email == instance and 'groups' in validated_data and Group.objects.get(
+                name='Administrator') not in validated_data['groups']:
+            raise serializers.ValidationError("You may not revoke your own administrator privileges")
+        return super().update(instance, validated_data)
+
     class Meta:
         model = get_user_model()
-        fields = ('id', 'email', 'full_name', 'address', 'latitude', 'longitude', 'groups')
+        fields = (
+            'id', 'email', 'full_name', 'phone_number', 'address', 'latitude', 'longitude', 'groups', 'managed_schools')
+
+
+class StaffEditUserSerializer(serializers.ModelSerializer):
+    def validate(self, attrs):
+        # print(self.context['request'].user)
+        return attrs
+
+    class Meta:
+        model = get_user_model()
+        fields = ('id', 'email', 'full_name', 'phone_number', 'address', 'latitude', 'longitude')
 
 
 class FormatUserSerializer(UserSerializer):
@@ -36,6 +58,12 @@ class SchoolSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class StaffEditSchoolSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = School
+        fields = ['bus_arrival_time', 'bus_departure_time']
+
+
 class RouteSerializer(serializers.ModelSerializer):
     is_complete = serializers.BooleanField(read_only=True)
 
@@ -46,7 +74,6 @@ class RouteSerializer(serializers.ModelSerializer):
 
 
 class StopSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Stop
         fields = '__all__'
@@ -91,6 +118,15 @@ class StudentSerializer(serializers.ModelSerializer):
         return data
 
 
+class StaffStudentSerializer(StudentSerializer):
+    def validate_school(self, data):
+        staff_email = self.context['request'].user
+        staff_user = get_user_model().objects.get(email=staff_email)
+        if data in staff_user.managed_schools.all():
+            return data
+        raise serializers.ValidationError("Student school is not among schools that you manage!")
+
+
 class FormatStudentSerializer(StudentSerializer):
     school = SchoolSerializer()
     routes = RouteSerializer()
@@ -112,3 +148,61 @@ class StudentLocationSerializer(serializers.Serializer):
 class CheckInrangeSerializer(serializers.Serializer):
     stops = StopLocationSerializer(many=True)
     students = StudentLocationSerializer(many=True)
+
+
+def find_school_match_candidates(school_name: str):
+    """
+
+    Django ORM does not appear to have a method to strip extra whitespace from entries that occur in the database.
+    This method results to a best-effort filter for the tokens that appear in the school name and then attempts to find
+    a best match.
+    :param school_name: name of the school
+    :return: candidate_schools, queryset containing matches
+    """
+    school_name_tokens = school_name.split()
+    candidate_schools = School.objects.all()
+    for token in school_name_tokens:
+        candidate_schools = candidate_schools.filter(name__icontains=token)
+    return candidate_schools
+
+
+def school_names_match(school_name1: str, school_name2: str):
+    formatted_name1 = " ".join(school_name1.split()).lower()
+    formatted_name2 = " ".join(school_name2.split()).lower()
+    return formatted_name1 == formatted_name2
+
+
+class LoadStudentSerializer(serializers.ModelSerializer):
+    school_name = serializers.CharField(required=True)
+    parent_email = serializers.CharField(required=True)
+
+    def validate_school_name(self, value):
+        candidates = find_school_match_candidates(value)
+        for candidate in candidates:
+            if school_names_match(candidate.name, value):
+                return value
+        raise serializers.ValidationError("school name could not be matched")
+
+    class Meta:
+        model = Student
+        fields = ("full_name", "student_id", "parent_email", "school_name")
+
+
+class LoadUserSerializer(serializers.ModelSerializer):
+    def validate_address(self, value):
+        # TODO: Uncomment to use paid geolocator API
+        # geolocator = GoogleV3(api_key="AIzaSyA6nIh9bWUWFOD_y7hEZ7UQh_KmPn5Sq58")
+        geolocator = Nominatim(user_agent="bulk import validator")
+        location = geolocator.geocode(value)
+        if not location or not location.latitude or not location.longitude:
+            raise serializers.ValidationError("address could not be geographically matched")
+        return value
+
+    class Meta:
+        model = get_user_model()
+        fields = ("email", "full_name", "address", "phone_number")
+
+
+class LoadModelDataSerializer(serializers.Serializer):
+    users = LoadUserSerializer(many=True, required=False)
+    students = LoadStudentSerializer(many=True, required=False)

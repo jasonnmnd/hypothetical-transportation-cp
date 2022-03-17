@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import {InfoWindow} from '@react-google-maps/api';
 import { connect } from 'react-redux';
-import MapComponent from "../../maps/MapComponent";
+import MapComponent from "./MapComponent";
 import PropTypes, { string } from 'prop-types';
 import { useSearchParams } from 'react-router-dom';
-import { NO_ROUTE } from '../../../utils/utils';
-import { getStudentPin, addSchoolPin, getStopPin } from '../../../utils/planner_maps';
+import { NO_ROUTE } from '../../utils/utils';
+import { getStudentPin, addSchoolPin, getStopPin } from '../../utils/planner_maps';
+
 
 
 

@@ -2,6 +2,7 @@
 # ssh-keygen -t rsa 
 # ssh-copy-id vcm@vcm-25708.vm.duke.edu
 DOW=$(date +%a)
+
 echo "[PROD: BACKUP - DAILY] today is $DOW, starting daily backup"
 
 echo "[PROD: BACKUP - DAILY] dumping data from inside web app"

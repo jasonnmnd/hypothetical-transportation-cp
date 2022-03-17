@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Header from '../../header/Header';
+import Header from '../../header/AdminHeader';
 import "../adminPage.css";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import FormDeleteModal from '../components/modals/FormDeleteModal';
@@ -10,7 +10,10 @@ import { getStudents } from '../../../actions/students';
 import { getRoutes } from '../../../actions/routes';
 import GeneralAdminTableView from '../components/views/GeneralAdminTableView';
 import { filterObjectForKeySubstring } from '../../../utils/utils';
-import { Container, Card, Button, Row, Col } from 'react-bootstrap'
+import { Container, Card, Button, Row, Col } from 'react-bootstrap';
+import isAdmin from '../../../utils/user';
+import getType from '../../../utils/user2'
+import isSchoolStaff from '../../../utils/userSchoolStaff';
 
 function GeneralAdminSchoolDetails(props) {
   const navigate = useNavigate();
@@ -23,7 +26,7 @@ function GeneralAdminSchoolDetails(props) {
   const handleConfirmDelete = (schoolName) => {
     if (props.school.name === schoolName) {
       props.deleteSchool(param.id)
-      navigate(`/admin/schools/`)
+      navigate(`/${getType(props.user)}/schools/`)
     } else {
       alert("School name does not match")
     }
@@ -71,80 +74,92 @@ function GeneralAdminSchoolDetails(props) {
       {openModal && <FormDeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}
       <Header></Header>
       <Container className="container-main d-flex flex-column" style={{gap: "20px"}}>
+      {isAdmin(props.user) ? <>
         <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
             <Row>
               <Col>
-                <Link to={`/admin/edit/school/${props.school.id}`}>
+                <Link to={`/${getType(props.user)}/edit/school/${props.school.id}`}>
                   <Button variant="yellowLong" size="lg">Edit School</Button>
                 </Link>
               </Col>
-
+              {isSchoolStaff(props.user) ? 
+              <></>
+              :
               <Col>
                 <Button variant="yellowLong" size="lg" onClick={() => {
                   setOpenModal(true);
                 }}>Delete School</Button>
               </Col>
+              }
+
             </Row>
             </Container>
             <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
             <Row>
               <Col>
-                <Link to={`/admin/route/plan/${props.school.id}?view=0&create=true`}>
+                <Link to={`/${getType(props.user)}/route/plan/${props.school.id}?view=0&create=true`}>
                   <Button variant="yellowLong" size="lg">New/Edit Route for this School</Button>
                 </Link>
 
               </Col>
 
               <Col>
-                <Link to={`/admin/school_email/${props.school.id}`}>
+                <Link to={`/${getType(props.user)}/school_email/${props.school.id}`}>
                   <Button variant="yellowLong" size="lg">Send School-wide Email</Button>
                 </Link>
               </Col>
                 
             </Row>
         </Container>
-        
-        <Card>
-            <Card.Header as="h5">Name</Card.Header>
-            <Card.Body>
-                <Card.Text>{props.school.name}</Card.Text>
-            </Card.Body>
-        </Card>
+        </> : <></>}
+        <Row  style={{gap: "10px"}}> 
+          <Card as={Col} style={{padding: "0px"}}>
+              <Card.Header as="h5">Name</Card.Header>
+              <Card.Body>
+                  <Card.Text>{props.school.name}</Card.Text>
+              </Card.Body>
+          </Card>
 
-        <Card>
-            <Card.Header as="h5">Address </Card.Header>
-            <Card.Body>
-                <Card.Text>{props.school.address}</Card.Text>
-            </Card.Body>
-        </Card>
+          <Card as={Col} style={{padding: "0px"}}>
+              <Card.Header as="h5">Address </Card.Header>
+              <Card.Body>
+                  <Card.Text>{props.school.address}</Card.Text>
+              </Card.Body>
+          </Card>
+        </Row>
+        <Row  style={{gap: "10px"}}> 
+          <Card as={Col} style={{padding: "0px"}}>
+              <Card.Header as="h5">Bus Arrival Time </Card.Header>
+              <Card.Body>
+                  <Card.Text>{props.school.bus_arrival_time}</Card.Text>
+              </Card.Body>
+          </Card>
 
-        <Card>
-            <Card.Header as="h5">Bus Arrival Time </Card.Header>
-            <Card.Body>
-                <Card.Text>{props.school.bus_arrival_time}</Card.Text>
-            </Card.Body>
-        </Card>
+          <Card as={Col} style={{padding: "0px"}}>
+              <Card.Header as="h5">Bus Departure Time </Card.Header>
+              <Card.Body>
+                  <Card.Text>{props.school.bus_departure_time}</Card.Text>
+              </Card.Body>
+          </Card>
+        </Row>
 
-        <Card>
-            <Card.Header as="h5">Bus Departure Time </Card.Header>
-            <Card.Body>
-                <Card.Text>{props.school.bus_departure_time}</Card.Text>
-            </Card.Body>
-        </Card>
+        <Row  style={{gap: "10px"}}> 
+          <Card as={Col} style={{padding: "0px"}}>
+              <Card.Header as="h5">Associated Students </Card.Header>
+                  <Card.Body>
+                      <GeneralAdminTableView values={props.students} tableType='student' title='Associated Students' search={STUDENT_PREFIX} pagination={STUDENT_PREFIX} totalCount={props.studentCount}/>
+                  </Card.Body>
+          </Card>
+        </Row>
 
-        <Card>
-            <Card.Header as="h5">Associated Students </Card.Header>
-                <Card.Body>
-                    <GeneralAdminTableView values={props.students} tableType='student' title='Associated Students' search={STUDENT_PREFIX} pagination={STUDENT_PREFIX} totalCount={props.studentCount}/>
-                </Card.Body>
-        </Card>
-
-        <Card>
-            <Card.Header as="h5">Associated Routes </Card.Header>
-            <Card.Body>
-                <GeneralAdminTableView values={props.routes} tableType='route' title='Associated Routes' search={ROUTE_PREFIX} pagination={ROUTE_PREFIX} totalCount={props.routeCount}/>
-            </Card.Body>
-        </Card>
+        <Row  style={{gap: "10px"}}> 
+          <Card as={Col} style={{padding: "0px"}}>
+              <Card.Header as="h5">Associated Routes </Card.Header>
+              <Card.Body>
+                  <GeneralAdminTableView values={props.routes} tableType='route' title='Associated Routes' search={ROUTE_PREFIX} pagination={ROUTE_PREFIX} totalCount={props.routeCount}/>
+              </Card.Body>
+          </Card>
+        </Row>
       </Container>
 
       <br></br>

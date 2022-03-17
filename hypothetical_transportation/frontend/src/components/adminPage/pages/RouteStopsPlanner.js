@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Header from '../../header/Header';
+import Header from '../../header/AdminHeader';
 import { Link, Route, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes, { string } from 'prop-types';
@@ -11,7 +11,7 @@ import { getSchool } from '../../../actions/schools';
 import { getStudents, patchStudent } from '../../../actions/students';
 import { NO_ROUTE } from '../../../utils/utils';
 import { getStopByRoute, deleteStop, createStop, updateStop } from '../../../actions/stops';
-import StopPlannerMap from './StopPlannerMap';
+import StopPlannerMap from '../../maps/StopPlannerMap';
 import ModifyStopTable from '../components/forms/ModifyStopTable';
 import Geocode from "react-geocode";
 import IconLegend from '../../common/IconLegend';

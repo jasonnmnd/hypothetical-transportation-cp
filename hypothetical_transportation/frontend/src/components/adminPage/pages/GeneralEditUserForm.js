@@ -1,16 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import "../NEWadminPage.css"
-import Header from "../../header/Header";
+import Header from "../../header/AdminHeader";
 import { getUser, updateUser } from "../../../actions/users";
 import { register } from "../../../actions/auth";
 import AssistedLocationMap from "../../maps/AssistedLocationMap";
-import { Form, Button, Row, Col, Container, InputGroup, ButtonGroup, ToggleButton} from 'react-bootstrap';
+import { Form, Button, Row, Col, Container, InputGroup, ButtonGroup, ToggleButton, Alert} from 'react-bootstrap';
 import { getItemCoord } from "../../../utils/geocode";
 import PageNavigateModal from "../components/modals/PageNavigateModal";
 import { resetPostedUser } from "../../../actions/users";
+import { getSchools } from "../../../actions/schools";
+import getType from "../../../utils/user2";
+
+import Select from 'react-select';
+
+import 'react-phone-number-input/style.css'
+import PhoneInput from 'react-phone-number-input'
 
 //Edit/New user form
 function GeneralEditUserForm(props) {
@@ -19,24 +26,28 @@ function GeneralEditUserForm(props) {
     const [openModal, setOpenModal] = useState(false);
     const [validated, setValidated] = useState(false);
     const[coord,setCoord]=useState({lat:36.0016944, lng:-78.9480547});
+    const [schoolSelected, setSchoolSelected] = useState([])
     
     const [fieldValues, setFieldValues] = useState({
         id: 0,
         full_name: "",
         address: "",
         email: "",
+        phone_number: "",
         groups: 2,
     });
     const [address, setAddress] = useState("");
 
 
     useEffect(() => {
+        props.getSchools({ordering:"name"});
         if(props.action == "edit"){
             props.getUser(param.id);
             setFieldValues({
                 full_name: props.curUser.full_name,
                 address: props.curUser.address,
                 email: props.curUser.email,
+                phone_number: props.curUser.phone_number,
                 groups: props.curUser.groups[0].id
             });
             setAddress(props.curUser.address);
@@ -50,6 +61,7 @@ function GeneralEditUserForm(props) {
                 full_name: "",
                 address: "",
                 email: "",
+                phone_number: "",
                 groups: 2,
             })
             setAddress("")
@@ -61,29 +73,59 @@ function GeneralEditUserForm(props) {
     },[props.action])
 
     useEffect(()=>{
+        var schoolss = props.schoollist.filter((s)=>{
+            if(props.curUser.managed_schools!==undefined){
+                if(props.curUser.managed_schools.includes(s.id)){
+                    return {value:s.id, label:s.name}
+                }
+            }
+        })
+        var school22 = schoolss.map((i)=>{return {value:i.id, label:i.name}})
+        setSchoolSelected(school22)
+    },[props.schoollist, props.curUser])
+
+
+    // useEffect(()=>{
+    //     console.log(schoolSelected)
+    // },[schoolSelected])
+
+    useEffect(()=>{
         if(props.action == "edit"){
             setFieldValues({
                 full_name: props.curUser.full_name,
                 address: props.curUser.address,
                 email: props.curUser.email,
+                phone_number: props.curUser.phone_number,
                 groups: props.curUser.groups[0].id
             });
             setAddress(props.curUser.address);
             setCoord({lat: Number(props.curUser.latitude), lng: Number(props.curUser.longitude)})
+            
         }
     },[props.curUser])
 
     const handleSubmit = (event) => {
         event.preventDefault();
         event.stopPropagation();
-        const createVals = {
+
+
+        const finalSchoolList = schoolSelected.map((item)=>{return item.value})
+        // console.log(finalSchoolList)
+        const createVals = fieldValues.groups==3 ? {
             ...fieldValues,
             groups: [fieldValues.groups],
             address: address,
             longitude: coord.lng.toFixed(6),
             latitude: coord.lat.toFixed(6),
+            managed_schools: finalSchoolList,
+        }:{
+            ...fieldValues,
+            groups: [fieldValues.groups],
+            address: address,
+            longitude: coord.lng.toFixed(6),
+            latitude: coord.lat.toFixed(6),
+            managed_schools: []
         }
-        console.log(createVals)
         const form = event.currentTarget;
         if (form.checkValidity() === false) {
             event.preventDefault();
@@ -91,12 +133,11 @@ function GeneralEditUserForm(props) {
         } else {
             if(props.action == "edit"){
                 props.updateUser(createVals, param.id).then(console.log("EDITED"));
-                // setOpenModal(true)
-                navigate(`/admin/users`)
+                navigate(`/${getType(props.user)}/users`)
             }
             else{
+                // console.log(createVals)
                 props.register(createVals);
-                // navigate(`/admin/new_student`)
                 setOpenModal(true)
             }
         }
@@ -105,7 +146,9 @@ function GeneralEditUserForm(props) {
 
     const groupTypes = [
         {name: "Administrator", value: 1},
-        {name: "Guardian", value: 2}
+        {name: "Guardian", value: 2},
+        {name: "Driver", value: 4},
+        {name: "Staff", value: 3}
     ]
 
 
@@ -120,24 +163,64 @@ function GeneralEditUserForm(props) {
     //   }
 
     const navToNewStudent = ()=>{
-        navigate(`/admin/new_student`);
+        navigate(`/${getType(props.user)}/new_student`);
     }
 
     const navToUsers = ()=>{
         resetPostedUser();
-        navigate(`/admin/users`);
+        navigate(`/${getType(props.user)}/users`);
+    }
+
+    const [val, setVal] = useState([])
+
+    // useEffect(()=>{
+    //     console.log(val)
+    // },[val])
+
+    // const handleChange = (e)=>{
+    //     // var options = e.target.options;
+    //     // var value = [];
+    //     // for (var i = 0, l = options.length; i < l; i++) {
+    //     //   if (options[i].selected) {
+    //     //     value.push(options[i].value);
+    //     //   }
+    //     // }
+    //     // setVal(value);
+    //     const list = e.map((i)=>{
+    //         return i.value
+    //     })
+    //     setSchoolSelected(list)
+    //   }
+
+    const getSchoolOPtion = ()=>{
+        var opt = []
+        if(props.schoollist!==null && props.schoollist!==undefined && props.schoollist.length!==0){
+            const x = props.schoollist.map((item)=> {
+                return ({value:item.id, label:item.name})
+            })    
+            opt = x  
+        }
+        // console.log(opt)
+        return opt
     }
     
     return (
         <div> 
             {/* <div>{openModal && <PageNavigateModal closeModal={setOpenModal} yesFunc={navToNewStudent} noFunc={navToUsers} message={`You have created a new User!`} question={`Would you like to navigate to the create a new student for them?`}/>}</div> */}
             <Header></Header>
+                {props.action == "edit" || getType(props.user) == "admin" ?
                 <Container className="container-main">
                 <div className="shadow-sm p-3 mb-5 bg-white rounded d-flex flex-row justify-content-center">
                     {props.action == "edit" ? <h1>Edit User</h1> : <h1>Create User</h1>}
                 </div>
-                    <Form className="shadow-lg p-3 mb-5 bg-white rounded" noValidate validated={validated} onSubmit={handleSubmit}>
-
+                    <Form className="shadow-lg p-3 mb-5 bg-white rounded" noValidate validated={validated} 
+                    onSubmit={handleSubmit}
+                    onKeyPress={event => {
+                        if (event.key === 'Enter' /* Enter */) {
+                          event.preventDefault();
+                        }
+                      }}
+                    >
                         <Row className="mb-3">
                             <Form.Group as={Col} controlId="formGridAddress2">
                                 <Form.Label as="h5">Full Name</Form.Label>
@@ -153,61 +236,97 @@ function GeneralEditUserForm(props) {
                                 <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                                 <Form.Control.Feedback type="invalid">Please provide a valid name.</Form.Control.Feedback>
                             </Form.Group>
-                            <Form.Group as={Col}>
-                                <Form.Label as="h5">User Type</Form.Label>
-                                <InputGroup className="mb-3">
-                                <ButtonGroup>
-                                    {groupTypes.map((radio, idx) => (
-                                    <ToggleButton
-                                        key={idx}
-                                        id={`radio-${idx}`}
-                                        type="radio"
-                                        variant={'outline-warning'}
-                                        name="radio"
-                                        value={radio.value}
-                                        checked={fieldValues.groups == radio.value}
-                                        onChange={(e)=>{
-                                            setFieldValues({...fieldValues, groups: e.target.value});
-                                        }}
-                                    >
-                                        {radio.name}
-                                    </ToggleButton>
-                                    ))}
-                                </ButtonGroup>
-                                </InputGroup>
-                            </Form.Group>
+                            {props.user.groups[0] == 1 ? 
+                                <Form.Group as={Col}>
+                                    <Form.Label as="h5">User Type</Form.Label>
+                                    <InputGroup className="mb-3">
+                                        <ButtonGroup>
+                                            {groupTypes.map((radio, idx) => (
+                                            <ToggleButton
+                                                key={idx}
+                                                id={`radio-${idx}`}
+                                                type="radio"
+                                                variant={'outline-warning'}
+                                                name="radio"
+                                                value={radio.value}
+                                                checked={fieldValues.groups == radio.value}
+                                                onChange={(e)=>{
+                                                    setFieldValues({...fieldValues, groups: e.target.value});
+                                                }}
+                                            >
+                                                {radio.name}
+                                            </ToggleButton>
+                                            ))}
+                                        </ButtonGroup>
+                                    </InputGroup>
+                                </Form.Group> : <></>
+                            }
                         </Row>
+                        {fieldValues.groups ==3 ?
+                        <Row className="mb-3">
+                            <Form.Group >
+                                <Form.Label>Please select schools that this user can manage</Form.Label>
+                                {/* <Form.Control
+                                    as="select"
+                                    multiple
+                                    value={val}
+                                    onChange={handleChange}
+                                >
+                                    {props.schoollist!==null && props.schoollist!==undefined && props.schoollist.length!==0?props.schoollist.map((u,i)=>{
+                                    return <option value={u.id} key={i}>{u.name}</option>
+                                    }):null}
+                                </Form.Control> */}
+                                <Select isMulti options={getSchoolOPtion()} value={schoolSelected} onChange={setSchoolSelected}/>
+                                <Form.Text muted> You can type into the box to filter the options</Form.Text>
+                            </Form.Group>
+                        </Row>:<></>}
 
                         <Row className="mb-3">
                             <Form.Group as={Col} controlId="formGridEmail">
-                            <Form.Label as="h5">Email</Form.Label>
-                            <Form.Control 
-                            required 
-                            type="email" 
-                            placeholder="Enter email..." 
-                            value={fieldValues.email}
-                            onChange={
-                              (e)=>{
-                                setFieldValues({...fieldValues, email: e.target.value});
-                                }
-                            }/>
-                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                            <Form.Control.Feedback type="invalid">Please provide a valid email.</Form.Control.Feedback>
+                                <Form.Label as="h5">Email</Form.Label>
+                                    <Form.Control 
+                                    required 
+                                    type="email" 
+                                    placeholder="Enter email..." 
+                                    value={fieldValues.email}
+                                    onChange={
+                                    (e)=>{
+                                        setFieldValues({...fieldValues, email: e.target.value});
+                                        }
+                                    }/>
+                                    <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                                <Form.Control.Feedback type="invalid">Please provide a valid email.</Form.Control.Feedback>
                             </Form.Group>
 
-                            {/* <Form.Group as={Col} controlId="formGridPassword">
-                            <Form.Label as="h5">Password</Form.Label>
-                            <Form.Control 
-                            type="password" 
-                            placeholder="Enter password..." 
-                            value={fieldValues.password}
-                            onChange={
-                              (e)=>{
-                                setFieldValues({...fieldValues, password: e.target.value});
+                            <Form.Group as={Col} md="3" controlId="validationCustom">
+                                <Form.Label><strong>Phone Number</strong></Form.Label>
+                                <Form.Control 
+                                required
+                                type="text" 
+                                placeholder="Phone number..."  
+                                value={fieldValues.phone_number}
+                                onChange={
+                                    (e) => setFieldValues({...fieldValues, phone_number: e.target.value})
                                 }
-                            }
-                            />
-                            </Form.Group> */}
+                                />
+                                {/* <PhoneInput
+                                    placeholder="Phone number"
+                                    defaultCountry="US"
+                                    value={fieldValues.phone_number}
+                                    onChange={
+                                    (e)=>{
+                                        setFieldValues({...fieldValues, phone_number: e.target.value});
+                                        }
+                                    }
+                                    /> */}
+                                
+                                <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                                <Form.Control.Feedback type="invalid">
+                                    Please provide a valid phone number.
+                                </Form.Control.Feedback>
+                            </Form.Group>
+
+
                         </Row>
                                                 
                         <Form.Group className="mb-3" controlId="formGridAddress1">
@@ -238,7 +357,29 @@ function GeneralEditUserForm(props) {
                             Submit
                         </Button>
                     </Form>
-                </Container>
+                </Container> : getType(props.user) == "staff" ? 
+                <Container className="container-main">
+                <Alert variant="danger">
+                  <Alert.Heading>You cannot create user with no students attached.</Alert.Heading>
+                  <p>
+                    Please navigate to create student and select "Create New User" in order to create a new student and user at the same time
+                  </p>
+                  <hr />
+                  <Link to={`/staff/new_student/`}>
+                    <Button variant='yellow'>
+                        Create New Student
+                    </Button>
+                </Link>
+                  </Alert>
+                </Container>:
+                <Container className="container-main">
+                <Alert variant="danger">
+                  <Alert.Heading>Access Denied</Alert.Heading>
+                  <p>
+                    You do not have access to this page. If you believe this is an error, contact an administrator.          
+                    </p>
+                  </Alert>
+                </Container>}
         </div>
     )
 }
@@ -248,13 +389,15 @@ GeneralEditUserForm.propTypes = {
     updateUser: PropTypes.func.isRequired,
     //addSchool: PropTypes.func.isRequired,
     action: PropTypes.string,
-    register: PropTypes.func.isRequired
+    register: PropTypes.func.isRequired,
+    getSchools: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = (state) => ({
-    curUser: state.users.viewedUser
-
+    user: state.auth.user,
+    curUser: state.users.viewedUser,
+    schoollist: state.schools.schools.results,
 });
 
-export default connect(mapStateToProps, {getUser, updateUser, register})(GeneralEditUserForm)
+export default connect(mapStateToProps, {getSchools, getUser, updateUser, register})(GeneralEditUserForm)
 

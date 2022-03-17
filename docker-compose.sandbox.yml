@@ -1,0 +1,27 @@
+version: "3.9"
+   
+services:
+  db:
+    image: postgres
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=admin
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+  web:
+    build: .
+    command: bash -c "python /code/manage.py migrate && "\
+              "python /code/manage.py initadmin && "\
+              "python /code/manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/local
+      # - /etc/letsencrypt/:/etc/letsencrypt/
+    ports:
+      - "8000:8000"
+    environment:
+      - POSTGRES_DB=admin
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+    depends_on:
+      - db
