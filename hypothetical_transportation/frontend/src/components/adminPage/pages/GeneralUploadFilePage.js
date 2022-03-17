@@ -59,21 +59,21 @@ function GeneralUploadFilePage() {
             <AdminHeader></AdminHeader>
             <Container className="container-main" style={{width: "50%"}} >
                 <Form className="shadow-lg p-3 mb-5 bg-white rounded"  noValidate onSubmit={handleOnSubmit}>
-                    <Form.Label as="h5">Select a CSV file for USER information</Form.Label>
+                    <Form.Label as="h5">Select USER CSV file</Form.Label>
                     <Form.Control
                         type={"file"}
                         id={"csvFileInput"}
                         accept={".csv"}
                         onChange={handleChangeUser}
                     />
-                    <Form.Label as="h5">Select a CSV file for STUDENT information</Form.Label>
+                    <Form.Label as="h5">Select STUDENT CSV file</Form.Label>
                     <Form.Control
                         type={"file"}
                         id={"csvFileInput"}
                         accept={".csv"}
                         onChange={handleChangeStudent}
                     />
-                    <br></br>
+                    <p>You can leave either of the above fields blank to import only student/user data.</p>
                     <Button variant="yellowsubmit" type="submit">
                         Submit
                     </Button>
