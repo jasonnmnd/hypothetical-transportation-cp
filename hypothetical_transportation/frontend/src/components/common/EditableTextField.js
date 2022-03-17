@@ -16,7 +16,6 @@ function EditableTextField( props ) {
 
     const onSubmit = (e) => {
         e.preventDefault();
-        console.log(props.keyType)
         props.onSubmit({
             key: props.keyType,
             value: value
@@ -38,7 +37,7 @@ function EditableTextField( props ) {
                         <Button type="submit" onClick={onSubmit}>Submit</Button>
                     </Col>
                     <Col className='input-col'>
-                        <Button type="secondary" onClick={onSubmit}>Reset</Button>
+                        <Button onClick={() => {setValue(props.value); setEditable(false);}}>Reset</Button>
                     </Col>
                 </Row>
             </Form>
