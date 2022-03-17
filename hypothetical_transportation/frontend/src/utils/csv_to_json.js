@@ -1,4 +1,4 @@
-function csvJSON(csv){
+export default function csvJSON(csv){
 
     var lines=csv.split("\n");
   
