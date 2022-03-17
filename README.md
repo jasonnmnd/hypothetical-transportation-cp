@@ -5,7 +5,7 @@ Senior design course project!
 ## Getting Started
 
 ### Deployment
-
+ 
 Using github actions, a developmental server is automatically deployed upon pushes to the branch `dev`, and a production server is automatically deployed upon pushes to `main`.
 
 The one thing to watch out for: if you edit a docker-compose file, you have to ssh into every host, `git fetch origin && git pull`
