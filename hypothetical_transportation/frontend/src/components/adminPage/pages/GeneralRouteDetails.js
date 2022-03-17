@@ -222,25 +222,23 @@ function GeneralAdminRouteDetails(props) {
                 </Row>
             </Container></>: <></>
         }
-        {isBusDriver(props.user) ? 
-            <Row style={{gap: "10px"}}>
-                <Card as={Col} style={{padding: "0px"}}>
-                    <Card.Header as="h5">Pickup Directions For This Route</Card.Header>
-                    <Card.Body>
-                        {generatePickupLinks()}
-                    </Card.Body>
-                </Card>
+        
+        <Row style={{gap: "10px"}}>
+            <Card as={Col} style={{padding: "0px"}}>
+                <Card.Header as="h5">Pickup Directions For This Route</Card.Header>
+                <Card.Body>
+                    {generatePickupLinks()}
+                </Card.Body>
+            </Card>
 
-                <Card as={Col} style={{padding: "0px"}}>
-                    <Card.Header as="h5">Dropoff Directions For This Route</Card.Header>
-                    <Card.Body>
-                        {generateDropoffLinks()}
-                    </Card.Body>
-                </Card>
+            <Card as={Col} style={{padding: "0px"}}>
+                <Card.Header as="h5">Dropoff Directions For This Route</Card.Header>
+                <Card.Body>
+                    {generateDropoffLinks()}
+                </Card.Body>
+            </Card>
 
-            </Row>
-                :
-                <></>}
+        </Row>
             <Row  style={{gap: "10px"}}>
                 <Card as={Col} style={{padding: "0px"}}>
                     <Card.Header as="h5">Name</Card.Header>
