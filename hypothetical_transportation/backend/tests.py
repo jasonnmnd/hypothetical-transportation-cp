@@ -15,6 +15,7 @@ class TestBulkImport(TestCase):
     def setUp(self) -> None:
         """
         Small prepopulated database that tests error handling of bulk import
+        admin@example.com
         user1@example.com: John Smith
             student: Charlie Smith
             student: Carson Smith
@@ -166,6 +167,140 @@ class TestBulkImport(TestCase):
                                     content_type='application/json', HTTP_AUTHORIZATION=f'Token {self.admin_token}')
         self.assertEqual(response.status_code, 400)
         self.assertEqual(len(response.data['users'][0]['email']['duplicates']), 1)
+
+    def test_submission_breaking_user_is_atomic(self):
+        loaded_data = {
+            "users": [
+                {
+                    "email": "user3@example.com",
+                    "full_name": "John Smith",
+                    "address": "4932 Stoney Creek Dr.",
+                    "phone_number": "9999999999"
+                },
+                {
+                    "email": "user4@example.com",
+                    "full_name": "John Smith",
+                    "address": "4932 Stoney Creek Dr.",
+                    "phone_number": "9999999999"
+                },
+                {
+                    "email": "user5@example.com",
+                    "full_name": "John Smith",
+                    "address": "4932 Stoney Creek Dr.",
+                    "phone_number": "9999999999"
+                },
+                {
+                    "email": "user1@example.com",
+                    "full_name": "John Smith",
+                    "address": "4932 Stoney Creek Dr.",
+                    "phone_number": "9999999999"
+                },
+            ],
+            "students": []
+        }
+        response = self.client.post('/api/loaded-data/', json.dumps(loaded_data),
+                                    content_type='application/json', HTTP_AUTHORIZATION=f'Token {self.admin_token}')
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(get_user_model().objects.count(), 3)
+        self.assertEqual(Student.objects.count(), 2)
+
+    def test_submission_breaking_student_is_atomic(self):
+        loaded_data = {
+            "users": [
+                {
+                    "email": "user3@example.com",
+                    "full_name": "John Smith",
+                    "address": "4932 Stoney Creek Dr.",
+                    "phone_number": "9999999999"
+                },
+                {
+                    "email": "user4@example.com",
+                    "full_name": "John Smith",
+                    "address": "4932 Stoney Creek Dr.",
+                    "phone_number": "9999999999"
+                },
+                {
+                    "email": "user5@example.com",
+                    "full_name": "John Smith",
+                    "address": "4932 Stoney Creek Dr.",
+                    "phone_number": "9999999999"
+                },
+                {
+                    "email": "user6@example.com",
+                    "full_name": "John Smith",
+                    "address": "4932 Stoney Creek Dr.",
+                    "phone_number": "9999999999"
+                },
+            ],
+            "students": [
+                {
+                    "full_name": "Carson Smith",
+                    "student_id": None,
+                    "parent_email": "user10@example.com",
+                    "school_name": "duke university"
+                }
+            ]
+        }
+        response = self.client.post('/api/loaded-data/', json.dumps(loaded_data),
+                                    content_type='application/json', HTTP_AUTHORIZATION=f'Token {self.admin_token}')
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(get_user_model().objects.count(), 3)
+        self.assertEqual(Student.objects.count(), 2)
+
+    def test_successful_transaction_large(self):
+        loaded_data = {
+            "users": [
+                {
+                    "email": "user3@example.com",
+                    "full_name": "John Smith",
+                    "address": "4932 Stoney Creek Dr.",
+                    "phone_number": "9999999999"
+                },
+                {
+                    "email": "user4@example.com",
+                    "full_name": "John Smith",
+                    "address": "4932 Stoney Creek Dr.",
+                    "phone_number": "9999999999"
+                },
+                {
+                    "email": "user5@example.com",
+                    "full_name": "John Smith",
+                    "address": "4932 Stoney Creek Dr.",
+                    "phone_number": "9999999999"
+                },
+                {
+                    "email": "user6@example.com",
+                    "full_name": "John Smith",
+                    "address": "4932 Stoney Creek Dr.",
+                    "phone_number": "9999999999"
+                },
+            ],
+            "students": [
+                {
+                    "full_name": "Carson Smith",
+                    "student_id": None,
+                    "parent_email": "user1@example.com",
+                    "school_name": "duke university"
+                },
+                {
+                    "full_name": "Carson Smith",
+                    "student_id": None,
+                    "parent_email": "user1@example.com",
+                    "school_name": "duke university"
+                },
+                {
+                    "full_name": "Carson Smith",
+                    "student_id": None,
+                    "parent_email": "user1@example.com",
+                    "school_name": "duke university"
+                },
+            ]
+        }
+        response = self.client.post('/api/loaded-data/', json.dumps(loaded_data),
+                                    content_type='application/json', HTTP_AUTHORIZATION=f'Token {self.admin_token}')
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(get_user_model().objects.count(), 7)
+        self.assertEqual(Student.objects.count(), 5)
 
 
 class TestGroupViewFiltering(TransactionTestCase):
