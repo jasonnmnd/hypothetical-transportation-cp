@@ -310,7 +310,7 @@ function GeneralEditUserForm(props) {
                                 }
                                 />
                                 {/* <PhoneInput
-                                    placeholder="Enter phone number"
+                                    placeholder="Phone number"
                                     defaultCountry="US"
                                     value={fieldValues.phone_number}
                                     onChange={

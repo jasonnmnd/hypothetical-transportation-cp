@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import Header from '../../header/AdminHeader';
 import "../adminPage.css";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
@@ -30,6 +30,8 @@ function GeneralAdminRouteDetails(props) {
   const [extra, setExtra] = useState({});
   const [pinData, setPinData] = useState([]);
   const [extraComponents, setExtraComponents] = useState(null);
+  const [pickupNavLinks, setPickupNavLinks] = useState([]);
+  const [dropoffNavLinks, setDropoffNavLinks] = useState([]);
 
 
   const handleConfirmDelete = () => {
@@ -43,6 +45,8 @@ function GeneralAdminRouteDetails(props) {
   const param = useParams();
 
   useEffect(() => {
+    getPickupNavLinks();
+    getDropoffNavLinks();
     props.getRouteInfo(param.id);
 
     // const allSearchParams = Object.fromEntries([...searchParams]);
@@ -50,7 +54,6 @@ function GeneralAdminRouteDetails(props) {
     // stopSearchParams.route = param.id
     // console.log(stopSearchParams)
     props.getStopByRoute(param.id);
-    getNavLinks();
   }, []);
 
   useEffect(() => {
@@ -126,16 +129,50 @@ function GeneralAdminRouteDetails(props) {
         setExtraComponents(<InfoWindow position={position} onCloseClick={setExtraComponents(null)}>{windowComponents}</InfoWindow>)
     }
 
-    const getNavLinks = () => {
-        axios.get(`/route/${param.id}/nav_link_pickup`, config(props.token))
+    const getPickupNavLinks = () => {
+        axios.get(`/api/route/${param.id}/nav_link_pickup/`, config(props.token))
         .then((res) => {
-            console.log("NAVIGATION SUCCESSFUL");
-            console.log(res);
-            return res;
+            setPickupNavLinks(res.data);
         })
         .catch((err) => {
-            alert('A error ocurred with navigation links. Please try again.')
+            alert('A error ocurred with pickup navigation links. Please try again.')
         });
+    }
+
+    const getDropoffNavLinks = () => {
+        axios.get(`/api/route/${param.id}/nav_link_dropoff/`, config(props.token))
+        .then((res) => {
+            setDropoffNavLinks(res.data);
+        })
+        .catch((err) => {
+            alert('A error ocurred with dropoff navigation links. Please try again.')
+        });
+    }
+
+    const generatePickupLinks = () => {
+        if (pickupNavLinks.length === 0) {
+            return <>There are no additional stops currently on this route.</>
+        }
+        else {
+            return (
+                <Fragment>
+                        <a target="_blank" href={pickupNavLinks[0]}><strong>Pickup Instructions</strong></a>
+                </Fragment>
+            )
+        }
+    }
+
+    const generateDropoffLinks = () => {
+        if (dropoffNavLinks.length === 0) {
+            return <>There are no additional stops currently on this route.</>
+        }
+        else {
+            return (
+                <Fragment>
+                    <a target="_blank" href={dropoffNavLinks[0]}><strong>Dropoff Instructions</strong></a>
+                </Fragment>
+            )
+        }
     }
 
   return (
@@ -178,13 +215,21 @@ function GeneralAdminRouteDetails(props) {
             </Container></>: <></>
         }
         {isBusDriver(props.user) ? 
-            <Row>
-                <Card style={{padding: "0px"}}>
-                    <Card.Header as="h5">Navigation Links For This Route</Card.Header>
+            <Row style={{gap: "10px"}}>
+                <Card as={Col} style={{padding: "0px"}}>
+                    <Card.Header as="h5">Pickup Directions For This Route</Card.Header>
                     <Card.Body>
-                        TEST
+                        {generatePickupLinks()}
                     </Card.Body>
                 </Card>
+
+                <Card as={Col} style={{padding: "0px"}}>
+                    <Card.Header as="h5">Dropoff Directions For This Route</Card.Header>
+                    <Card.Body>
+                        {generateDropoffLinks()}
+                    </Card.Body>
+                </Card>
+
             </Row>
                 :
                 <></>}
