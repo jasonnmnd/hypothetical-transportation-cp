@@ -149,6 +149,19 @@ function GeneralAdminRouteDetails(props) {
         });
     }
 
+    let rMap = new Map([
+        [0, "for First Set (1-10)"],
+        [1, "for Second Set (11-20)"],
+        [2, "for Third Set (21-30)"],
+        [3, "for Fourth Set (31-40)"],
+        [4, "for Fifth Set (41-50)"],
+        [5, "for Sixth Set (51-60)"],
+        [6, "for Seventh Set (61-70)"],
+        [7, "for Eigth Set (71-80)"],
+        [8, "for Ninth Set (81-90)"],
+        [9, "for Tenth Set (91-100)"]
+    ])
+
     const generatePickupLinks = () => {
         if (pickupNavLinks.length === 0) {
             return <>There are no additional stops currently on this route.</>
@@ -157,7 +170,7 @@ function GeneralAdminRouteDetails(props) {
             return pickupNavLinks.map((link, idx) => {
                 return (
                         <Fragment>
-                                <a target="_blank" href={link}><strong>Set {idx+1} Pickup Navigation</strong></a>
+                                <a target="_blank" href={link}><strong>Pickup Navigation {rMap.get(idx)}</strong></a>
                                 <br></br>
                         </Fragment>
                     )
@@ -175,7 +188,7 @@ function GeneralAdminRouteDetails(props) {
             return dropoffNavLinks.map((link, idx) => {
                 return (
                     <Fragment>
-                        <a target="_blank" href={link}><strong>Set {idx+1} Dropoff Navigation</strong></a>
+                        <a target="_blank" href={link}><strong>Dropoff Navigation {rMap.get(idx)}</strong></a>
                         <br></br>
                     </Fragment>
                 )
