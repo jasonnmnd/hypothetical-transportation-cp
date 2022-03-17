@@ -113,6 +113,7 @@ python3 manage.py runserver
 within the host:
 
 ```
+sudo docker-compose -f docker-compose.<ENV>.yml down --volumes --remove-orphans
 sudo docker-compose -f docker-compose.<ENV>.yml up --build
 ```
 
