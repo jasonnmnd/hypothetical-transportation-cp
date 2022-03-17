@@ -6,6 +6,7 @@ export default function config(token) {
 const userDefaultCols = [
     "full_name",
     "email",
+    "phone_number",
     "address",
     "group_name"
 ]
@@ -103,13 +104,20 @@ const userColumns = {
         sortable: false,
         filterable: false
     },
-    group_name: {
-        colTitle: "Group",
-        dataPath: "groups.0.name",
+    phone_number: {
+        colTitle: "Phone Number",
+        dataPath: "phone_number",
         search_key: "",
         sortable: false,
         filterable: false
     },
+    group_name: {
+        colTitle: "Group",
+        dataPath: "groups.0.name",
+        search_key: "groups",
+        sortable: false,
+        filterable: true,
+    }
 }
 
 

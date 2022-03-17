@@ -3,12 +3,12 @@ import { useNavigate, useParams } from "react-router-dom";
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import "../NEWadminPage.css"
-import Header from "../../header/Header";
+import Header from "../../header/AdminHeader";
 import AssistedLocationMap from "../../maps/AssistedLocationMap";
 import { getSchool, updateSchool, addSchool } from "../../../actions/schools";
-import { Container, Form, Button, Row, Col } from 'react-bootstrap';
+import { Container, Form, Button, Row, Col, Alert } from 'react-bootstrap';
 import { getItemCoord } from "../../../utils/geocode";
-
+import getType from "../../../utils/user2";
 //input1: title of form
 //input2: list of fields?
 //input3: a typed object matching the fields
@@ -25,12 +25,14 @@ function GeneralEditSchoolForm(props) {
     const [address, setAddress] = useState("");
     const [busArrivalTime, setBusArrivalTime] = useState({
         hour: "00",
-        minute: "00"
+        minute: "00",
+        time: "AM"
     })
 
     const [busDepartureTime, setBusDepartureTime] = useState({
         hour: "00",
-        minute: "00"
+        minute: "00",
+        time: "PM"
     })
 
 
@@ -48,6 +50,33 @@ function GeneralEditSchoolForm(props) {
         "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51",
         "52", "53", "54", "55", "56", "57", "58", "59"
     ]
+
+    const convertTo24Hr = (hour) => {
+        hour = parseInt(hour);
+        hour += 12;
+        return String(hour)
+    }
+
+    const convertTo12Hr = (hour, isArrival) => {
+        hour = parseInt(hour)
+        if (hour > 12) {
+
+            if (isArrival) {
+                setBusArrivalTime({time: "PM"});
+            } else {
+                setBusDepartureTime({time: "PM"});
+            }
+
+            hour -= 12;
+            return String(hour)
+        } else {
+            if (isArrival) {
+                setBusArrivalTime({time: "AM"});
+            } else {
+                setBusDepartureTime({time: "AM"});
+            }
+        }
+    }
 
     useEffect(() => {
         if(props.action == "edit"){
@@ -92,6 +121,15 @@ function GeneralEditSchoolForm(props) {
             event.stopPropagation();
           }
         else {
+
+            // if (busArrivalTime.time == "PM") {
+            //     busArrivalTime.hour = convertTo24Hr(busArrivalTime.hour);
+            // }
+
+            // if (busDepartureTime.time == "PM") {
+            //     busDepartureTime.hour = convertTo24Hr(busDepartureTime.hour);
+            // }
+
             if(props.action == "edit"){
                 props.updateSchool({
                     name: name,
@@ -101,6 +139,8 @@ function GeneralEditSchoolForm(props) {
                     bus_arrival_time: busArrivalTime.hour + ":" + busArrivalTime.minute + ":00",
                     bus_departure_time: busDepartureTime.hour + ":" + busDepartureTime.minute + ":00"
                 }, param.id);
+                console.log(busArrivalTime);
+                console.log(busDepartureTime);
             } else {
                 props.addSchool({
                     name: name,
@@ -110,8 +150,10 @@ function GeneralEditSchoolForm(props) {
                     bus_arrival_time: busArrivalTime.hour + ":" + busArrivalTime.minute + ":00",
                     bus_departure_time: busDepartureTime.hour + ":" + busDepartureTime.minute + ":00"
                 })
+                console.log(busArrivalTime);
+                console.log(busDepartureTime);
             }
-            navigate(`/admin/schools`)
+            navigate(`/${getType(props.user)}/schools`)
         }
     
         setValidated(true);
@@ -133,11 +175,18 @@ function GeneralEditSchoolForm(props) {
     return (
         <div> 
             <Header></Header>
+            {props.action == "edit" || getType(props.user) == "admin" ?
                 <Container className="container-main">
                     <div className="shadow-sm p-3 mb-5 bg-white rounded d-flex flex-row justify-content-center">
                         {props.action == "edit" ? <h1>Edit School</h1> : <h1>Create School</h1>}
                     </div>
-                    <Form className="shadow-lg p-3 mb-5 bg-white rounded" noValidate validated={validated} onSubmit={handleSubmit}>
+                    <Form className="shadow-lg p-3 mb-5 bg-white rounded" noValidate validated={validated} onSubmit={handleSubmit}
+                    onKeyPress={event => {
+                        if (event.key === 'Enter' /* Enter */) {
+                          event.preventDefault();
+                        }
+                      }}
+                    >
 
                         <Form.Group className="mb-3" controlId="validationCustom01">
                             <Form.Label as="h5">Name of School</Form.Label>
@@ -147,6 +196,7 @@ function GeneralEditSchoolForm(props) {
                             placeholder="Enter Name..." 
                             value={name}
                             onChange={(e)=>{setName(e.target.value);}}
+                            disabled={getType(props.user)=="staff" ? true : false}
                             />
                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                             <Form.Control.Feedback type="invalid">Please provide a valid name.</Form.Control.Feedback>
@@ -208,6 +258,7 @@ function GeneralEditSchoolForm(props) {
                                 setAddress(e.target.value)
                                 getItemCoord(e.target.value,setCoord);
                             }}
+                            disabled={getType(props.user)=="staff" ? true : false}
                             />
                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                             <Form.Control.Feedback type="invalid">Please provide a valid address.</Form.Control.Feedback>
@@ -215,14 +266,30 @@ function GeneralEditSchoolForm(props) {
 
                         <Form.Group className="mb-3">
                             <Form.Label as="h5">Location Assistance</Form.Label>
-                            <AssistedLocationMap address={address} coord={coord} setAddress={setAddress} setCoord={setCoord}></AssistedLocationMap>
+                            <AssistedLocationMap draggable={false} address={address} coord={coord} setAddress={setAddress} setCoord={setCoord}></AssistedLocationMap>
                         </Form.Group>
 
                         <Button variant="yellowsubmit" type="submit">
                             Submit
                         </Button>
                     </Form>
-                </Container>
+                </Container>:getType(props.user) == "staff" ? 
+                <Container className="container-main">
+                <Alert variant="danger">
+                  <Alert.Heading>Access Denied</Alert.Heading>
+                  <p>
+                    As School staff, you do not access to creating new schools. If you believe this is an error, contact an administrator.          
+                  </p>
+                  </Alert>
+                </Container>:
+                <Container className="container-main">
+                <Alert variant="danger">
+                  <Alert.Heading>Access Denied</Alert.Heading>
+                  <p>
+                    You do not have access to this page. If you believe this is an error, contact an administrator.          
+                    </p>
+                  </Alert>
+                </Container>}
         </div>
     )
 }
@@ -235,6 +302,7 @@ GeneralEditSchoolForm.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
+    user: state.auth.user,
     curSchool: state.schools.viewedSchool
 
 });

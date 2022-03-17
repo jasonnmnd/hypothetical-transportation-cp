@@ -1,19 +1,11 @@
 import React from 'react';
-import Header from '../../header/Header';
 import { Container, Form, Button, Alert } from 'react-bootstrap';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import Header from '../../header/AdminHeader'
 import "../NEWadminPage.css";
 
-function GeneralEditRouteForm() {
-
-    const emptyRoute = {
-        id: 0,
-        name: "",
-        description: "",
-        // school: param.school_id,
-    }
-    const [obj, setObj] = useState(emptyRoute);
+function GeneralNewRoutePage() {
     
   return (
       <div>
@@ -38,4 +30,4 @@ function GeneralEditRouteForm() {
   );
 }
 
-export default GeneralEditRouteForm;
+export default GeneralNewRoutePage;

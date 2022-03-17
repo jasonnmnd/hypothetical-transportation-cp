@@ -22,6 +22,7 @@ from .customfilters import StudentCountShortCircuitFilter
 from .permissions import is_admin, is_school_staff, is_driver, IsAdminOrReadOnly, IsAdmin, IsSchoolStaff, is_guardian
 from django.shortcuts import get_object_or_404
 from .geo_utils import get_straightline_distance, LEN_OF_MILE
+from .nav_utils import navigation_link_dropoff, navigation_link_pickup
 from collections import defaultdict
 
 MAX_STOPS_IN_ONE_CALL = 1
@@ -346,6 +347,21 @@ class RouteViewSet(viewsets.ModelViewSet):
         else:
             students_queryset = self.request.user.students
             return Route.objects.filter(id__in=students_queryset.values('routes_id')).distinct().order_by('id')
+    
+    @action(detail=False, permission_classes=[permissions.AllowAny])
+    def fields(self, request):
+        content = parse_repr(repr(RouteSerializer()))
+        return Response(content)
+
+    @action(detail=True, methods=['get'], permission_classes=[permissions.AllowAny])
+    def nav_link_pickup(self, request, pk=None):
+        route = get_object_or_404(self.get_queryset(), pk=pk)
+        return Response(navigation_link_pickup(route))
+
+    @action(detail=True, methods=['get'], permission_classes=[permissions.AllowAny])
+    def nav_link_dropoff(self, request, pk=None):
+        route = get_object_or_404(self.get_queryset(), pk=pk)
+        return Response(navigation_link_dropoff(route))
 
 
 class SchoolViewSet(viewsets.ModelViewSet):

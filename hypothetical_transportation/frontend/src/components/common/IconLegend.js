@@ -11,79 +11,81 @@ function IconLegend(props) {
 
 
     const routePlannerLegend = [
+
         {
-            key: "School: ",
+            key: " School ",
             icon: SCHOOL_LEGEND("white")
         },
 
         {
-            key: " Students in This Route: ",
-            icon: STUDENT_CHECK_LEGEND("green")
+            key: " Multiple Students ",
+            icon: STUDENT_MULTIPLE_LEGEND("purple")
         },
 
         {
-            key: " Students on Other Routes: ",
-            icon: STUDENT_OTHER_ROUTE_LEGEND("gray")
+            key: " Students in This Route ",
+            icon: STUDENT_CHECK_LEGEND("green"),
         },
 
         {
-            key: " Students Without Route: ",
+            key: " Students Without Route  ",
             icon: STUDENT_X_LEGEND("red")
         },
+
         {
-            key: " Multiple Students: ",
-            icon: STUDENT_MULTIPLE_LEGEND("purple")
-        }
+            key: " Students on Other Routes  ",
+            icon: STUDENT_OTHER_ROUTE_LEGEND("gray")
+        },
     ]
 
     const routeDetailsLegend = [
         {
-            key: "School: ",
+            key: " School ",
             icon: SCHOOL_LEGEND("white")
         },
         {
-            key: " Students in This Route: ",
+            key: " Students in This Route ",
             icon: STUDENT_CHECK_LEGEND("green")
         },
 
         {
-            key: " Multiple Students: ",
+            key: " Multiple Students ",
             icon: STUDENT_MULTIPLE_LEGEND("purple")
         },
         {
-            key: " Stops: ",
+            key: " Stops ",
             icon: STOP_LEGEND("blue")
         }
     ]
 
     const stopPlannerLegend = [
         {
-            key: "School: ",
+            key: " School ",
             icon: SCHOOL_LEGEND("white")
         },
 
         {
-            key: " Students with In Range Stops: ",
+            key: " Students w/ In Range Stops ",
             icon: STUDENT_CHECK_LEGEND("green")
         },
 
         {
-            key: " Students with NO In Range Stops: ",
+            key: " Students NO In Range Stops ",
             icon: STUDENT_X_LEGEND("red")
         },
         {
-            key: " Stops: ",
+            key: " Stops ",
             icon: STOP_LEGEND("blue")
         }
     ]
 
     const parentStudentLegned = [
         {
-            key: "Your Child: ",
+            key: " Your Child ",
             icon: STUDENT_CHECK_LEGEND("green")
         },
         {
-            key: " Stops that are in range: ",
+            key: " Stops that are in range ",
             icon: STOP_LEGEND("blue")
         }
     ]
@@ -107,10 +109,12 @@ function IconLegend(props) {
         {
             getLegend().map((result, index) => {
             return (
-                <Fragment key={index}>
-                    {result.key}
+                <Fragment key={index} style={{padding: "10px"}}>
                     {result.icon}
-                    {props.legendType == "stopPlanner" ? <br></br> : <></>}
+                    {result.key}
+                    {result.break ? <br></br> : <></>}
+                    {/* {props.legendType == "stopPlanner" ? <br></br> : <span  style={{padding: "15px"}}>  </span>} */}
+                    <br></br>
                 </Fragment>
             )})
         }
