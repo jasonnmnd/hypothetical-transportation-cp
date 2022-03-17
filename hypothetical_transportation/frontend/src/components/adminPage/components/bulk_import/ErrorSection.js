@@ -114,25 +114,40 @@ function ErrorSection(props){
     }
 
 
-    if((!errorsExist()) && (!duplicatesExist())){
+    const getErrorCard = () => {
+        if(errorsExist()){
+            return (
+                <Card>
+                    <Card.Header as="h4">Errors</Card.Header>
+                    <Card.Body>
+                        {getErrorSection()}
+                    </Card.Body>
+                </Card>
+            )
+        }
         return null;
     }
 
+    const getDuplicateCard = () => {
+        if(duplicatesExist()){
+            return (
+                <Card>
+                    <Card.Header as="h4">Duplicates</Card.Header>
+                    <Card.Body>
+                        {getDuplicateSection()}
+                    </Card.Body>
+                </Card>
+            )
+        }
+        return null;
+    }
+
+
     return (
         <>
-            <Card>
-                <Card.Header as="h4">Errors</Card.Header>
-                <Card.Body>
-                    {errorsExist() ? getErrorSection() : <h6>No Errors</h6>}
-                </Card.Body>
-            </Card>
+            {getErrorCard()}
 
-            <Card>
-                <Card.Header as="h4">Duplicates</Card.Header>
-                <Card.Body>
-                    {duplicatesExist() ? getDuplicateSection() : <h6>No Duplicates</h6>}
-                </Card.Body>
-            </Card>
+            {getDuplicateCard()}
         </>
     )
 }

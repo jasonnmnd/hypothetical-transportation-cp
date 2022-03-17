@@ -36,7 +36,7 @@ const USER_1_DATA = {
 const USER_2_DATA = {
     "email": {
         value: "Alfredsdfsdfdsf@example.com",
-        errors: [],
+        errors: ["erorrrrr"],
         duplicates: []
     },
     "full_name": {

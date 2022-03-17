@@ -47,7 +47,7 @@ function EditableTextField( props ) {
   
     return (
         <div >
-            {editable ? getInput() : <span onClick={() => setEditable(true)}>{value}</span>}
+            {editable ? getInput() : <span onClick={() => setEditable(true)}>✏️ {value}</span>}
         </div>
     );
 }
