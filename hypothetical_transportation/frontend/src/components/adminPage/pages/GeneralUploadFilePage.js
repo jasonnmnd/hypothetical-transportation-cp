@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Button, Container, Form } from 'react-bootstrap';
 import AdminHeader from '../../header/AdminHeader'
 
 function GeneralUploadFilePage() {
@@ -27,24 +28,22 @@ function GeneralUploadFilePage() {
   return (
     <div>
     <AdminHeader></AdminHeader>
-
-    <form>
-      <input
-          type={"file"}
-          id={"csvFileInput"}
-          accept={".csv"}
-          onChange={handleChange}
-      />
-
-      <button
-          onClick={(e) => {
-              handleOnSubmit(e);
-          }}
-      >
-          IMPORT CSV
-      </button>
-  </form>
-  </div>
+    <Container className="container-main" style={{width: "50%"}} >
+        <Form className="shadow-lg p-3 mb-5 bg-white rounded"  noValidate onSubmit={handleOnSubmit}>
+            <Form.Label as="h5">Select a CSV file to upload to the server</Form.Label>
+            <Form.Control
+                type={"file"}
+                id={"csvFileInput"}
+                accept={".csv"}
+                onChange={handleChange}
+            />
+            <br></br>
+            <Button variant="yellowsubmit" type="submit">
+                Submit
+            </Button>
+        </Form>
+    </Container>
+    </div>
   )
 }
 
