@@ -23,7 +23,13 @@ function GeneralUploadFilePage() {
     }
     const handleOnSubmit = (e) => {
         e.preventDefault();
+        console.log(jsonRes)
+        console.log("calling the backend validator dodododo")
+        
+    };
 
+    useEffect(()=>{
+        // console.log(typeof(userRes))
         if (userfile) {
             userReader.onload = function (event) {
                 const csvOutput = event.target.result;
@@ -39,17 +45,13 @@ function GeneralUploadFilePage() {
             };
             studentReader.readAsText(studentfile);
         }
-    };
+    },[userfile, studentfile])
 
 
     useEffect(()=>{
         // console.log(typeof(userRes))
         setJsonRes({"users":userRes, "students":studentRes})
     },[userRes,studentRes])
-
-    useEffect(()=>{
-        console.log(jsonRes)
-    },[jsonRes])
 
 
     return (
