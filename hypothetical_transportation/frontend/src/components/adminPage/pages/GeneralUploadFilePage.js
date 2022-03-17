@@ -4,32 +4,51 @@ import AdminHeader from '../../header/AdminHeader'
 import csvJSON from '../../../utils/csv_to_json'
 
 function GeneralUploadFilePage() {
-    const [file, setFile] = useState();
+    const [userfile, setUserFile] = useState();
+    const [studentfile, setStudentFile] = useState();
 
-    const fileReader = new FileReader();
-    const [jsonRes, setJsonRes] = useState();
+    const [jsonRes, setJsonRes] = useState({"users":[], "students":[]});
 
-    const handleChange = (e) => {
-        setFile(e.target.files[0]);
-        // console.log(e.target.files[0])
+    const userReader = new FileReader();
+    const studentReader = new FileReader();
+
+    const [userRes, setUserRes] = useState([]);
+    const [studentRes, setStudentRes] = useState([]);
+
+    const handleChangeUser = (e) => {
+        setUserFile(e.target.files[0]);
+    }
+    const handleChangeStudent = (e) => {
+        setStudentFile(e.target.files[0]);
     }
     const handleOnSubmit = (e) => {
         e.preventDefault();
 
-        if (file) {
-            fileReader.onload = function (event) {
+        if (userfile) {
+            userReader.onload = function (event) {
                 const csvOutput = event.target.result;
-                setJsonRes(csvJSON(csvOutput))
+                setUserRes(csvJSON(csvOutput))
             };
+            userReader.readAsText(userfile);
+        }
 
-            fileReader.readAsText(file);
+        if (studentfile) {
+            studentReader.onload = function (event) {
+                const csvOutput = event.target.result;
+                setStudentRes(csvJSON(csvOutput))
+            };
+            studentReader.readAsText(studentfile);
         }
     };
 
+
     useEffect(()=>{
-        if(jsonRes!==undefined) {
-            console.log(jsonRes)
-        }
+        // console.log(typeof(userRes))
+        setJsonRes({"users":userRes, "students":studentRes})
+    },[userRes,studentRes])
+
+    useEffect(()=>{
+        console.log(jsonRes)
     },[jsonRes])
 
 
@@ -38,12 +57,19 @@ function GeneralUploadFilePage() {
             <AdminHeader></AdminHeader>
             <Container className="container-main" style={{width: "50%"}} >
                 <Form className="shadow-lg p-3 mb-5 bg-white rounded"  noValidate onSubmit={handleOnSubmit}>
-                    <Form.Label as="h5">Select a CSV file to upload to the server</Form.Label>
+                    <Form.Label as="h5">Select a CSV file for USER information</Form.Label>
                     <Form.Control
                         type={"file"}
                         id={"csvFileInput"}
                         accept={".csv"}
-                        onChange={handleChange}
+                        onChange={handleChangeUser}
+                    />
+                    <Form.Label as="h5">Select a CSV file for STUDENT information</Form.Label>
+                    <Form.Control
+                        type={"file"}
+                        id={"csvFileInput"}
+                        accept={".csv"}
+                        onChange={handleChangeStudent}
                     />
                     <br></br>
                     <Button variant="yellowsubmit" type="submit">

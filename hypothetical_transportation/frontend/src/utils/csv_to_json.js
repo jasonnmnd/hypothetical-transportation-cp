@@ -23,6 +23,6 @@ export default function csvJSON(csv){
   
     }
   
-    //return result; //JavaScript object
-    return JSON.stringify(result); //JSON
+    return result; //JavaScript object
+    // return JSON.stringify(result); //JSON
   }
