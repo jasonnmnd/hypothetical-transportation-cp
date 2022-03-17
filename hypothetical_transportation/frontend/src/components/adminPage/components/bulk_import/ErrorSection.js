@@ -5,7 +5,7 @@ import PropTypes, { string } from 'prop-types';
 import EditableTextField from '../../../common/EditableTextField';
 import './bulk_import.css'
 import AddressInputWithMap from '../../../common/AddressInputWithMap';
-import { STUDENT_COLUMNS, USER_COLUMNS } from '../../../../utils/bulk_import';
+import { duplicatesExist, errOrDupExists, errorsExist, STUDENT_COLUMNS, USER_COLUMNS } from '../../../../utils/bulk_import';
 
 
 const ERROR_TITLES = {
@@ -74,7 +74,7 @@ function ErrorSection(props){
                     <>
                         <h5>The following are duplicates for this {props.type}: </h5>
                         {Object.keys(props.transaction).map((value, ind) => {
-                            if(errOrDupExists(value, 'duplicates')){
+                            if(errOrDupExists(props.transaction, value, 'duplicates')){
                                 
                                 return <div key={ind}>
                                             <h6>Duplicates of {ERROR_TITLES[value]}</h6>
@@ -86,25 +86,24 @@ function ErrorSection(props){
         )
     }
 
-    const errOrDupExists = (value, key) => {
-        
-        return props.transaction && props.transaction[value] && props.transaction[value][key] && props.transaction[value][key] != undefined && props.transaction[value][key].length > 0
-    }
+    // const errOrDupExists = (value, key) => {
+    //     return props.transaction && props.transaction[value] && props.transaction[value][key] && props.transaction[value][key] != undefined && props.transaction[value][key].length > 0
+    // }
 
-    const errorsExist = () => {
-        return props.transaction && Object.keys(props.transaction).some(value => {return errOrDupExists(value, 'errors')})
-    }
+    // const errorsExist = () => {
+    //     return props.transaction && Object.keys(props.transaction).some(value => {return errOrDupExists(props.transaction, value, 'errors')})
+    // }
 
-    const duplicatesExist = () => {
-        return props.transaction && Object.keys(props.transaction).some(value => {return errOrDupExists(value, 'duplicates')})
-    }
+    // const duplicatesExist = () => {
+    //     return props.transaction && Object.keys(props.transaction).some(value => {return errOrDupExists(props.transaction, value, 'duplicates')})
+    // }
 
     const getErrorSection = () => {
         return (
             Object.keys(props.transaction).map((value, ind) => {
                 return (
                     <div key={ind}>
-                        <h5>{errOrDupExists(value, "errors") ? ERROR_TITLES[value] : null}</h5>
+                        <h5>{errOrDupExists(props.transaction, value, "errors") ? ERROR_TITLES[value] : null}</h5>
                         {props.transaction[value].errors?.map((error, ind) => <p key={ind}>{error}</p>)}
                     </div>
                     
@@ -115,7 +114,7 @@ function ErrorSection(props){
 
 
     const getErrorCard = () => {
-        if(errorsExist()){
+        if(errorsExist(props.transaction)){
             return (
                 <Card>
                     <Card.Header as="h4">Errors</Card.Header>
@@ -129,7 +128,7 @@ function ErrorSection(props){
     }
 
     const getDuplicateCard = () => {
-        if(duplicatesExist()){
+        if(duplicatesExist(props.transaction)){
             return (
                 <Card>
                     <Card.Header as="h4">Duplicates</Card.Header>

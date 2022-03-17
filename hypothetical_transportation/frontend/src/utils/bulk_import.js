@@ -210,3 +210,18 @@ export const STUDENT_COLUMNS = [
     },
 ]
 
+export const errOrDupExists = (transaction, value, key) => {
+    return transaction && transaction[value] && transaction[value][key] && transaction[value][key] != undefined && transaction[value][key].length > 0
+}
+
+const issueExists = (transaction, issueType) => {
+    return transaction && Object.keys(transaction).some(value => {return errOrDupExists(transaction, value, issueType)})
+}
+
+export const errorsExist = (transaction) => {
+    return issueExists(transaction, 'errors')
+}
+
+export const duplicatesExist = (transaction) => {
+    return issueExists(transaction, 'duplicates')
+}

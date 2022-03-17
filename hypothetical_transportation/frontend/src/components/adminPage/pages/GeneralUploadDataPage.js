@@ -2,10 +2,11 @@ import AdminHeader from '../../header/AdminHeader'
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import PropTypes, { string } from 'prop-types';
-import { FAKE_IMPORT_DATA, STUDENT_COLUMNS, USER_COLUMNS } from '../../../utils/bulk_import';
+import { duplicatesExist, errOrDupExists, errorsExist, FAKE_IMPORT_DATA, STUDENT_COLUMNS, USER_COLUMNS } from '../../../utils/bulk_import';
 import BulkImportTable from '../components/bulk_import/BulkImportTable';
 import UserDetailsModal from '../components/bulk_import/UserDetailsModal';
 import TransactionDetailsModal from '../components/bulk_import/TransactionDetailsModal';
+import { Button } from 'react-bootstrap';
 
 function GeneralUploadDataPage(props) {
 
@@ -17,10 +18,9 @@ function GeneralUploadDataPage(props) {
   const [checkedStudents, setCheckedStudents] = useState([]);
   const [checkedUsers, setCheckedUsers] = useState([]);
   
+  
 
-  useEffect(()=>{
-    setData(props.uploadData)
-  },[props.data])
+  
 
 
   const closeModal = () => {
@@ -51,10 +51,39 @@ function GeneralUploadDataPage(props) {
     }
 
     closeModal();
-    
-    
+  }
 
+  const setDataWithCheckBoxes = (inData) => {
+    //figure out how to set check boxes
+    let newCheckedUsers = [];
+    inData.users.forEach((user, ind) => {
+      if(!(errorsExist(user) || duplicatesExist(user))){
+        newCheckedUsers.push(ind);
+      }
+    });
 
+    let newCheckedStudents = [];
+    inData.students.forEach((student, ind) => {
+      if(!(errorsExist(student) || duplicatesExist(student))){
+        newCheckedStudents.push(ind);
+      }
+    });
+
+    setCheckedUsers(newCheckedUsers);
+    setCheckedStudents(newCheckedStudents);
+    setData(inData);
+  }
+
+  useEffect(()=>{
+    setDataWithCheckBoxes(props.uploadData)
+  },[props.data])
+
+  const resetPage = () => {
+    setModalInfo(null);
+    setModalType(null);
+    setUserDataChanges({});
+    setStudentDataChanges({});
+    setDataWithCheckBoxes(props.uploadData);
   }
 
 
@@ -83,6 +112,9 @@ function GeneralUploadDataPage(props) {
         checked={checkedStudents}
         setChecked={setCheckedStudents}
       />
+      <Button>Validate</Button>
+      <Button>Submit</Button>
+      <Button onClick={resetPage}>Reset</Button>
     </>
   )
 }
