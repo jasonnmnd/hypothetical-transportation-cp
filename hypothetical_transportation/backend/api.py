@@ -261,7 +261,7 @@ class UserViewSet(viewsets.ModelViewSet):
     def perform_destroy(self, instance):
         if is_school_staff(self.request.user):
             user_to_delete = get_user_model().objects.get(email=instance)
-            if not is_guardian(user_to_delete) or user_to_delete.groups.count() == 0:
+            if not is_guardian(user_to_delete):
                 raise serializers.ValidationError("Target account to delete is privileged!")
             for student in user_to_delete.students.all():
                 if student.school not in self.request.user.managed_schools.all():

@@ -383,6 +383,13 @@ class TestGroupViewFiltering(TransactionTestCase):
                                       HTTP_AUTHORIZATION=f'Token {self.staff_1_token}')
         self.assertEqual(response.status_code, 204)
 
+    def test_staff_cannot_delete_privileged_user(self):
+        self.parent_1.groups.clear()
+        self.parent_1.groups.add(Group.objects.get(name='SchoolStaff'))
+        response = self.client.delete(f'/api/user/{self.parent_1.id}/',
+                                      HTTP_AUTHORIZATION=f'Token {self.staff_1_token}')
+        self.assertEqual(response.status_code, 400)
+
 
 class TestMatchingUtilities(TestCase):
     def setUp(self):
