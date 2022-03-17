@@ -154,11 +154,16 @@ function GeneralAdminRouteDetails(props) {
             return <>There are no additional stops currently on this route.</>
         }
         else {
-            return (
-                <Fragment>
-                        <a target="_blank" href={pickupNavLinks[0]}><strong>Pickup Instructions</strong></a>
-                </Fragment>
-            )
+            return pickupNavLinks.map((link => {
+                return (
+                        <Fragment>
+                                <a target="_blank" href={link}><strong>Pickup Navigation</strong></a>
+                                <br></br>
+                        </Fragment>
+                    )
+            }))
+                
+            
         }
     }
 
@@ -167,11 +172,14 @@ function GeneralAdminRouteDetails(props) {
             return <>There are no additional stops currently on this route.</>
         }
         else {
-            return (
-                <Fragment>
-                    <a target="_blank" href={dropoffNavLinks[0]}><strong>Dropoff Instructions</strong></a>
-                </Fragment>
-            )
+            return dropoffNavLinks.map((link => {
+                return (
+                    <Fragment>
+                        <a target="_blank" href={link}><strong>Dropoff Navigation</strong></a>
+                        <br></br>
+                    </Fragment>
+                )
+            }))
         }
     }
 
