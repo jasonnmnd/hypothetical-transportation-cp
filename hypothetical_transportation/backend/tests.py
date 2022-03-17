@@ -208,6 +208,7 @@ class TestGroupViewFiltering(TransactionTestCase):
 
         self.loc = (36.00352740209603, -78.93814858774756)
 
+        parent_group = Group.objects.create(name='Guardian')
         staff_group = Group.objects.create(name='SchoolStaff')
         driver_group = Group.objects.create(name='Driver')
 
@@ -252,14 +253,17 @@ class TestGroupViewFiltering(TransactionTestCase):
                                                                       password='password',
                                                                       full_name='parent 1', address='Duke University',
                                                                       latitude=self.loc[0], longitude=self.loc[1])
+        self.parent_1.groups.add(parent_group)
         self.parent_2 = get_user_model().objects.create_verified_user(email='parent2@gmail.com',
                                                                       password='password',
                                                                       full_name='parent 2', address='Duke University',
                                                                       latitude=self.loc[0], longitude=self.loc[1])
+        self.parent_2.groups.add(parent_group)
         self.parent_3 = get_user_model().objects.create_verified_user(email='parent3@gmail.com',
                                                                       password='password',
                                                                       full_name='parent 3', address='Duke University',
                                                                       latitude=self.loc[0], longitude=self.loc[1])
+        self.parent_3.groups.add(parent_group)
 
         school_1 = School.objects.create(address='Duke University', longitude=self.loc[0], latitude=self.loc[1],
                                          name='school 1')
