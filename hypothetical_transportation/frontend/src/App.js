@@ -10,7 +10,7 @@ import axios from "axios";
 import { LOGIN_SUCCESS } from "./actions/types";
 
 function App( props ) {
-  //Whole App
+  //Whole app from here
 
   const [authStateChecking, setAuthStateChecking] = useState(true);
   const dispatch = useDispatch()
