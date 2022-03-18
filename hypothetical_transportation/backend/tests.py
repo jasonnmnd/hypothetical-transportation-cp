@@ -15,6 +15,7 @@ class TestBulkImport(TestCase):
     def setUp(self) -> None:
         """
         Small prepopulated database that tests error handling of bulk import
+        admin@example.com
         user1@example.com: John Smith
             student: Charlie Smith
             student: Carson Smith
@@ -167,6 +168,140 @@ class TestBulkImport(TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(len(response.data['users'][0]['email']['duplicates']), 1)
 
+    def test_submission_breaking_user_is_atomic(self):
+        loaded_data = {
+            "users": [
+                {
+                    "email": "user3@example.com",
+                    "full_name": "John Smith",
+                    "address": "4932 Stoney Creek Dr.",
+                    "phone_number": "9999999999"
+                },
+                {
+                    "email": "user4@example.com",
+                    "full_name": "John Smith",
+                    "address": "4932 Stoney Creek Dr.",
+                    "phone_number": "9999999999"
+                },
+                {
+                    "email": "user5@example.com",
+                    "full_name": "John Smith",
+                    "address": "4932 Stoney Creek Dr.",
+                    "phone_number": "9999999999"
+                },
+                {
+                    "email": "user1@example.com",
+                    "full_name": "John Smith",
+                    "address": "4932 Stoney Creek Dr.",
+                    "phone_number": "9999999999"
+                },
+            ],
+            "students": []
+        }
+        response = self.client.post('/api/loaded-data/', json.dumps(loaded_data),
+                                    content_type='application/json', HTTP_AUTHORIZATION=f'Token {self.admin_token}')
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(get_user_model().objects.count(), 3)
+        self.assertEqual(Student.objects.count(), 2)
+
+    def test_submission_breaking_student_is_atomic(self):
+        loaded_data = {
+            "users": [
+                {
+                    "email": "user3@example.com",
+                    "full_name": "John Smith",
+                    "address": "4932 Stoney Creek Dr.",
+                    "phone_number": "9999999999"
+                },
+                {
+                    "email": "user4@example.com",
+                    "full_name": "John Smith",
+                    "address": "4932 Stoney Creek Dr.",
+                    "phone_number": "9999999999"
+                },
+                {
+                    "email": "user5@example.com",
+                    "full_name": "John Smith",
+                    "address": "4932 Stoney Creek Dr.",
+                    "phone_number": "9999999999"
+                },
+                {
+                    "email": "user6@example.com",
+                    "full_name": "John Smith",
+                    "address": "4932 Stoney Creek Dr.",
+                    "phone_number": "9999999999"
+                },
+            ],
+            "students": [
+                {
+                    "full_name": "Carson Smith",
+                    "student_id": None,
+                    "parent_email": "user10@example.com",
+                    "school_name": "duke university"
+                }
+            ]
+        }
+        response = self.client.post('/api/loaded-data/', json.dumps(loaded_data),
+                                    content_type='application/json', HTTP_AUTHORIZATION=f'Token {self.admin_token}')
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(get_user_model().objects.count(), 3)
+        self.assertEqual(Student.objects.count(), 2)
+
+    def test_successful_transaction_large(self):
+        loaded_data = {
+            "users": [
+                {
+                    "email": "user3@example.com",
+                    "full_name": "John Smith",
+                    "address": "4932 Stoney Creek Dr.",
+                    "phone_number": "9999999999"
+                },
+                {
+                    "email": "user4@example.com",
+                    "full_name": "John Smith",
+                    "address": "4932 Stoney Creek Dr.",
+                    "phone_number": "9999999999"
+                },
+                {
+                    "email": "user5@example.com",
+                    "full_name": "John Smith",
+                    "address": "4932 Stoney Creek Dr.",
+                    "phone_number": "9999999999"
+                },
+                {
+                    "email": "user6@example.com",
+                    "full_name": "John Smith",
+                    "address": "4932 Stoney Creek Dr.",
+                    "phone_number": "9999999999"
+                },
+            ],
+            "students": [
+                {
+                    "full_name": "Carson Smith",
+                    "student_id": None,
+                    "parent_email": "user1@example.com",
+                    "school_name": "duke university"
+                },
+                {
+                    "full_name": "Carson Smith",
+                    "student_id": None,
+                    "parent_email": "user1@example.com",
+                    "school_name": "duke university"
+                },
+                {
+                    "full_name": "Carson Smith",
+                    "student_id": None,
+                    "parent_email": "user1@example.com",
+                    "school_name": "duke university"
+                },
+            ]
+        }
+        response = self.client.post('/api/loaded-data/', json.dumps(loaded_data),
+                                    content_type='application/json', HTTP_AUTHORIZATION=f'Token {self.admin_token}')
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(get_user_model().objects.count(), 7)
+        self.assertEqual(Student.objects.count(), 5)
+
 
 class TestGroupViewFiltering(TransactionTestCase):
     """
@@ -208,6 +343,7 @@ class TestGroupViewFiltering(TransactionTestCase):
 
         self.loc = (36.00352740209603, -78.93814858774756)
 
+        parent_group = Group.objects.create(name='Guardian')
         staff_group = Group.objects.create(name='SchoolStaff')
         driver_group = Group.objects.create(name='Driver')
 
@@ -252,14 +388,17 @@ class TestGroupViewFiltering(TransactionTestCase):
                                                                       password='password',
                                                                       full_name='parent 1', address='Duke University',
                                                                       latitude=self.loc[0], longitude=self.loc[1])
+        self.parent_1.groups.add(parent_group)
         self.parent_2 = get_user_model().objects.create_verified_user(email='parent2@gmail.com',
                                                                       password='password',
                                                                       full_name='parent 2', address='Duke University',
                                                                       latitude=self.loc[0], longitude=self.loc[1])
+        self.parent_2.groups.add(parent_group)
         self.parent_3 = get_user_model().objects.create_verified_user(email='parent3@gmail.com',
                                                                       password='password',
                                                                       full_name='parent 3', address='Duke University',
                                                                       latitude=self.loc[0], longitude=self.loc[1])
+        self.parent_3.groups.add(parent_group)
 
         school_1 = School.objects.create(address='Duke University', longitude=self.loc[0], latitude=self.loc[1],
                                          name='school 1')
@@ -378,6 +517,13 @@ class TestGroupViewFiltering(TransactionTestCase):
         response = self.client.delete(f'/api/user/{self.parent_1.id}/',
                                       HTTP_AUTHORIZATION=f'Token {self.staff_1_token}')
         self.assertEqual(response.status_code, 204)
+
+    def test_staff_cannot_delete_privileged_user(self):
+        self.parent_1.groups.clear()
+        self.parent_1.groups.add(Group.objects.get(name='SchoolStaff'))
+        response = self.client.delete(f'/api/user/{self.parent_1.id}/',
+                                      HTTP_AUTHORIZATION=f'Token {self.staff_1_token}')
+        self.assertEqual(response.status_code, 400)
 
 
 class TestMatchingUtilities(TestCase):
