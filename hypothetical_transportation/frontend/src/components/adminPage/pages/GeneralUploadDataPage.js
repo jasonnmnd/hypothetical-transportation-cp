@@ -6,7 +6,8 @@ import { duplicatesExist, errOrDupExists, errorsExist, FAKE_IMPORT_DATA, STUDENT
 import BulkImportTable from '../components/bulk_import/BulkImportTable';
 import UserDetailsModal from '../components/bulk_import/UserDetailsModal';
 import TransactionDetailsModal from '../components/bulk_import/TransactionDetailsModal';
-import { Button } from 'react-bootstrap';
+import { Button, Container } from 'react-bootstrap';
+import '../NEWadminPage.css';
 
 function GeneralUploadDataPage(props) {
 
@@ -104,30 +105,43 @@ function GeneralUploadDataPage(props) {
   return (
     <>
       <AdminHeader></AdminHeader>
-      <TransactionDetailsModal modalType={modalType} info={modalInfo} closeModal={closeModal} saveModal={saveModal} />
-      <h2>Users</h2>
-      <BulkImportTable 
-        data={data.users} 
-        colData={USER_COLUMNS}
-        setModalInfo={setModalInfo}
-        setModalType={() => setModalType("user")}
-        dataChanges={userDataChanges}
-        checked={checkedUsers}
-        setChecked={setCheckedUsers}
-      />
-      <h2>Students</h2>
-      <BulkImportTable 
-        data={data.students} 
-        colData={STUDENT_COLUMNS}
-        setModalInfo={setModalInfo}
-        setModalType={() => setModalType("student")}
-        dataChanges={studentDataChanges}
-        checked={checkedStudents}
-        setChecked={setCheckedStudents}
-      />
-      <Button onClick={validate}>Validate</Button>
-      <Button onClick={submit} disabled={changedSinceLastValidation}>Submit</Button>
-      <Button onClick={resetPage}>Reset</Button>
+
+      <Container className='d-flex flex-column justify-content-center' style={{gap: "10px", marginTop: "20px"}}>
+        <TransactionDetailsModal modalType={modalType} info={modalInfo} closeModal={closeModal} saveModal={saveModal} />
+        <Container className='d-flex justify-content-center'>
+          <h2>Users</h2>
+        </Container>
+        
+        <BulkImportTable 
+          data={data.users} 
+          colData={USER_COLUMNS}
+          setModalInfo={setModalInfo}
+          setModalType={() => setModalType("user")}
+          dataChanges={userDataChanges}
+          checked={checkedUsers}
+          setChecked={setCheckedUsers}
+        />
+
+        <Container className='d-flex justify-content-center'>
+          <h2>Students</h2>
+        </Container>
+        
+        <BulkImportTable 
+          data={data.students} 
+          colData={STUDENT_COLUMNS}
+          setModalInfo={setModalInfo}
+          setModalType={() => setModalType("student")}
+          dataChanges={studentDataChanges}
+          checked={checkedStudents}
+          setChecked={setCheckedStudents}
+        />
+        
+        <Container className='d-flex flex-row justify-content-center' style={{gap: "10px"}}>
+          <Button variant="yellow" onClick={validate}>Validate</Button>
+          <Button variant="yellow" onClick={submit} disabled={changedSinceLastValidation}>Submit</Button>
+          <Button variant="yellow" onClick={resetPage}>Reset</Button>
+        </Container>
+      </Container>
     </>
   )
 }
