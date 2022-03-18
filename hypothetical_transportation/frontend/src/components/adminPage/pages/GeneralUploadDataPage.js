@@ -159,7 +159,7 @@ GeneralUploadDataPage.defaultProps = {
 }
 
 const mapStateToProps = (state) => ({
-  uploadData: state.bulk_import
+  uploadData: state.bulk_import.uploadData
 });
 
 
