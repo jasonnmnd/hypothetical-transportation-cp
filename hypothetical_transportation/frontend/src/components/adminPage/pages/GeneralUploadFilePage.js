@@ -5,8 +5,10 @@ import csvJSON from '../../../utils/csv_to_json'
 import { validate } from '../../../actions/bulk_import';
 import PropTypes, { string } from 'prop-types';
 import { connect } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 function GeneralUploadFilePage(props) {
+    const navigate = useNavigate();
     const [userfile, setUserFile] = useState();
     const [studentfile, setStudentFile] = useState();
 
@@ -30,7 +32,7 @@ function GeneralUploadFilePage(props) {
 
         console.log("calling the backend validator dodododo")
 
-        props.validate(jsonRes)
+        props.validate(jsonRes, () => {navigate("/upload_data")})
         
     };
 
