@@ -17,7 +17,7 @@ function GeneralUploadDataPage(props) {
   const [studentDataChanges, setStudentDataChanges] = useState({});
   const [checkedStudents, setCheckedStudents] = useState([]);
   const [checkedUsers, setCheckedUsers] = useState([]);
-  
+  const [changedSinceLastValidation, setChangedSinceLastValidation] = useState(false);
   
 
   
@@ -75,8 +75,12 @@ function GeneralUploadDataPage(props) {
   }
 
   useEffect(()=>{
-    setDataWithCheckBoxes(props.uploadData)
+    resetPage()
   },[props.data])
+
+  useEffect(()=>{
+    setChangedSinceLastValidation(true);
+  },[userDataChanges, studentDataChanges, checkedUsers, checkedStudents])
 
   const resetPage = () => {
     setModalInfo(null);
@@ -84,8 +88,17 @@ function GeneralUploadDataPage(props) {
     setUserDataChanges({});
     setStudentDataChanges({});
     setDataWithCheckBoxes(props.uploadData);
+    setChangedSinceLastValidation(false);
   }
 
+  const validate = () => {
+    console.log("VALIDATE");
+    setChangedSinceLastValidation(false);
+  }
+
+  const submit = () => {
+    console.log("SUBMIT")
+  }
 
 
   return (
@@ -112,8 +125,8 @@ function GeneralUploadDataPage(props) {
         checked={checkedStudents}
         setChecked={setCheckedStudents}
       />
-      <Button>Validate</Button>
-      <Button>Submit</Button>
+      <Button onClick={validate}>Validate</Button>
+      <Button onClick={submit} disabled={changedSinceLastValidation}>Submit</Button>
       <Button onClick={resetPage}>Reset</Button>
     </>
   )
