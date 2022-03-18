@@ -6,7 +6,7 @@ import EditableTextField from '../../../common/EditableTextField';
 import './bulk_import.css'
 import AddressInputWithMap from '../../../common/AddressInputWithMap';
 import ErrorSection from './ErrorSection';
-import { getEditableTextFieldClass } from '../../../../utils/bulk_import';
+import { getEditableTextField, getEditableTextFieldClass } from '../../../../utils/bulk_import';
 
 
 const TYPE_TITLES = {
@@ -45,25 +45,9 @@ function UserDetailsModal(props){
         })
     }
 
-    const getEditableTextField = (type) => {
-        if(type == 'address'){
-            return (
-                <Card className={getEditableTextFieldClass(props.user, type)}>
-                    <Card.Header as="h4">{TYPE_TITLES[type]}</Card.Header>
-                    <Card.Body>
-                        <AddressInputWithMap value={userInfo[type].value} title={TYPE_TITLES[type]} keyType={type} onSubmit={onChange}/>
-                    </Card.Body>
-                </Card>
-            )
-        }
-        return (
-            <Card className={getEditableTextFieldClass(props.user, type)}>
-                <Card.Header as="h4">{TYPE_TITLES[type]}</Card.Header>
-                <Card.Body>
-                    <EditableTextField value={userInfo[type].value} title={TYPE_TITLES[type]} keyType={type} onSubmit={onChange}/>
-                </Card.Body>
-            </Card>
-        )
+
+    const getTextFieldUser = (type) => {
+        return getEditableTextField(type, TYPE_TITLES[type], userInfo, onChange, props.user)
     }
 
     return (
@@ -77,10 +61,10 @@ function UserDetailsModal(props){
                 <Modal.Body>
                     <Container className="d-flex flex-column justify-content-center" style={{gap: "10px"}}>
 
-                            {getEditableTextField("email")}
-                            {getEditableTextField("phone_number")}
-                            {getEditableTextField("full_name")}
-                            {getEditableTextField("address")}
+                            {getTextFieldUser("email")}
+                            {getTextFieldUser("phone_number")}
+                            {getTextFieldUser("full_name")}
+                            {getTextFieldUser("address")}
                             <ErrorSection transaction={props.user} type='user'/>
                     </Container>
                 </Modal.Body>

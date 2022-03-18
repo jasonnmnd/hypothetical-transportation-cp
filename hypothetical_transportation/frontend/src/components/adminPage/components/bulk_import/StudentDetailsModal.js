@@ -6,7 +6,7 @@ import EditableTextField from '../../../common/EditableTextField';
 import './bulk_import.css'
 import AddressInputWithMap from '../../../common/AddressInputWithMap';
 import ErrorSection from './ErrorSection';
-import { errOrDupExists, getEditableTextFieldClass } from '../../../../utils/bulk_import';
+import { errOrDupExists, getEditableTextField, getEditableTextFieldClass } from '../../../../utils/bulk_import';
 
 
 const TYPE_TITLES = {
@@ -44,25 +44,8 @@ function StudentDetailsModal(props){
         })
     }
 
-    
-
-    const getEditableTextField = (type) => {
-        if(type == 'address'){
-            return <Card className={getEditableTextFieldClass(props.student, type)}>
-            <Card.Header as="h4">{TYPE_TITLES[type]}</Card.Header>
-            <Card.Body>
-                <AddressInputWithMap value={studentInfo[type].value} title={TYPE_TITLES[type]} keyType={type} onSubmit={onChange}/>
-            </Card.Body>
-        </Card>
-        }
-        return (
-            <Card className={getEditableTextFieldClass(props.student, type)} >
-                <Card.Header as="h4">{TYPE_TITLES[type]}</Card.Header>
-                <Card.Body>
-                    <EditableTextField value={studentInfo[type].value} title={TYPE_TITLES[type]} keyType={type} onSubmit={onChange}/>
-                </Card.Body>
-            </Card>
-        )
+    const getTextFieldStudent = (type) => {
+        return getEditableTextField(type, TYPE_TITLES[type], studentInfo, onChange, props.student)
     }
 
     return (
@@ -75,10 +58,10 @@ function StudentDetailsModal(props){
 
                 <Modal.Body>
                     <Container className="d-flex flex-column justify-content-center" style={{gap: "10px"}}>
-                            {getEditableTextField("full_name")}
-                            {getEditableTextField("student_id")}
-                            {getEditableTextField("school_name")}
-                            {getEditableTextField("parent_email")}
+                            {getTextFieldStudent("full_name")}
+                            {getTextFieldStudent("student_id")}
+                            {getTextFieldStudent("school_name")}
+                            {getTextFieldStudent("parent_email")}
                             <ErrorSection transaction={props.student} type='student'/>
                     </Container>
                 </Modal.Body>

@@ -1,3 +1,7 @@
+import React from 'react';
+import { Card } from "react-bootstrap"
+import AddressInputWithMap from "../components/common/AddressInputWithMap"
+import EditableTextField from "../components/common/EditableTextField"
 
 
 const USER_1_DATA = {
@@ -226,15 +230,46 @@ export const duplicatesExist = (transaction) => {
     return issueExists(transaction, 'duplicates')
 }
 
-export const getEditableTextFieldClass = (transaction, fieldName) => {
+export const getEditableTextFieldClass = (transaction, fieldName, section) => {
     if(errOrDupExists(transaction, fieldName, 'errors')){
-        return 'field-error'
+        if(section == 'card'){
+            return 'border-danger mb-3'
+        }
+        else if(section == 'body'){
+            return 'text-danger'
+        }
     }
     else if(errOrDupExists(transaction, fieldName, 'duplicates')){
-        return 'field-duplicate'
+        if(section == 'card'){
+            return 'border-warning mb-3'
+        }
+        else if(section == 'body'){
+            return 'text-warning'
+        }
     }
     else {
         return ''
     }
 
+}
+
+export const getEditableTextField = (fieldName, title, info, onChange, transaction) => {
+    return (
+        <Card className={getEditableTextFieldClass(transaction, fieldName, 'card')}>
+            <Card.Header as="h4">{title}</Card.Header>
+            <Card.Body className={getEditableTextFieldClass(transaction, fieldName, 'body')}> 
+                {fieldName == 'address' ? <AddressInputWithMap 
+                                            value={info[fieldName].value} 
+                                            title={title} 
+                                            keyType={fieldName} 
+                                            onSubmit={onChange}/> 
+                                        : <EditableTextField 
+                                            value={info[fieldName].value} 
+                                            title={title} 
+                                            keyType={fieldName} 
+                                            onSubmit={onChange}/>
+                }
+            </Card.Body>
+        </Card>
+    )
 }
