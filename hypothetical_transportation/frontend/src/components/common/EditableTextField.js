@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Button, Col, Form, FormGroup, Row } from 'react-bootstrap';
+import { Button, Col, Form, Container, Row } from 'react-bootstrap';
+import '../adminPage/NEWadminPage.css';
 
 
 function EditableTextField( props ) {
@@ -33,12 +34,12 @@ function EditableTextField( props ) {
                             {props.underText}
                         </Form.Text>
                     </Col>
-                    <Col className='input-col'>
-                        <Button type="submit" onClick={onSubmit}>Submit</Button>
-                    </Col>
-                    <Col className='input-col'>
-                        <Button onClick={() => {setValue(props.value); setEditable(false);}}>Reset</Button>
-                    </Col>
+                        <Col className='input-col'>
+                            <Button variant="yellowEditSmall" onClick={onSubmit}>Submit</Button>
+                        </Col>
+                        <Col className='input-col'>
+                            <Button variant="yellowEditSmall" onClick={() => {setValue(props.value); setEditable(false);}}>Reset</Button>
+                        </Col>
                 </Row>
             </Form>
         )
