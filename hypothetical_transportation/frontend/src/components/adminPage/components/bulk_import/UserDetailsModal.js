@@ -75,28 +75,20 @@ function UserDetailsModal(props){
                 </Modal.Header>
 
                 <Modal.Body>
+                    <Container className="d-flex flex-column justify-content-center" style={{gap: "10px"}}>
 
-                    <Container className="d-flex flex-column justify-content-center">
-                        <Row  style={{gap: "10px"}}> 
                             {getEditableTextField("email")}
                             {getEditableTextField("phone_number")}
-                        </Row>
-                        <Row  style={{gap: "10px"}}> 
                             {getEditableTextField("full_name")}
-                        </Row>
-                        <Row  style={{gap: "10px"}}> 
                             {getEditableTextField("address")}
-                        </Row>
-                        <Row  style={{gap: "10px"}}> 
                             <ErrorSection transaction={props.user} type='user'/>
-                        </Row>
                     </Container>
                 </Modal.Body>
 
                 <Modal.Footer>
-                    <Container className='d-flex flex-row justify-content-center'>
+                    <Container className='d-flex flex-row justify-content-center' style={{gap: "10px"}}>
                         <Button variant="yellowclose" onClick={props.closeModal}>Close</Button>
-                        <Button variant="saveModal" onClick={() => props.saveModal(userInfo)}>Save</Button>
+                        <Button variant="yellowclose" onClick={() => props.saveModal(userInfo)}>Save</Button>
                     </Container>
                 </Modal.Footer>
         </Modal>  

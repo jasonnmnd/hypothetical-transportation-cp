@@ -21,15 +21,10 @@ function GeneralUploadDataPage(props) {
   const [changedSinceLastValidation, setChangedSinceLastValidation] = useState(false);
   
 
-  
-
-
   const closeModal = () => {
     setModalInfo(null)
     setModalType(null)
   }
-
-
 
   const saveModal = (newInfo) => {
 
