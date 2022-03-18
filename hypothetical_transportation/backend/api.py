@@ -19,7 +19,7 @@ from .serializers import UserSerializer, StudentSerializer, RouteSerializer, Sch
     StaffEditUserSerializer, StaffEditSchoolSerializer, StaffStudentSerializer, LoadStudentSerializer
 from .search import DynamicSearchFilter
 from .customfilters import StudentCountShortCircuitFilter
-from .permissions import is_admin, is_school_staff, is_driver, IsAdminOrReadOnly, IsAdmin, IsSchoolStaff
+from .permissions import is_admin, is_school_staff, is_driver, IsAdminOrReadOnly, IsAdmin, IsSchoolStaff, is_guardian
 from django.shortcuts import get_object_or_404
 from .geo_utils import get_straightline_distance, LEN_OF_MILE
 from .nav_utils import navigation_link_dropoff, navigation_link_pickup
@@ -262,6 +262,8 @@ class UserViewSet(viewsets.ModelViewSet):
     def perform_destroy(self, instance):
         if is_school_staff(self.request.user):
             user_to_delete = get_user_model().objects.get(email=instance)
+            if not is_guardian(user_to_delete):
+                raise serializers.ValidationError("Target account to delete is privileged!")
             for student in user_to_delete.students.all():
                 if student.school not in self.request.user.managed_schools.all():
                     raise serializers.ValidationError("User has a student outside of your managed schools")
