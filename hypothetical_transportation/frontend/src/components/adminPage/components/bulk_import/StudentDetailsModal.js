@@ -74,26 +74,19 @@ function StudentDetailsModal(props){
                 </Modal.Header>
 
                 <Modal.Body>
-
-                    <Container className="d-flex flex-column justify-content-center">
-                        <Row  style={{gap: "10px"}}> 
+                    <Container className="d-flex flex-column justify-content-center" style={{gap: "10px"}}>
                             {getEditableTextField("full_name")}
                             {getEditableTextField("student_id")}
-                        </Row>
-                        <Row  style={{gap: "10px"}}> 
                             {getEditableTextField("school_name")}
                             {getEditableTextField("parent_email")}
-                        </Row>
-                        <Row  style={{gap: "10px"}}> 
                             <ErrorSection transaction={props.student} type='student'/>
-                        </Row>
                     </Container>
                 </Modal.Body>
 
                 <Modal.Footer>
-                    <Container className='d-flex flex-row justify-content-center'>
+                    <Container className='d-flex flex-row justify-content-center' style={{gap: "10px"}}>
                         <Button variant="yellowclose" onClick={props.closeModal}>Close</Button>
-                        <Button variant="saveModal" onClick={() => props.saveModal(studentInfo)}>Save</Button>
+                        <Button variant="yellowclose" onClick={() => props.saveModal(studentInfo)}>Save</Button>
                     </Container>
                 </Modal.Footer>
         </Modal>  
