@@ -38,7 +38,7 @@ function EditableTextField( props ) {
                             <Button variant="yellowEditSmall" onClick={onSubmit}>Submit</Button>
                         </Col>
                         <Col className='input-col'>
-                            <Button variant="yellowEditSmall" onClick={() => {setValue(props.value); setEditable(false);}}>Reset</Button>
+                            <Button variant="yellowEditSmall" onClick={() => {setValue(props.value); setEditable(false); props.onReset()}}>Reset</Button>
                         </Col>
                 </Row>
             </Form>
@@ -57,12 +57,13 @@ EditableTextField.propTypes = {
     value: PropTypes.string,
     underText: PropTypes.string,
     onSubmit: PropTypes.func,
-    onChange: PropTypes.func
-    
+    onChange: PropTypes.func,
+    onReset: PropTypes.func
 }
 
 EditableTextField.defaultProps = {
-    onChange: () => {}
+    onChange: () => {},
+    onReset: () => {}
 }
 
 const mapStateToProps = (state) => ({

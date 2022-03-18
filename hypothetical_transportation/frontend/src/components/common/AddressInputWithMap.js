@@ -9,7 +9,6 @@ import MapComponent from '../maps/MapComponent';
 function AddressInputWithMap( props ) {
 
     const [value, setValue] = useState(props.value);
-    const [editable, setEditable] = useState(false);
     
 
     useEffect(()=>{
@@ -38,7 +37,7 @@ function AddressInputWithMap( props ) {
   
     return (
         <div >
-            <EditableTextField key={props.key} value={value} underText={props.underText} onSubmit={props.onSubmit} onChange={onChangeText}/>
+            <EditableTextField key={props.key} value={value} underText={props.underText} onSubmit={props.onSubmit} onChange={onChangeText} onReset={() => {setValue(props.value)}}/>
             <MapComponent pinData={getPinData()} center={{address: value}} zoom={13}/>
         </div>
     );
