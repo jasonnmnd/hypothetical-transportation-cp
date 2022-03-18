@@ -116,9 +116,9 @@ function ErrorSection(props){
     const getErrorCard = () => {
         if(errorsExist(props.transaction)){
             return (
-                <Card>
+                <Card className='border-danger mb-3'>
                     <Card.Header as="h4">Errors</Card.Header>
-                    <Card.Body>
+                    <Card.Body className='text-danger'>
                         {getErrorSection()}
                     </Card.Body>
                 </Card>
@@ -130,9 +130,9 @@ function ErrorSection(props){
     const getDuplicateCard = () => {
         if(duplicatesExist(props.transaction)){
             return (
-                <Card>
+                <Card className='border-warning mb-3'>
                     <Card.Header as="h4">Duplicates</Card.Header>
-                    <Card.Body>
+                    <Card.Body className='text-warning'>
                         {getDuplicateSection()}
                     </Card.Body>
                 </Card>

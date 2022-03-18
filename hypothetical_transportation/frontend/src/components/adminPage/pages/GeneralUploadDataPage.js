@@ -1,5 +1,5 @@
 import AdminHeader from '../../header/AdminHeader'
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import PropTypes, { string } from 'prop-types';
 import { duplicatesExist, errOrDupExists, errorsExist, FAKE_IMPORT_DATA, STUDENT_COLUMNS, USER_COLUMNS } from '../../../utils/bulk_import';
@@ -70,20 +70,33 @@ function GeneralUploadDataPage(props) {
     setData(inData);
   }
 
-  useEffect(()=>{
-    resetPage()
-  },[props.data])
+  const mounted = useRef();
+  useEffect(() => {
+    if (!mounted.current) {
+      // do componentDidMount logic
+      resetPage()
+      mounted.current = true;
+    } else {
+      resetPage(true)
+      // do componentDidUpdate logic
+    }
+  }, [props.data]);
 
   useEffect(()=>{
     setChangedSinceLastValidation(true);
   },[userDataChanges, studentDataChanges, checkedUsers, checkedStudents])
 
-  const resetPage = () => {
+  const resetPage = (keepCheckBoxes) => {
     setModalInfo(null);
     setModalType(null);
     setUserDataChanges({});
     setStudentDataChanges({});
-    setDataWithCheckBoxes(props.uploadData);
+    if(keepCheckBoxes){
+      setData(props.uploadData)
+    }
+    else {
+      setDataWithCheckBoxes(props.uploadData);
+    }
     setChangedSinceLastValidation(false);
   }
 
@@ -94,6 +107,7 @@ function GeneralUploadDataPage(props) {
 
   const submit = () => {
     console.log("SUBMIT")
+    props.uploadData.students[0].student_id = 5000
   }
 
 
