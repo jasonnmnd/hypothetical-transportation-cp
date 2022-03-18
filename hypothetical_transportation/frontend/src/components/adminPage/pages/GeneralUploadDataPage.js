@@ -117,9 +117,6 @@ function GeneralUploadDataPage(props) {
 
       <Container className='d-flex flex-column justify-content-center' style={{gap: "10px", marginTop: "20px"}}>
         <TransactionDetailsModal modalType={modalType} info={modalInfo} closeModal={closeModal} saveModal={saveModal} />
-        <Container className='d-flex justify-content-center'>
-          <h2>Users</h2>
-        </Container>
         
         <BulkImportTable 
           data={data.users} 
@@ -129,11 +126,8 @@ function GeneralUploadDataPage(props) {
           dataChanges={userDataChanges}
           checked={checkedUsers}
           setChecked={setCheckedUsers}
+          title='Users'
         />
-
-        <Container className='d-flex justify-content-center'>
-          <h2>Students</h2>
-        </Container>
         
         <BulkImportTable 
           data={data.students} 
@@ -143,6 +137,7 @@ function GeneralUploadDataPage(props) {
           dataChanges={studentDataChanges}
           checked={checkedStudents}
           setChecked={setCheckedStudents}
+          title='Students'
         />
         
         <Container className='d-flex flex-row justify-content-center' style={{gap: "10px"}}>
