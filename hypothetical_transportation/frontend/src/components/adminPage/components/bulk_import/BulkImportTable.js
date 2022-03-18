@@ -5,6 +5,7 @@ import { useTable } from 'react-table'
 import { duplicatesExist, errorsExist, USER_COLUMNS } from '../../../../utils/bulk_import';
 import "../forms/forms.css"
 import "./bulk_import.css"
+import { Container } from 'react-bootstrap';
 
 function BulkImportTable(props) {
 
@@ -79,16 +80,24 @@ function BulkImportTable(props) {
         )
     }
 
+    if(props.data == null || props.data == undefined || props.data.length == 0){
+        return null;
+    }
   
     return (
-        <table className="table borderd" >
-            <thead>
-                {getTableHeader()}
-            </thead>
-            <tbody >
-                {getTableBody()}
-            </tbody>
-        </table>
+        <>
+             <Container className='d-flex justify-content-center'>
+                <h2>{props.title}</h2>
+            </Container>
+            <table className="table borderd" >
+                <thead>
+                    {getTableHeader()}
+                </thead>
+                <tbody >
+                    {getTableBody()}
+                </tbody>
+            </table>
+        </>
     )
 }
 
@@ -99,7 +108,8 @@ BulkImportTable.propTypes = {
   setModalType: PropTypes.func,
   dataChanges: PropTypes.object,
   checked: PropTypes.array,
-  setChecked: PropTypes.func
+  setChecked: PropTypes.func,
+  title: PropTypes.string
 }
 
 BulkImportTable.defaultProps = {

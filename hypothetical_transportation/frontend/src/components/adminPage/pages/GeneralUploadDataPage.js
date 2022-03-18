@@ -1,5 +1,5 @@
 import AdminHeader from '../../header/AdminHeader'
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import PropTypes, { string } from 'prop-types';
 import { duplicatesExist, errOrDupExists, errorsExist, FAKE_IMPORT_DATA, STUDENT_COLUMNS, USER_COLUMNS } from '../../../utils/bulk_import';
@@ -70,20 +70,33 @@ function GeneralUploadDataPage(props) {
     setData(inData);
   }
 
-  useEffect(()=>{
-    resetPage()
-  },[props.data])
+  const mounted = useRef();
+  useEffect(() => {
+    if (!mounted.current) {
+      // do componentDidMount logic
+      resetPage()
+      mounted.current = true;
+    } else {
+      resetPage(true)
+      // do componentDidUpdate logic
+    }
+  }, [props.data]);
 
   useEffect(()=>{
     setChangedSinceLastValidation(true);
   },[userDataChanges, studentDataChanges, checkedUsers, checkedStudents])
 
-  const resetPage = () => {
+  const resetPage = (keepCheckBoxes) => {
     setModalInfo(null);
     setModalType(null);
     setUserDataChanges({});
     setStudentDataChanges({});
-    setDataWithCheckBoxes(props.uploadData);
+    if(keepCheckBoxes){
+      setData(props.uploadData)
+    }
+    else {
+      setDataWithCheckBoxes(props.uploadData);
+    }
     setChangedSinceLastValidation(false);
   }
 
@@ -94,6 +107,7 @@ function GeneralUploadDataPage(props) {
 
   const submit = () => {
     console.log("SUBMIT")
+    props.uploadData.students[0].student_id = 5000
   }
 
 
@@ -103,9 +117,6 @@ function GeneralUploadDataPage(props) {
 
       <Container className='d-flex flex-column justify-content-center' style={{gap: "10px", marginTop: "20px"}}>
         <TransactionDetailsModal modalType={modalType} info={modalInfo} closeModal={closeModal} saveModal={saveModal} />
-        <Container className='d-flex justify-content-center'>
-          <h2>Users</h2>
-        </Container>
         
         <BulkImportTable 
           data={data.users} 
@@ -115,11 +126,8 @@ function GeneralUploadDataPage(props) {
           dataChanges={userDataChanges}
           checked={checkedUsers}
           setChecked={setCheckedUsers}
+          title='Users'
         />
-
-        <Container className='d-flex justify-content-center'>
-          <h2>Students</h2>
-        </Container>
         
         <BulkImportTable 
           data={data.students} 
@@ -129,6 +137,7 @@ function GeneralUploadDataPage(props) {
           dataChanges={studentDataChanges}
           checked={checkedStudents}
           setChecked={setCheckedStudents}
+          title='Students'
         />
         
         <Container className='d-flex flex-row justify-content-center' style={{gap: "10px"}}>
