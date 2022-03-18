@@ -2,8 +2,11 @@ import React, { useEffect, useState } from 'react'
 import { Button, Container, Form } from 'react-bootstrap';
 import AdminHeader from '../../header/AdminHeader'
 import csvJSON from '../../../utils/csv_to_json'
+import { validate } from '../../../actions/bulk_import';
+import PropTypes, { string } from 'prop-types';
+import { connect } from 'react-redux';
 
-function GeneralUploadFilePage() {
+function GeneralUploadFilePage(props) {
     const [userfile, setUserFile] = useState();
     const [studentfile, setStudentFile] = useState();
 
@@ -24,7 +27,10 @@ function GeneralUploadFilePage() {
     const handleOnSubmit = (e) => {
         e.preventDefault();
         console.log(jsonRes)
+
         console.log("calling the backend validator dodododo")
+
+        props.validate(jsonRes)
         
     };
 
@@ -83,4 +89,14 @@ function GeneralUploadFilePage() {
     )
 }
 
-export default GeneralUploadFilePage
+GeneralUploadFilePage.propTypes = {
+    validate: PropTypes.func.isRequired
+}
+
+GeneralUploadFilePage.defaultProps = {
+}
+
+const mapStateToProps = (state) => ({
+});
+
+export default connect(mapStateToProps, {validate})(GeneralUploadFilePage)
