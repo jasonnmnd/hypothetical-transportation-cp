@@ -225,3 +225,16 @@ export const errorsExist = (transaction) => {
 export const duplicatesExist = (transaction) => {
     return issueExists(transaction, 'duplicates')
 }
+
+export const getEditableTextFieldClass = (transaction, fieldName) => {
+    if(errOrDupExists(transaction, fieldName, 'errors')){
+        return 'field-error'
+    }
+    else if(errOrDupExists(transaction, fieldName, 'duplicates')){
+        return 'field-duplicate'
+    }
+    else {
+        return ''
+    }
+
+}

@@ -6,6 +6,7 @@ import EditableTextField from '../../../common/EditableTextField';
 import './bulk_import.css'
 import AddressInputWithMap from '../../../common/AddressInputWithMap';
 import ErrorSection from './ErrorSection';
+import { getEditableTextFieldClass } from '../../../../utils/bulk_import';
 
 
 const TYPE_TITLES = {
@@ -46,15 +47,17 @@ function UserDetailsModal(props){
 
     const getEditableTextField = (type) => {
         if(type == 'address'){
-            return <Card>
-            <Card.Header as="h4">{TYPE_TITLES[type]}</Card.Header>
-            <Card.Body>
-                <AddressInputWithMap value={userInfo[type].value} title={TYPE_TITLES[type]} keyType={type} onSubmit={onChange}/>
-            </Card.Body>
-        </Card>
+            return (
+                <Card className={getEditableTextFieldClass(props.user, type)}>
+                    <Card.Header as="h4">{TYPE_TITLES[type]}</Card.Header>
+                    <Card.Body>
+                        <AddressInputWithMap value={userInfo[type].value} title={TYPE_TITLES[type]} keyType={type} onSubmit={onChange}/>
+                    </Card.Body>
+                </Card>
+            )
         }
         return (
-            <Card>
+            <Card className={getEditableTextFieldClass(props.user, type)}>
                 <Card.Header as="h4">{TYPE_TITLES[type]}</Card.Header>
                 <Card.Body>
                     <EditableTextField value={userInfo[type].value} title={TYPE_TITLES[type]} keyType={type} onSubmit={onChange}/>

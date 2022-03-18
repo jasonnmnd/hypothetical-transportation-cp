@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import PropTypes, { string } from 'prop-types';
 import { useTable } from 'react-table'
-import { USER_COLUMNS } from '../../../../utils/bulk_import';
+import { duplicatesExist, errorsExist, USER_COLUMNS } from '../../../../utils/bulk_import';
 import "../forms/forms.css"
+import "./bulk_import.css"
 
 function BulkImportTable(props) {
 
@@ -29,26 +30,42 @@ function BulkImportTable(props) {
         }
     }
 
-    const getTableRow = (rowIn, ind) => {
-        let row = rowIn
-        if(ind in props.dataChanges){
-            return (
-                <tr key={ind}>
-                    <td onClick={() => onCheck(ind)}><input type="checkbox" checked={props.checked.includes(ind)} onChange={() => onCheck(ind)}/></td>
-                    {props.colData.map((col, index) => {
-                        return <td onClick={() => {props.setModalType(); props.setModalInfo({...props.dataChanges[ind], index: ind});}} key={index} >{props.dataChanges[ind][col.accessor].value}</td>
-                    })}
-                </tr>
-            )
+    const getRowClass = (row, changed) => {
+        if(changed){
+            return 'row-changed'
         }
+        else if(errorsExist(row)){
+            return 'row-error'
+        }
+        else if(duplicatesExist(row)){
+            return 'row-duplicate'
+        }
+        else {
+            return ''
+        }
+
+    }
+
+    const getRowComponent = (row, ind, changed) => {
         return (
-            <tr key={ind}>
+            <tr key={ind} className={getRowClass(row, changed)}>
                 <td onClick={() => onCheck(ind)}><input type="checkbox" checked={props.checked.includes(ind)} onChange={() => onCheck(ind)} /></td>
                 {props.colData.map((col, index) => {
                     return <td onClick={() => {props.setModalType(); props.setModalInfo({...row, index: ind});}} key={index} >{row[col.accessor].value}</td>
                 })}
             </tr>
         )
+    }
+
+    const getTableRow = (rowIn, ind) => {
+        let row = rowIn;
+        let changed = false;
+        if(ind in props.dataChanges){
+            changed = true;
+            row = props.dataChanges[ind];
+        }
+
+        return getRowComponent(row, ind, changed);
     }
 
 
@@ -66,10 +83,10 @@ function BulkImportTable(props) {
     return (
         <table className="table borderd" >
             <thead>
-            {getTableHeader()}
+                {getTableHeader()}
             </thead>
             <tbody >
-            {getTableBody()}
+                {getTableBody()}
             </tbody>
         </table>
     )

@@ -203,4 +203,24 @@
   .btn-yellow2:hover {
     background-color: #ffdd99;
   }
+
+  .row-changed {
+    background-color: #57aef5;
+  }
+
+  .row-error {
+    background-color: #f55757;
+  }
+
+  .row-duplicate {
+    background-color: #fafd27;
+  }
+
+  .field-error {
+    background-color: #f55757;
+  }
+
+  .field-duplicate {
+    background-color: #fafd27;
+  }
   
