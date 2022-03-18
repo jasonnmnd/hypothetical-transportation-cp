@@ -1,5 +1,10 @@
 
+import { InfoWindow } from "@react-google-maps/api";
+import React from 'react';
+import { getDistance } from "./geocode"
 import { NO_ROUTE } from "./utils"
+
+const MARKER_OVERLAP_DISTANCE = 0.01; //miles
 
 export const addSchoolPin = (pinData, school, onSchoolClick) => {
     pinData.push({
@@ -70,3 +75,57 @@ export const compareStopLists = (stops1, stops2) => {
         return stop2 != undefined && stop1.name == stop2.name && stop1.location == stop2.location && stop1.stop_number == stop2.stop_number
     })
 }
+
+const getOverlappedStudents = (student, studentList) => {
+    let overlaps = []
+
+    studentList.forEach(stu => {
+        if(getDistance(student.guardian, stu.guardian) < MARKER_OVERLAP_DISTANCE){
+            overlaps.push(stu);
+            const index = studentList.indexOf(stu);
+                if (index !== -1) {
+                studentList.splice(index, 1);
+            }
+        }
+    })
+    return overlaps;
+}
+
+export const getMarkerOverlaps = (studentsArr) => {
+    let students = Array.from(studentsArr);
+    let overlappingStudents = []
+    let normalStudents = []
+
+    while(students.length > 0){
+        const student = students[0];
+        students.splice(0, 1); // remove current student
+        const overlapGroup = overlappingStudents.find(overlapStudentObj => getDistance(overlapStudentObj, student.guardian) < MARKER_OVERLAP_DISTANCE)
+        if(overlapGroup != undefined){
+            overlapGroup.pins.push(student);
+        }
+        else { //student doesn't overlap with existing overlap groups
+            let studentsOverlappingWCurStudent = getOverlappedStudents(student, students);
+            if(studentsOverlappingWCurStudent.length == 0){
+                normalStudents.push(student);
+            }
+            else { //student overlaps with a student not yet part of an overlap group, must create new group
+                const newOverlapGroupPins = [student, ...studentsOverlappingWCurStudent];
+
+                const avgLat = newOverlapGroupPins.reduce((sum, curPin) => sum + curPin.guardian.latitude, 0) / newOverlapGroupPins.length;
+                const avgLng = newOverlapGroupPins.reduce((sum, curPin) => sum + curPin.guardian.longitude, 0) / newOverlapGroupPins.length;
+                overlappingStudents.push({
+                    latitude: avgLat,
+                    longitude: avgLng,
+                    pins: newOverlapGroupPins
+                })
+            }
+        }
+    }
+    
+    return [overlappingStudents, normalStudents]
+}
+
+export const createInfoWindow = (position, windowComponents, setExtraComponents) => {
+    setExtraComponents(<InfoWindow position={position} onCloseClick={setExtraComponents(null)}>{windowComponents}</InfoWindow>)
+}
+

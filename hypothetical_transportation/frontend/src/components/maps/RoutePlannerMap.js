@@ -5,13 +5,13 @@ import MapComponent from "./MapComponent";
 import PropTypes, { string } from 'prop-types';
 import { useSearchParams } from 'react-router-dom';
 import { NO_ROUTE } from '../../utils/utils';
-import { getStudentPin, addSchoolPin, getStudentRouteName, getCurRouteFromStudent } from '../../utils/planner_maps';
+import { getStudentPin, addSchoolPin, getStudentRouteName, getCurRouteFromStudent, getMarkerOverlaps, createInfoWindow } from '../../utils/planner_maps';
 import { getDistance } from '../../utils/geocode';
 import { Button, Modal } from 'react-bootstrap';
 import OverLappingStudentsModal from '../adminPage/components/modals/OverLappingStudentsModal';
 
 
-const MARKER_OVERLAP_DISTANCE = 0.01; //miles
+// const MARKER_OVERLAP_DISTANCE = 0.01; //miles
 
 
 function RoutePlannerMap(props){
@@ -26,9 +26,9 @@ function RoutePlannerMap(props){
         setModalStudents([]);
     }
 
-    const createInfoWindow = (position, windowComponents) => {
-        setExtraComponents(<InfoWindow position={position} onCloseClick={setExtraComponents(null)}>{windowComponents}</InfoWindow>)
-    }
+    // const createInfoWindow = (position, windowComponents) => {
+    //     setExtraComponents(<InfoWindow position={position} onCloseClick={setExtraComponents(null)}>{windowComponents}</InfoWindow>)
+    // }
 
     
 
@@ -38,13 +38,13 @@ function RoutePlannerMap(props){
     }
     
     const onStudentClick = (pinStuff, position) => {
-        createInfoWindow(position, getStudentInfoForWindow(pinStuff))
+        createInfoWindow(position, getStudentInfoForWindow(pinStuff), setExtraComponents)
     }
 
     const onMultipleStudentClick = (pinStuff, position) => {
         const pinStudents = pinStuff.pins;
         const windowInfo = pinStudents.map(student => getStudentInfoForWindow(student));
-        createInfoWindow(position, <>{windowInfo}</>)
+        createInfoWindow(position, <>{windowInfo}</>, setExtraComponents)
     }
 
     const multipleStudentsChange = (pinStuff, position) => {
@@ -52,7 +52,7 @@ function RoutePlannerMap(props){
     }
 
     const onSchoolClick = (pinStuff, position) => {
-        createInfoWindow(position, <h1>{pinStuff.name}</h1>)
+        createInfoWindow(position, <h1>{pinStuff.name}</h1>, setExtraComponents)
     }
 
     useEffect(() => {
@@ -84,55 +84,55 @@ function RoutePlannerMap(props){
         });
     }
 
-    const getOverlappedStudents = (student, studentList) => {
-        let overlaps = []
+    // const getOverlappedStudents = (student, studentList) => {
+    //     let overlaps = []
 
-        studentList.forEach(stu => {
-            if(getDistance(student.guardian, stu.guardian) < MARKER_OVERLAP_DISTANCE){
-                overlaps.push(stu);
-                const index = studentList.indexOf(stu);
-                    if (index !== -1) {
-                    studentList.splice(index, 1);
-                }
-            }
-        })
-        return overlaps;
-    }
+    //     studentList.forEach(stu => {
+    //         if(getDistance(student.guardian, stu.guardian) < MARKER_OVERLAP_DISTANCE){
+    //             overlaps.push(stu);
+    //             const index = studentList.indexOf(stu);
+    //                 if (index !== -1) {
+    //                 studentList.splice(index, 1);
+    //             }
+    //         }
+    //     })
+    //     return overlaps;
+    // }
 
 
-    const getMarkerOverlaps = (studentsArr) => {
-        let students = Array.from(studentsArr);
-        let overlappingStudents = []
-        let normalStudents = []
+    // const getMarkerOverlaps = (studentsArr) => {
+    //     let students = Array.from(studentsArr);
+    //     let overlappingStudents = []
+    //     let normalStudents = []
 
-        while(students.length > 0){
-            const student = students[0];
-            students.splice(0, 1); // remove current student
-            const overlapGroup = overlappingStudents.find(overlapStudentObj => getDistance(overlapStudentObj, student.guardian) < MARKER_OVERLAP_DISTANCE)
-            if(overlapGroup != undefined){
-                overlapGroup.pins.push(student);
-            }
-            else { //student doesn't overlap with existing overlap groups
-                let studentsOverlappingWCurStudent = getOverlappedStudents(student, students);
-                if(studentsOverlappingWCurStudent.length == 0){
-                    normalStudents.push(student);
-                }
-                else { //student overlaps with a student not yet part of an overlap group, must create new group
-                    const newOverlapGroupPins = [student, ...studentsOverlappingWCurStudent];
+    //     while(students.length > 0){
+    //         const student = students[0];
+    //         students.splice(0, 1); // remove current student
+    //         const overlapGroup = overlappingStudents.find(overlapStudentObj => getDistance(overlapStudentObj, student.guardian) < MARKER_OVERLAP_DISTANCE)
+    //         if(overlapGroup != undefined){
+    //             overlapGroup.pins.push(student);
+    //         }
+    //         else { //student doesn't overlap with existing overlap groups
+    //             let studentsOverlappingWCurStudent = getOverlappedStudents(student, students);
+    //             if(studentsOverlappingWCurStudent.length == 0){
+    //                 normalStudents.push(student);
+    //             }
+    //             else { //student overlaps with a student not yet part of an overlap group, must create new group
+    //                 const newOverlapGroupPins = [student, ...studentsOverlappingWCurStudent];
 
-                    const avgLat = newOverlapGroupPins.reduce((sum, curPin) => sum + curPin.guardian.latitude, 0) / newOverlapGroupPins.length;
-                    const avgLng = newOverlapGroupPins.reduce((sum, curPin) => sum + curPin.guardian.longitude, 0) / newOverlapGroupPins.length;
-                    overlappingStudents.push({
-                        latitude: avgLat,
-                        longitude: avgLng,
-                        pins: newOverlapGroupPins
-                    })
-                }
-            }
-        }
+    //                 const avgLat = newOverlapGroupPins.reduce((sum, curPin) => sum + curPin.guardian.latitude, 0) / newOverlapGroupPins.length;
+    //                 const avgLng = newOverlapGroupPins.reduce((sum, curPin) => sum + curPin.guardian.longitude, 0) / newOverlapGroupPins.length;
+    //                 overlappingStudents.push({
+    //                     latitude: avgLat,
+    //                     longitude: avgLng,
+    //                     pins: newOverlapGroupPins
+    //                 })
+    //             }
+    //         }
+    //     }
         
-        return [overlappingStudents, normalStudents]
-    }
+    //     return [overlappingStudents, normalStudents]
+    // }
 
     const getOverlappingStudentsGrouped = (overlappingStudents) => {
         let allInCurRoute = []
