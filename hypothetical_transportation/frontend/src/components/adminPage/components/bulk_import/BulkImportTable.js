@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import PropTypes, { string } from 'prop-types';
 import { useTable } from 'react-table'
-import { duplicatesExist, errorsExist, USER_COLUMNS } from '../../../../utils/bulk_import';
+import { duplicatesExist, errorExist, USER_COLUMNS } from '../../../../utils/bulk_import';
 import "../forms/forms.css"
 import "./bulk_import.css"
 import { Container } from 'react-bootstrap';
@@ -35,7 +35,7 @@ function BulkImportTable(props) {
         if(changed){
             return 'row-changed'
         }
-        else if(errorsExist(row)){
+        else if(errorExist(row)){
             return 'row-error'
         }
         else if(duplicatesExist(row)){
@@ -50,7 +50,7 @@ function BulkImportTable(props) {
     const getRowComponent = (row, ind, changed) => {
         return (
             <tr key={ind} className={getRowClass(row, changed)}>
-                <td onClick={() => onCheck(ind)}><input type="checkbox" checked={props.checked.includes(ind)} onChange={() => onCheck(ind)} /></td>
+                <td onClick={() => onCheck(ind)}><input type="checkbox" checked={props.checked.includes(ind)} onChange={() => onCheck(ind)} disabled={errorExist(row)==true}/></td>
                 {props.colData.map((col, index) => {
                     return <td onClick={() => {props.setModalType(); props.setModalInfo({...row, index: ind});}} key={index} >{row[col.accessor].value}</td>
                 })}

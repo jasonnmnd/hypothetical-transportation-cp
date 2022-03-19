@@ -2,7 +2,7 @@ import AdminHeader from '../../header/AdminHeader'
 import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import PropTypes, { string } from 'prop-types';
-import { duplicatesExist, errOrDupExists, errorsExist, FAKE_IMPORT_DATA, STUDENT_COLUMNS, USER_COLUMNS } from '../../../utils/bulk_import';
+import { duplicatesExist, errOrDupExists, errorExist, FAKE_IMPORT_DATA, STUDENT_COLUMNS, USER_COLUMNS } from '../../../utils/bulk_import';
 import BulkImportTable from '../components/bulk_import/BulkImportTable';
 import UserDetailsModal from '../components/bulk_import/UserDetailsModal';
 import TransactionDetailsModal from '../components/bulk_import/TransactionDetailsModal';
@@ -53,14 +53,14 @@ function GeneralUploadDataPage(props) {
     //figure out how to set check boxes
     let newCheckedUsers = [];
     inData.users.forEach((user, ind) => {
-      if(!(errorsExist(user) || duplicatesExist(user))){
+      if(!(errorExist(user) || duplicatesExist(user))){
         newCheckedUsers.push(ind);
       }
     });
 
     let newCheckedStudents = [];
     inData.students.forEach((student, ind) => {
-      if(!(errorsExist(student) || duplicatesExist(student))){
+      if(!(errorExist(student) || duplicatesExist(student))){
         newCheckedStudents.push(ind);
       }
     });
