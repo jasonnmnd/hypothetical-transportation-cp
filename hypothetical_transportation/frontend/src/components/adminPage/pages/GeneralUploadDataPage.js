@@ -102,6 +102,7 @@ function GeneralUploadDataPage(props) {
 
   const validate = () => {
     console.log("VALIDATE");
+    console.log(data)
     setChangedSinceLastValidation(false);
   }
 

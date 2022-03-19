@@ -5,7 +5,7 @@ import PropTypes, { string } from 'prop-types';
 import EditableTextField from '../../../common/EditableTextField';
 import './bulk_import.css'
 import AddressInputWithMap from '../../../common/AddressInputWithMap';
-import { duplicatesExist, errOrDupExists, errorsExist, STUDENT_COLUMNS, USER_COLUMNS } from '../../../../utils/bulk_import';
+import { duplicatesExist, errOrDupExists, errorExist, STUDENT_COLUMNS, USER_COLUMNS } from '../../../../utils/bulk_import';
 
 
 const ERROR_TITLES = {
@@ -90,7 +90,7 @@ function ErrorSection(props){
     //     return props.transaction && props.transaction[value] && props.transaction[value][key] && props.transaction[value][key] != undefined && props.transaction[value][key].length > 0
     // }
 
-    // const errorsExist = () => {
+    // const errorExist = () => {
     //     return props.transaction && Object.keys(props.transaction).some(value => {return errOrDupExists(props.transaction, value, 'errors')})
     // }
 
@@ -114,7 +114,7 @@ function ErrorSection(props){
 
 
     const getErrorCard = () => {
-        if(errorsExist(props.transaction)){
+        if(errorExist(props.transaction)){
             return (
                 <Card className='border-danger mb-3'>
                     <Card.Header as="h4">Errors</Card.Header>
