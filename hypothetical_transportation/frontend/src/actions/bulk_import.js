@@ -18,7 +18,14 @@ export const validate = (data, onSuccess = () => {}) => (dispatch, getState) => 
           });
           onSuccess();
     })
-    .catch((err) => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});
+    .catch((err) => {/*console.log(err);*/
+        dispatch(returnErrors(err.response.data, err.response.status))
+        dispatch({
+            type: VALIDATE_BULK_IMPORT,
+            payload: err.response.data,
+          });
+        onSuccess();
+    });
 
 }
 
