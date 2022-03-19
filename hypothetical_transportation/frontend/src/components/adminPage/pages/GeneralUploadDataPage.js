@@ -50,18 +50,18 @@ function GeneralUploadDataPage(props) {
     closeModal();
   }
 
-  const setDataWithCheckBoxes = (inData) => {
+  const setDataWithCheckBoxes = (inData, uncheckErrors=true, uncheckDuplicates=true) => {
     //figure out how to set check boxes
     let newCheckedUsers = [];
     inData.users.forEach((user, ind) => {
-      if(!(errorsExist(user) || duplicatesExist(user))){
+      if(!((uncheckErrors && errorsExist(user)) || (uncheckDuplicates && duplicatesExist(user)))){
         newCheckedUsers.push(ind);
       }
     });
 
     let newCheckedStudents = [];
     inData.students.forEach((student, ind) => {
-      if(!(errorsExist(student) || duplicatesExist(student))){
+      if(!((uncheckErrors && errorsExist(student)) || (uncheckDuplicates && duplicatesExist(student)))){
         newCheckedStudents.push(ind);
       }
     });
@@ -93,7 +93,7 @@ function GeneralUploadDataPage(props) {
     setUserDataChanges({});
     setStudentDataChanges({});
     if(keepCheckBoxes){
-      setData(props.uploadData)
+      setDataWithCheckBoxes(props.uploadData, true, false)
     }
     else {
       setDataWithCheckBoxes(props.uploadData);
