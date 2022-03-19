@@ -506,6 +506,24 @@ class TestGroupViewFiltering(TransactionTestCase):
         response = self.client.delete('/api/route/3/', HTTP_AUTHORIZATION=f'Token {self.staff_1_token}')
         self.assertEqual(response.status_code, 404)
 
+    def test_admin_cannot_revoke_own_group(self):
+        admin_group = Group.objects.create(name="Administrator")
+        admin = get_user_model().objects.create_verified_user(email='admin@example.com', password='wordpass',
+                                                              full_name='admin', address='Duke University',
+                                                              latitude=self.loc[0],
+                                                              longitude=self.loc[1])
+        admin.groups.add(admin_group)
+        login_response = self.client.post('/api/auth/login',
+                                          json.dumps(
+                                              {'email': 'admin@example.com', 'password': 'wordpass'}),
+                                          content_type='application/json')
+        admin_token = login_response.data['token']
+        response = self.client.patch(f'/api/user/{admin.id}/',
+                                     json.dumps({"groups": [Group.objects.get(name="SchoolStaff").id]}),
+                                     content_type='application/json',
+                                     HTTP_AUTHORIZATION=f'Token {admin_token}')
+        self.assertEqual(response.status_code, 400)
+
     def test_staff_user_delete_on_all_students(self):
         """
         Tests that staff can only delete a user if all children of that user attend schools within that staff's managed
@@ -596,8 +614,6 @@ class TestGroupViewFiltering(TransactionTestCase):
                                     content_type='application/json',
                                     HTTP_AUTHORIZATION=f'Token {self.staff_1_token}')
         self.assertEqual(len(mail.outbox), 2)
-
-
 
     def test_staff_cannot_send_email_to_outside_school(self):
         school_3 = School.objects.get(name="school 3")
