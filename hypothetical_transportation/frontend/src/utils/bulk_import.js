@@ -273,3 +273,25 @@ export const getEditableTextField = (fieldName, title, info, onChange, transacti
         </Card>
     )
 }
+
+
+const removeValue = (transactionIn, index, dataChanges) => {
+    let ret = {}
+    let transaction = transactionIn;
+
+    if(index in dataChanges){
+        transaction = dataChanges[index]
+    }
+
+    Object.keys(transaction).forEach(key => {
+        ret[key] = transaction[key].value
+    })
+    return ret;
+}
+
+export const dataToValidationPayload = (data, userDataChanges, studentDataChanges) => {
+    return {
+        users: data.users.map((user, index) => {return removeValue(user, index, userDataChanges)}),
+        students: data.students.map((student, index) => {return removeValue(student, index, studentDataChanges)})
+    }
+}

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { VALIDATE_BULK_IMPORT } from "./types"; 
+import { VALIDATE_BULK_IMPORT, VALIDATION_LOADING } from "./types"; 
 import { tokenConfig } from './auth';
 import { getParameters } from "./utils";
 
@@ -8,6 +8,10 @@ import { createMessage, returnErrors } from './messages';
 
 
 export const validate = (data, onSuccess = () => {}) => (dispatch, getState) => {
+    dispatch({
+        type: VALIDATION_LOADING,
+        payload: true,
+    });
     let config = tokenConfig(getState);
     axios
     .post('/api/loaded-data/validate/', data, config)

@@ -2,12 +2,13 @@ import AdminHeader from '../../header/AdminHeader'
 import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import PropTypes, { string } from 'prop-types';
-import { duplicatesExist, errOrDupExists, errorsExist, FAKE_IMPORT_DATA, STUDENT_COLUMNS, USER_COLUMNS } from '../../../utils/bulk_import';
+import { dataToValidationPayload, duplicatesExist, errOrDupExists, errorsExist, FAKE_IMPORT_DATA, STUDENT_COLUMNS, USER_COLUMNS } from '../../../utils/bulk_import';
 import BulkImportTable from '../components/bulk_import/BulkImportTable';
 import UserDetailsModal from '../components/bulk_import/UserDetailsModal';
 import TransactionDetailsModal from '../components/bulk_import/TransactionDetailsModal';
 import { Button, Container } from 'react-bootstrap';
 import '../NEWadminPage.css';
+import { validate } from '../../../actions/bulk_import';
 
 function GeneralUploadDataPage(props) {
 
@@ -80,7 +81,7 @@ function GeneralUploadDataPage(props) {
       resetPage(true)
       // do componentDidUpdate logic
     }
-  }, [props.data]);
+  }, [props.uploadData]);
 
   useEffect(()=>{
     setChangedSinceLastValidation(true);
@@ -101,15 +102,18 @@ function GeneralUploadDataPage(props) {
   }
 
   const validate = () => {
-    console.log("VALIDATE");
-    setChangedSinceLastValidation(false);
+    props.validate(dataToValidationPayload(data, userDataChanges, studentDataChanges));
+    resetPage(true)
+    
   }
 
   const submit = () => {
     console.log("SUBMIT")
-    props.uploadData.students[0].student_id = 5000
   }
 
+  if(props.isLoading){
+    return <div>LOADING!</div>
+  }
 
   return (
     <>
@@ -151,7 +155,9 @@ function GeneralUploadDataPage(props) {
 }
 
 GeneralUploadDataPage.propTypes = {
-  uploadData: PropTypes.object
+  uploadData: PropTypes.object,
+  isLoading: PropTypes.bool,
+  validate: PropTypes.func.isRequired
 }
 
 GeneralUploadDataPage.defaultProps = {
@@ -159,9 +165,10 @@ GeneralUploadDataPage.defaultProps = {
 }
 
 const mapStateToProps = (state) => ({
-  uploadData: state.bulk_import.uploadData
+  uploadData: state.bulk_import.uploadData,
+  isLoading: state.bulk_import.isLoading
 });
 
 
 
-export default connect(mapStateToProps)(GeneralUploadDataPage)
+export default connect(mapStateToProps, {validate})(GeneralUploadDataPage)
