@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Container, Form } from 'react-bootstrap';
+import { Button, Container, Form, Spinner } from 'react-bootstrap';
 import AdminHeader from '../../header/AdminHeader'
 import csvJSON from '../../../utils/csv_to_json'
 import { validate } from '../../../actions/bulk_import';
@@ -89,7 +89,15 @@ function GeneralUploadFilePage(props) {
                     <Button variant="yellowsubmit" type="submit">
                         Submit
                     </Button>
-                    {loading? <p>Backend processing information, please wait...</p>:<></>}
+                    {loading? 
+                    <div>
+                        <p>Backend processing information, please wait...</p>
+                        <Spinner animation="border" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                        </Spinner>
+                    </div>
+                    :
+                    <></>}
                 </Form>
             </Container>
         </div>
