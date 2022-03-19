@@ -92,7 +92,7 @@ function GeneralUploadFilePage(props) {
                     {loading? 
                     <div>
                         <p>Backend processing information, please wait...</p>
-                        <Spinner animation="border" role="status">
+                        <Spinner animation="border" role="status" size="lg">
                             <span className="visually-hidden">Loading...</span>
                         </Spinner>
                     </div>
