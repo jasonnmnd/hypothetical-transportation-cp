@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Container, Form } from 'react-bootstrap';
+import { Button, Container, Form, Spinner } from 'react-bootstrap';
 import AdminHeader from '../../header/AdminHeader'
 import csvJSON from '../../../utils/csv_to_json'
 import { validate } from '../../../actions/bulk_import';
@@ -13,6 +13,7 @@ function GeneralUploadFilePage(props) {
     const [studentfile, setStudentFile] = useState();
 
     const [jsonRes, setJsonRes] = useState({"users":[], "students":[]});
+    const [loading, setLoading] = useState(false)
 
     const userReader = new FileReader();
     const studentReader = new FileReader();
@@ -28,10 +29,9 @@ function GeneralUploadFilePage(props) {
     }
     const handleOnSubmit = (e) => {
         e.preventDefault();
+        setLoading(true)
         console.log(jsonRes)
-
         console.log("calling the backend validator dodododo")
-
         props.validate(jsonRes, () => {navigate("/upload_data")})
         
     };
@@ -61,6 +61,10 @@ function GeneralUploadFilePage(props) {
         setJsonRes({"users":userRes, "students":studentRes})
     },[userRes,studentRes])
 
+    useEffect(()=>{
+        setLoading(false)
+    },[])
+
 
     return (
         <div>
@@ -85,6 +89,15 @@ function GeneralUploadFilePage(props) {
                     <Button variant="yellowsubmit" type="submit">
                         Submit
                     </Button>
+                    {loading? 
+                    <div>
+                        <p>Backend processing information, please wait...</p>
+                        <Spinner animation="border" role="status" size="lg">
+                            <span className="visually-hidden">Loading...</span>
+                        </Spinner>
+                    </div>
+                    :
+                    <></>}
                 </Form>
             </Container>
         </div>

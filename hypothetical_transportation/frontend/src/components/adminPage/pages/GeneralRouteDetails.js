@@ -150,16 +150,16 @@ function GeneralAdminRouteDetails(props) {
     }
 
     let rMap = new Map([
-        [0, "for First Set (1-10)"],
-        [1, "for Second Set (11-20)"],
-        [2, "for Third Set (21-30)"],
-        [3, "for Fourth Set (31-40)"],
-        [4, "for Fifth Set (41-50)"],
-        [5, "for Sixth Set (51-60)"],
-        [6, "for Seventh Set (61-70)"],
-        [7, "for Eigth Set (71-80)"],
-        [8, "for Ninth Set (81-90)"],
-        [9, "for Tenth Set (91-100)"]
+        [0, "for First Set of Stops"],
+        [1, "for Second Set of Stops"],
+        [2, "for Third Set of Stops"],
+        [3, "for Fourth Set of Stops"],
+        [4, "for Fifth Set of Stops"],
+        [5, "for Sixth Set of Stops"],
+        [6, "for Seventh Set of Stops"],
+        [7, "for Eigth Set of Stops"],
+        [8, "for Ninth Set of Stops"],
+        [9, "for Tenth Set of Stops"]
     ])
 
     const generatePickupLinks = () => {

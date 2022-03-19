@@ -13,6 +13,8 @@ import Header from "../../header/AdminHeader";
 import MapComponent from "../../maps/MapComponent";
 import { InfoWindow } from "@react-google-maps/api";
 import IconLegend from "../../common/IconLegend";
+import isBusDriver from "../../../utils/userBusDriver";
+import isSchoolStaff from "../../../utils/userSchoolStaff";
 
 function ParentStudentDetails(props){
     const param = useParams();
@@ -155,7 +157,7 @@ function ParentStudentDetails(props){
 
         <div>  
         {
-            isAdmin(props.user) ? <Header></Header> : <ParentHeader></ParentHeader>
+            isAdmin(props.user) || isBusDriver(props.user) || isSchoolStaff(props.user) ? <Header></Header> : <ParentHeader></ParentHeader>
         }        
         <Container className="container-main d-flex flex-column" style={{gap: "20px"}}>
         

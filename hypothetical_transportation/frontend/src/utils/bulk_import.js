@@ -7,7 +7,7 @@ import EditableTextField from "../components/common/EditableTextField"
 const USER_1_DATA = {
     "email": {
         value: "Alfredaadswe@example.com",
-        errors: ["This is an error"],
+        error: ["This is an error"],
         duplicates: [{
             "email": "user1@example.com",
             "full_name": "sebastian",
@@ -17,12 +17,12 @@ const USER_1_DATA = {
     },
     "full_name": {
         value: "Alfwerwrwerwred TheButler",
-        errors: ["Another error"],
+        error: ["Another error"],
         duplicates: []
     },
     "address": {
         value: "40 Walters Brook Drive, Bridgewater, NJ",
-        errors: [],
+        error: [],
         duplicates: [{
             "email": "user1@example.com",
             "full_name": "sebastian",
@@ -32,7 +32,7 @@ const USER_1_DATA = {
     },
     "phone_number": {
         value: "9083348450",
-        errors: [],
+        error: [],
         duplicates: []
     },
 }
@@ -40,22 +40,22 @@ const USER_1_DATA = {
 const USER_2_DATA = {
     "email": {
         value: "Alfredsdfsdfdsf@example.com",
-        errors: ["erorrrrr"],
+        error: ["erorrrrr"],
         duplicates: []
     },
     "full_name": {
         value: "Alfredfdsfdsfsfsf TheButler",
-        errors: [],
+        error: [],
         duplicates: []
     },
     "address": {
         value: "52 Walters Brook Drive, Bridgewater, NJ",
-        errors: [],
+        error: [],
         duplicates: []
     },
     "phone_number": {
         value: "9085005966",
-        errors: [],
+        error: [],
         duplicates: []
     },
 }
@@ -63,22 +63,22 @@ const USER_2_DATA = {
 const USER_3_DATA = {
     "email": {
         value: "Alfred@example.com",
-        errors: [],
+        error: [],
         duplicates: []
     },
     "full_name": {
         value: "Alfred TheButler",
-        errors: [],
+        error: [],
         duplicates: []
     },
     "address": {
         value: "60 Walters Brook Drive, Bridgewater, NJ",
-        errors: [],
+        error: [],
         duplicates: []
     },
     "phone_number": {
         value: "9088720608",
-        errors: [],
+        error: [],
         duplicates: []
     },
 }
@@ -88,7 +88,7 @@ const USER_3_DATA = {
 const STUDENT_1_DATA = {
     "parent_email": {
         value: "sdfsdfs@example.com",
-        errors: [],
+        error: [],
         duplicates: [
             {
                 parent_email: "duplicate@gmail.com",
@@ -100,17 +100,17 @@ const STUDENT_1_DATA = {
     },
     "full_name": {
         value: "dsfssdfdsfdsfdsfsfsdffdr",
-        errors: [],
+        error: [],
         duplicates: []
     },
     "school_name": {
         value: "AAA School",
-        errors: [],
+        error: [],
         duplicates: []
     },
     "student_id": {
         value: 10,
-        errors: [],
+        error: [],
         duplicates: []
     },
 }
@@ -118,22 +118,22 @@ const STUDENT_1_DATA = {
 const STUDENT_2_DATA = {
     "parent_email": {
         value: "sdfsdfs@example.com",
-        errors: [],
+        error: [],
         duplicates: []
     },
     "full_name": {
         value: "dsfsfdr",
-        errors: [],
+        error: [],
         duplicates: []
     },
     "school_name": {
         value: "AAA School",
-        errors: [],
+        error: [],
         duplicates: []
     },
     "student_id": {
         value: 10,
-        errors: [],
+        error: [],
         duplicates: []
     },
 }
@@ -141,22 +141,22 @@ const STUDENT_2_DATA = {
 const STUDENT_3_DATA = {
     "parent_email": {
         value: "fdsfsfs@example.com",
-        errors: ["Student Error"],
+        error: ["Student Error"],
         duplicates: []
     },
     "full_name": {
         value: "fsdkflsdlfjsdlkf",
-        errors: [],
+        error: [],
         duplicates: []
     },
     "school_name": {
         value: "AAA School",
-        errors: [],
+        error: [],
         duplicates: []
     },
     "student_id": {
         value: 11,
-        errors: [],
+        error: [],
         duplicates: []
     },
 }
@@ -223,7 +223,7 @@ const issueExists = (transaction, issueType) => {
 }
 
 export const errorsExist = (transaction) => {
-    return issueExists(transaction, 'errors')
+    return issueExists(transaction, 'error')
 }
 
 export const duplicatesExist = (transaction) => {
@@ -231,7 +231,7 @@ export const duplicatesExist = (transaction) => {
 }
 
 export const getEditableTextFieldClass = (transaction, fieldName, section) => {
-    if(errOrDupExists(transaction, fieldName, 'errors')){
+    if(errOrDupExists(transaction, fieldName, 'error')){
         if(section == 'card'){
             return 'border-danger mb-3'
         }
