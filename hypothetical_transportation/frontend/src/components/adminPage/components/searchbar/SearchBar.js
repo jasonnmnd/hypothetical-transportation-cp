@@ -62,7 +62,6 @@ function SearchBar(props){
         }
         else{
             setSearchParams({
-                ...Object.fromEntries([...searchParams]),
                 [`${props.search}ordering`]: values.sort_by,
                 [`${props.search}search`]: values.value,
                 [`${props.search}search_fields`]: values.filter_by,
