@@ -32,7 +32,7 @@ function AdminPage( props ) {
 
               <Row>
                 <Col>
-                  <Card className="text-center" style={{height:'450px'}} onClick={() => navigate(`/${getType(props.user)}/users?pageNum=1`)}>
+                  <Card className="text-center" style={{height:'450px', cursor: "pointer"}} onClick={() => navigate(`/${getType(props.user)}/users?pageNum=1`)} >
                     <Card.Img variant="top" src={AdminPic} style={{height: '300px'}}/>
                     <Card.Body>
                       <Card.Title><strong>Users</strong></Card.Title>
@@ -43,7 +43,7 @@ function AdminPage( props ) {
                   </Card>
                 </Col>
                 <Col>
-                  <Card className="text-center" style={{height:'450px'}} onClick={() => navigate(`/${getType(props.user)}/students?pageNum=1`)}>
+                  <Card className="text-center" style={{height:'450px', cursor: "pointer"}} onClick={() => navigate(`/${getType(props.user)}/students?pageNum=1`)}>
                     <Card.Img variant="top" src={StudentsPic} style={{height: '300px'}}/>
                     <Card.Body>
                       <Card.Title><strong>Students</strong></Card.Title>
@@ -54,7 +54,7 @@ function AdminPage( props ) {
                   </Card>
                 </Col>
                 <Col>
-                  <Card className="text-center" style={{height:'450px'}} onClick={() => navigate(`/${getType(props.user)}/schools?pageNum=1`)}>
+                  <Card className="text-center" style={{height:'450px', cursor: "pointer"}} onClick={() => navigate(`/${getType(props.user)}/schools?pageNum=1`)}>
                     <Card.Img variant="top" src={SchoolPic} style={{height: '300px'}}/>
                     <Card.Body>
                       <Card.Title><strong>Schools</strong></Card.Title>
@@ -68,7 +68,7 @@ function AdminPage( props ) {
 
               <Row>
                 <Col>
-                  <Card className="text-center" style={{height:'450px'}} onClick={() => navigate(`/${getType(props.user)}/routes?pageNum=1`)}>
+                  <Card className="text-center" style={{height:'450px', cursor: "pointer"}} onClick={() => navigate(`/${getType(props.user)}/routes?pageNum=1`)}>
                     <Card.Img variant="top" src={RoutesPic} style={{height: '300px'}}/>
                     <Card.Body>
                       <Card.Title><strong>Routes</strong></Card.Title>
@@ -80,7 +80,7 @@ function AdminPage( props ) {
                 </Col>
                 {isAdmin(props.user)?
                   <Col>
-                    <Card className="text-center" style={{height:'450px'}} onClick={() => navigate(`/${getType(props.user)}/email`)}>
+                    <Card className="text-center" style={{height:'450px', cursor: "pointer"}} onClick={() => navigate(`/${getType(props.user)}/email`)}>
                       <Card.Img variant="top" src={EmailPic} style={{height: '300px'}}/>
                       <Card.Body>
                         <Card.Title><strong>Email</strong></Card.Title>
@@ -96,7 +96,7 @@ function AdminPage( props ) {
 
                 {isAdmin(props.user)?
                   <Col>
-                    <Card className="text-center" style={{height:'450px'}} onClick={() => navigate(`/upload_file`)}>
+                    <Card className="text-center" style={{height:'450px', cursor: "pointer"}} onClick={() => navigate(`/upload_file`)}>
                       <Card.Img variant="top" src={DataPic} style={{height: '300px'}}/>
                       <Card.Body>
                         <Card.Title><strong>Data</strong></Card.Title>
