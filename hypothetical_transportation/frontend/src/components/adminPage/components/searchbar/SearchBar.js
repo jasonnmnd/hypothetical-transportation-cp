@@ -23,10 +23,28 @@ function SearchBar(props){
     
     const searchHandler = (e)=>{
         e.preventDefault();
+        console.log(values)
+        console.log(values.value.toLowerCase())
+        console.log("admin".includes(values.value.toLowerCase()))
+        var val = 0
+        if(values.filter_by=="groups"){
+            if("admin".includes(values.value.toLowerCase())){
+                val=1
+            }
+            else if("parent".includes(values.value.toLowerCase()) || "guardian".includes(values.value.toLowerCase())){
+                val=2
+            }
+            else if("school staff".includes(values.value.toLowerCase()) || "schoolstaff".includes(values.value.toLowerCase())){
+                val=3
+            }
+            if("bus driver".includes(values.value.toLowerCase()) || "busdriver".includes(values.value.toLowerCase())){
+                val=4
+            }
+        }
         setSearchParams({
             ...Object.fromEntries([...searchParams]),
             [`${props.search}ordering`]: values.sort_by,
-            [`${props.search}search`]: values.value,
+            [`${props.search}search`]: val==0?values.value:val,
             [`${props.search}search_fields`]: values.filter_by,
             [`${props.search}pageNum`]: searchParams.get(`${props.search}pageNum`) == -1 ? -1 : 1
         })
