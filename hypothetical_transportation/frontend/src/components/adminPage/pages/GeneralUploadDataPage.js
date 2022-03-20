@@ -7,7 +7,7 @@ import { dataToSubmitPayload, dataToValidationPayload, duplicatesExist, errOrDup
 import BulkImportTable from '../components/bulk_import/BulkImportTable';
 import UserDetailsModal from '../components/bulk_import/UserDetailsModal';
 import TransactionDetailsModal from '../components/bulk_import/TransactionDetailsModal';
-import { Button, Container } from 'react-bootstrap';
+import { Button, Container, Spinner } from 'react-bootstrap';
 import '../NEWadminPage.css';
 import { submit, validate } from '../../../actions/bulk_import';
 
@@ -51,7 +51,7 @@ function GeneralUploadDataPage(props) {
   }
 
   const setDataWithCheckBoxes = (inData, uncheckErrors=true, uncheckDuplicates=true) => {
-    //figure out how to set check boxes
+
     let newCheckedUsers = [];
     inData.users.forEach((user, ind) => {
       if(!((uncheckErrors && errorsExist(user)) || (uncheckDuplicates && duplicatesExist(user)))){
@@ -71,6 +71,21 @@ function GeneralUploadDataPage(props) {
     setData(inData);
   }
 
+  const onUploadDataChange = () => {
+    setModalInfo(null);
+    setModalType(null);
+    setUserDataChanges({});
+    setStudentDataChanges({});
+    let newCheckedUsers = checkedUsers.filter(userInd => {return !errorsExist(props.uploadData.users[userInd])});
+
+    let newCheckedStudents = checkedStudents.filter(studentInd => {return !errorsExist(props.uploadData.students[studentInd])});
+
+    setCheckedUsers(newCheckedUsers);
+    setCheckedStudents(newCheckedStudents);
+    setData(props.uploadData);
+    setChangedSinceLastValidation(false);
+  }
+
   const mounted = useRef();
   useEffect(() => {
     if (!mounted.current) {
@@ -78,14 +93,17 @@ function GeneralUploadDataPage(props) {
       resetPage()
       mounted.current = true;
     } else {
-      resetPage(true)
       // do componentDidUpdate logic
+      onUploadDataChange();
     }
   }, [props.uploadData]);
 
   useEffect(()=>{
     setChangedSinceLastValidation(true);
   },[userDataChanges, studentDataChanges, checkedUsers, checkedStudents])
+
+
+  
 
   const resetPage = (keepCheckBoxes) => {
     setModalInfo(null);
@@ -103,18 +121,20 @@ function GeneralUploadDataPage(props) {
 
   const validate = () => {
     props.validate(dataToValidationPayload(data, userDataChanges, studentDataChanges));
-    resetPage(true)
-    
   }
 
   const submit = () => {
     // console.log("SUBMIT")
-    props.submit(dataToSubmitPayload(data, userDataChanges, studentDataChanges, checkedUsers, checkedStudents)); //TODO is this needed?
-    navigate(`/upload_file`);
+    props.submit(dataToSubmitPayload(data, userDataChanges, studentDataChanges, checkedUsers, checkedStudents), () => navigate(`/upload_data/success`)); //TODO is this needed?
   }
 
   if(props.isLoading){
-    return <div>LOADING!</div>
+    return <div>
+    <p>Backend processing information, please wait...</p>
+    <Spinner animation="border" role="status" size="lg">
+        <span className="visually-hidden">Loading...</span>
+    </Spinner>
+</div>
   }
 
   return (
@@ -148,7 +168,7 @@ function GeneralUploadDataPage(props) {
         
         <Container className='d-flex flex-row justify-content-center' style={{gap: "10px"}}>
           <Button variant="yellow" onClick={validate}>Validate</Button>
-          <Button variant="yellow" onClick={submit} /*disabled={changedSinceLastValidation}*/>Submit</Button>
+          <Button variant="yellow" onClick={submit} disabled={changedSinceLastValidation}>Submit</Button>
           <Button variant="yellow" onClick={resetPage}>Reset</Button>
         </Container>
       </Container>
