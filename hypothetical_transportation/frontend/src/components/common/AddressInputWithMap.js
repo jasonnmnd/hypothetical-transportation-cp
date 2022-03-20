@@ -37,7 +37,7 @@ function AddressInputWithMap( props ) {
   
     return (
         <div >
-            <EditableTextField key={props.key} value={value} underText={props.underText} onSubmit={props.onSubmit} onChange={onChangeText} onReset={() => {setValue(props.value)}}/>
+            <EditableTextField key={props.key} keyType={props.keyType} value={value} underText={props.underText} onSubmit={props.onSubmit} onChange={onChangeText} onReset={() => {setValue(props.value)}}/>
             <MapComponent pinData={getPinData()} center={{address: value}} zoom={13}/>
         </div>
     );
@@ -48,7 +48,8 @@ AddressInputWithMap.propTypes = {
     value: PropTypes.string,
     underText: PropTypes.string,
     onSubmit: PropTypes.func,
-    onChange: PropTypes.func
+    onChange: PropTypes.func,
+    keyType: PropTypes.string
 }
 
 const mapStateToProps = (state) => ({

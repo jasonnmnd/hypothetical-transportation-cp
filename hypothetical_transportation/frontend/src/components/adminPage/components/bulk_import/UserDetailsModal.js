@@ -39,6 +39,7 @@ function UserDetailsModal(props){
     
     
     const onChange = (change) => {
+        console.log(change)
         setUserInfo({
             ...userInfo,
             [change.key]: {value: change.value}
