@@ -223,8 +223,6 @@ const issueExists = (transaction, issueType) => {
 }
 
 export const errorsExist = (transaction) => {
-    console.log(transaction);
-    console.log(issueExists(transaction, 'error'))
     return issueExists(transaction, 'error')
 }
 
@@ -301,8 +299,8 @@ export const dataToValidationPayload = (data, userDataChanges, studentDataChange
 export const dataToSubmitPayload = (data, userDataChanges, studentDataChanges, checkedUsers, checkedStudents) => {
     let usersToUpload = [];
     let studentsToUpload = [];
-    data.users.forEach((user, index) => {if(index in checkedUsers) {usersToUpload.push(removeValue(user, index, userDataChanges))}})
-    data.students.forEach((student, index) => {if(index in checkedStudents) {studentsToUpload.push(removeValue(student, index, studentDataChanges))}})
+    data.users.forEach((user, index) => {if(checkedUsers.includes(index)) {usersToUpload.push(removeValue(user, index, userDataChanges))}})
+    data.students.forEach((student, index) => {if(checkedStudents.includes(index)) {studentsToUpload.push(removeValue(student, index, studentDataChanges))}})
 
     return {
         users: usersToUpload,

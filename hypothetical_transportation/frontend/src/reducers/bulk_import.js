@@ -22,6 +22,7 @@ export default function(state = initialState, action) {
                 isLoading: action.payload
             }
         case BULK_IMPORT_SUBMIT: {
+            console.log(action.payload)
             return {
                 ...state,
                 successfulSubmit: action.payload,

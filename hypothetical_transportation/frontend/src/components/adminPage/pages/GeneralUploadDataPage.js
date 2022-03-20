@@ -7,9 +7,11 @@ import { dataToSubmitPayload, dataToValidationPayload, duplicatesExist, errOrDup
 import BulkImportTable from '../components/bulk_import/BulkImportTable';
 import UserDetailsModal from '../components/bulk_import/UserDetailsModal';
 import TransactionDetailsModal from '../components/bulk_import/TransactionDetailsModal';
-import { Button, Container, Spinner } from 'react-bootstrap';
+import { Alert, Button, Container, Spinner } from 'react-bootstrap';
 import '../NEWadminPage.css';
 import { submit, validate } from '../../../actions/bulk_import';
+import getType from '../../../utils/user2';
+import SubmitModal from '../components/bulk_import/SubmitModal';
 
 function GeneralUploadDataPage(props) {
 
@@ -22,7 +24,8 @@ function GeneralUploadDataPage(props) {
   const [checkedStudents, setCheckedStudents] = useState([]);
   const [checkedUsers, setCheckedUsers] = useState([]);
   const [changedSinceLastValidation, setChangedSinceLastValidation] = useState(false);
-  
+  const [openModal, setOpenModal] = useState(false);
+
 
   const closeModal = () => {
     setModalInfo(null)
@@ -46,44 +49,81 @@ function GeneralUploadDataPage(props) {
         [index]: newInfoNoInd
       })
     }
-
     closeModal();
+    setChangedSinceLastValidation(true);
   }
 
-  const setDataWithCheckBoxes = (inData, uncheckErrors=true, uncheckDuplicates=true) => {
+  const updateCheckedOnDelete = (checked, setChecked, index) => {
+    let newChecked = []
+    checked.forEach(transactionIndex => {
+      if(transactionIndex == index){
+        return;
+      }
+      let newIndex = transactionIndex;
+      if(transactionIndex > index){
+        newIndex = transactionIndex - 1
+      }
+      newChecked.push(newIndex);
+    });
+    setChecked(newChecked)
+  }
+
+  const updateDataChangesOnDelete = (dataChanges, setDataChanges, index) => {
+    let newChanges = {}
+    Object.keys(dataChanges).forEach(transactionIndex => {
+      if(transactionIndex == index){
+        return;
+      }
+      let newIndex = transactionIndex;
+      if(transactionIndex > index){
+        newIndex = transactionIndex - 1
+      }
+      newChanges[newIndex] = dataChanges[transactionIndex];
+    });
+    setDataChanges(newChanges)
+  }
+
+  const deleteRow = (transactionType, index) => {
+    setData({
+      ...data,
+      [transactionType]: data[transactionType].filter((transaction, ind) => ind != index)
+    })
+    if(transactionType == 'users'){
+      updateCheckedOnDelete(checkedUsers, setCheckedUsers, index)
+      updateDataChangesOnDelete(userDataChanges, setUserDataChanges, index)
+    }
+    if(transactionType == 'students'){
+      updateCheckedOnDelete(checkedStudents, setCheckedStudents, index)
+      updateDataChangesOnDelete(studentDataChanges, setStudentDataChanges, index)
+    }
+  }
+
+  const setCheckedFromErrorsAndDuplicates = (inData, uncheckErrors, uncheckDuplicates, newChecked) => {
+    inData.forEach((transaction, ind) => {
+      if(!((uncheckErrors && errorsExist(transaction)) || (uncheckDuplicates && duplicatesExist(transaction)))){
+        newChecked.push(ind);
+      }
+    });
+  }
+
+  const setDataWithCheckBoxes = (inData, keepCheckBoxes=false, uncheckErrors=true, uncheckDuplicates=true) => {
 
     let newCheckedUsers = [];
-    inData.users.forEach((user, ind) => {
-      if(!((uncheckErrors && errorsExist(user)) || (uncheckDuplicates && duplicatesExist(user)))){
-        newCheckedUsers.push(ind);
-      }
-    });
-
     let newCheckedStudents = [];
-    inData.students.forEach((student, ind) => {
-      if(!((uncheckErrors && errorsExist(student)) || (uncheckDuplicates && duplicatesExist(student)))){
-        newCheckedStudents.push(ind);
-      }
-    });
+
+    if(keepCheckBoxes){
+      newCheckedUsers = checkedUsers.filter(userInd => {return !errorsExist(props.uploadData.users[userInd])});
+      newCheckedStudents = checkedStudents.filter(studentInd => {return !errorsExist(props.uploadData.students[studentInd])});
+    }
+    else {
+      setCheckedFromErrorsAndDuplicates(inData.users, uncheckErrors, uncheckDuplicates, newCheckedUsers);
+      setCheckedFromErrorsAndDuplicates(inData.students, uncheckErrors, uncheckDuplicates, newCheckedStudents);
+    }
+
 
     setCheckedUsers(newCheckedUsers);
     setCheckedStudents(newCheckedStudents);
     setData(inData);
-  }
-
-  const onUploadDataChange = () => {
-    setModalInfo(null);
-    setModalType(null);
-    setUserDataChanges({});
-    setStudentDataChanges({});
-    let newCheckedUsers = checkedUsers.filter(userInd => {return !errorsExist(props.uploadData.users[userInd])});
-
-    let newCheckedStudents = checkedStudents.filter(studentInd => {return !errorsExist(props.uploadData.students[studentInd])});
-
-    setCheckedUsers(newCheckedUsers);
-    setCheckedStudents(newCheckedStudents);
-    setData(props.uploadData);
-    setChangedSinceLastValidation(false);
   }
 
   const mounted = useRef();
@@ -94,28 +134,26 @@ function GeneralUploadDataPage(props) {
       mounted.current = true;
     } else {
       // do componentDidUpdate logic
-      onUploadDataChange();
+      resetPage(true);
     }
   }, [props.uploadData]);
 
-  useEffect(()=>{
+  const setCheckedWithChange = (newChecked, checkedFunc) => {
+    checkedFunc(newChecked);
     setChangedSinceLastValidation(true);
-  },[userDataChanges, studentDataChanges, checkedUsers, checkedStudents])
+  }
 
 
   
 
-  const resetPage = (keepCheckBoxes) => {
+  const resetPage = (keepCheckBoxes=false) => {
     setModalInfo(null);
     setModalType(null);
     setUserDataChanges({});
     setStudentDataChanges({});
-    if(keepCheckBoxes){
-      setDataWithCheckBoxes(props.uploadData, true, false)
-    }
-    else {
-      setDataWithCheckBoxes(props.uploadData);
-    }
+    
+    setDataWithCheckBoxes(props.uploadData, keepCheckBoxes);
+
     setChangedSinceLastValidation(false);
   }
 
@@ -124,23 +162,25 @@ function GeneralUploadDataPage(props) {
   }
 
   const submit = () => {
-    // console.log("SUBMIT")
-    props.submit(dataToSubmitPayload(data, userDataChanges, studentDataChanges, checkedUsers, checkedStudents), () => navigate(`/upload_data/success`)); //TODO is this needed?
+    props.submit(dataToSubmitPayload(data, userDataChanges, studentDataChanges, checkedUsers, checkedStudents)); 
+    navigate(`/upload_data/success`);
   }
 
   if(props.isLoading){
     return <div>
-    <p>Backend processing information, please wait...</p>
-    <Spinner animation="border" role="status" size="lg">
-        <span className="visually-hidden">Loading...</span>
-    </Spinner>
-</div>
+              <p>Backend processing information, please wait...</p>
+              <Spinner animation="border" role="status" size="lg">
+                  <span className="visually-hidden">Loading...</span>
+              </Spinner>
+          </div>
   }
 
   return (
     <>
+      
+      {getType(props.user) == "staff" || getType(props.user) == "admin" ?
+      <>      <div>{openModal && <SubmitModal closeModal={setOpenModal} handleConfirm={submit}/>}</div>
       <AdminHeader></AdminHeader>
-
       <Container className='d-flex flex-column justify-content-center' style={{gap: "10px", marginTop: "20px"}}>
         <TransactionDetailsModal modalType={modalType} info={modalInfo} closeModal={closeModal} saveModal={saveModal} />
         
@@ -151,8 +191,9 @@ function GeneralUploadDataPage(props) {
           setModalType={() => setModalType("user")}
           dataChanges={userDataChanges}
           checked={checkedUsers}
-          setChecked={setCheckedUsers}
+          setChecked={(checked) => setCheckedWithChange(checked, setCheckedUsers)}
           title='Users'
+          deleteRow={(index) => deleteRow("users", index)}
         />
         
         <BulkImportTable 
@@ -162,16 +203,30 @@ function GeneralUploadDataPage(props) {
           setModalType={() => setModalType("student")}
           dataChanges={studentDataChanges}
           checked={checkedStudents}
-          setChecked={setCheckedStudents}
+          setChecked={(checked) => setCheckedWithChange(checked, setCheckedStudents)}
           title='Students'
+          deleteRow={(index) => deleteRow("students", index)}
         />
         
         <Container className='d-flex flex-row justify-content-center' style={{gap: "10px"}}>
           <Button variant="yellow" onClick={validate}>Validate</Button>
-          <Button variant="yellow" onClick={submit} disabled={changedSinceLastValidation}>Submit</Button>
+          <Button variant="yellow" onClick={() => {
+                      setOpenModal(true);
+                    }} disabled={changedSinceLastValidation}>Submit</Button>
           <Button variant="yellow" onClick={resetPage}>Reset</Button>
         </Container>
-      </Container>
+      </Container>      
+      </> : <>
+      <AdminHeader></AdminHeader>
+      <Container className="container-main">
+        <Alert variant="danger">
+          <Alert.Heading>Access Denied</Alert.Heading>
+          <p>
+            You do not have access to this page. If you believe this is an error, contact an administrator.          
+            </p>
+          </Alert>
+        </Container></>
+        }
     </>
   )
 }
@@ -189,6 +244,7 @@ GeneralUploadDataPage.defaultProps = {
 
 const mapStateToProps = (state) => ({
   uploadData: state.bulk_import.uploadData,
+  user: state.auth.user,
   isLoading: state.bulk_import.isLoading
 });
 

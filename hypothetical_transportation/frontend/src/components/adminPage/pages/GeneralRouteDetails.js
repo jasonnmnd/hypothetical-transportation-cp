@@ -233,7 +233,15 @@ function GeneralAdminRouteDetails(props) {
                         </Link>
                     </Col>
                 </Row>
-            </Container></>: <></>
+            </Container></>: 
+            <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
+                <Row>
+                    <Col>
+                        <Link to={`/print/${props.route.id}`} target="_blank">
+                            <Button variant="yellowLong" size="lg">Print Route Roster</Button>
+                        </Link>
+                    </Col>
+                    </Row></Container>
         }
         
         <Row style={{gap: "10px"}}>

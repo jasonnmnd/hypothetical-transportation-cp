@@ -7,13 +7,13 @@ import { dataToSubmitPayload, dataToValidationPayload, duplicatesExist, errOrDup
 import BulkImportTable from '../components/bulk_import/BulkImportTable';
 import UserDetailsModal from '../components/bulk_import/UserDetailsModal';
 import TransactionDetailsModal from '../components/bulk_import/TransactionDetailsModal';
-import { Button, Container, Spinner } from 'react-bootstrap';
+import { Button, Container, Spinner, Toast, ToastContainer } from 'react-bootstrap';
 import '../NEWadminPage.css';
 import { submit, validate } from '../../../actions/bulk_import';
+import { Link } from 'react-router-dom';
+import getType from '../../../utils/user2';
 
 function GeneralBulkImportSuccessPage(props) {
-
-  
   if(props.isLoading){
     return <div>
     <p>Backend processing information, please wait...</p>
@@ -28,15 +28,43 @@ function GeneralBulkImportSuccessPage(props) {
       <AdminHeader></AdminHeader>
 
       <Container className='d-flex flex-column justify-content-center' style={{gap: "10px", marginTop: "20px"}}>
-        <h3>{props.succesfulSubmit.num_users} Users were Added</h3>
-        <h3>{props.succesfulSubmit.num_students} Students were Added</h3>
+
+        <ToastContainer>
+          <Toast style={{width: "2000px"}}>
+            {/* <Toast.Header closeButton={false} >
+              <img src="holder.js/20x20?text=%20" className="rounded me-2" alt="" />
+              <strong className="me-auto">Entries Added</strong>
+              <small>just now</small>
+            </Toast.Header> */}
+            <Toast.Body><h5>{props.successfulSubmit.num_users} Users were added</h5></Toast.Body>
+          </Toast>
+          <Toast style={{width: "2000px"}}>
+            {/* <Toast.Header closeButton={false}>
+              <img src="holder.js/20x20?text=%20" className="rounded me-2" alt="" />
+              <strong className="me-auto">Entries Added</strong>
+              <small>just now</small>
+            </Toast.Header> */}
+            <Toast.Body><h5>{props.successfulSubmit.num_students} Students were added</h5></Toast.Body>
+          </Toast>
+        </ToastContainer>
+
+        <Container className='d-flex flex-row justify-content-center' style={{gap: "10px"}}>
+          <Link to={`/${getType(props.user)}/users?pageNum=1`}>
+            <Button variant="yellow" size="lg">View Users</Button>
+          </Link>
+
+          <Link to={`/${getType(props.user)}/students?pageNum=1`}>
+            <Button variant="yellow" size="lg">View Students</Button>
+          </Link>
+        </Container>
+
       </Container>
     </>
   )
 }
 
 GeneralBulkImportSuccessPage.propTypes = {
-  succesfulSubmit: PropTypes.object,
+  successfulSubmit: PropTypes.object,
   isLoading: PropTypes.bool,
 }
 
@@ -45,8 +73,10 @@ GeneralBulkImportSuccessPage.defaultProps = {
 }
 
 const mapStateToProps = (state) => ({
-  succesfulSubmit: state.bulk_import.succesfulSubmit,
-  isLoading: state.bulk_import.isLoading
+  successfulSubmit: state.bulk_import.successfulSubmit,
+  isLoading: state.bulk_import.isLoading,
+  isAuthenticated: state.auth.isAuthenticated,
+  user: state.auth.user
 });
 
 

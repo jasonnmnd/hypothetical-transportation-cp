@@ -20,6 +20,7 @@ function BulkImportTable(props) {
                 {props.colData.map((column, ind) => (
                     <th key={ind}>{column.header}</th>
                 ))}
+                <th>Delete</th>
             </tr>
         )
     }
@@ -56,6 +57,7 @@ function BulkImportTable(props) {
                 {props.colData.map((col, index) => {
                     return <td onClick={() => {props.setModalType(); props.setModalInfo({...row, index: ind});}} key={index} >{row[col.accessor].value}</td>
                 })}
+                <td onClick={() => props.deleteRow(ind)}>🗑</td>
             </tr>
         )
     }
@@ -111,7 +113,8 @@ BulkImportTable.propTypes = {
   dataChanges: PropTypes.object,
   checked: PropTypes.array,
   setChecked: PropTypes.func,
-  title: PropTypes.string
+  title: PropTypes.string,
+  deleteRow: PropTypes.func
 }
 
 BulkImportTable.defaultProps = {
