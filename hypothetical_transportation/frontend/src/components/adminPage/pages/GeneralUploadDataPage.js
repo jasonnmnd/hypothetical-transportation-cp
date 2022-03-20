@@ -1,5 +1,6 @@
 import AdminHeader from '../../header/AdminHeader'
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes, { string } from 'prop-types';
 import { dataToValidationPayload, duplicatesExist, errOrDupExists, errorsExist, FAKE_IMPORT_DATA, STUDENT_COLUMNS, USER_COLUMNS } from '../../../utils/bulk_import';
@@ -12,6 +13,7 @@ import { submit, validate } from '../../../actions/bulk_import';
 
 function GeneralUploadDataPage(props) {
 
+  const navigate = useNavigate();
   const [modalInfo, setModalInfo] = useState(null);
   const [modalType, setModalType] = useState(null);
   const [data, setData] = useState(props.uploadData);
@@ -28,10 +30,8 @@ function GeneralUploadDataPage(props) {
   }
 
   const saveModal = (newInfo) => {
-
     
     const {index, ...newInfoNoInd} = newInfo 
-
 
     if(modalType == 'user'){
       setUserDataChanges({
@@ -110,7 +110,7 @@ function GeneralUploadDataPage(props) {
   const submit = () => {
     // console.log("SUBMIT")
     props.submit(dataToValidationPayload(data, userDataChanges, studentDataChanges)); //TODO is this needed?
-    resetPage(true)
+    navigate(`/upload_file`);
   }
 
   if(props.isLoading){

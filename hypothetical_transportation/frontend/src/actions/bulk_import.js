@@ -6,7 +6,6 @@ import { getParameters } from "./utils";
 import { createMessage, returnErrors } from './messages';
 
 export const submit = (data, onSuccess = () => {}) => (dispatch, getState) => {
-    // console.log("dfa;sldkfjs;")
     dispatch({
         type: BULK_IMPORT_SUBMIT_LOADING,
         payload: true,
