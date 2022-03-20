@@ -295,3 +295,15 @@ export const dataToValidationPayload = (data, userDataChanges, studentDataChange
         students: data.students.map((student, index) => {return removeValue(student, index, studentDataChanges)})
     }
 }
+
+export const dataToSubmitPayload = (data, userDataChanges, studentDataChanges, checkedUsers, checkedStudents) => {
+    let usersToUpload = [];
+    let studentsToUpload = [];
+    data.users.forEach((user, index) => {if(index in checkedUsers) {usersToUpload.push(removeValue(user, index, userDataChanges))}})
+    data.students.forEach((student, index) => {if(index in checkedStudents) {studentsToUpload.push(removeValue(student, index, studentDataChanges))}})
+
+    return {
+        users: usersToUpload,
+        students: studentsToUpload
+    }
+}
