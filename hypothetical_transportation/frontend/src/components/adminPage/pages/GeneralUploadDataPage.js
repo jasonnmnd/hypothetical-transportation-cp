@@ -8,7 +8,7 @@ import UserDetailsModal from '../components/bulk_import/UserDetailsModal';
 import TransactionDetailsModal from '../components/bulk_import/TransactionDetailsModal';
 import { Button, Container } from 'react-bootstrap';
 import '../NEWadminPage.css';
-import { validate } from '../../../actions/bulk_import';
+import { submit, validate } from '../../../actions/bulk_import';
 
 function GeneralUploadDataPage(props) {
 
@@ -108,7 +108,9 @@ function GeneralUploadDataPage(props) {
   }
 
   const submit = () => {
-    console.log("SUBMIT")
+    // console.log("SUBMIT")
+    props.submit(dataToValidationPayload(data, userDataChanges, studentDataChanges)); //TODO is this needed?
+    resetPage(true)
   }
 
   if(props.isLoading){
@@ -146,7 +148,7 @@ function GeneralUploadDataPage(props) {
         
         <Container className='d-flex flex-row justify-content-center' style={{gap: "10px"}}>
           <Button variant="yellow" onClick={validate}>Validate</Button>
-          <Button variant="yellow" onClick={submit} disabled={changedSinceLastValidation}>Submit</Button>
+          <Button variant="yellow" onClick={submit} /*disabled={changedSinceLastValidation}*/>Submit</Button>
           <Button variant="yellow" onClick={resetPage}>Reset</Button>
         </Container>
       </Container>
@@ -157,7 +159,8 @@ function GeneralUploadDataPage(props) {
 GeneralUploadDataPage.propTypes = {
   uploadData: PropTypes.object,
   isLoading: PropTypes.bool,
-  validate: PropTypes.func.isRequired
+  validate: PropTypes.func.isRequired,
+  submit: PropTypes.func.isRequired
 }
 
 GeneralUploadDataPage.defaultProps = {
@@ -171,4 +174,4 @@ const mapStateToProps = (state) => ({
 
 
 
-export default connect(mapStateToProps, {validate})(GeneralUploadDataPage)
+export default connect(mapStateToProps, {validate, submit})(GeneralUploadDataPage)
