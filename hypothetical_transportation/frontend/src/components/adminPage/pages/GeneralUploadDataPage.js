@@ -7,9 +7,10 @@ import { dataToSubmitPayload, dataToValidationPayload, duplicatesExist, errOrDup
 import BulkImportTable from '../components/bulk_import/BulkImportTable';
 import UserDetailsModal from '../components/bulk_import/UserDetailsModal';
 import TransactionDetailsModal from '../components/bulk_import/TransactionDetailsModal';
-import { Button, Container, Spinner } from 'react-bootstrap';
+import { Alert, Button, Container, Spinner } from 'react-bootstrap';
 import '../NEWadminPage.css';
 import { submit, validate } from '../../../actions/bulk_import';
+import getType from '../../../utils/user2';
 
 function GeneralUploadDataPage(props) {
 
@@ -130,7 +131,7 @@ function GeneralUploadDataPage(props) {
   return (
     <>
       <AdminHeader></AdminHeader>
-
+      {getType(props.user) == "staff" || getType(props.user) == "admin" ?
       <Container className='d-flex flex-column justify-content-center' style={{gap: "10px", marginTop: "20px"}}>
         <TransactionDetailsModal modalType={modalType} info={modalInfo} closeModal={closeModal} saveModal={saveModal} />
         
@@ -161,7 +162,15 @@ function GeneralUploadDataPage(props) {
           <Button variant="yellow" onClick={submit} disabled={changedSinceLastValidation}>Submit</Button>
           <Button variant="yellow" onClick={resetPage}>Reset</Button>
         </Container>
-      </Container>
+      </Container> : <Container className="container-main">
+                <Alert variant="danger">
+                  <Alert.Heading>Access Denied</Alert.Heading>
+                  <p>
+                    You do not have access to this page. If you believe this is an error, contact an administrator.          
+                    </p>
+                  </Alert>
+                </Container>
+        }
     </>
   )
 }
@@ -179,6 +188,7 @@ GeneralUploadDataPage.defaultProps = {
 
 const mapStateToProps = (state) => ({
   uploadData: state.bulk_import.uploadData,
+  user: state.auth.user,
   isLoading: state.bulk_import.isLoading
 });
 

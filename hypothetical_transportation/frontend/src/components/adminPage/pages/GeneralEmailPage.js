@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Header from '../../header/AdminHeader';
 import "../NEWadminPage.css";
-import { Container, Form, Button, ButtonGroup, ToggleButton,Collapse, Card, Row } from 'react-bootstrap'; 
+import { Container, Form, Button, ButtonGroup, ToggleButton,Collapse, Card, Row, Alert } from 'react-bootstrap'; 
 import { connect } from 'react-redux';
 import { getSchools } from '../../../actions/schools';
 import { getRoutes } from '../../../actions/routes';
@@ -11,6 +11,7 @@ import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import config from '../../../utils/config';
 import Select from 'react-select';
+import getType from '../../../utils/user2';
 
 
 
@@ -226,18 +227,18 @@ const getRouteOption = ()=>{
     <>
         <Header></Header>
 
-
+        {getType(props.user) == "staff" || getType(props.user) == "admin" ?
         <Container className="container-main">
             <div className="shadow-sm p-3 mb-5 bg-white rounded d-flex flex-row justify-content-center">
                 <h1>Send Email</h1>
             </div>
             <br></br>
             <Form className="shadow-lg p-3 mb-5 bg-white rounded"
-            onKeyPress={event => {
-                if (event.key === 'Enter' /* Enter */) {
-                  event.preventDefault();
-                }
-              }}
+            // onKeyPress={event => {
+            //     if (event.key === 'Enter' /* Enter */) {
+            //       event.preventDefault();
+            //     }
+            //   }}
             >
                 <Container className='d-flex justify-content-center'>
                     <Form.Group className="mb-3" controlId="validationCustom01">
@@ -310,6 +311,11 @@ const getRouteOption = ()=>{
                     onChange={(e)=>{
                         setSubject(e.target.value)
                     }}
+                    onKeyPress={event => {
+                        if (event.key === 'Enter' /* Enter */) {
+                          event.preventDefault();
+                        }
+                      }}
                     />
                 </Form.Group>
 
@@ -332,7 +338,15 @@ const getRouteOption = ()=>{
                 </Button>
 
             </Form>
-        </Container>
+        </Container> : <Container className="container-main">
+                <Alert variant="danger">
+                  <Alert.Heading>Access Denied</Alert.Heading>
+                  <p>
+                    You do not have access to this page. If you believe this is an error, contact an administrator.          
+                    </p>
+                  </Alert>
+                </Container>
+        }
 
     </>
   );
@@ -344,6 +358,7 @@ GeneralAdminEmailPage.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
+    user: state.auth.user,
     schoollist: state.schools.schools.results,
     routes: state.routes.routes.results,
     token: state.auth.token
