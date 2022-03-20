@@ -29,11 +29,38 @@ function GeneralUploadFilePage(props) {
     const handleChangeStudent = (e) => {
         setStudentFile(e.target.files[0]);
     }
+    const expectedUserHeader = ['full_name', 'email', 'address', 'phone_number']
+    const expectedStudentHeader = ['full_name', 'email', 'address', 'phone_number']
+    const [warning, setWarning] = useState(false)
     const handleOnSubmit = (e) => {
         e.preventDefault();
         setLoading(true)
+        var userOK=false;
+        var studentOK=false;
+        if(jsonRes.users.length>0){
+            if(JSON.stringify(expectedUserHeader) == JSON.stringify(Object.keys(jsonRes.users[0]))){
+                userOK=true;
+            }
+        }else{
+            userOK=true;
+        }
 
-        props.validate(jsonRes, () => {navigate("/upload_data")})
+
+        if(jsonRes.students.length>0){
+            if(JSON.stringify(expectedStudentHeader) == JSON.stringify(Object.keys(jsonRes.students[0]))){
+                studentOK=true;
+            }
+        }else{
+            studentOK=true;
+        }
+        if(userOK && studentOK){
+            setLoading(true)
+            setWarning(false)
+            props.validate(jsonRes, () => {navigate("/upload_data")})
+        }
+        else{
+            setWarning(true);
+        }
         
     };
 
@@ -89,7 +116,12 @@ function GeneralUploadFilePage(props) {
                     <Button variant="yellowsubmit" type="submit">
                         Submit
                     </Button>
-                    {loading? 
+                    {warning? <div>
+                        <p>The CSV you uploaded does not match our criteria</p>
+                        <p>User CSV is expected to have "name", "email", "address", "phone_number" fields</p>
+                        <p>Student CSV is expected to have "name", "parent_email", "student_id", "school_name" fields</p>
+                        <p>Please double check the files you are uploading before continuing</p>
+                    </div>: loading? 
                     <div>
                         <p>Backend processing information, please wait...</p>
                         <Spinner animation="border" role="status" size="lg">
