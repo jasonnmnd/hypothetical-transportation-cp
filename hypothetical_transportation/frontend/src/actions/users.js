@@ -35,7 +35,10 @@ export const deleteUser = (id) => (dispatch, getState) => {
             type: DELETE_USER,
             payload: parseInt(id)
           });
-    }).catch(err => {console.log("FAIL");/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});
+    }).catch(err => {
+      // console.log(err);/*console.log(err);*/
+      alert(`Error: ${err.response.data}`);
+      dispatch(returnErrors(err.response.data, err.response.status))});
 }
 
 export const addUser = (user) => (dispatch, getState) => {

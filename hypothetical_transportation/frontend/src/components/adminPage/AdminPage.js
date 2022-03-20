@@ -117,7 +117,7 @@ function AdminPage( props ) {
                         <Card.Text>
                           Bulk Upload Data.
                         </Card.Text>
-                          <Link to={`/upload_data`}>
+                          <Link to={`/upload_file`}>
                             <Button variant="yellow" size="lg">Upload Data</Button>
                           </Link>
                       </Card.Body>

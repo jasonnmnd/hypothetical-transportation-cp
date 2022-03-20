@@ -2,8 +2,9 @@ import React, { useRef, Fragment, useEffect } from 'react';
 import { withAlert } from 'react-alert';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import getType from '../../utils/user2';
+import { getUsers } from '../../actions/users';
 
 
 function Alerts(props) {
@@ -15,6 +16,8 @@ function Alerts(props) {
     const prevErrorRef = useRef(props.error)
     const prevMessageRef = useRef(props.message)
     const navigate = useNavigate();
+    let [searchParams, setSearchParams] = useSearchParams();
+
 
     useEffect(() => {
       if (!mounted.current) {
@@ -51,6 +54,11 @@ function Alerts(props) {
           }
           if (message.user && message.user.includes("Update")){
             alert(message.user);
+            setSearchParams({
+              [`pageNum`]: 1,
+            })
+            let paramsToSend = Object.fromEntries([...searchParams]);
+            props.getUsers(paramsToSend);
           }
           if (message.school) alert(message.school);
           if (message.route) alert(message.route);
@@ -67,6 +75,7 @@ function Alerts(props) {
 Alerts.propTypes = {
     error: PropTypes.object.isRequired,
     message: PropTypes.object.isRequired,
+    getUsers: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -75,4 +84,4 @@ const mapStateToProps = (state) => ({
   message: state.messages,
 });
 
-export default connect(mapStateToProps)(withAlert()(Alerts));
+export default connect(mapStateToProps, {getUsers} )(withAlert()(Alerts));

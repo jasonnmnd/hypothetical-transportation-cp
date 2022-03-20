@@ -223,7 +223,7 @@ function SchoolRoutesPlannerPage(props) {
   const handleViewChange = (e) => {
     const temp = e.target.value;
     if(searchParams.get(VIEW_PARAM) == 0){
-      onRoutePlannerClickAway(() => changeView(temp))
+      onRoutePlannerClickAway(() => {resetStudentChanges();changeView(temp);})
     }
     else {
       onStopPlannerClickAway(() => changeView(temp));

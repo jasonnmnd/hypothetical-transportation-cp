@@ -20,7 +20,6 @@
   width: 300px;
 }
 
-
 .btn-yellow:hover {
   background-color: #ffdd99;
 }
@@ -81,7 +80,7 @@
 
 h1 {
   color: #333333;
-  font-family:  Charcoal, sans-serif;
+  font-family: Charcoal, sans-serif;
 }
 
 .reverseArrow {
@@ -131,4 +130,22 @@ h1 {
 .btn-outline-warning {
   color: rgb(244, 177, 75);
   border-color: rgba(33, 37, 41, 255);
+}
+
+.btn-yellowEditSmall {
+  display: inline-block;
+  border-radius: 4px;
+  background-color: rgb(244, 177, 75);
+  background-position: 0%;
+  transition: 0.4s;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  width: 80px;
+  height: 40px;
+  font-size: 14px;
+}
+
+.btn-yellowEditSmall:hover {
+  background-color: #ffdd99;
 }

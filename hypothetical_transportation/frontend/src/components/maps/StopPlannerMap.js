@@ -5,7 +5,7 @@ import MapComponent from "./MapComponent";
 import PropTypes, { string } from 'prop-types';
 import { useSearchParams } from 'react-router-dom';
 import { NO_ROUTE } from '../../utils/utils';
-import { getStudentPin, addSchoolPin, getStopPin } from '../../utils/planner_maps';
+import { getStudentPin, addSchoolPin, getStopPin, getMarkerOverlaps } from '../../utils/planner_maps';
 
 
 
@@ -21,16 +21,26 @@ function StopPlannerMap(props){
         setExtraComponents(<InfoWindow position={position} onCloseClick={setExtraComponents(null)}>{windowComponents}</InfoWindow>)
     }
 
+    const getStudentInfoForWindow = (pinStuff) => {
+        return <h4>{pinStuff.full_name}</h4>
+    }
+
     const onStudentClick = (pinStuff, position) => {
-        createInfoWindow(position, <h4>{pinStuff.full_name}</h4>)
+        createInfoWindow(position, getStudentInfoForWindow(pinStuff))
     }
 
-    const onSchoolClick = (pinStuff, position) => {
-        createInfoWindow(position, <h4>{pinStuff.name}</h4>)
+    const onSchoolClick = (school, position) => {
+        createInfoWindow(position, <h4>{school.name}</h4>)
     }
 
-    const onStopClick = (pinStuff, position) => {
-        createInfoWindow(position, <h4>{pinStuff.name}</h4>)
+    const onStopClick = (stop, position) => {
+        createInfoWindow(position, <h4>{stop.name}</h4>)
+    }
+
+    const onMultipleStudentClick = (pinStuff, position) => {
+        const pinStudents = pinStuff.pins;
+        const windowInfo = pinStudents.map(student => getStudentInfoForWindow(student));
+        createInfoWindow(position, <>{windowInfo}</>)
     }
 
     useEffect(() => {
@@ -42,23 +52,56 @@ function StopPlannerMap(props){
 
     
 
-    const getStudentsWStop = () => {
-        return props.students.filter(student => student.has_inrange_stop == true);
+    const getStudentsWStop = (students) => {
+        return students.filter(student => student.has_inrange_stop == true);
     }
 
-    const getStudentsWOStop = () => {
-        return props.students.filter(student => !student.has_inrange_stop);
+    const getStudentsWOStop = (students) => {
+        return students.filter(student => !student.has_inrange_stop);
     }
 
     const getStudentInfoWindow = (pinStuff) => {
         return <InfoWindow key={`student-${pinStuff.id}`}></InfoWindow>
     }
 
+    const getOverlapPinGroup = (pinInfo, color) => {
+        return {
+            iconColor: color,
+            iconType: "studentMultiple",
+            markerProps: {
+                onClick: onMultipleStudentClick
+            },
+            pins: pinInfo
+        }
+    }
+
+    const getOverlappingStudentsGrouped = (overlappingStudents) => {
+        let allInRange = []
+        let allOutOfRange = []
+        let mixedOverlap = []
+        overlappingStudents.forEach(studentGroup => {
+            if(studentGroup.pins.every(student => student.has_inrange_stop == true)){
+                allInRange.push(studentGroup);
+            }
+            else if(studentGroup.pins.every(student => !student.has_inrange_stop)){
+                allOutOfRange.push(studentGroup);
+            }
+            else{
+                mixedOverlap.push(studentGroup);
+            }
+        })
+        return [allInRange, allOutOfRange, mixedOverlap]
+    }
+
+
 
     const getStudentGroupsPinData = () => {
 
-        const studentsWStop = getStudentsWStop();
-        const studentsWOStop = getStudentsWOStop();
+        const [overlappingStudents, normalStudents] = getMarkerOverlaps(props.students);
+        const [allInRange, allOutOfRange, mixedOverlap] = getOverlappingStudentsGrouped(overlappingStudents);
+
+        const studentsWStop = getStudentsWStop(normalStudents);
+        const studentsWOStop = getStudentsWOStop(normalStudents);
 
         props.setComplete(studentsWOStop.length == 0);
         
@@ -81,6 +124,9 @@ function StopPlannerMap(props){
                 },
                 pins: studentsWOStop.map(student => {return getStudentPin(student)})
             },
+            getOverlapPinGroup(mixedOverlap, "purple"),
+            getOverlapPinGroup(allInRange, "green"),
+            getOverlapPinGroup(allOutOfRange, "red"),
         ]
     }
 

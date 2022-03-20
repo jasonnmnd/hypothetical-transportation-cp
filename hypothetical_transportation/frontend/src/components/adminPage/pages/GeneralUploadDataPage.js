@@ -1,10 +1,197 @@
-import React from 'react'
 import AdminHeader from '../../header/AdminHeader'
+import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { connect } from 'react-redux';
+import PropTypes, { string } from 'prop-types';
+import { dataToSubmitPayload, dataToValidationPayload, duplicatesExist, errOrDupExists, errorsExist, FAKE_IMPORT_DATA, STUDENT_COLUMNS, USER_COLUMNS } from '../../../utils/bulk_import';
+import BulkImportTable from '../components/bulk_import/BulkImportTable';
+import UserDetailsModal from '../components/bulk_import/UserDetailsModal';
+import TransactionDetailsModal from '../components/bulk_import/TransactionDetailsModal';
+import { Button, Container, Spinner } from 'react-bootstrap';
+import '../NEWadminPage.css';
+import { submit, validate } from '../../../actions/bulk_import';
 
-function GeneralUploadDataPage() {
+function GeneralUploadDataPage(props) {
+
+  const navigate = useNavigate();
+  const [modalInfo, setModalInfo] = useState(null);
+  const [modalType, setModalType] = useState(null);
+  const [data, setData] = useState(props.uploadData);
+  const [userDataChanges, setUserDataChanges] = useState({});
+  const [studentDataChanges, setStudentDataChanges] = useState({});
+  const [checkedStudents, setCheckedStudents] = useState([]);
+  const [checkedUsers, setCheckedUsers] = useState([]);
+  const [changedSinceLastValidation, setChangedSinceLastValidation] = useState(false);
+  
+
+  const closeModal = () => {
+    setModalInfo(null)
+    setModalType(null)
+  }
+
+  const saveModal = (newInfo) => {
+    
+    const {index, ...newInfoNoInd} = newInfo 
+
+    if(modalType == 'user'){
+      setUserDataChanges({
+        ...userDataChanges,
+        [index]: newInfoNoInd
+      })
+    }
+
+    if(modalType == 'student'){
+      setStudentDataChanges({
+        ...studentDataChanges,
+        [index]: newInfoNoInd
+      })
+    }
+
+    closeModal();
+  }
+
+  const setDataWithCheckBoxes = (inData, uncheckErrors=true, uncheckDuplicates=true) => {
+
+    let newCheckedUsers = [];
+    inData.users.forEach((user, ind) => {
+      if(!((uncheckErrors && errorsExist(user)) || (uncheckDuplicates && duplicatesExist(user)))){
+        newCheckedUsers.push(ind);
+      }
+    });
+
+    let newCheckedStudents = [];
+    inData.students.forEach((student, ind) => {
+      if(!((uncheckErrors && errorsExist(student)) || (uncheckDuplicates && duplicatesExist(student)))){
+        newCheckedStudents.push(ind);
+      }
+    });
+
+    setCheckedUsers(newCheckedUsers);
+    setCheckedStudents(newCheckedStudents);
+    setData(inData);
+  }
+
+  const onUploadDataChange = () => {
+    setModalInfo(null);
+    setModalType(null);
+    setUserDataChanges({});
+    setStudentDataChanges({});
+    let newCheckedUsers = checkedUsers.filter(userInd => {return !errorsExist(props.uploadData.users[userInd])});
+
+    let newCheckedStudents = checkedStudents.filter(studentInd => {return !errorsExist(props.uploadData.students[studentInd])});
+
+    setCheckedUsers(newCheckedUsers);
+    setCheckedStudents(newCheckedStudents);
+    setData(props.uploadData);
+    setChangedSinceLastValidation(false);
+  }
+
+  const mounted = useRef();
+  useEffect(() => {
+    if (!mounted.current) {
+      // do componentDidMount logic
+      resetPage()
+      mounted.current = true;
+    } else {
+      // do componentDidUpdate logic
+      onUploadDataChange();
+    }
+  }, [props.uploadData]);
+
+  useEffect(()=>{
+    setChangedSinceLastValidation(true);
+  },[userDataChanges, studentDataChanges, checkedUsers, checkedStudents])
+
+
+  
+
+  const resetPage = (keepCheckBoxes) => {
+    setModalInfo(null);
+    setModalType(null);
+    setUserDataChanges({});
+    setStudentDataChanges({});
+    if(keepCheckBoxes){
+      setDataWithCheckBoxes(props.uploadData, true, false)
+    }
+    else {
+      setDataWithCheckBoxes(props.uploadData);
+    }
+    setChangedSinceLastValidation(false);
+  }
+
+  const validate = () => {
+    props.validate(dataToValidationPayload(data, userDataChanges, studentDataChanges));
+  }
+
+  const submit = () => {
+    // console.log("SUBMIT")
+    props.submit(dataToSubmitPayload(data, userDataChanges, studentDataChanges, checkedUsers, checkedStudents), () => navigate(`/upload_data/success`)); //TODO is this needed?
+  }
+
+  if(props.isLoading){
+    return <div>
+    <p>Backend processing information, please wait...</p>
+    <Spinner animation="border" role="status" size="lg">
+        <span className="visually-hidden">Loading...</span>
+    </Spinner>
+</div>
+  }
+
   return (
-    <AdminHeader></AdminHeader>
+    <>
+      <AdminHeader></AdminHeader>
+
+      <Container className='d-flex flex-column justify-content-center' style={{gap: "10px", marginTop: "20px"}}>
+        <TransactionDetailsModal modalType={modalType} info={modalInfo} closeModal={closeModal} saveModal={saveModal} />
+        
+        <BulkImportTable 
+          data={data.users} 
+          colData={USER_COLUMNS}
+          setModalInfo={setModalInfo}
+          setModalType={() => setModalType("user")}
+          dataChanges={userDataChanges}
+          checked={checkedUsers}
+          setChecked={setCheckedUsers}
+          title='Users'
+        />
+        
+        <BulkImportTable 
+          data={data.students} 
+          colData={STUDENT_COLUMNS}
+          setModalInfo={setModalInfo}
+          setModalType={() => setModalType("student")}
+          dataChanges={studentDataChanges}
+          checked={checkedStudents}
+          setChecked={setCheckedStudents}
+          title='Students'
+        />
+        
+        <Container className='d-flex flex-row justify-content-center' style={{gap: "10px"}}>
+          <Button variant="yellow" onClick={validate}>Validate</Button>
+          <Button variant="yellow" onClick={submit} disabled={changedSinceLastValidation}>Submit</Button>
+          <Button variant="yellow" onClick={resetPage}>Reset</Button>
+        </Container>
+      </Container>
+    </>
   )
 }
 
-export default GeneralUploadDataPage
+GeneralUploadDataPage.propTypes = {
+  uploadData: PropTypes.object,
+  isLoading: PropTypes.bool,
+  validate: PropTypes.func.isRequired,
+  submit: PropTypes.func.isRequired
+}
+
+GeneralUploadDataPage.defaultProps = {
+  uploadData: FAKE_IMPORT_DATA
+}
+
+const mapStateToProps = (state) => ({
+  uploadData: state.bulk_import.uploadData,
+  isLoading: state.bulk_import.isLoading
+});
+
+
+
+export default connect(mapStateToProps, {validate, submit})(GeneralUploadDataPage)
