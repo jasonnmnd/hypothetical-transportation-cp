@@ -51,6 +51,62 @@ class TestBulkImport(TestCase):
                                school=school_1, routes=None, guardian=parent_1,
                                student_id=None)
 
+    def test_school_staff_student_post_handling(self):
+        inside_school = School.objects.create(address='Duke University', longitude=self.loc[0], latitude=self.loc[1],
+                                              name='Staff Managed School')
+        staff_group = Group.objects.create(name="SchoolStaff")
+        staff = get_user_model().objects.create_verified_user(email='staff@example.com', password='wordpass',
+                                                              full_name='staff', address='Duke University',
+                                                              latitude=self.loc[0],
+                                                              longitude=self.loc[1])
+        staff.groups.add(staff_group)
+        staff.managed_schools.add(inside_school)
+        login_response = self.client.post('/api/auth/login',
+                                          json.dumps(
+                                              {'email': 'staff@example.com', 'password': 'wordpass'}),
+                                          content_type='application/json')
+        staff_token = login_response.data['token']
+        loaded_data = {
+            "users": [],
+            "students": [
+                {
+                    "full_name": "Ronaldo Smith",
+                    "student_id": None,
+                    "parent_email": "user1@example.com",
+                    "school_name": "duke university"
+                }
+            ]
+        }
+        response = self.client.post('/api/loaded-data/validate/', json.dumps(loaded_data),
+                                    content_type='application/json', HTTP_AUTHORIZATION=f'Token {staff_token}')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(str(response.data['students'][0]['school_name']['error'][0]),
+                         'Student would be assigned to school you do not manage')
+
+        response = self.client.post('/api/loaded-data/', json.dumps(loaded_data),
+                                    content_type='application/json', HTTP_AUTHORIZATION=f'Token {staff_token}')
+        self.assertEqual(response.status_code, 400)
+
+        loaded_data = {
+            "users": [],
+            "students": [
+                {
+                    "full_name": "Ronaldo Smith",
+                    "student_id": None,
+                    "parent_email": "user1@example.com",
+                    "school_name": "staff managed school"
+                }
+            ]
+        }
+        response = self.client.post('/api/loaded-data/validate/', json.dumps(loaded_data),
+                                    content_type='application/json', HTTP_AUTHORIZATION=f'Token {staff_token}')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data['students'][0]['school_name']['error']), 0)
+
+        response = self.client.post('/api/loaded-data/', json.dumps(loaded_data),
+                                    content_type='application/json', HTTP_AUTHORIZATION=f'Token {staff_token}')
+        self.assertEqual(response.status_code, 201)
+
     def test_non_conflict_post(self):
         loaded_data = {
             "users": [

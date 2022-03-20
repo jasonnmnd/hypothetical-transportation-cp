@@ -544,7 +544,8 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
         return {"value": value, "error": error, "duplicates": duplicates}
 
     def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data)
+        # serializer = self.serializer_class(data=request.data)
+        serializer = self.get_serializer(data=request.data)
         is_valid = serializer.is_valid()
         serializer_errors = serializer.errors
         populate_serializer_errors(serializer_errors, request.data)
@@ -646,14 +647,14 @@ class SubmitLoadedDataAPI(generics.GenericAPIView):
 
     def post(self, request, *args, **kwargs):
         geolocator = Nominatim(user_agent="bulk data importer")
-        serializer = self.serializer_class(data=request.data)
+        serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer_errors = serializer.errors
         populate_serializer_errors(serializer_errors, request.data)
         try:
             with transaction.atomic():
                 for user_dex, user_data in enumerate(serializer.validated_data["users"]):
-                    user_serializer = LoadUserSerializer(data=user_data)
+                    user_serializer = LoadUserSerializer(data=user_data, context={'request': request})
                     user_serializer.is_valid(raise_exception=True)
                     location = geolocator.geocode(user_data["address"])
                     user = get_user_model().objects.create_verified_user(**user_data, latitude=location.latitude,
@@ -663,7 +664,7 @@ class SubmitLoadedDataAPI(generics.GenericAPIView):
                     user.groups.add(Group.objects.get(name="Guardian"))
 
                 for student_dex, student_data in enumerate(serializer.validated_data["students"]):
-                    student_serializer = LoadStudentSerializer(data=student_data)
+                    student_serializer = LoadStudentSerializer(data=student_data, context={'request': request})
                     student_serializer.is_valid(raise_exception=True)
                     candidates = find_school_match_candidates(student_data["school_name"])
                     school = None
