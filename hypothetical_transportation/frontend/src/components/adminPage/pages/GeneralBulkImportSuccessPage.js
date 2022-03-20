@@ -28,8 +28,8 @@ function GeneralBulkImportSuccessPage(props) {
       <AdminHeader></AdminHeader>
 
       <Container className='d-flex flex-column justify-content-center' style={{gap: "10px", marginTop: "20px"}}>
-        <h3>{props.succesfulSubmit.num_users} Users were Added</h3>
-        <h3>{props.succesfulSubmit.num_students} Students were Added</h3>
+        <h3>{props.succesfulSubmit? props.succesfulSubmit.num_users:null} Users were Added</h3>
+        <h3>{props.succesfulSubmit?props.succesfulSubmit.num_students:null} Students were Added</h3>
       </Container>
     </>
   )
