@@ -29,8 +29,8 @@ function GeneralUploadFilePage(props) {
     const handleChangeStudent = (e) => {
         setStudentFile(e.target.files[0]);
     }
-    const expectedUserHeader = ['full_name', 'email', 'address', 'phone_number']
-    const expectedStudentHeader = ['full_name', 'email', 'address', 'phone_number']
+    const expectedUserHeader = ['email', 'full_name', 'address', 'phone_number']
+    const expectedStudentHeader = ['name', 'parent_email', 'student_id', 'school_name']
     const [warning, setWarning] = useState(false)
     const handleOnSubmit = (e) => {
         e.preventDefault();
@@ -118,8 +118,8 @@ function GeneralUploadFilePage(props) {
                     </Button>
                     {warning? <div>
                         <p>The CSV you uploaded does not match our criteria</p>
-                        <p>User CSV is expected to have "name", "email", "address", "phone_number" fields</p>
-                        <p>Student CSV is expected to have "name", "parent_email", "student_id", "school_name" fields</p>
+                        <p>User CSV is expected to have  "email","name", "address", "phone_number" fields, in this order</p>
+                        <p>Student CSV is expected to have "name", "parent_email", "student_id", "school_name" fields, in this order</p>
                         <p>Please double check the files you are uploading before continuing</p>
                     </div>: loading? 
                     <div>
