@@ -646,7 +646,8 @@ class SubmitLoadedDataAPI(generics.GenericAPIView):
     permission_classes = [IsAdmin | IsSchoolStaff]
 
     def post(self, request, *args, **kwargs):
-        geolocator = Nominatim(user_agent="bulk data importer")
+        # geolocator = Nominatim(user_agent="bulk data importer")
+        geolocator = GoogleV3(api_key="AIzaSyA6nIh9bWUWFOD_y7hEZ7UQh_KmPn5Sq58")
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid()
         # print('SERIALIZER VALIDATED DATA:', serializer.validated_data)
