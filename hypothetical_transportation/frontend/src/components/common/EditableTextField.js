@@ -29,7 +29,13 @@ function EditableTextField( props ) {
             <Form className='editable-input'>
                 <Row>
                     <Col className='input-field'>
-                        <Form.Control type="text" placeholder={`Enter ${props.keyType}`}  onChange={(e) => {setValue(e.target.value); props.onChange(e);}} value={value} />
+                        <Form.Control type="text" placeholder={`Enter ${props.keyType}`}  onChange={(e) => {setValue(e.target.value); props.onChange(e);}} value={value} 
+                        onKeyPress={event => {
+                            if (event.key === 'Enter' /* Enter */) {
+                              event.preventDefault();
+                            }
+                          }}
+                        />
                         <Form.Text className="text-muted">
                             {props.underText}
                         </Form.Text>
