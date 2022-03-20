@@ -52,7 +52,7 @@ class TestBulkImport(TestCase):
                                student_id=None)
 
     def test_school_staff_student_post_handling(self):
-        inside_school = School.objects.create(address='Duke University', longitude=self.loc[0], latitude=self.loc[1],
+        inside_school = School.objects.create(address='Duke University, Durham NC', longitude=self.loc[0], latitude=self.loc[1],
                                               name='Staff Managed School')
         staff_group = Group.objects.create(name="SchoolStaff")
         staff = get_user_model().objects.create_verified_user(email='staff@example.com', password='wordpass',
@@ -113,7 +113,7 @@ class TestBulkImport(TestCase):
                 {
                     "email": "user3@example.com",
                     "full_name": "Sam Smith",
-                    "address": "4932 Stoney Creek Dr.",
+                    "address": "4932 Stoney Creek Dr., Rapid City SD",
                     "phone_number": "9999999999"
                 }
             ],
@@ -146,6 +146,22 @@ class TestBulkImport(TestCase):
                                     content_type='application/json', HTTP_AUTHORIZATION=f'Token {self.admin_token}')
         self.assertEqual(response.status_code, 200)
         self.assertIn('address could not be geographically matched', response.data['users'][0]['address']['error'])
+
+    def test_address_timeout(self):
+        loaded_data = {
+            "users": [
+                {
+                    "email": "user10@example.com",
+                    "full_name": "Sam Smith",
+                    "address": "510 West Main St.",
+                    "phone_number": "9999999999"
+                }
+            ],
+            "students": []
+        }
+        response = self.client.post('/api/loaded-data/validate/', json.dumps(loaded_data),
+                                    content_type='application/json', HTTP_AUTHORIZATION=f'Token {self.admin_token}')
+        self.assertEqual(response.status_code, 200)
 
     def test_school_matching(self):
         loaded_data = {
@@ -306,31 +322,32 @@ class TestBulkImport(TestCase):
         self.assertEqual(get_user_model().objects.count(), 3)
         self.assertEqual(Student.objects.count(), 2)
 
+
     def test_successful_transaction_large(self):
         loaded_data = {
             "users": [
                 {
                     "email": "user3@example.com",
                     "full_name": "John Smith",
-                    "address": "4932 Stoney Creek Dr.",
+                    "address": "4932 Stoney Creek Dr., Rapid City, SD",
                     "phone_number": "9999999999"
                 },
                 {
                     "email": "user4@example.com",
                     "full_name": "John Smith",
-                    "address": "4932 Stoney Creek Dr.",
+                    "address": "4932 Stoney Creek Dr., Rapid City, SD",
                     "phone_number": "9999999999"
                 },
                 {
                     "email": "user5@example.com",
                     "full_name": "John Smith",
-                    "address": "4932 Stoney Creek Dr.",
+                    "address": "4932 Stoney Creek Dr., Rapid City, SD",
                     "phone_number": "9999999999"
                 },
                 {
                     "email": "user6@example.com",
                     "full_name": "John Smith",
-                    "address": "4932 Stoney Creek Dr.",
+                    "address": "4932 Stoney Creek Dr., Rapid City, SD",
                     "phone_number": "9999999999"
                 },
             ],
@@ -357,6 +374,7 @@ class TestBulkImport(TestCase):
         }
         response = self.client.post('/api/loaded-data/', json.dumps(loaded_data),
                                     content_type='application/json', HTTP_AUTHORIZATION=f'Token {self.admin_token}')
+
         self.assertEqual(response.status_code, 201)
         self.assertEqual(get_user_model().objects.count(), 7)
         self.assertEqual(Student.objects.count(), 5)

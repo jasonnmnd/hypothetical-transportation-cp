@@ -568,9 +568,12 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
             current_email_duplicates = [dup.get_representation() for dup in user_email_duplication[user.email] if
                                         dup != user]
             is_valid &= len(current_email_duplicates) == 0
+            duplicate_email_address_alert = [] if len(current_email_duplicates) == 0 else [
+                "duplicate email addresses must be corrected before continuing"]
             user_object_response["email"] = self.get_val_field_response_format(user.email,
                                                                                serializer_errors["users"][user_dex].get(
-                                                                                   "email", []),
+                                                                                   "email",
+                                                                                   []) + duplicate_email_address_alert,
                                                                                current_email_duplicates)
             current_name_duplicates = [dup.get_representation() for dup in user_name_duplication[user.full_name] if
                                        dup != user]
@@ -647,33 +650,50 @@ class SubmitLoadedDataAPI(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
         serializer_errors = serializer.errors
         populate_serializer_errors(serializer_errors, request.data)
+        user_errors = list()
+        student_errors = list()
+        rollback_at_end = False
         try:
             with transaction.atomic():
                 for user_dex, user_data in enumerate(serializer.validated_data["users"]):
                     user_serializer = LoadUserSerializer(data=user_data, context={'request': request})
-                    user_serializer.is_valid(raise_exception=True)
-                    location = geolocator.geocode(user_data["address"])
-                    user = get_user_model().objects.create_verified_user(**user_data, latitude=location.latitude,
-                                                                         longitude=location.longitude,
-                                                                         password="DUMMY_PASSWORD")
-                    user.set_unusable_password()
-                    user.groups.add(Group.objects.get(name="Guardian"))
-
+                    if user_serializer.is_valid():
+                        location = geolocator.geocode(user_data["address"])
+                        user = get_user_model().objects.create_verified_user(**user_data, latitude=location.latitude,
+                                                                             longitude=location.longitude,
+                                                                             password="DUMMY_PASSWORD")
+                        user.set_unusable_password()
+                        user.groups.add(Group.objects.get(name="Guardian"))
+                    else:
+                        rollback_at_end = True
+                    print(user_serializer.errors)
+                    user_errors.append(user_serializer.errors)
                 for student_dex, student_data in enumerate(serializer.validated_data["students"]):
                     student_serializer = LoadStudentSerializer(data=student_data, context={'request': request})
-                    student_serializer.is_valid(raise_exception=True)
-                    candidates = find_school_match_candidates(student_data["school_name"])
-                    school = None
-                    for candidate in candidates:
-                        if school_names_match(candidate.name, student_data["school_name"]):
-                            school = candidate
-                            break
-                    guardian = get_user_model().objects.get(email=student_data["parent_email"])
-                    student = Student.objects.create(full_name=student_data["full_name"], active=True, school=school,
-                                                     guardian=guardian, routes=None,
-                                                     student_id=student_data["student_id"])
-        except (IntegrityError, ObjectDoesNotExist):
-            return Response(serializer_errors, status=status.HTTP_400_BAD_REQUEST)
+                    if student_serializer.is_valid():
+                        candidates = find_school_match_candidates(student_data["school_name"])
+                        school = None
+                        for candidate in candidates:
+                            if school_names_match(candidate.name, student_data["school_name"]):
+                                school = candidate
+                                break
+                        guardian = get_user_model().objects.get(email=student_data["parent_email"])
+                        student = Student.objects.create(full_name=student_data["full_name"], active=True,
+                                                         school=school,
+                                                         guardian=guardian, routes=None,
+                                                         student_id=student_data["student_id"])
+                    else:
+                        rollback_at_end = True
+                    print(student_serializer.errors)
+                    student_errors.append(student_serializer.errors)
+                if rollback_at_end:
+                    raise serializers.ValidationError("Generic validation error")
+        except serializers.ValidationError:
+            context = {
+                "users": user_errors,
+                "students": student_errors
+            }
+            return Response(context, status=status.HTTP_400_BAD_REQUEST)
 
         content = {"num_users": len(serializer.validated_data["users"]),
                    "num_students": len(serializer.validated_data["students"])}
