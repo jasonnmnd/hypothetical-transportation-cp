@@ -46,44 +46,36 @@ function GeneralUploadDataPage(props) {
         [index]: newInfoNoInd
       })
     }
-
     closeModal();
+    setChangedSinceLastValidation(true);
   }
 
-  const setDataWithCheckBoxes = (inData, uncheckErrors=true, uncheckDuplicates=true) => {
+  const setCheckedFromErrorsAndDuplicates = (inData, uncheckErrors, uncheckDuplicates, newChecked) => {
+    inData.forEach((transaction, ind) => {
+      if(!((uncheckErrors && errorsExist(transaction)) || (uncheckDuplicates && duplicatesExist(transaction)))){
+        newChecked.push(ind);
+      }
+    });
+  }
+
+  const setDataWithCheckBoxes = (inData, keepCheckBoxes=false, uncheckErrors=true, uncheckDuplicates=true) => {
 
     let newCheckedUsers = [];
-    inData.users.forEach((user, ind) => {
-      if(!((uncheckErrors && errorsExist(user)) || (uncheckDuplicates && duplicatesExist(user)))){
-        newCheckedUsers.push(ind);
-      }
-    });
-
     let newCheckedStudents = [];
-    inData.students.forEach((student, ind) => {
-      if(!((uncheckErrors && errorsExist(student)) || (uncheckDuplicates && duplicatesExist(student)))){
-        newCheckedStudents.push(ind);
-      }
-    });
+
+    if(keepCheckBoxes){
+      newCheckedUsers = checkedUsers.filter(userInd => {return !errorsExist(props.uploadData.users[userInd])});
+      newCheckedStudents = checkedStudents.filter(studentInd => {return !errorsExist(props.uploadData.students[studentInd])});
+    }
+    else {
+      setCheckedFromErrorsAndDuplicates(inData.users, uncheckErrors, uncheckDuplicates, newCheckedUsers);
+      setCheckedFromErrorsAndDuplicates(inData.students, uncheckErrors, uncheckDuplicates, newCheckedStudents);
+    }
+
 
     setCheckedUsers(newCheckedUsers);
     setCheckedStudents(newCheckedStudents);
     setData(inData);
-  }
-
-  const onUploadDataChange = () => {
-    setModalInfo(null);
-    setModalType(null);
-    setUserDataChanges({});
-    setStudentDataChanges({});
-    let newCheckedUsers = checkedUsers.filter(userInd => {return !errorsExist(props.uploadData.users[userInd])});
-
-    let newCheckedStudents = checkedStudents.filter(studentInd => {return !errorsExist(props.uploadData.students[studentInd])});
-
-    setCheckedUsers(newCheckedUsers);
-    setCheckedStudents(newCheckedStudents);
-    setData(props.uploadData);
-    setChangedSinceLastValidation(false);
   }
 
   const mounted = useRef();
@@ -94,28 +86,26 @@ function GeneralUploadDataPage(props) {
       mounted.current = true;
     } else {
       // do componentDidUpdate logic
-      onUploadDataChange();
+      resetPage(true);
     }
   }, [props.uploadData]);
 
-  useEffect(()=>{
+  const setCheckedWithChange = (newChecked, checkedFunc) => {
+    checkedFunc(newChecked);
     setChangedSinceLastValidation(true);
-  },[userDataChanges, studentDataChanges, checkedUsers, checkedStudents])
+  }
 
 
   
 
-  const resetPage = (keepCheckBoxes) => {
+  const resetPage = (keepCheckBoxes=false) => {
     setModalInfo(null);
     setModalType(null);
     setUserDataChanges({});
     setStudentDataChanges({});
-    if(keepCheckBoxes){
-      setDataWithCheckBoxes(props.uploadData, true, false)
-    }
-    else {
-      setDataWithCheckBoxes(props.uploadData);
-    }
+    
+    setDataWithCheckBoxes(props.uploadData, keepCheckBoxes);
+
     setChangedSinceLastValidation(false);
   }
 
@@ -124,17 +114,17 @@ function GeneralUploadDataPage(props) {
   }
 
   const submit = () => {
-    // console.log("SUBMIT")
-    props.submit(dataToSubmitPayload(data, userDataChanges, studentDataChanges, checkedUsers, checkedStudents), () => navigate(`/upload_data/success`)); //TODO is this needed?
+    props.submit(dataToSubmitPayload(data, userDataChanges, studentDataChanges, checkedUsers, checkedStudents)); 
+    navigate(`/upload_data/success`);
   }
 
   if(props.isLoading){
     return <div>
-    <p>Backend processing information, please wait...</p>
-    <Spinner animation="border" role="status" size="lg">
-        <span className="visually-hidden">Loading...</span>
-    </Spinner>
-</div>
+              <p>Backend processing information, please wait...</p>
+              <Spinner animation="border" role="status" size="lg">
+                  <span className="visually-hidden">Loading...</span>
+              </Spinner>
+          </div>
   }
 
   return (
@@ -151,7 +141,7 @@ function GeneralUploadDataPage(props) {
           setModalType={() => setModalType("user")}
           dataChanges={userDataChanges}
           checked={checkedUsers}
-          setChecked={setCheckedUsers}
+          setChecked={(checked) => setCheckedWithChange(checked, setCheckedUsers)}
           title='Users'
         />
         
@@ -162,7 +152,7 @@ function GeneralUploadDataPage(props) {
           setModalType={() => setModalType("student")}
           dataChanges={studentDataChanges}
           checked={checkedStudents}
-          setChecked={setCheckedStudents}
+          setChecked={(checked) => setCheckedWithChange(checked, setCheckedStudents)}
           title='Students'
         />
         

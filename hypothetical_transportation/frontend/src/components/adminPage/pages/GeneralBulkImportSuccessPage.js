@@ -12,8 +12,7 @@ import '../NEWadminPage.css';
 import { submit, validate } from '../../../actions/bulk_import';
 
 function GeneralBulkImportSuccessPage(props) {
-
-  
+    console.log(props)
   if(props.isLoading){
     return <div>
     <p>Backend processing information, please wait...</p>
@@ -28,15 +27,15 @@ function GeneralBulkImportSuccessPage(props) {
       <AdminHeader></AdminHeader>
 
       <Container className='d-flex flex-column justify-content-center' style={{gap: "10px", marginTop: "20px"}}>
-        <h3>{props.succesfulSubmit.num_users} Users were Added</h3>
-        <h3>{props.succesfulSubmit.num_students} Students were Added</h3>
+        <h3>{props.successfulSubmit?.num_users} Users were Added</h3>
+        <h3>{props.successfulSubmit?.num_students} Students were Added</h3>
       </Container>
     </>
   )
 }
 
 GeneralBulkImportSuccessPage.propTypes = {
-  succesfulSubmit: PropTypes.object,
+  successfulSubmit: PropTypes.object,
   isLoading: PropTypes.bool,
 }
 
@@ -45,7 +44,7 @@ GeneralBulkImportSuccessPage.defaultProps = {
 }
 
 const mapStateToProps = (state) => ({
-  succesfulSubmit: state.bulk_import.succesfulSubmit,
+  successfulSubmit: state.bulk_import.successfulSubmit,
   isLoading: state.bulk_import.isLoading
 });
 

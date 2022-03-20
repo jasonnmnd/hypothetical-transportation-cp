@@ -223,8 +223,6 @@ const issueExists = (transaction, issueType) => {
 }
 
 export const errorsExist = (transaction) => {
-    console.log(transaction);
-    console.log(issueExists(transaction, 'error'))
     return issueExists(transaction, 'error')
 }
 
