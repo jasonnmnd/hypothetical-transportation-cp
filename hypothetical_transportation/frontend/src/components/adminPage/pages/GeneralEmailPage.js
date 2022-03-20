@@ -234,11 +234,11 @@ const getRouteOption = ()=>{
             </div>
             <br></br>
             <Form className="shadow-lg p-3 mb-5 bg-white rounded"
-            onKeyPress={event => {
-                if (event.key === 'Enter' /* Enter */) {
-                  event.preventDefault();
-                }
-              }}
+            // onKeyPress={event => {
+            //     if (event.key === 'Enter' /* Enter */) {
+            //       event.preventDefault();
+            //     }
+            //   }}
             >
                 <Container className='d-flex justify-content-center'>
                     <Form.Group className="mb-3" controlId="validationCustom01">
@@ -311,6 +311,11 @@ const getRouteOption = ()=>{
                     onChange={(e)=>{
                         setSubject(e.target.value)
                     }}
+                    onKeyPress={event => {
+                        if (event.key === 'Enter' /* Enter */) {
+                          event.preventDefault();
+                        }
+                      }}
                     />
                 </Form.Group>
 
