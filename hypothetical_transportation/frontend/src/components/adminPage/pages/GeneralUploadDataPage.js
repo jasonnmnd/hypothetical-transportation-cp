@@ -11,6 +11,7 @@ import { Alert, Button, Container, Spinner } from 'react-bootstrap';
 import '../NEWadminPage.css';
 import { submit, validate } from '../../../actions/bulk_import';
 import getType from '../../../utils/user2';
+import SubmitModal from '../components/bulk_import/SubmitModal';
 
 function GeneralUploadDataPage(props) {
 
@@ -23,7 +24,8 @@ function GeneralUploadDataPage(props) {
   const [checkedStudents, setCheckedStudents] = useState([]);
   const [checkedUsers, setCheckedUsers] = useState([]);
   const [changedSinceLastValidation, setChangedSinceLastValidation] = useState(false);
-  
+  const [openModal, setOpenModal] = useState(false);
+
 
   const closeModal = () => {
     setModalInfo(null)
@@ -130,8 +132,10 @@ function GeneralUploadDataPage(props) {
 
   return (
     <>
-      <AdminHeader></AdminHeader>
+      
       {getType(props.user) == "staff" || getType(props.user) == "admin" ?
+      <>      <div>{openModal && <SubmitModal closeModal={setOpenModal} handleConfirm={submit}/>}</div>
+      <AdminHeader></AdminHeader>
       <Container className='d-flex flex-column justify-content-center' style={{gap: "10px", marginTop: "20px"}}>
         <TransactionDetailsModal modalType={modalType} info={modalInfo} closeModal={closeModal} saveModal={saveModal} />
         
@@ -159,17 +163,22 @@ function GeneralUploadDataPage(props) {
         
         <Container className='d-flex flex-row justify-content-center' style={{gap: "10px"}}>
           <Button variant="yellow" onClick={validate}>Validate</Button>
-          <Button variant="yellow" onClick={submit} disabled={changedSinceLastValidation}>Submit</Button>
+          <Button variant="yellow" onClick={() => {
+                      setOpenModal(true);
+                    }} disabled={changedSinceLastValidation}>Submit</Button>
           <Button variant="yellow" onClick={resetPage}>Reset</Button>
         </Container>
-      </Container> : <Container className="container-main">
-                <Alert variant="danger">
-                  <Alert.Heading>Access Denied</Alert.Heading>
-                  <p>
-                    You do not have access to this page. If you believe this is an error, contact an administrator.          
-                    </p>
-                  </Alert>
-                </Container>
+      </Container>      
+      </> : <>
+      <AdminHeader></AdminHeader>
+      <Container className="container-main">
+        <Alert variant="danger">
+          <Alert.Heading>Access Denied</Alert.Heading>
+          <p>
+            You do not have access to this page. If you believe this is an error, contact an administrator.          
+            </p>
+          </Alert>
+        </Container></>
         }
     </>
   )
