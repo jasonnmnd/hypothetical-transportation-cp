@@ -24,6 +24,8 @@ class TestBulkImport(TestCase):
         """
         self.loc = (36.00352740209603, -78.93814858774756)
         admin_group = Group.objects.create(name='Administrator')
+        parent_group = Group.objects.create(name='Guardian')
+
         self.admin = get_user_model().objects.create_verified_user(email='admin@example.com', password='wordpass',
                                                                    full_name='admin', address='Duke University',
                                                                    latitude=self.loc[0],
@@ -86,7 +88,7 @@ class TestBulkImport(TestCase):
         }
         response = self.client.post('/api/loaded-data/validate/', json.dumps(loaded_data),
                                     content_type='application/json', HTTP_AUTHORIZATION=f'Token {self.admin_token}')
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 200)
         self.assertIn('address could not be geographically matched', response.data['users'][0]['address']['error'])
 
     def test_school_matching(self):
@@ -103,7 +105,7 @@ class TestBulkImport(TestCase):
         }
         response = self.client.post('/api/loaded-data/validate/', json.dumps(loaded_data),
                                     content_type='application/json', HTTP_AUTHORIZATION=f'Token {self.admin_token}')
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 200)
         self.assertIn('school name could not be matched', response.data['students'][0]['school_name']['error'])
 
     def test_user_name_duplication(self):
@@ -166,7 +168,7 @@ class TestBulkImport(TestCase):
         }
         response = self.client.post('/api/loaded-data/validate/', json.dumps(loaded_data),
                                     content_type='application/json', HTTP_AUTHORIZATION=f'Token {self.admin_token}')
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data['users'][0]['email']['duplicates']), 1)
 
     def test_submission_breaking_user_is_atomic(self):

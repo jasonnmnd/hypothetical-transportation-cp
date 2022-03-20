@@ -24,6 +24,7 @@ from django.shortcuts import get_object_or_404
 from .geo_utils import get_straightline_distance, LEN_OF_MILE
 from .nav_utils import navigation_link_dropoff, navigation_link_pickup
 from collections import defaultdict
+from django.contrib.auth.models import Group
 
 MAX_STOPS_IN_ONE_CALL = 1
 
@@ -347,7 +348,7 @@ class RouteViewSet(viewsets.ModelViewSet):
         else:
             students_queryset = self.request.user.students
             return Route.objects.filter(id__in=students_queryset.values('routes_id')).distinct().order_by('id')
-    
+
     @action(detail=False, permission_classes=[permissions.AllowAny])
     def fields(self, request):
         content = parse_repr(repr(RouteSerializer()))
@@ -634,8 +635,7 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
                                                                                             student_dex].get(
                                                                                             "school_name", []), [])
             students_response.append(student_object_response)
-        return Response({"users": users_response, "students": students_response},
-                        status.HTTP_200_OK if is_valid else status.HTTP_400_BAD_REQUEST)
+        return Response({"users": users_response, "students": students_response}, status.HTTP_200_OK)
 
 
 class SubmitLoadedDataAPI(generics.GenericAPIView):
@@ -660,6 +660,7 @@ class SubmitLoadedDataAPI(generics.GenericAPIView):
                                                                          longitude=location.longitude,
                                                                          password="DUMMY_PASSWORD")
                     user.set_unusable_password()
+                    user.groups.add(Group.objects.get(name="Guardian"))
 
                 for student_dex, student_data in enumerate(serializer.validated_data["students"]):
                     student_serializer = LoadStudentSerializer(data=student_data)
