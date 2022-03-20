@@ -12,7 +12,6 @@ import '../NEWadminPage.css';
 import { submit, validate } from '../../../actions/bulk_import';
 
 function GeneralBulkImportSuccessPage(props) {
-    console.log(props)
   if(props.isLoading){
     return <div>
     <p>Backend processing information, please wait...</p>
@@ -27,8 +26,8 @@ function GeneralBulkImportSuccessPage(props) {
       <AdminHeader></AdminHeader>
 
       <Container className='d-flex flex-column justify-content-center' style={{gap: "10px", marginTop: "20px"}}>
-        <h3>{props.succesfulSubmit? props.succesfulSubmit.num_users:null} Users were Added</h3>
-        <h3>{props.succesfulSubmit?props.succesfulSubmit.num_students:null} Students were Added</h3>
+        <h3>{props.successfulSubmit.num_users} Users were Added</h3>
+        <h3>{props.successfulSubmit.num_students} Students were Added</h3>
       </Container>
     </>
   )
