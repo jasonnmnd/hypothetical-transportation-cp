@@ -86,24 +86,13 @@ function ErrorSection(props){
         )
     }
 
-    // const errOrDupExists = (value, key) => {
-    //     return props.transaction && props.transaction[value] && props.transaction[value][key] && props.transaction[value][key] != undefined && props.transaction[value][key].length > 0
-    // }
-
-    // const errorExist = () => {
-    //     return props.transaction && Object.keys(props.transaction).some(value => {return errOrDupExists(props.transaction, value, 'errors')})
-    // }
-
-    // const duplicatesExist = () => {
-    //     return props.transaction && Object.keys(props.transaction).some(value => {return errOrDupExists(props.transaction, value, 'duplicates')})
-    // }
 
     const getErrorSection = () => {
         return (
             Object.keys(props.transaction).map((value, ind) => {
                 return (
                     <div key={ind}>
-                        <h5>{errOrDupExists(props.transaction, value, "errors") ? ERROR_TITLES[value] : null}</h5>
+                        <h5>{errOrDupExists(props.transaction, value, "error") ? ERROR_TITLES[value] : null}</h5>
                         {props.transaction[value].error?.map((error, ind) => <p key={ind}>{error}</p>)}
                     </div>
                     
