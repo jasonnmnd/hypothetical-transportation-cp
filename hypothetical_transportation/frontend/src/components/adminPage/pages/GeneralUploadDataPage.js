@@ -51,6 +51,51 @@ function GeneralUploadDataPage(props) {
     setChangedSinceLastValidation(true);
   }
 
+  const updateCheckedOnDelete = (checked, setChecked, index) => {
+    let newChecked = []
+    checked.forEach(transactionIndex => {
+      if(transactionIndex == index){
+        return;
+      }
+      let newIndex = transactionIndex;
+      if(transactionIndex > index){
+        newIndex = transactionIndex - 1
+      }
+      newChecked.push(newIndex);
+    });
+    setChecked(newChecked)
+  }
+
+  const updateDataChangesOnDelete = (dataChanges, setDataChanges, index) => {
+    let newChanges = {}
+    Object.keys(dataChanges).forEach(transactionIndex => {
+      if(transactionIndex == index){
+        return;
+      }
+      let newIndex = transactionIndex;
+      if(transactionIndex > index){
+        newIndex = transactionIndex - 1
+      }
+      newChanges[newIndex] = dataChanges[transactionIndex];
+    });
+    setDataChanges(newChanges)
+  }
+
+  const deleteRow = (transactionType, index) => {
+    setData({
+      ...data,
+      [transactionType]: data[transactionType].filter((transaction, ind) => ind != index)
+    })
+    if(transactionType == 'users'){
+      updateCheckedOnDelete(checkedUsers, setCheckedUsers, index)
+      updateDataChangesOnDelete(userDataChanges, setUserDataChanges, index)
+    }
+    if(transactionType == 'students'){
+      updateCheckedOnDelete(checkedStudents, setCheckedStudents, index)
+      updateDataChangesOnDelete(studentDataChanges, setStudentDataChanges, index)
+    }
+  }
+
   const setCheckedFromErrorsAndDuplicates = (inData, uncheckErrors, uncheckDuplicates, newChecked) => {
     inData.forEach((transaction, ind) => {
       if(!((uncheckErrors && errorsExist(transaction)) || (uncheckDuplicates && duplicatesExist(transaction)))){
@@ -144,6 +189,7 @@ function GeneralUploadDataPage(props) {
           checked={checkedUsers}
           setChecked={(checked) => setCheckedWithChange(checked, setCheckedUsers)}
           title='Users'
+          deleteRow={(index) => deleteRow("users", index)}
         />
         
         <BulkImportTable 
@@ -155,6 +201,7 @@ function GeneralUploadDataPage(props) {
           checked={checkedStudents}
           setChecked={(checked) => setCheckedWithChange(checked, setCheckedStudents)}
           title='Students'
+          deleteRow={(index) => deleteRow("students", index)}
         />
         
         <Container className='d-flex flex-row justify-content-center' style={{gap: "10px"}}>
