@@ -189,6 +189,13 @@ class LoadStudentSerializer(serializers.ModelSerializer):
                 return value
         raise serializers.ValidationError("school name could not be matched")
 
+    def validate_parent_email(self, value):
+        if get_user_model().objects.filter(email=value).count() > 0:
+            return value
+        raise serializers.ValidationError("Invalid parent email")
+
+
+
     class Meta:
         model = Student
         fields = ("full_name", "student_id", "parent_email", "school_name")
@@ -197,8 +204,8 @@ class LoadStudentSerializer(serializers.ModelSerializer):
 class LoadUserSerializer(serializers.ModelSerializer):
     def validate_address(self, value):
         # TODO: Uncomment to use paid geolocator API
-        # geolocator = GoogleV3(api_key="AIzaSyA6nIh9bWUWFOD_y7hEZ7UQh_KmPn5Sq58")
-        geolocator = Nominatim(user_agent="bulk import validator")
+        geolocator = GoogleV3(api_key="AIzaSyA6nIh9bWUWFOD_y7hEZ7UQh_KmPn5Sq58")
+        # geolocator = Nominatim(user_agent="bulk import validator")
         location = geolocator.geocode(value)
         if not location or not location.latitude or not location.longitude:
             raise serializers.ValidationError("address could not be geographically matched")

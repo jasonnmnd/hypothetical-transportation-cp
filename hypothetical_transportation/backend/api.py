@@ -647,15 +647,17 @@ class SubmitLoadedDataAPI(generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
         geolocator = Nominatim(user_agent="bulk data importer")
         serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer_errors = serializer.errors
-        populate_serializer_errors(serializer_errors, request.data)
+        serializer.is_valid()
+        # print('SERIALIZER VALIDATED DATA:', serializer.validated_data)
+
+        # serializer_errors = serializer.errors
+        # populate_serializer_errors(serializer_errors, request.data)
         user_errors = list()
         student_errors = list()
         rollback_at_end = False
         try:
             with transaction.atomic():
-                for user_dex, user_data in enumerate(serializer.validated_data["users"]):
+                for user_dex, user_data in enumerate(serializer.data["users"]):
                     user_serializer = LoadUserSerializer(data=user_data, context={'request': request})
                     if user_serializer.is_valid():
                         location = geolocator.geocode(user_data["address"])
@@ -666,9 +668,8 @@ class SubmitLoadedDataAPI(generics.GenericAPIView):
                         user.groups.add(Group.objects.get(name="Guardian"))
                     else:
                         rollback_at_end = True
-                    print(user_serializer.errors)
                     user_errors.append(user_serializer.errors)
-                for student_dex, student_data in enumerate(serializer.validated_data["students"]):
+                for student_dex, student_data in enumerate(serializer.data["students"]):
                     student_serializer = LoadStudentSerializer(data=student_data, context={'request': request})
                     if student_serializer.is_valid():
                         candidates = find_school_match_candidates(student_data["school_name"])
@@ -684,7 +685,6 @@ class SubmitLoadedDataAPI(generics.GenericAPIView):
                                                          student_id=student_data["student_id"])
                     else:
                         rollback_at_end = True
-                    print(student_serializer.errors)
                     student_errors.append(student_serializer.errors)
                 if rollback_at_end:
                     raise serializers.ValidationError("Generic validation error")
@@ -695,6 +695,6 @@ class SubmitLoadedDataAPI(generics.GenericAPIView):
             }
             return Response(context, status=status.HTTP_400_BAD_REQUEST)
 
-        content = {"num_users": len(serializer.validated_data["users"]),
-                   "num_students": len(serializer.validated_data["students"])}
+        content = {"num_users": len(serializer.data["users"]),
+                   "num_students": len(serializer.data["students"])}
         return Response(content, status=status.HTTP_201_CREATED)
