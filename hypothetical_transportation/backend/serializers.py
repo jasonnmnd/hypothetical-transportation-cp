@@ -189,16 +189,17 @@ class LoadStudentSerializer(serializers.ModelSerializer):
                 return value
         raise serializers.ValidationError("school name could not be matched")
 
+    class Meta:
+        model = Student
+        fields = ("full_name", "student_id", "parent_email", "school_name")
+
+
+class LoadStudentSerializerStrict(LoadStudentSerializer):
+
     def validate_parent_email(self, value):
         if get_user_model().objects.filter(email=value).count() > 0:
             return value
         raise serializers.ValidationError("Invalid parent email")
-
-
-
-    class Meta:
-        model = Student
-        fields = ("full_name", "student_id", "parent_email", "school_name")
 
 
 class LoadUserSerializer(serializers.ModelSerializer):

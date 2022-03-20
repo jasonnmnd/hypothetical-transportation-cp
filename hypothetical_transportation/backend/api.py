@@ -16,7 +16,8 @@ from .models import School, Route, Student, Stop
 from .serializers import UserSerializer, StudentSerializer, RouteSerializer, SchoolSerializer, FormatStudentSerializer, \
     FormatRouteSerializer, FormatUserSerializer, EditUserSerializer, StopSerializer, CheckInrangeSerializer, \
     LoadUserSerializer, LoadModelDataSerializer, find_school_match_candidates, school_names_match, \
-    StaffEditUserSerializer, StaffEditSchoolSerializer, StaffStudentSerializer, LoadStudentSerializer
+    StaffEditUserSerializer, StaffEditSchoolSerializer, StaffStudentSerializer, LoadStudentSerializer, \
+    LoadStudentSerializerStrict
 from .search import DynamicSearchFilter
 from .customfilters import StudentCountShortCircuitFilter
 from .permissions import is_admin, is_school_staff, is_driver, IsAdminOrReadOnly, IsAdmin, IsSchoolStaff, is_guardian
@@ -670,7 +671,7 @@ class SubmitLoadedDataAPI(generics.GenericAPIView):
                         rollback_at_end = True
                     user_errors.append(user_serializer.errors)
                 for student_dex, student_data in enumerate(serializer.data["students"]):
-                    student_serializer = LoadStudentSerializer(data=student_data, context={'request': request})
+                    student_serializer = LoadStudentSerializerStrict(data=student_data, context={'request': request})
                     if student_serializer.is_valid():
                         candidates = find_school_match_candidates(student_data["school_name"])
                         school = None
