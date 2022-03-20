@@ -479,9 +479,7 @@ def add_error(error_object: dict, field: str, message: str):
 
 class VerifyLoadedDataAPI(generics.GenericAPIView):
     serializer_class = LoadModelDataSerializer
-    permission_classes = [
-        permissions.AllowAny
-    ]
+    permission_classes = [IsAdmin | IsSchoolStaff]
 
     class UserRepresentation:
         def __init__(self, uuid: int, full_name: str, email: str, phone_number: str, address: str, in_db=False):
@@ -641,9 +639,7 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
 
 class SubmitLoadedDataAPI(generics.GenericAPIView):
     serializer_class = LoadModelDataSerializer
-    permission_classes = [
-        permissions.AllowAny
-    ]
+    permission_classes = [IsAdmin | IsSchoolStaff]
 
     def post(self, request, *args, **kwargs):
         geolocator = Nominatim(user_agent="bulk data importer")
