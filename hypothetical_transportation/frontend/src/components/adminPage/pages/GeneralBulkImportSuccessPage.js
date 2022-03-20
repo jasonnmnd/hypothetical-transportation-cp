@@ -12,8 +12,7 @@ import '../NEWadminPage.css';
 import { submit, validate } from '../../../actions/bulk_import';
 
 function GeneralBulkImportSuccessPage(props) {
-
-  
+    console.log(props)
   if(props.isLoading){
     return <div>
     <p>Backend processing information, please wait...</p>
@@ -36,7 +35,7 @@ function GeneralBulkImportSuccessPage(props) {
 }
 
 GeneralBulkImportSuccessPage.propTypes = {
-  succesfulSubmit: PropTypes.object,
+  successfulSubmit: PropTypes.object,
   isLoading: PropTypes.bool,
 }
 
@@ -45,7 +44,7 @@ GeneralBulkImportSuccessPage.defaultProps = {
 }
 
 const mapStateToProps = (state) => ({
-  succesfulSubmit: state.bulk_import.succesfulSubmit,
+  successfulSubmit: state.bulk_import.successfulSubmit,
   isLoading: state.bulk_import.isLoading
 });
 
