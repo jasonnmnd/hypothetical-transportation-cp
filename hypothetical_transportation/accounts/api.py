@@ -23,7 +23,7 @@ class InviteAPI(generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
 
-        if serializer.is_valid():
+        if serializer.is_valid(raise_exception=True):
             email = serializer.data['email']
             full_name = serializer.data['full_name']
             phone_number = serializer.data['phone_number']

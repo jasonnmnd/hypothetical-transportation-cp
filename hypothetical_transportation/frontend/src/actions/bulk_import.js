@@ -26,7 +26,6 @@ export const submit = (data, onSuccess = () => {}) => (dispatch, getState) => {
             type: BULK_IMPORT_SUBMIT,
             payload: err.response.data,
           });
-        onSuccess();
     });
 
 }
@@ -52,7 +51,6 @@ export const validate = (data, onSuccess = () => {}) => (dispatch, getState) => 
             type: VALIDATE_BULK_IMPORT,
             payload: err.response.data,
           });
-        onSuccess();
     });
 
 }

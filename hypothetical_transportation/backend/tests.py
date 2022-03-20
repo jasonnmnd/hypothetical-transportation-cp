@@ -8,6 +8,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from .geo_utils import get_straightline_distance
 from .serializers import find_school_match_candidates, school_names_match
+from django.core import mail
 from django.test import tag
 
 
@@ -23,6 +24,8 @@ class TestBulkImport(TestCase):
         """
         self.loc = (36.00352740209603, -78.93814858774756)
         admin_group = Group.objects.create(name='Administrator')
+        parent_group = Group.objects.create(name='Guardian')
+
         self.admin = get_user_model().objects.create_verified_user(email='admin@example.com', password='wordpass',
                                                                    full_name='admin', address='Duke University',
                                                                    latitude=self.loc[0],
@@ -85,7 +88,7 @@ class TestBulkImport(TestCase):
         }
         response = self.client.post('/api/loaded-data/validate/', json.dumps(loaded_data),
                                     content_type='application/json', HTTP_AUTHORIZATION=f'Token {self.admin_token}')
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 200)
         self.assertIn('address could not be geographically matched', response.data['users'][0]['address']['error'])
 
     def test_school_matching(self):
@@ -102,7 +105,7 @@ class TestBulkImport(TestCase):
         }
         response = self.client.post('/api/loaded-data/validate/', json.dumps(loaded_data),
                                     content_type='application/json', HTTP_AUTHORIZATION=f'Token {self.admin_token}')
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 200)
         self.assertIn('school name could not be matched', response.data['students'][0]['school_name']['error'])
 
     def test_user_name_duplication(self):
@@ -165,7 +168,7 @@ class TestBulkImport(TestCase):
         }
         response = self.client.post('/api/loaded-data/validate/', json.dumps(loaded_data),
                                     content_type='application/json', HTTP_AUTHORIZATION=f'Token {self.admin_token}')
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data['users'][0]['email']['duplicates']), 1)
 
     def test_submission_breaking_user_is_atomic(self):
@@ -505,6 +508,24 @@ class TestGroupViewFiltering(TransactionTestCase):
         response = self.client.delete('/api/route/3/', HTTP_AUTHORIZATION=f'Token {self.staff_1_token}')
         self.assertEqual(response.status_code, 404)
 
+    def test_admin_cannot_revoke_own_group(self):
+        admin_group = Group.objects.create(name="Administrator")
+        admin = get_user_model().objects.create_verified_user(email='admin@example.com', password='wordpass',
+                                                              full_name='admin', address='Duke University',
+                                                              latitude=self.loc[0],
+                                                              longitude=self.loc[1])
+        admin.groups.add(admin_group)
+        login_response = self.client.post('/api/auth/login',
+                                          json.dumps(
+                                              {'email': 'admin@example.com', 'password': 'wordpass'}),
+                                          content_type='application/json')
+        admin_token = login_response.data['token']
+        response = self.client.patch(f'/api/user/{admin.id}/',
+                                     json.dumps({"groups": [Group.objects.get(name="SchoolStaff").id]}),
+                                     content_type='application/json',
+                                     HTTP_AUTHORIZATION=f'Token {admin_token}')
+        self.assertEqual(response.status_code, 400)
+
     def test_staff_user_delete_on_all_students(self):
         """
         Tests that staff can only delete a user if all children of that user attend schools within that staff's managed
@@ -524,6 +545,167 @@ class TestGroupViewFiltering(TransactionTestCase):
         response = self.client.delete(f'/api/user/{self.parent_1.id}/',
                                       HTTP_AUTHORIZATION=f'Token {self.staff_1_token}')
         self.assertEqual(response.status_code, 400)
+
+    def test_staff_cannot_send_email_to_all(self):
+        response = self.client.post('/api/communication/send-announcement',
+                                    json.dumps(
+                                        {
+                                            "object_id": 1,
+                                            "id_type": "ALL",
+                                            "subject": "General Announcement",
+                                            "body": "Body Example"
+                                        }
+                                    ),
+                                    content_type='application/json',
+                                    HTTP_AUTHORIZATION=f'Token {self.staff_1_token}')
+        self.assertEqual(response.status_code, 400)
+        response = self.client.post('/api/communication/send-route-announcement',
+                                    json.dumps(
+                                        {
+                                            "id_type": "ALL",
+                                            "subject": "Route Announcement (ALL)",
+                                            "body": "Body Example"
+                                        }
+                                    ),
+                                    content_type='application/json',
+                                    HTTP_AUTHORIZATION=f'Token {self.staff_1_token}')
+        self.assertEqual(response.status_code, 400)
+
+    def test_staff_cannot_send_email_to_outside_route(self):
+        route_4 = Route.objects.get(name="route 4")
+        response = self.client.post('/api/communication/send-announcement',
+                                    json.dumps(
+                                        {
+                                            "object_id": route_4.id,
+                                            "id_type": "ROUTE",
+                                            "subject": "General (Route) Announcement",
+                                            "body": "Body Example"
+                                        }
+                                    ),
+                                    content_type='application/json',
+                                    HTTP_AUTHORIZATION=f'Token {self.staff_1_token}')
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.data['detail'], 'This email is not permitted.  Please check your managed schools')
+
+    def test_staff_can_send_email_to_route(self):
+        route_3 = Route.objects.get(name="route 3")
+        response = self.client.post('/api/communication/send-announcement',
+                                    json.dumps(
+                                        {
+                                            "object_id": route_3.id,
+                                            "id_type": "ROUTE",
+                                            "subject": "General (Route) Announcement",
+                                            "body": "Body Example"
+                                        }
+                                    ),
+                                    content_type='application/json',
+                                    HTTP_AUTHORIZATION=f'Token {self.staff_1_token}')
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(len(response.data['recipients']), 2)
+
+        mail.outbox = []
+        response = self.client.post('/api/communication/send-route-announcement',
+                                    json.dumps(
+                                        {
+                                            "object_id": route_3.id,
+                                            "id_type": "ROUTE",
+                                            "subject": "Route (Route) Announcement",
+                                            "body": "Body Example"
+                                        }
+                                    ),
+                                    content_type='application/json',
+                                    HTTP_AUTHORIZATION=f'Token {self.staff_1_token}')
+        self.assertEqual(len(mail.outbox), 2)
+
+    def test_staff_cannot_send_email_to_outside_school(self):
+        school_3 = School.objects.get(name="school 3")
+        response = self.client.post('/api/communication/send-announcement',
+                                    json.dumps(
+                                        {
+                                            "object_id": school_3.id,
+                                            "id_type": "SCHOOL",
+                                            "subject": "General (School) Announcement",
+                                            "body": "Body Example"
+                                        }
+                                    ),
+                                    content_type='application/json',
+                                    HTTP_AUTHORIZATION=f'Token {self.staff_1_token}')
+        self.assertEqual(response.status_code, 400)
+        response = self.client.post('/api/communication/send-route-announcement',
+                                    json.dumps(
+                                        {
+                                            "object_id": school_3.id,
+                                            "id_type": "SCHOOL",
+                                            "subject": "Route (School) Announcement",
+                                            "body": "Body Example"
+                                        }
+                                    ),
+                                    content_type='application/json',
+                                    HTTP_AUTHORIZATION=f'Token {self.staff_1_token}')
+        self.assertEqual(response.status_code, 400)
+
+    def test_staff_can_send_email_to_managed_schools(self):
+        school_1 = School.objects.get(name="school 1")
+        school_2 = School.objects.get(name="school 2")
+        response = self.client.post('/api/communication/send-announcement',
+                                    json.dumps(
+                                        {
+                                            "object_id": school_1.id,
+                                            "id_type": "SCHOOL",
+                                            "subject": "General (School) Announcement",
+                                            "body": "Body Example"
+                                        }
+                                    ),
+                                    content_type='application/json',
+                                    HTTP_AUTHORIZATION=f'Token {self.staff_1_token}')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(mail.outbox), 1)
+
+        mail.outbox = []
+        response = self.client.post('/api/communication/send-route-announcement',
+                                    json.dumps(
+                                        {
+                                            "object_id": school_1.id,
+                                            "id_type": "SCHOOL",
+                                            "subject": "Route (School) Announcement",
+                                            "body": "Body Example"
+                                        }
+                                    ),
+                                    content_type='application/json',
+                                    HTTP_AUTHORIZATION=f'Token {self.staff_1_token}')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(mail.outbox), 1)
+
+        mail.outbox = []
+        response = self.client.post('/api/communication/send-announcement',
+                                    json.dumps(
+                                        {
+                                            "object_id": school_2.id,
+                                            "id_type": "SCHOOL",
+                                            "subject": "General (School) Announcement",
+                                            "body": "Body Example"
+                                        }
+                                    ),
+                                    content_type='application/json',
+                                    HTTP_AUTHORIZATION=f'Token {self.staff_1_token}')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data['recipients']), 2)
+        self.assertEqual(len(mail.outbox), 1)
+
+        mail.outbox = []
+        response = self.client.post('/api/communication/send-route-announcement',
+                                    json.dumps(
+                                        {
+                                            "object_id": school_2.id,
+                                            "id_type": "SCHOOL",
+                                            "subject": "Route (School) Announcement",
+                                            "body": "Body Example"
+                                        }
+                                    ),
+                                    content_type='application/json',
+                                    HTTP_AUTHORIZATION=f'Token {self.staff_1_token}')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(mail.outbox), 2)
 
 
 class TestMatchingUtilities(TestCase):
