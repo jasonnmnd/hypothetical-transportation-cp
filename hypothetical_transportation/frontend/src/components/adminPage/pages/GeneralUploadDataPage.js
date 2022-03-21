@@ -23,6 +23,7 @@ function GeneralUploadDataPage(props) {
   const [checkedUsers, setCheckedUsers] = useState([]);
   const [changedSinceLastValidation, setChangedSinceLastValidation] = useState(false);
   const [openModal, setOpenModal] = useState(false);
+  const [shouldShowValidateText, setShouldValidateText] = useState(false);
 
 
   const closeModal = () => {
@@ -196,6 +197,10 @@ function GeneralUploadDataPage(props) {
     </Tooltip>
   );
 
+  function changeValidateText(e) {
+    setShouldValidateText(!shouldShowValidateText)
+  }
+
   return (
     <>
       
@@ -232,11 +237,13 @@ function GeneralUploadDataPage(props) {
         
         <Container className='d-flex flex-row justify-content-center' style={{gap: "10px"}}>
           <Button variant="yellow" onClick={validate}>Validate</Button>
-          <Button variant="yellow" onClick={submit} disabled={changedSinceLastValidation || checkedStudents.length + checkedUsers.length == 0}>Submit</Button>
+          <div onMouseOver={changeValidateText} onMouseLeave={changeValidateText}>
+            <Button variant="yellow" onClick={submit} disabled={changedSinceLastValidation || checkedStudents.length + checkedUsers.length == 0}>Submit</Button>
+          </div>
           <Button variant="yellow" onClick={resetPage}>Reset</Button>
         </Container>
         
-        {changedSinceLastValidation ?
+        {changedSinceLastValidation && shouldShowValidateText ?
         <Container className='d-flex flex-row justify-content-center'>Please validate before submitting.</Container>
         :
         <></>
