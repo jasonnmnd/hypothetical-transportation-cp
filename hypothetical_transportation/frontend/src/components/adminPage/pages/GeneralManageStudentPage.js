@@ -61,6 +61,7 @@ function GeneralManageStudentPage(props) {
       if(props.action==="new"){
         if(obj.guardian!=="new"){
           props.addStudent(obj)
+          navigate(`/${getType(props.user)}/students/`)
         }
         else{
           const finalSchoolList = staffSchool.map((item)=>{return item.value})
@@ -80,9 +81,12 @@ function GeneralManageStudentPage(props) {
               latitude: coord.lat.toFixed(6),
               managed_schools: []
           }
-          props.addStudentWithParent(createVals, obj)
+
+          //hit email expose endpoint
+          //if email expose endpoint gives yes, show popup
+          //if yes clicked on popup,  props.addStudentWithParent(createVals, obj)
+          //else do nothing? don't navigate? Tell user email exist?
         }
-        navigate(`/${getType(props.user)}/students/`)
       }
       else{
         if(obj.guardian!=="new"){
@@ -183,7 +187,7 @@ const getParentOption = ()=>{
   var opt = [{value: null, label: "-----------------------"}, {value: "new", label: "---Create New User---"}]
   if(props.users!==null && props.users!==undefined && props.users.length!==0){
       const x = props.users.map((item)=> {
-          return ({value:item.id, label:item.full_name})
+          return ({value:item.id, label:item.email})
       })    
       opt = [...opt, ...x]
   }
