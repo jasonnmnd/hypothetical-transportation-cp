@@ -27,7 +27,7 @@ export const getUsers = (parameters) => (dispatch, getState) => {
 
 
 export const emailExpose = (email) => (dispatch, getState) => {
-  return axios.delete(`/api/user/expose/${email}/`, tokenConfig(getState))
+  return axios.post(`/api/user/expose/`,{"email":email}, tokenConfig(getState))
   .then(res => {
       dispatch({
           type: EXPOSED_RESULT,

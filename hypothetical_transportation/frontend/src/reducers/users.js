@@ -1,4 +1,4 @@
-import { EXPOSED_RESULT,REGISTER_SUCCESS,GET_USERS, DELETE_USER, ADD_USER, GET_USER,RESET_POSTED_USER} from '../actions/types.js';
+import { EXPOSED_RESULT,RESET_EXPOSED_USER,REGISTER_SUCCESS,GET_USERS, DELETE_USER, ADD_USER, GET_USER,RESET_POSTED_USER} from '../actions/types.js';
 
 const initialState = {
   users: {
@@ -20,7 +20,7 @@ const initialState = {
     groups: [{id:2}],
   },
   exposedUser:{
-      id: -1,
+      id: 0,
       full_name: "",
       email: "",
       address: "",
@@ -76,8 +76,20 @@ export default function (state = initialState, action) {
     case EXPOSED_RESULT:
       return{
         ...state,
-        exposedUser: action.payload
+        exposedUser: action.payload.data
       };
+    case RESET_EXPOSED_USER:
+      console.log(action)
+      return{
+        ...state,
+        exposedUser:{
+          id: 0,
+          full_name: "",
+          email: "",
+          address: "",
+          groups: [{id:2}],
+      }
+      }
     default:
       return state;
   }

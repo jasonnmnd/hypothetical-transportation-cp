@@ -39,6 +39,8 @@ function GeneralManageStudentPage(props) {
 
     const [obj, setObj] = useState(emptyStudent)
 
+    const [parent, setPar] = useState(emptyStudent)
+
 
 
   const setParent = (e)=>{
@@ -69,19 +71,20 @@ function GeneralManageStudentPage(props) {
           // console.log(finalSchoolList)
           const createVals = fieldValues.groups==3 ? {
               ...fieldValues,
-              groups: [fieldValues.groups],
+              groups: [2],
               address: address,
               longitude: coord.lng.toFixed(6),
               latitude: coord.lat.toFixed(6),
               managed_schools: finalSchoolList,
           }:{
               ...fieldValues,
-              groups: [fieldValues.groups],
+              groups: [2],
               address: address,
               longitude: coord.lng.toFixed(6),
               latitude: coord.lat.toFixed(6),
               managed_schools: []
           }
+          setPar(createVals)
           props.emailExpose(createVals.email)
           //hit email expose endpoint
           //if email expose endpoint gives yes, show popup
@@ -96,7 +99,7 @@ function GeneralManageStudentPage(props) {
         else{
           const createVals = {
             ...fieldValues,
-            groups: [fieldValues.groups],
+            groups: [2],
             address: address,
             longitude: coord.lng.toFixed(6),
             latitude: coord.lat.toFixed(6),
@@ -112,25 +115,27 @@ function GeneralManageStudentPage(props) {
 
   useEffect(() => {
     if(props.exposedUser.id==-1){
+        console.log("?")
         const createVals = fieldValues.groups==3 ? {
           ...fieldValues,
-          groups: [fieldValues.groups],
+          groups: [2],
           address: address,
           longitude: coord.lng.toFixed(6),
           latitude: coord.lat.toFixed(6),
           managed_schools: finalSchoolList,
       }:{
           ...fieldValues,
-          groups: [fieldValues.groups],
+          groups: [2],
           address: address,
           longitude: coord.lng.toFixed(6),
           latitude: coord.lat.toFixed(6),
           managed_schools: []
       }
       props.addStudentWithParent(createVals, obj)
+      navigate(`/${getType(props.user)}/students/`)
     }
     else{
-
+      console.log("???")
     }
   }, [props.exposedUser]);
 
@@ -281,7 +286,7 @@ useEffect(()=>{
     return ( 
       <>
         <Header></Header>
-        <ParentModal />
+        <ParentModal student={obj} parent={parent} fieldValue={fieldValues} setFieldValues={setFieldValues}/>
         {getType(props.user) == "staff"  || getType(props.user) == "admin" ?
         <Container className="container-main">
           <Form className="shadow-lg p-3 mb-5 bg-white rounded" noValidate validated={validated} onSubmit={handleSubmit}
