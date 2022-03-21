@@ -43,6 +43,8 @@ function Alerts(props) {
 
         //if ((JSON.stringify(message)!== JSON.stringify(prevMessageRef.current))) {
         if(message!==prevMessageRef.current){
+          console.log(message)
+          console.log(prevMessageRef.current)
           if (message.student) alert(message.student);
           if (message.user && message.user.includes("Create")){
             if(confirm(message.user + " Would you like to navigate to create a new student for them?")){
@@ -52,7 +54,7 @@ function Alerts(props) {
               navigate(`/${getType(props.user)}/users`)
             }
           }
-          if (message.user && message.user.includes("Update")){
+          else if (message.user && message.user.includes("Update")){
             alert(message.user);
             setSearchParams({
               [`pageNum`]: 1,
@@ -60,7 +62,15 @@ function Alerts(props) {
             let paramsToSend = Object.fromEntries([...searchParams]);
             props.getUsers(paramsToSend);
           }
-          if (message.school) alert(message.school);
+          else if (message.user){
+            alert(message.user);
+            setSearchParams({
+              [`pageNum`]: 1,
+            })
+            let paramsToSend = Object.fromEntries([...searchParams]);
+            props.getUsers(paramsToSend);
+          }
+          if (message.school)alert(message.school);
           if (message.route) alert(message.route);
           if (message.passwordNotMatch) alert(message.passwordNotMatch);
           prevMessageRef.current = props.message;
