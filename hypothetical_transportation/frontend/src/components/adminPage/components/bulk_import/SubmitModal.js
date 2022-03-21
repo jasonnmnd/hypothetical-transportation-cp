@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import "../modals/modal.css";
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -13,6 +13,9 @@ import { useNavigate } from 'react-router-dom';
 
 function SubmitModal(props) {
     const navigate = useNavigate();
+
+    const [checked, setChecked] = useState(false);
+
     if(props.data == null || props.data == undefined){
         return null;
     }
@@ -77,13 +80,17 @@ function SubmitModal(props) {
                     />
                     {errorsExistMany(props.data.users) ? getErrors("user") : null}
                     {errorsExistMany(props.data.students) ? getErrors("student") : null}
+                    <Container className="d-flex flex-row justify-content-center" style={{gap: "10px"}}>
+                        <span style={{fontSize: "80%"}}>Confirm Changes</span>
+                        <input style={{alignSelf: "center"}} type="checkbox" checked={checked} onChange={() => setChecked(!checked)} disabled={errorsExistMany(props.data.users) || errorsExistMany(props.data.students)}/>
+                    </Container>
                 </Container>
             </Modal.Body>
 
             <Modal.Footer>
                 <Container className='d-flex flex-row justify-content-center' style={{gap: "10px"}}>
                     <Button variant="yellowclose" onClick={closeModal}>Close</Button>
-                    <Button variant="yellowclose" disabled={errorsExistMany(props.data.users) || errorsExistMany(props.data.students)} onClick={submit}>Save</Button>
+                    <Button variant="yellowclose" disabled={errorsExistMany(props.data.users) || errorsExistMany(props.data.students) || !checked} onClick={submit}>Save</Button>
                 </Container>
             </Modal.Footer>
         </Modal>  
