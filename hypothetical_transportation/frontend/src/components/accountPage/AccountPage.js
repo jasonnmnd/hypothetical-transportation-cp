@@ -72,6 +72,13 @@ function AccountPage(props){
         </Card>
 
         <Card>
+            <Card.Header as="h5">Phone Number </Card.Header>
+            <Card.Body>
+                <Card.Text>{props.user.phone_number}</Card.Text>
+            </Card.Body>
+        </Card>
+
+        <Card>
             <Card.Header as="h5">Address </Card.Header>
             <Card.Body>
                 <Card.Text>{props.user.address}</Card.Text>

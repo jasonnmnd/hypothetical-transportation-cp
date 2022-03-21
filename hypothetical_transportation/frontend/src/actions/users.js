@@ -5,7 +5,7 @@ import { tokenConfig } from './auth';
 import { createMessage, returnErrors } from './messages';
 import { getStudents } from './students';
 import { getParameters } from './utils';
-import { GET_USERS, ADD_USER, DELETE_USER, POPULATE_TABLE, GET_USER, DELETE_ITEM,RESET_POSTED_USER } from './types';
+import { GET_USERS, EXPOSED_RESULT,ADD_USER, DELETE_USER, POPULATE_TABLE, GET_USER, DELETE_ITEM,RESET_POSTED_USER } from './types';
 
 
 export const getUsers = (parameters) => (dispatch, getState) => {
@@ -25,6 +25,19 @@ export const getUsers = (parameters) => (dispatch, getState) => {
     .catch((err) => dispatch(returnErrors(err.response.data, err.response.status)));
 };
 
+
+export const emailExpose = (email) => (dispatch, getState) => {
+  return axios.post(`/api/user/expose/`,{"email":email}, tokenConfig(getState))
+  .then(res => {
+      dispatch({
+          type: EXPOSED_RESULT,
+          payload: res
+        });
+  }).catch(err => {
+    // console.log(err);/*console.log(err);*/
+    alert(`Error: ${err.response.data}`);
+    dispatch(returnErrors(err.response.data, err.response.status))});
+}
 
 
 export const deleteUser = (id) => (dispatch, getState) => {

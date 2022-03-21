@@ -562,10 +562,15 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
         serializer_errors = serializer.errors
         populate_serializer_errors(serializer_errors, request.data)
 
+        user_emails_in_student = set()
+        for student in serializer.data["students"]:
+            user_emails_in_student.add(student.get("parent_email", ""))
+
         user_email_duplication = defaultdict(set)
         user_name_duplication = defaultdict(set)
         user_representations = list()
         users_response = list()
+
         for user_dex, user in enumerate(serializer.data["users"]):
             email = user.get("email")
             full_name = user.get("full_name")
@@ -583,11 +588,13 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
                                         dup != user]
             is_valid &= len(current_email_duplicates) == 0
             duplicate_email_address_alert = [] if len(current_email_duplicates) == 0 else [
-                "duplicate email addresses must be corrected before continuing"]
+                "Duplicate email addresses must be corrected before continuing"]
+            paired_email_alert = [] if is_school_staff(request.user) and user.email in user_emails_in_student else [
+                "This parent would be created without corresponding students"]
             user_object_response["email"] = self.get_val_field_response_format(user.email,
                                                                                serializer_errors["users"][user_dex].get(
                                                                                    "email",
-                                                                                   []) + duplicate_email_address_alert,
+                                                                                   []) + duplicate_email_address_alert + paired_email_alert,
                                                                                current_email_duplicates)
             current_name_duplicates = [dup.get_representation() for dup in user_name_duplication[user.full_name] if
                                        dup != user]
@@ -618,7 +625,7 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
                 if "parent_email" not in serializer_errors["students"][student_dex]:
                     serializer_errors["students"][student_dex]["parent_email"] = list()
                 serializer_errors["students"][student_dex]["parent_email"].append(
-                    "parent email does not exist in database or loaded data")
+                    "Parent email does not exist in database or loaded data")
 
             representation = self.StudentRepresentation(usid=student_dex, full_name=student.get("full_name"),
                                                         student_id=student.get("student_id"),
