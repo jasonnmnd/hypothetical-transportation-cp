@@ -139,8 +139,8 @@ function GeneralManageStudentPage(props) {
     }
   }, [props.exposedUser]);
 
-  const [schoolSelected, setSchoolSelected] = useState(null)
-  const [guardianSelected, setGuardianSelected] = useState(null)
+  const [schoolSelected, setSchoolSelected] = useState({value: null, label: "-----------------------"})
+  const [guardianSelected, setGuardianSelected] = useState({value: null, label: "-----------------------"})
   const changeSchool = (e)=>{
     // console.log(e)
     setSchoolSelected(e)
@@ -161,21 +161,21 @@ function GeneralManageStudentPage(props) {
       props.getStudent(param.id);
       setObj({...props.student, ["guardian"]:props.student.guardian.id,["school"]:props.student.school.id,["routes"]:props.student.routes?props.student.routes.id:null})
       setSchoolSelected({value: props.student.school.id, label: props.student.school.name})
-      setGuardianSelected({value: props.student.guardian.id, label: props.student.guardian.full_name})
+      setGuardianSelected({value: props.student.guardian.id, label: props.student.guardian.email})
       props.resetPostedUser()
 
       // props.getRoutesByID({school: props.student.school.id}) // Normal to get an api request error on first load
     }
     else{
-      setSchoolSelected(null)
-      setGuardianSelected(null)
+      setSchoolSelected({value: null, label: "-----------------------"})
+      setGuardianSelected({value: null, label: "-----------------------"})
     }
     // console.log("also")
     // console.log(props.selectedUser)
     if(props.selectedUser!==null && props.selectedUser.id!==0&& props.selectedUser.id!==obj.guardian){
       // console.log("setting obj")
       setObj({ ...obj, ["guardian"]: props.selectedUser.id});
-      setGuardianSelected({value: props.selectedUser.id, label: props.selectedUser.full_name})  
+      setGuardianSelected({value: props.selectedUser.id, label: props.selectedUser.email})  
       props.resetPostedUser()
     }
     // else{
@@ -188,7 +188,7 @@ function GeneralManageStudentPage(props) {
   useEffect(() => {
       setObj({...props.student, ["guardian"]:props.student.guardian.id,["school"]:props.student.school.id,["routes"]:props.student.routes?props.student.routes.id:null})
       setSchoolSelected({value: props.student.school.id, label: props.student.school.name})
-      setGuardianSelected({value: props.student.guardian.id, label: props.student.guardian.full_name})
+      setGuardianSelected({value: props.student.guardian.id, label: props.student.guardian.email})
   }, [props.student]);
 
   useEffect(()=>{
@@ -260,14 +260,14 @@ const groupTypes = [
       if(props.selectedUser!==null && props.selectedUser.id!==0 && props.selectedUser.id!==obj.guardian){
         // console.log("action if")
         setObj({ ...emptyStudent, ["guardian"]: props.selectedUser.id});
-        setGuardianSelected({value: props.selectedUser.id, label: props.selectedUser.full_name})  
+        setGuardianSelected({value: props.selectedUser.id, label: props.selectedUser.email})  
         props.resetPostedUser()
       }
       else{
         // console.log("action else")
         setObj({...emptyStudent, ["guardian"]: obj.guardian})
-        setSchoolSelected(null)
-        setGuardianSelected(null)
+        setSchoolSelected({value: null, label: "-----------------------"})
+        setGuardianSelected({value: null, label: "-----------------------"})
       }
     }
     else{
