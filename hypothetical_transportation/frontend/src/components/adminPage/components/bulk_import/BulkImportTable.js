@@ -16,11 +16,12 @@ function BulkImportTable(props) {
     const getTableHeader = () => {
         return (
             <tr className='tr-header' >
-                <th>Active</th>
+                {props.showRowNumbers ? <th>Row Number</th> : null}
+                {props.checked ? <th>Active</th> : null}
                 {props.colData.map((column, ind) => (
                     <th key={ind}>{column.header}</th>
                 ))}
-                <th>Delete</th>
+                {props.deleteRow ? <th>Delete</th> : null}
             </tr>
         )
     }
@@ -53,11 +54,12 @@ function BulkImportTable(props) {
     const getRowComponent = (row, ind, changed) => {
         return (
             <tr key={ind} className={getRowClass(row, changed)}>
-                <td><input type="checkbox" checked={props.checked.includes(ind)} onChange={() => onCheck(ind)} disabled={errorsExist(row)==true}/></td>
+                {props.showRowNumbers ? <td>{ind}</td> : null}
+                {props.checked ? <td><input type="checkbox" checked={props.checked.includes(ind)} onChange={() => onCheck(ind)} disabled={errorsExist(row)==true}/></td> : null }
                 {props.colData.map((col, index) => {
                     return <td onClick={() => {props.setModalType(); props.setModalInfo({...row, index: ind});}} key={index} >{row[col.accessor].value}</td>
                 })}
-                <td style={{cursor: "pointer"}} onClick={() => props.deleteRow(ind)}>🗑</td>
+                {props.deleteRow ? <td style={{cursor: "pointer"}} onClick={() => props.deleteRow(ind)}>🗑</td> : null}
             </tr>
         )
     }
@@ -114,10 +116,15 @@ BulkImportTable.propTypes = {
   checked: PropTypes.array,
   setChecked: PropTypes.func,
   title: PropTypes.string,
-  deleteRow: PropTypes.func
+  deleteRow: PropTypes.func,
+  showRowNumbers: PropTypes.bool
 }
 
 BulkImportTable.defaultProps = {
+    showRowNumbers: false,
+    setModalInfo: () => {},
+    setModalType: () => {},
+    dataChanges: {},
 }
 
 const mapStateToProps = (state) => ({

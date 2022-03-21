@@ -106,7 +106,7 @@ function ErrorSection(props){
         if(errorsExist(props.transaction)){
             return (
                 <Card className='border-danger mb-3'>
-                    <Card.Header as="h4">Errors</Card.Header>
+                    <Card.Header as="h4">{props.errorTitle}</Card.Header>
                     <Card.Body className='text-danger'>
                         {getErrorSection()}
                     </Card.Body>
@@ -130,22 +130,31 @@ function ErrorSection(props){
         return null;
     }
 
+    // if(props.transaction == null){
+    //     return null;
+    // }
 
     return (
         <>
-            {getErrorCard()}
+            {props.hideErrors ? null : getErrorCard()}
 
-            {getDuplicateCard()}
+            {props.hideDups ? null : getDuplicateCard()}
         </>
     )
 }
 
 ErrorSection.propTypes = {
     transaction: PropTypes.object,
-    type: PropTypes.string
+    type: PropTypes.string,
+    errorTitle: PropTypes.string,
+    hideErrors: PropTypes.bool,
+    hideDups: PropTypes.bool
 }
 
 ErrorSection.defaultProps = {
+    errorTitle: "Errors",
+    hideErrors: false,
+    hideDups: false
 }
 
 const mapStateToProps = (state) => ({
