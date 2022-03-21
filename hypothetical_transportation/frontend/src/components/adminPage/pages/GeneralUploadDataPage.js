@@ -186,8 +186,6 @@ function GeneralUploadDataPage(props) {
       </>
 
     )
-  
-    
          
   }
 
@@ -197,8 +195,12 @@ function GeneralUploadDataPage(props) {
     </Tooltip>
   );
 
-  function changeValidateText(e) {
-    setShouldValidateText(!shouldShowValidateText)
+  function changeValidateTextTrue(e) {
+    setShouldValidateText(true)
+  }
+
+  function changeValidateTextFalse(e) {
+    setShouldValidateText(false)
   }
 
   return (
@@ -237,7 +239,7 @@ function GeneralUploadDataPage(props) {
         
         <Container className='d-flex flex-row justify-content-center' style={{gap: "10px"}}>
           <Button variant="yellow" onClick={validate}>Validate</Button>
-          <div onMouseOver={changeValidateText} onMouseLeave={changeValidateText}>
+          <div onMouseOver={changeValidateTextTrue} onMouseLeave={changeValidateTextFalse}>
             <Button variant="yellow" onClick={submit} disabled={changedSinceLastValidation}>Submit</Button>
           </div>
           <Button variant="yellow" onClick={resetPage}>Reset</Button>
@@ -246,7 +248,7 @@ function GeneralUploadDataPage(props) {
         {changedSinceLastValidation && shouldShowValidateText ?
         <Container className='d-flex flex-row justify-content-center'>Please validate before submitting.</Container>
         :
-        <></>
+        <br></br>
         }
 
 
