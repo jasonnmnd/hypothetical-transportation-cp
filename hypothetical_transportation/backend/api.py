@@ -602,9 +602,9 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
 
             if parent_email not in user_email_duplication and get_user_model().objects.filter(
                     email=parent_email).count() == 0:
-                if "parent_email" not in serializer.errors["students"][student_dex]:
-                    serializer.errors["students"][student_dex]["parent_email"] = list()
-                serializer.errors["students"][student_dex]["parent_email"].append(
+                if "parent_email" not in serializer_errors["students"][student_dex]:
+                    serializer_errors["students"][student_dex]["parent_email"] = list()
+                serializer_errors["students"][student_dex]["parent_email"].append(
                     "parent email does not exist in database or loaded data")
 
             representation = self.StudentRepresentation(usid=student_dex, full_name=student.get("full_name"),
