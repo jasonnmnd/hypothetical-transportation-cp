@@ -6,6 +6,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     environment:
+      - PGPASSWORD=temptobereplacedpassword
       - POSTGRES_DB=admin
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=admin
@@ -14,6 +15,7 @@ services:
   web:
     image: dmm107/ece-458:web-prod
     # build: .
+    restart: always
     command: ./entrypoint_prod.sh
     volumes:
       - static_volume:/code/staticfiles

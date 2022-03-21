@@ -2,7 +2,7 @@ name: Build & Deploy [PROD]
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, new-prod-host ]
     
 jobs:
   build:
