@@ -30,7 +30,7 @@ function GeneralUploadFilePage(props) {
         setStudentFile(e.target.files[0]);
     }
     const expectedUserHeader = ['email', 'full_name', 'address', 'phone_number']
-    const expectedStudentHeader = ['name', 'parent_email', 'student_id', 'school_name']
+    const expectedStudentHeader = ['full_name', 'parent_email', 'student_id', 'school_name']
     const [warning, setWarning] = useState(false)
     const handleOnSubmit = (e) => {
         e.preventDefault();
@@ -47,6 +47,7 @@ function GeneralUploadFilePage(props) {
 
 
         if(jsonRes.students.length>0){
+            console.log(jsonRes.students[0])
             if(JSON.stringify(expectedStudentHeader) == JSON.stringify(Object.keys(jsonRes.students[0]))){
                 studentOK=true;
             }
@@ -72,6 +73,8 @@ function GeneralUploadFilePage(props) {
                 setUserRes(csvJSON(csvOutput))
             };
             userReader.readAsText(userfile);
+        }else{
+            setUserRes([])
         }
 
         if (studentfile) {
@@ -80,6 +83,8 @@ function GeneralUploadFilePage(props) {
                 setStudentRes(csvJSON(csvOutput))
             };
             studentReader.readAsText(studentfile);
+        }else{
+            setStudentRes([])
         }
     },[userfile, studentfile])
 
@@ -113,7 +118,7 @@ function GeneralUploadFilePage(props) {
                         onChange={handleChangeStudent}
                     />
                     <p>You can leave either of the above fields blank to import only student/user data.</p>
-                    <Button variant="yellowsubmit" type="submit">
+                    <Button variant="yellowsubmit" type="submit" disabled={jsonRes.users.length == 0 && jsonRes.students.length == 0}>
                         Submit
                     </Button>
                     {warning? <div>
