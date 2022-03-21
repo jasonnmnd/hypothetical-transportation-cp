@@ -15,7 +15,7 @@ export default function csvJson(text, headers, quoteChar = '"', delimiter = ',')
     return lines.map(line => {
         return match(line).reduce((acc, cur, i) => {
             // Attempt to parse as a number; replace blank matches with `null`
-            const val = cur.length <= 0 ? null : Number(cur) || cur;
+            const val = cur.length <= 0 ? null : cur.length <= 35 ? Number(cur) || cur : cur;
             const key = heads[i] ?? `extra_${i}`;
             return { ...acc, [key]: val };
         }, {});
