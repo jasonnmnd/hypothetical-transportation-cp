@@ -101,7 +101,7 @@ function AdminPage( props ) {
                       <Card.Body>
                         <Card.Title><strong>Data</strong></Card.Title>
                         <Card.Text>
-                          Bulk Upload Data.
+                          Bulk upload data.
                         </Card.Text>
                       </Card.Body>
                     </Card>
