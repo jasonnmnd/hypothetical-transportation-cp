@@ -7,10 +7,12 @@ import BulkImportTable from './BulkImportTable';
 import ErrorSection from './ErrorSection';
 import { dataToValidationPayload, errorsExistMany, STUDENT_COLUMNS, USER_COLUMNS } from '../../../../utils/bulk_import';
 import { resetValidateForSubmit, submit } from '../../../../actions/bulk_import';
+import { useNavigate } from 'react-router-dom';
 
 
 
 function SubmitModal(props) {
+    const navigate = useNavigate();
     if(props.data == null || props.data == undefined){
         return null;
     }
@@ -45,6 +47,7 @@ function SubmitModal(props) {
 
     const submit = () => {
         props.submit(dataToValidationPayload(props.data, {}, {}));
+        navigate("/upload_data/success")
     }
 
 

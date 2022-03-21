@@ -21,7 +21,7 @@ function GeneralBulkImportSuccessPage(props) {
           <Alert variant="success">
             <Alert.Heading>Uploading Data</Alert.Heading>
             <p>
-              Your data is being processed, please wait....
+              Your data is being submitted, please wait....
             </p>
             <hr />
               <Spinner animation="border" role="status" size="lg">

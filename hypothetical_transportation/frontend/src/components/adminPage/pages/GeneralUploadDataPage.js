@@ -14,8 +14,6 @@ import getType from '../../../utils/user2';
 import SubmitModal from '../components/bulk_import/SubmitModal';
 
 function GeneralUploadDataPage(props) {
-
-  const navigate = useNavigate();
   const [modalInfo, setModalInfo] = useState(null);
   const [modalType, setModalType] = useState(null);
   const [data, setData] = useState(props.uploadData);
