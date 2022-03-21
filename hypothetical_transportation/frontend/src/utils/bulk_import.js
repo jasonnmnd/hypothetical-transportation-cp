@@ -230,6 +230,10 @@ export const duplicatesExist = (transaction) => {
     return issueExists(transaction, 'duplicates')
 }
 
+export const errorsExistMany = (data) => {
+    return data.some(transaction => errorsExist(transaction));
+}
+
 export const getEditableTextFieldClass = (transaction, fieldName, section) => {
     if(errOrDupExists(transaction, fieldName, 'error')){
         if(section == 'card'){

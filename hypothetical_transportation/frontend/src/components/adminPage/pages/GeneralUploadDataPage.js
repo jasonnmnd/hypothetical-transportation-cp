@@ -9,7 +9,7 @@ import UserDetailsModal from '../components/bulk_import/UserDetailsModal';
 import TransactionDetailsModal from '../components/bulk_import/TransactionDetailsModal';
 import { Alert, Button, Container, Spinner } from 'react-bootstrap';
 import '../NEWadminPage.css';
-import { submit, validate } from '../../../actions/bulk_import';
+import { submit, validate, validateForSubmit } from '../../../actions/bulk_import';
 import getType from '../../../utils/user2';
 import SubmitModal from '../components/bulk_import/SubmitModal';
 
@@ -162,8 +162,8 @@ function GeneralUploadDataPage(props) {
   }
 
   const submit = () => {
-    props.submit(dataToSubmitPayload(data, userDataChanges, studentDataChanges, checkedUsers, checkedStudents)); 
-    navigate(`/upload_data/success`);
+    props.validateForSubmit(dataToSubmitPayload(data, userDataChanges, studentDataChanges, checkedUsers, checkedStudents)); 
+    //navigate(`/upload_data/success`);
   }
 
   if(props.isLoading){
@@ -185,7 +185,8 @@ function GeneralUploadDataPage(props) {
     <>
       
       {getType(props.user) == "staff" || getType(props.user) == "admin" ?
-      <>      <div>{openModal && <SubmitModal closeModal={setOpenModal} handleConfirm={submit}/>}</div>
+      <>      
+      <SubmitModal />
       <AdminHeader></AdminHeader>
       <Container className='d-flex flex-column justify-content-center' style={{gap: "10px", marginTop: "20px"}}>
         <TransactionDetailsModal modalType={modalType} info={modalInfo} closeModal={closeModal} saveModal={saveModal} />
@@ -216,9 +217,7 @@ function GeneralUploadDataPage(props) {
         
         <Container className='d-flex flex-row justify-content-center' style={{gap: "10px"}}>
           <Button variant="yellow" onClick={validate}>Validate</Button>
-          <Button variant="yellow" onClick={() => {
-                      setOpenModal(true);
-                    }} disabled={changedSinceLastValidation}>Submit</Button>
+          <Button variant="yellow" onClick={submit} disabled={changedSinceLastValidation}>Submit</Button>
           <Button variant="yellow" onClick={resetPage}>Reset</Button>
         </Container>
 
@@ -247,7 +246,8 @@ GeneralUploadDataPage.propTypes = {
   uploadData: PropTypes.object,
   isLoading: PropTypes.bool,
   validate: PropTypes.func.isRequired,
-  submit: PropTypes.func.isRequired
+  submit: PropTypes.func.isRequired,
+  validateForSubmit: PropTypes.func.isRequired
 }
 
 GeneralUploadDataPage.defaultProps = {
@@ -262,4 +262,4 @@ const mapStateToProps = (state) => ({
 
 
 
-export default connect(mapStateToProps, {validate, submit})(GeneralUploadDataPage)
+export default connect(mapStateToProps, {validate, submit, validateForSubmit})(GeneralUploadDataPage)
