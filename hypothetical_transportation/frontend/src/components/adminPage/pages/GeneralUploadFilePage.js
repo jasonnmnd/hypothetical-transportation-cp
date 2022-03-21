@@ -113,7 +113,7 @@ function GeneralUploadFilePage(props) {
                         onChange={handleChangeStudent}
                     />
                     <p>You can leave either of the above fields blank to import only student/user data.</p>
-                    <Button variant="yellowsubmit" type="submit">
+                    <Button variant="yellowsubmit" type="submit" disabled={jsonRes.users.length == 0 && jsonRes.students.length == 0}>
                         Submit
                     </Button>
                     {warning? <div>
