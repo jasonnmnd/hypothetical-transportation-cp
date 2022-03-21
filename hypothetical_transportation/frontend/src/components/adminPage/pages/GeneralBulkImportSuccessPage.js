@@ -12,15 +12,25 @@ import '../NEWadminPage.css';
 import { submit, validate } from '../../../actions/bulk_import';
 import { Link } from 'react-router-dom';
 import getType from '../../../utils/user2';
+import { Alert } from 'react-bootstrap';
 
 function GeneralBulkImportSuccessPage(props) {
   if(props.isLoading){
-    return <div>
-    <p>Backend processing information, please wait...</p>
-    <Spinner animation="border" role="status" size="lg">
-        <span className="visually-hidden">Loading...</span>
-    </Spinner>
-</div>
+    return (
+      <div>
+          <Alert variant="success">
+            <Alert.Heading>Uploading Data</Alert.Heading>
+            <p>
+              Your data is being processed, please wait....
+            </p>
+            <hr />
+              <Spinner animation="border" role="status" size="lg">
+                  <span className="visually-hidden">Loading...</span>
+              </Spinner>
+          </Alert>
+
+      </div>
+    )
   }
 
   return (
