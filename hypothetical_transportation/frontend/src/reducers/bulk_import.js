@@ -1,4 +1,4 @@
-import { BULK_IMPORT_SUBMIT, BULK_IMPORT_SUBMIT_LOADING, VALIDATE_BULK_IMPORT, VALIDATE_FOR_SUBMIT, VALIDATION_LOADING } from '../actions/types.js';
+import { BULK_IMPORT_SUBMIT, BULK_IMPORT_SUBMIT_LOADING, SET_VALIDATION_FOR_SUBMIT, VALIDATE_BULK_IMPORT, VALIDATE_FOR_SUBMIT, VALIDATION_LOADING } from '../actions/types.js';
 
 const initialState = {
     uploadData: {
@@ -33,6 +33,12 @@ export default function(state = initialState, action) {
                 ...state,
                 validateForSubmit: action.payload,
                 isLoading: false
+            }
+        }
+        case SET_VALIDATION_FOR_SUBMIT: {
+            return {
+                ...state,
+                validateForSubmit: null,
             }
         }
         case VALIDATE_BULK_IMPORT:

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { VALIDATE_BULK_IMPORT, VALIDATION_LOADING, BULK_IMPORT_SUBMIT, BULK_IMPORT_SUBMIT_LOADING, VALIDATE_FOR_SUBMIT } from "./types"; 
+import { VALIDATE_BULK_IMPORT, VALIDATION_LOADING, BULK_IMPORT_SUBMIT, BULK_IMPORT_SUBMIT_LOADING, VALIDATE_FOR_SUBMIT, SET_VALIDATION_FOR_SUBMIT } from "./types"; 
 import { tokenConfig } from './auth';
 import { getParameters } from "./utils";
 
@@ -78,5 +78,12 @@ export const validateForSubmit = (data, onSuccess = () => {}) => (dispatch, getS
           });
     });
 
+}
+
+export const resetValidateForSubmit = () => (dispatch, getState) => {
+    dispatch({
+        type: SET_VALIDATION_FOR_SUBMIT,
+        payload: null,
+    });
 }
 

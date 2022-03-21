@@ -5,7 +5,8 @@ import PropTypes from 'prop-types';
 import { Button, Container, Modal } from 'react-bootstrap';
 import BulkImportTable from './BulkImportTable';
 import ErrorSection from './ErrorSection';
-import { errorsExistMany, STUDENT_COLUMNS, USER_COLUMNS } from '../../../../utils/bulk_import';
+import { dataToValidationPayload, errorsExistMany, STUDENT_COLUMNS, USER_COLUMNS } from '../../../../utils/bulk_import';
+import { resetValidateForSubmit, submit } from '../../../../actions/bulk_import';
 
 
 
@@ -15,7 +16,7 @@ function SubmitModal(props) {
     }
 
     const closeModal = () => {
-
+        props.resetValidateForSubmit();
 
     }
 
@@ -42,9 +43,13 @@ function SubmitModal(props) {
         
     }
 
+    const submit = () => {
+        props.submit(dataToValidationPayload(props.data, {}, {}));
+    }
+
 
     return (
-        <Modal show={props.data} onHide={closeModal}>
+        <Modal dialogClassName="user-modal" show={props.data} onHide={closeModal}>
             <Modal.Header closeButton>
                 <Container className='d-flex flex-row justify-content-center'>
                     <Modal.Title>Are You Sure You Want To Submit?</Modal.Title>
@@ -73,8 +78,8 @@ function SubmitModal(props) {
 
             <Modal.Footer>
                 <Container className='d-flex flex-row justify-content-center' style={{gap: "10px"}}>
-                    <Button variant="yellowclose" onClick={props.closeModal}>Close</Button>
-                    <Button variant="yellowclose" onClick={() => {}}>Save</Button>
+                    <Button variant="yellowclose" onClick={closeModal}>Close</Button>
+                    <Button variant="yellowclose" onClick={submit}>Save</Button>
                 </Container>
             </Modal.Footer>
         </Modal>  
@@ -83,7 +88,9 @@ function SubmitModal(props) {
 }
 
 SubmitModal.propTypes = {
-    data: PropTypes.object
+    data: PropTypes.object,
+    resetValidateForSubmit: PropTypes.func.isRequired,
+    submit: PropTypes.func.isRequired
     
 }
 
@@ -91,4 +98,4 @@ const mapStateToProps = (state) => ({
   data: state.bulk_import.validateForSubmit
 });
 
-export default connect(mapStateToProps)(SubmitModal)
+export default connect(mapStateToProps, {resetValidateForSubmit, submit})(SubmitModal)

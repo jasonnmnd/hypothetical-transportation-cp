@@ -54,7 +54,7 @@ function BulkImportTable(props) {
     const getRowComponent = (row, ind, changed) => {
         return (
             <tr key={ind} className={getRowClass(row, changed)}>
-                {props.showRowNumbers ? <td>{ind}</td> : null}
+                {props.showRowNumbers ? <td>{ind + 1}</td> : null}
                 {props.checked ? <td><input type="checkbox" checked={props.checked.includes(ind)} onChange={() => onCheck(ind)} disabled={errorsExist(row)==true}/></td> : null }
                 {props.colData.map((col, index) => {
                     return <td onClick={() => {props.setModalType(); props.setModalInfo({...row, index: ind});}} key={index} >{row[col.accessor].value}</td>
