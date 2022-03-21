@@ -55,11 +55,11 @@ function BulkImportTable(props) {
         return (
             <tr key={ind} className={getRowClass(row, changed)}>
                 {props.showRowNumbers ? <td>{ind + 1}</td> : null}
-                {props.checked ? <td><input type="checkbox" checked={props.checked.includes(ind)} onChange={() => onCheck(ind)} disabled={errorsExist(row)==true}/></td> : null }
+                {props.checked ? <td style={{textAlign: "center"}}><input type="checkbox" checked={props.checked.includes(ind)} onChange={() => onCheck(ind)} disabled={errorsExist(row)==true}/></td> : null }
                 {props.colData.map((col, index) => {
                     return <td onClick={() => {props.setModalType(); props.setModalInfo({...row, index: ind});}} key={index} >{row[col.accessor].value}</td>
                 })}
-                {props.deleteRow ? <td style={{cursor: "pointer"}} onClick={() => props.deleteRow(ind)}>🗑</td> : null}
+                {props.deleteRow ? <td style={{cursor: "pointer", textAlign: "center"}} onClick={() => props.deleteRow(ind)}>🗑</td> : null}
             </tr>
         )
     }
