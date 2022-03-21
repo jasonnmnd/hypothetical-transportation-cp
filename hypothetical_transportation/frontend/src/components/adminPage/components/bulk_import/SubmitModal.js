@@ -38,7 +38,7 @@ function SubmitModal(props) {
             <>
                 <h2>{title}</h2> 
                 {showData.map((transaction, index) => {
-                    <ErrorSection transaction={transaction} type={transactionType} hideDups={true} errorTitle={`Row ${index}`}/>
+                    return (<ErrorSection transaction={transaction} type={transactionType} hideDups={true} errorTitle={`Row ${index + 1}`}/>)
                 })}
             </>
         )
@@ -75,15 +75,15 @@ function SubmitModal(props) {
                         showRowNumbers={true}
                         title='Students To Submit'
                     />
-                    {errorsExistMany(props.data.users) ? getErrors("users") : null}
-                    {errorsExistMany(props.data.students) ? getErrors("students") : null}
+                    {errorsExistMany(props.data.users) ? getErrors("user") : null}
+                    {errorsExistMany(props.data.students) ? getErrors("student") : null}
                 </Container>
             </Modal.Body>
 
             <Modal.Footer>
                 <Container className='d-flex flex-row justify-content-center' style={{gap: "10px"}}>
                     <Button variant="yellowclose" onClick={closeModal}>Close</Button>
-                    <Button variant="yellowclose" onClick={submit}>Save</Button>
+                    <Button variant="yellowclose" disabled={errorsExistMany(props.data.users) || errorsExistMany(props.data.students)} onClick={submit}>Save</Button>
                 </Container>
             </Modal.Footer>
         </Modal>  
