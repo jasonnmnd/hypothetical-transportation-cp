@@ -7,7 +7,7 @@ import { dataToSubmitPayload, dataToValidationPayload, duplicatesExist, errOrDup
 import BulkImportTable from '../components/bulk_import/BulkImportTable';
 import UserDetailsModal from '../components/bulk_import/UserDetailsModal';
 import TransactionDetailsModal from '../components/bulk_import/TransactionDetailsModal';
-import { Alert, Button, Container, Spinner } from 'react-bootstrap';
+import { Alert, Button, Container, Spinner, Tooltip, OverlayTrigger } from 'react-bootstrap';
 import '../NEWadminPage.css';
 import { submit, validate, validateForSubmit } from '../../../actions/bulk_import';
 import getType from '../../../utils/user2';
@@ -190,6 +190,12 @@ function GeneralUploadDataPage(props) {
          
   }
 
+  const renderTooltip = (props) => (
+    <Tooltip id="button-tooltip" {...props}>
+      Please validate first before submitting
+    </Tooltip>
+  );
+
   return (
     <>
       
@@ -229,12 +235,16 @@ function GeneralUploadDataPage(props) {
           <Button variant="yellow" onClick={submit} disabled={changedSinceLastValidation || checkedStudents.length + checkedUsers.length == 0}>Submit</Button>
           <Button variant="yellow" onClick={resetPage}>Reset</Button>
         </Container>
-
-        <br></br>
-
-        <br></br>
-
         
+        {changedSinceLastValidation ?
+        <Container className='d-flex flex-row justify-content-center'>Please validate before submitting.</Container>
+        :
+        <></>
+        }
+
+
+        <br></br>
+        <br></br>
       </Container>      
       </> : <>
       <AdminHeader></AdminHeader>
