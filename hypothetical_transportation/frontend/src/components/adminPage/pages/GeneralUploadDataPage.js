@@ -1,5 +1,5 @@
 import AdminHeader from '../../header/AdminHeader'
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, Fragment } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes, { string } from 'prop-types';
@@ -7,11 +7,13 @@ import { dataToSubmitPayload, dataToValidationPayload, duplicatesExist, errOrDup
 import BulkImportTable from '../components/bulk_import/BulkImportTable';
 import UserDetailsModal from '../components/bulk_import/UserDetailsModal';
 import TransactionDetailsModal from '../components/bulk_import/TransactionDetailsModal';
-import { Alert, Button, Container, Spinner, Tooltip, OverlayTrigger } from 'react-bootstrap';
+import { Alert, Button, Container, Spinner, Tooltip, OverlayTrigger, Card, Collapse } from 'react-bootstrap';
 import '../NEWadminPage.css';
 import { submit, validate, validateForSubmit } from '../../../actions/bulk_import';
 import getType from '../../../utils/user2';
 import SubmitModal from '../components/bulk_import/SubmitModal';
+import bulk_import_legend from '../../../utils/bulk_import_legend';
+import IconLegend from '../../common/IconLegend';
 
 function GeneralUploadDataPage(props) {
   const [modalInfo, setModalInfo] = useState(null);
@@ -184,22 +186,33 @@ function GeneralUploadDataPage(props) {
             </div>
         </Container>
       </>
-
     )
-  
-    
-         
   }
 
-  const renderTooltip = (props) => (
-    <Tooltip id="button-tooltip" {...props}>
-      Please validate first before submitting
-    </Tooltip>
-  );
-
-  function changeValidateText(e) {
-    setShouldValidateText(!shouldShowValidateText)
+  function changeValidateTextTrue(e) {
+    setShouldValidateText(true)
   }
+
+  function changeValidateTextFalse(e) {
+    setShouldValidateText(false)
+  }
+
+  const legendElements = [
+      {
+          color: "🟦  ",
+          key: "Modified "
+      },
+      {
+          color: "🟨  ",
+          key: "Warning "
+      },
+      {
+          color: "🟥  ",
+          key: "Error "
+      }
+  ]
+
+  const [openInstruc, setOpenInstruc] = useState(false);
 
   return (
     <>
@@ -209,8 +222,44 @@ function GeneralUploadDataPage(props) {
       <SubmitModal />
       <AdminHeader></AdminHeader>
       <Container className='d-flex flex-column justify-content-center' style={{gap: "10px", marginTop: "20px"}}>
+
+
         <TransactionDetailsModal modalType={modalType} info={modalInfo} closeModal={closeModal} saveModal={saveModal} />
         
+        <div className='d-flex flex-row justify-content-center'>
+            <Button
+                onClick={() => setOpenInstruc(!openInstruc)}
+                aria-controls="example-collapse-text"
+                aria-expanded={openInstruc}
+                variant="instrucToggle"
+                >
+                    Legend {openInstruc ? "▲" : "▼"}
+            </Button>
+        </div>
+
+        <Container>
+          <Collapse in={openInstruc}>
+            <Card>
+                <Card.Header as="h5">Legend</Card.Header>
+                <Card.Body>
+                    <Card.Text>
+                    {
+                        legendElements.map((result, index) => {
+                        return (
+                            <Fragment key={index}>
+                                {result.color}
+                                {result.key}
+                                <br></br>
+                            </Fragment>
+                        )})
+                    }
+                    </Card.Text>
+                </Card.Body>
+            </Card>
+          </Collapse>
+        </Container>
+
+
         <BulkImportTable 
           data={data.users} 
           colData={USER_COLUMNS}
@@ -237,18 +286,22 @@ function GeneralUploadDataPage(props) {
         
         <Container className='d-flex flex-row justify-content-center' style={{gap: "10px"}}>
           <Button variant="yellow" onClick={validate}>Validate</Button>
-          <div onMouseOver={changeValidateText} onMouseLeave={changeValidateText}>
+          <div onMouseOver={changeValidateTextTrue} onMouseLeave={changeValidateTextFalse}>
             <Button variant="yellow" onClick={submit} disabled={changedSinceLastValidation || checkedStudents.length + checkedUsers.length == 0}>Submit</Button>
           </div>
           <Button variant="yellow" onClick={resetPage}>Reset</Button>
         </Container>
-        
-        {changedSinceLastValidation && shouldShowValidateText ?
-        <Container className='d-flex flex-row justify-content-center'>Please validate before submitting.</Container>
+
+        {checkedStudents.length + checkedUsers.length == 0 && shouldShowValidateText ?
+        <Container className='d-flex flex-row justify-content-center'>Please check at least one row and validate.</Container>
         :
         <></>
         }
-
+        {checkedStudents.length + checkedUsers.length !== 0 && changedSinceLastValidation && shouldShowValidateText ?
+        <Container className='d-flex flex-row justify-content-center'>Please validate before submitting.</Container>
+        :
+        <br></br>
+        }
 
         <br></br>
         <br></br>

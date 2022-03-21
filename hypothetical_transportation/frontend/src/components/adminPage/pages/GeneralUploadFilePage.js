@@ -102,7 +102,7 @@ function GeneralUploadFilePage(props) {
             <AdminHeader></AdminHeader>
             {getType(props.user) == "staff" || getType(props.user) == "admin" ?
             <Container className="container-main" style={{width: "50%"}} >
-                <Form className="shadow-lg p-3 mb-5 bg-white rounded"  noValidate onSubmit={handleOnSubmit}>
+                {!loading?<Form className="shadow-lg p-3 mb-5 bg-white rounded"  noValidate onSubmit={handleOnSubmit}>
                     <Form.Label as="h5">Select USER CSV file</Form.Label>
                     <Form.Control
                         type={"file"}
@@ -135,7 +135,19 @@ function GeneralUploadFilePage(props) {
                     </div>
                     :
                     <></>}
-                </Form>
+                </Form>:<div>
+                <Alert variant="success">
+                  <Alert.Heading>Uploading Data</Alert.Heading>
+                  <p>
+                    Your data is being validated, please wait....
+                  </p>
+                  <hr />
+                    <Spinner animation="border" role="status" size="lg">
+                        <span className="visually-hidden">Loading...</span>
+                    </Spinner>
+                </Alert>
+                    </div>
+            }
             </Container> : <Container className="container-main">
                 <Alert variant="danger">
                   <Alert.Heading>Access Denied</Alert.Heading>
