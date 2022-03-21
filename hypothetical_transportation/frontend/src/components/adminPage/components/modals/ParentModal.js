@@ -35,7 +35,7 @@ function ParentModal(props) {
         {/* //onHide={closeModal}> */}
             <Modal.Header closeButton>
                 <Container className='d-flex flex-row justify-content-center'>
-                    <Modal.Title>This email Already Exists in the database. Would you like to use them instead?</Modal.Title>
+                    <Modal.Title>This email already exists in the database. Would you like to use them instead?</Modal.Title>
                 </Container>
             </Modal.Header>
 
