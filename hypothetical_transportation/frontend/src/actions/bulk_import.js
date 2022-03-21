@@ -23,9 +23,9 @@ export const submit = (data, onSuccess = () => {}) => (dispatch, getState) => {
     .catch((err) => {/*console.log(err);*/
         dispatch(returnErrors(err.response.data, err.response.status))
         dispatch({
-            type: BULK_IMPORT_SUBMIT,
-            payload: err.response.data,
-          });
+            type: BULK_IMPORT_SUBMIT_LOADING,
+            payload: false,
+        });
     });
 
 }
@@ -73,8 +73,8 @@ export const validateForSubmit = (data, onSuccess = () => {}) => (dispatch, getS
     .catch((err) => {/*console.log(err);*/
         dispatch(returnErrors(err.response.data, err.response.status))
         dispatch({
-            type: VALIDATE_FOR_SUBMIT,
-            payload: err.response.data,
+            type: VALIDATION_LOADING,
+            payload: false,
           });
     });
 
