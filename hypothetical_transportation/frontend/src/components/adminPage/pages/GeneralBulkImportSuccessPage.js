@@ -18,6 +18,7 @@ function GeneralBulkImportSuccessPage(props) {
   if(props.isLoading){
     return (
       <div>
+          <AdminHeader></AdminHeader>
           <Alert variant="success">
             <Alert.Heading>Uploading Data</Alert.Heading>
             <p>
