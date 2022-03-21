@@ -72,6 +72,8 @@ function GeneralUploadFilePage(props) {
                 setUserRes(csvJSON(csvOutput))
             };
             userReader.readAsText(userfile);
+        }else{
+            setUserRes([])
         }
 
         if (studentfile) {
@@ -80,6 +82,8 @@ function GeneralUploadFilePage(props) {
                 setStudentRes(csvJSON(csvOutput))
             };
             studentReader.readAsText(studentfile);
+        }else{
+            setStudentRes([])
         }
     },[userfile, studentfile])
 
