@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { Button, Card, Container, Modal } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import getType from '../../../../utils/user2';
-import { addStudent } from '../../../../actions/students';
+import { addStudent,resetExposedUser } from '../../../../actions/students';
 
 
 
@@ -14,6 +14,7 @@ function ParentModal(props) {
     const [show, setShow]=useState(false);
     const closeModal = () => {
         setShow(false)
+        props.resetExposedUser()
         props.setFieldValues({...props.parent, email:""})
     }
 
@@ -87,6 +88,7 @@ ParentModal.propTypes = {
     parent: PropTypes.object,
     student: PropTypes.object,
     setFieldValues: PropTypes.func,
+    resetExposedUser: PropTypes.func,
     fieldValue:PropTypes.object,
 
 }
@@ -96,4 +98,4 @@ const mapStateToProps = (state) => ({
     user: state.auth.user,
 });
 
-export default connect(mapStateToProps, {addStudent})(ParentModal)
+export default connect(mapStateToProps, {addStudent,resetExposedUser})(ParentModal)
