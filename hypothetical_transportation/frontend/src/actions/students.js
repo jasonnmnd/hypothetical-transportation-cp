@@ -78,7 +78,12 @@ export const addStudent = (student) => (dispatch, getState) => {
         payload: res.data,
       });
     })
-    .catch((err) => {console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
+    .catch((err) => {
+      dispatch({
+        type: RESET_EXPOSED_USER
+      })
+      console.log(err);
+      dispatch(returnErrors(err.response.data, err.response.status))});
 };
 
 //addStudentWithParent, updateStudentWithParent
@@ -104,6 +109,10 @@ export const addStudentWithParent = (parent, student) => (dispatch, getState) =>
         .catch((err) => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});    
       })
       .catch((err) => {
+
+      dispatch({
+        type: RESET_EXPOSED_USER
+      })
         dispatch(returnErrors(err.response.data, err.response.status));
       });
 };
