@@ -46,6 +46,7 @@ function SubmitModal(props) {
     }
 
     const submit = () => {
+        props.resetValidateForSubmit()
         props.submit(dataToValidationPayload(props.data, {}, {}));
         navigate("/upload_data/success")
     }
