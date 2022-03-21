@@ -5,7 +5,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { getSchools } from '../../../actions/schools';
-import { getUsers, getUser } from '../../../actions/users';
+import { getUsers, getUser,emailExpose } from '../../../actions/users';
 import { getStudent, addStudent, updateStudent, addStudentWithParent, updateStudentWithParent } from '../../../actions/students';
 import { getRoutesByID } from '../../../actions/routes';
 import { Form, Button, Row, Col, Container, InputGroup, ButtonGroup, ToggleButton, Card, Alert} from 'react-bootstrap';
@@ -14,6 +14,7 @@ import AssistedLocationMap from "../../maps/AssistedLocationMap";
 import getType from '../../../utils/user2';
 import Select from 'react-select';
 import { getItemCoord } from "../../../utils/geocode";
+import ParentModal from '../components/modals/ParentModal';
 
 
 
@@ -81,7 +82,7 @@ function GeneralManageStudentPage(props) {
               latitude: coord.lat.toFixed(6),
               managed_schools: []
           }
-
+          props.emailExpose(createVals.email)
           //hit email expose endpoint
           //if email expose endpoint gives yes, show popup
           //if yes clicked on popup,  props.addStudentWithParent(createVals, obj)
@@ -106,8 +107,32 @@ function GeneralManageStudentPage(props) {
       }
     }
     setValidated(true);
-
   }
+
+
+  useEffect(() => {
+    if(props.exposedUser.id==-1){
+        const createVals = fieldValues.groups==3 ? {
+          ...fieldValues,
+          groups: [fieldValues.groups],
+          address: address,
+          longitude: coord.lng.toFixed(6),
+          latitude: coord.lat.toFixed(6),
+          managed_schools: finalSchoolList,
+      }:{
+          ...fieldValues,
+          groups: [fieldValues.groups],
+          address: address,
+          longitude: coord.lng.toFixed(6),
+          latitude: coord.lat.toFixed(6),
+          managed_schools: []
+      }
+      props.addStudentWithParent(createVals, obj)
+    }
+    else{
+
+    }
+  }, [props.exposedUser]);
 
   const [schoolSelected, setSchoolSelected] = useState(null)
   const [guardianSelected, setGuardianSelected] = useState(null)
@@ -256,6 +281,7 @@ useEffect(()=>{
     return ( 
       <>
         <Header></Header>
+        <ParentModal />
         {getType(props.user) == "staff"  || getType(props.user) == "admin" ?
         <Container className="container-main">
           <Form className="shadow-lg p-3 mb-5 bg-white rounded" noValidate validated={validated} onSubmit={handleSubmit}
@@ -455,7 +481,8 @@ GeneralManageStudentPage.propTypes = {
     updateStudent: PropTypes.func.isRequired,
     resetPostedUser: PropTypes.func.isRequired,
     addStudentWithParent: PropTypes.func.isRequired,
-    updateStudentWithParent: PropTypes.func.isRequired
+    updateStudentWithParent: PropTypes.func.isRequired,
+    emailExpose: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = (state) => ({
@@ -465,7 +492,8 @@ const mapStateToProps = (state) => ({
   users: state.users.users.results,
   student: state.students.viewedStudent,
   routes: state.routes.routes.results,
-  selectedUser: state.users.postedUser
+  selectedUser: state.users.postedUser,
+  exposedUser: state.users.exposedUser,
 });
 
-export default connect(mapStateToProps, {getSchools, getUsers, getStudent, getRoutesByID, getUser, addStudent, updateStudent,resetPostedUser,addStudentWithParent,updateStudentWithParent})(GeneralManageStudentPage)
+export default connect(mapStateToProps, {getSchools, getUsers, getStudent, getRoutesByID, getUser, addStudent, updateStudent,resetPostedUser,emailExpose, addStudentWithParent,updateStudentWithParent})(GeneralManageStudentPage)
