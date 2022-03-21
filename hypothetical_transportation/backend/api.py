@@ -306,8 +306,12 @@ class UserViewSet(viewsets.ModelViewSet):
     def expose(self, request):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = get_object_or_404(get_user_model(), email=serializer.validated_data["email"])
-        return Response(ExposeUserSerializer(user).data, status.HTTP_200_OK)
+        try:
+            user = get_user_model().objects.get(email=serializer.validated_data["email"])
+            return Response(FormatUserSerializer(user).data, status.HTTP_200_OK)
+        except get_user_model().DoesNotExist:
+            content = {"id": -1}
+            return Response(content, status.HTTP_200_OK)
 
 
 class StopViewSet(viewsets.ModelViewSet):
