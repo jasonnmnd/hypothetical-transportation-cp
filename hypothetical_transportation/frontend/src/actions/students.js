@@ -135,6 +135,12 @@ export const updateStudentWithParent = (parent, student) => (dispatch, getState)
       });
 };
 
+export const resetExposedUser = ()=>(dispatch, getState) =>{
+  dispatch({
+    type: RESET_EXPOSED_USER
+  })
+}
+
 export const updateStudent = (student, id) => (dispatch, getState) => {
   axios
           .put(`/api/student/${id}/`,student, tokenConfig(getState))

@@ -15,6 +15,21 @@ import SubmitModal from '../components/bulk_import/SubmitModal';
 import bulk_import_legend from '../../../utils/bulk_import_legend';
 import IconLegend from '../../common/IconLegend';
 
+const LEGEND_ELEMENTS = [
+  {
+      color: "🟦  ",
+      key: "Modified "
+  },
+  {
+      color: "🟨  ",
+      key: "Warning "
+  },
+  {
+      color: "🟥  ",
+      key: "Error "
+  }
+]
+
 function GeneralUploadDataPage(props) {
   const [modalInfo, setModalInfo] = useState(null);
   const [modalType, setModalType] = useState(null);
@@ -26,6 +41,7 @@ function GeneralUploadDataPage(props) {
   const [changedSinceLastValidation, setChangedSinceLastValidation] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [shouldShowValidateText, setShouldValidateText] = useState(false);
+  const [openInstruc, setOpenInstruc] = useState(false);
 
 
   const closeModal = () => {
@@ -167,6 +183,15 @@ function GeneralUploadDataPage(props) {
     //navigate(`/upload_data/success`);
   }
 
+  function changeValidateTextTrue(e) {
+    setShouldValidateText(true)
+  }
+
+  function changeValidateTextFalse(e) {
+    setShouldValidateText(false)
+  }
+
+
   if(props.isLoading){
     return (
       <>
@@ -189,30 +214,10 @@ function GeneralUploadDataPage(props) {
     )
   }
 
-  function changeValidateTextTrue(e) {
-    setShouldValidateText(true)
-  }
+  
+  
 
-  function changeValidateTextFalse(e) {
-    setShouldValidateText(false)
-  }
-
-  const legendElements = [
-      {
-          color: "🟦  ",
-          key: "Modified "
-      },
-      {
-          color: "🟨  ",
-          key: "Warning "
-      },
-      {
-          color: "🟥  ",
-          key: "Error "
-      }
-  ]
-
-  const [openInstruc, setOpenInstruc] = useState(false);
+  
 
   return (
     <>
@@ -244,7 +249,7 @@ function GeneralUploadDataPage(props) {
                 <Card.Body>
                     <Card.Text>
                     {
-                        legendElements.map((result, index) => {
+                        LEGEND_ELEMENTS.map((result, index) => {
                         return (
                             <Fragment key={index}>
                                 {result.color}
