@@ -24,9 +24,9 @@ services:
       - POSTGRES_DB=admin
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=admin
-      - VIRTUAL_HOST=hypothetical-transportation.colab.duke.edu
+      - VIRTUAL_HOST=hypothetical-transportation-legoons.colab.duke.edu
       - VIRTUAL_PORT=8000
-      - LETSENCRYPT_HOST=hypothetical-transportation.colab.duke.edu
+      - LETSENCRYPT_HOST=hypothetical-transportation-legoons.colab.duke.edu
       - LETSENCRYPT_EMAIL=dmm107@duke.edu
     depends_on:
       - db

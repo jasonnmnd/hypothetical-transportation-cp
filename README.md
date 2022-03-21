@@ -14,7 +14,7 @@ The hosts for these servers are as listed:
 
 #### PRODUCTION
 
-`https://hypothetical-transportation.colab.duke.edu`
+`https://hypothetical-transportation-legoons.colab.duke.edu`
 
 #### DEV
 
