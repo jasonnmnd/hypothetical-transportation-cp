@@ -17,7 +17,6 @@ function GeneralUploadFilePage(props) {
 
     const userReader = new FileReader();
     const studentReader = new FileReader();
-    const [loading, setLoading] = useState(false)
 
 
     const [userRes, setUserRes] = useState([]);
@@ -34,7 +33,6 @@ function GeneralUploadFilePage(props) {
     const [warning, setWarning] = useState(false)
     const handleOnSubmit = (e) => {
         e.preventDefault();
-        setLoading(true)
         var userOK=false;
         var studentOK=false;
         if(jsonRes.users.length>0){
@@ -55,9 +53,9 @@ function GeneralUploadFilePage(props) {
             studentOK=true;
         }
         if(userOK && studentOK){
-            setLoading(true)
             setWarning(false)
-            props.validate(jsonRes, () => {navigate("/upload_data")})
+            props.validate(jsonRes)
+            navigate("/upload_data")
         }
         else{
             setWarning(true);
@@ -126,14 +124,7 @@ function GeneralUploadFilePage(props) {
                         <p>User CSV is expected to have  "email","name", "address", "phone_number" fields, in this order</p>
                         <p>Student CSV is expected to have "name", "parent_email", "student_id", "school_name" fields, in this order</p>
                         <p>Please double check the files you are uploading before continuing</p>
-                    </div>: loading? 
-                    <div>
-                        <p>Backend processing information, please wait...</p>
-                        <Spinner animation="border" role="status" size="lg">
-                            <span className="visually-hidden">Loading...</span>
-                        </Spinner>
-                    </div>
-                    :
+                    </div>: 
                     <></>}
                 </Form>
             </Container> : <Container className="container-main">

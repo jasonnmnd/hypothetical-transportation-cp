@@ -167,18 +167,29 @@ function GeneralUploadDataPage(props) {
   }
 
   if(props.isLoading){
-    return <div>
-               <Alert variant="success">
-                <Alert.Heading>Uploading Data</Alert.Heading>
-                <p>
-                  Your data is being validated, please wait....
-                </p>
-                <hr />
-                  <Spinner animation="border" role="status" size="lg">
-                      <span className="visually-hidden">Loading...</span>
-                  </Spinner>
-              </Alert>
-          </div>
+    return (
+      <>
+        <AdminHeader/>
+        <Container className='d-flex flex-column justify-content-center' style={{gap: "10px", marginTop: "20px"}}>
+          <div>
+                <Alert variant="success">
+                  <Alert.Heading>Uploading Data</Alert.Heading>
+                  <p>
+                    Your data is being validated, please wait....
+                  </p>
+                  <hr />
+                    <Spinner animation="border" role="status" size="lg">
+                        <span className="visually-hidden">Loading...</span>
+                    </Spinner>
+                </Alert>
+            </div>
+        </Container>
+      </>
+
+    )
+  
+    
+         
   }
 
   return (
