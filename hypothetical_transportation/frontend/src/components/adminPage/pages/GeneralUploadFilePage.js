@@ -60,6 +60,8 @@ function GeneralUploadFilePage(props) {
             props.validate(jsonRes, () => {navigate("/upload_data")})
         }
         else{
+
+            setLoading(false)
             setWarning(true);
         }
         
