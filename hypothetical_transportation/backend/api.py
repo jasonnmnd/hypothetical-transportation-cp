@@ -17,7 +17,7 @@ from .serializers import UserSerializer, StudentSerializer, RouteSerializer, Sch
     FormatRouteSerializer, FormatUserSerializer, EditUserSerializer, StopSerializer, CheckInrangeSerializer, \
     LoadUserSerializer, LoadModelDataSerializer, find_school_match_candidates, school_names_match, \
     StaffEditUserSerializer, StaffEditSchoolSerializer, StaffStudentSerializer, LoadStudentSerializer, \
-    LoadStudentSerializerStrict
+    LoadStudentSerializerStrict, ExposeUserSerializer, ExposeUserInputEmailSerializer
 from .search import DynamicSearchFilter
 from .customfilters import StudentCountShortCircuitFilter
 from .permissions import is_admin, is_school_staff, is_driver, IsAdminOrReadOnly, IsAdmin, IsSchoolStaff, is_guardian
@@ -272,6 +272,8 @@ class UserViewSet(viewsets.ModelViewSet):
         super().perform_destroy(instance)
 
     def get_serializer_class(self):
+        if self.action == 'expose':
+            return ExposeUserInputEmailSerializer
         if is_school_staff(self.request.user) and (
                 self.action == 'partial_update' or self.action == 'update' or self.action == 'create'):
             return StaffEditUserSerializer
@@ -299,6 +301,17 @@ class UserViewSet(viewsets.ModelViewSet):
     def fields(self, request):
         content = parse_repr(repr(UserSerializer()))
         return Response(content)
+
+    @action(detail=False, methods=['post'], permission_classes=[IsAdmin | IsSchoolStaff])
+    def expose(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        try:
+            user = get_user_model().objects.get(email=serializer.validated_data["email"])
+            return Response(FormatUserSerializer(user).data, status.HTTP_200_OK)
+        except get_user_model().DoesNotExist:
+            content = {"id": -1}
+            return Response(content, status.HTTP_200_OK)
 
 
 class StopViewSet(viewsets.ModelViewSet):

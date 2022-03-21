@@ -239,8 +239,8 @@ function GeneralUploadDataPage(props) {
         
         <Container className='d-flex flex-row justify-content-center' style={{gap: "10px"}}>
           <Button variant="yellow" onClick={validate}>Validate</Button>
-          <div onMouseOver={changeValidateTextTrue} onMouseLeave={changeValidateTextFalse}>
-            <Button variant="yellow" onClick={submit} disabled={changedSinceLastValidation}>Submit</Button>
+          <div onMouseOver={changeValidateText} onMouseLeave={changeValidateText}>
+            <Button variant="yellow" onClick={submit} disabled={changedSinceLastValidation || checkedStudents.length + checkedUsers.length == 0}>Submit</Button>
           </div>
           <Button variant="yellow" onClick={resetPage}>Reset</Button>
         </Container>
