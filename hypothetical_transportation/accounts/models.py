@@ -29,7 +29,7 @@ class User(EmailAbstractUser):
     address = models.CharField(_('address'), max_length=150, validators=[MinLengthValidator(1)])
     latitude = models.FloatField(blank=False)
     longitude = models.FloatField(blank=False)
-    phone_number = models.CharField(max_length=20, blank=False, null=False, validators=[MinLengthValidator(1)])
+    phone_number = models.CharField(max_length=35, blank=False, null=False, validators=[MinLengthValidator(1)])
     managed_schools = models.ManyToManyField(School, related_name="managers", blank=True)
     objects = CustomEmailUserManager()
 

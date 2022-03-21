@@ -74,7 +74,11 @@ function IconLegend(props) {
             icon: STUDENT_X_LEGEND("red")
         },
         {
-            key: " Stops ",
+            key: " Multiple Students: ",
+            icon: STUDENT_MULTIPLE_LEGEND("purple")
+        },
+        {
+            key: " Stops: ",
             icon: STOP_LEGEND("blue")
         }
     ]

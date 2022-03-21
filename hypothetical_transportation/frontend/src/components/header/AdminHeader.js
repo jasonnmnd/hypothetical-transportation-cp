@@ -53,7 +53,7 @@ function AdminHeader( props ) {
                         <NavDropdown.Item as={Link} to={`/`}><IoIcons5.IoCreate /> Create Stops</NavDropdown.Item>
                     </NavDropdown> */}
                     {isAdmin(props.user) ? <Nav.Link as={Link} to={`/admin/email`}> Send Email</Nav.Link> : <></>}
-                    {isAdmin(props.user) ? <Nav.Link as={Link} to={`/upload_data`}> Upload Data</Nav.Link>: <></>}
+                    {isAdmin(props.user) ? <Nav.Link as={Link} to={`/upload_file`}> Upload Data</Nav.Link>: <></>}
                     <Nav.Link as={Link} to={`/parent?pageNum=1`}> Your Parent Portal</Nav.Link>
 
                         <Navbar.Brand width="200" height="50">

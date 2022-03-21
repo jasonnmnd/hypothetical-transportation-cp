@@ -13,6 +13,8 @@ import { resetPostedUser } from '../../../actions/users';
 import AssistedLocationMap from "../../maps/AssistedLocationMap";
 import getType from '../../../utils/user2';
 import Select from 'react-select';
+import { getItemCoord } from "../../../utils/geocode";
+
 
 
 function GeneralManageStudentPage(props) {

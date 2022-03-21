@@ -9,6 +9,7 @@ import table from './table';
 import routes from './routes';
 import routeplanner from './routeplanner';
 import stop from './stops';
+import bulk_import from './bulk_import';
 
 export default combineReducers({
   students,
@@ -21,4 +22,5 @@ export default combineReducers({
   routeplanner,
   routes,
   stop,
+  bulk_import
 });
