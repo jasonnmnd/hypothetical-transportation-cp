@@ -57,7 +57,7 @@ function BulkImportTable(props) {
                 {props.colData.map((col, index) => {
                     return <td onClick={() => {props.setModalType(); props.setModalInfo({...row, index: ind});}} key={index} >{row[col.accessor].value}</td>
                 })}
-                <td onClick={() => props.deleteRow(ind)}>🗑</td>
+                <td style={{cursor: "pointer"}} onClick={() => props.deleteRow(ind)}>🗑</td>
             </tr>
         )
     }
