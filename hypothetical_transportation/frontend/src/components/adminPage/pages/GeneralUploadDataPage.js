@@ -23,6 +23,7 @@ function GeneralUploadDataPage(props) {
   const [checkedUsers, setCheckedUsers] = useState([]);
   const [changedSinceLastValidation, setChangedSinceLastValidation] = useState(false);
   const [openModal, setOpenModal] = useState(false);
+  const [shouldShowValidateText, setShouldValidateText] = useState(false);
 
 
   const closeModal = () => {
@@ -196,6 +197,10 @@ function GeneralUploadDataPage(props) {
     </Tooltip>
   );
 
+  function changeValidateText(e) {
+    setShouldValidateText(!shouldShowValidateText)
+  }
+
   return (
     <>
       
@@ -232,26 +237,13 @@ function GeneralUploadDataPage(props) {
         
         <Container className='d-flex flex-row justify-content-center' style={{gap: "10px"}}>
           <Button variant="yellow" onClick={validate}>Validate</Button>
-
-          {/* {changedSinceLastValidation ?
-          <Button variant="yellow" onClick={submit} disabled={!changedSinceLastValidation}>Submit</Button>
-          :
-          <OverlayTrigger
-            placement="bottom"
-            // delay={{ show: 250, hide: 400 }}
-            // overlay={renderTooltip}
-            overlay={<Tooltip id="button-tooltip-2">Please validate first before submitting</Tooltip>}
-          >
-            {({ ref, ...triggerHandler }) => (
-            <Button variant="yellow" {...triggerHandler} disabled={!changedSinceLastValidation} onClick={submit}><span className="ms-1">Hover to see</span></Button>
-            )}
-          </OverlayTrigger>
-          } */}
-          <Button variant="yellow" onClick={submit} disabled={changedSinceLastValidation}>Submit</Button>
+          <div onMouseOver={changeValidateText} onMouseLeave={changeValidateText}>
+            <Button variant="yellow" onClick={submit} disabled={changedSinceLastValidation}>Submit</Button>
+          </div>
           <Button variant="yellow" onClick={resetPage}>Reset</Button>
         </Container>
         
-        {changedSinceLastValidation ?
+        {changedSinceLastValidation && shouldShowValidateText ?
         <Container className='d-flex flex-row justify-content-center'>Please validate before submitting.</Container>
         :
         <></>
