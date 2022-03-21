@@ -116,6 +116,7 @@ function GeneralManageStudentPage(props) {
   useEffect(() => {
     if(props.exposedUser.id==-1){
         console.log("?")
+        const finalSchoolList = staffSchool.map((item)=>{return item.value})
         const createVals = fieldValues.groups==3 ? {
           ...fieldValues,
           groups: [2],

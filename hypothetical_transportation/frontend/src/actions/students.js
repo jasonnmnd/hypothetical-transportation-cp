@@ -106,7 +106,12 @@ export const addStudentWithParent = (parent, student) => (dispatch, getState) =>
             payload: res.data,
           });
         })
-        .catch((err) => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});    
+        .catch((err) => {/*console.log(err);*/
+
+          dispatch({
+            type: RESET_EXPOSED_USER
+          })
+          dispatch(returnErrors(err.response.data, err.response.status))});    
       })
       .catch((err) => {
 
