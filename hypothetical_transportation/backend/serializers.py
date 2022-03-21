@@ -215,7 +215,7 @@ class LoadStudentSerializerStrict(LoadStudentSerializer):
 class LoadUserSerializer(serializers.ModelSerializer):
     def validate_address(self, value):
         # TODO: Uncomment to use paid geolocator API
-        geolocator = GoogleV3(api_key="AIzaSyA6nIh9bWUWFOD_y7hEZ7UQh_KmPn5Sq58")
+        geolocator = GoogleV3(api_key="AIzaSyDsyPs-pIVKGJiy7EVy8aKebN5zg515BCs")
         # geolocator = Nominatim(user_agent="bulk import validator")
         location = geolocator.geocode(value)
         if not location or not location.latitude or not location.longitude:

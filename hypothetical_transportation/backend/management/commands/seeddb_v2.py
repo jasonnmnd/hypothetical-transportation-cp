@@ -12,7 +12,7 @@ Student = apps.get_model('backend', 'Student')
 path = "backend/management/commands"
 
 #geolocator = Nominatim(user_agent="Hypothetical Transportation Database Seeder")
-geolocator = GoogleV3(api_key="AIzaSyA6nIh9bWUWFOD_y7hEZ7UQh_KmPn5Sq58")
+geolocator = GoogleV3(api_key="AIzaSyDsyPs-pIVKGJiy7EVy8aKebN5zg515BCs")
 
 class Command(BaseCommand):
     help = 'Loads ECE458 CSV files into the database'
