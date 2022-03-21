@@ -589,7 +589,7 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
             is_valid &= len(current_email_duplicates) == 0
             duplicate_email_address_alert = [] if len(current_email_duplicates) == 0 else [
                 "Duplicate email addresses must be corrected before continuing"]
-            paired_email_alert = [] if is_school_staff(request.user) and user.email in user_emails_in_student else [
+            paired_email_alert = [] if is_admin(request.user) or user.email in user_emails_in_student else [
                 "This parent would be created without corresponding students"]
             user_object_response["email"] = self.get_val_field_response_format(user.email,
                                                                                serializer_errors["users"][user_dex].get(
