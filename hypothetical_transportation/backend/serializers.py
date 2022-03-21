@@ -12,6 +12,16 @@ class GroupSerializer(serializers.ModelSerializer):
         fields = ('id', 'name')
 
 
+class ExposeUserInputEmailSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True)
+
+
+class ExposeUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = get_user_model()
+        fields = ('id', 'email')
+
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
