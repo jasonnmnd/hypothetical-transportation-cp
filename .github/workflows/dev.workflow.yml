@@ -35,3 +35,5 @@ jobs:
             sudo docker-compose -f docker-compose.dev.yml pull
             sudo docker-compose -f docker-compose.dev.yml down --volumes
             sudo docker-compose -f docker-compose.dev.yml up -d --build
+            cd postgres
+            sudo docker cp pg_hba.conf ece-458_db_1:var/lib/postgresql/data/pg_hba.conf

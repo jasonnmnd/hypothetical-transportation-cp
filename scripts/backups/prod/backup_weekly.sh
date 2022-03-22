@@ -12,4 +12,4 @@ echo "[PROD: BACKUP - WEEKLY] copying data dump from db to dev server host"
 sudo docker cp ece-458_web_1:weekly.json /home/vcm/backups/weekly.json
 
 echo "[PROD: BACKUP - WEEKLY] Sending $WEEK weekly backup"
-scp -v -i ~/.ssh/id_rsa /home/vcm/backups/weekly.json vcm@vcm-25708.vm.duke.edu:/home/vcm/backups/prod-host/weekly/weekly-$WEEK.json
+scp -v -i /home/vcm/.ssh/id_rsa /home/vcm/backups/weekly.json vcm@vcm-25708.vm.duke.edu:/home/vcm/backups/prod-host/weekly/weekly-$WEEK.json
