@@ -7,7 +7,7 @@ services:
       - postgres_data:/var/lib/postgresql/data/
     environment:
       - POSTGRES_DB=admin
-      - POSTGRES_USER=admin
+      - POSTGRES_USER=admin_new
       - POSTGRES_PASSWORD=temptobereplacedpassword
     ports:
       - 5432:5432
@@ -23,7 +23,7 @@ services:
       - "8000"
     environment:
       - POSTGRES_DB=admin
-      - POSTGRES_USER=admin
+      - POSTGRES_USER=admin_new
       - POSTGRES_PASSWORD=temptobereplacedpassword
       - VIRTUAL_HOST=hypothetical-transportation-legoons.colab.duke.edu
       - VIRTUAL_PORT=8000
