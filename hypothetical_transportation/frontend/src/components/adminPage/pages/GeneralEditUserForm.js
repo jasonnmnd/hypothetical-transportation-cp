@@ -236,7 +236,7 @@ function GeneralEditUserForm(props) {
                                 <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                                 <Form.Control.Feedback type="invalid">Please provide a valid name.</Form.Control.Feedback>
                             </Form.Group>
-                            {props.user.groups[0] == 1 ? 
+                            {props.user.groups[0] == 1 && props.user.id!==props.curUser.id ? 
                                 <Form.Group as={Col}>
                                     <Form.Label as="h5">User Type</Form.Label>
                                     <InputGroup className="mb-3">
@@ -262,7 +262,7 @@ function GeneralEditUserForm(props) {
                                 </Form.Group> : <></>
                             }
                         </Row>
-                        {fieldValues.groups ==3 ?
+                        {fieldValues.groups ==3 && props.user.groups[0] == 1 ?
                         <Row className="mb-3">
                             <Form.Group >
                                 <Form.Label>Please select schools that this user can manage</Form.Label>

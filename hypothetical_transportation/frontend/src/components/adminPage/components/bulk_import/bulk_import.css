@@ -1,0 +1,226 @@
+.grayed-out-tr {
+    background-color: lightgray;
+    color: gray;
+    font-weight: 700px;
+  }
+  
+  .delete_td {
+    font-weight: bold;
+  }
+  
+  .tr-header-delete {
+    background-color: darkgrey;
+  }
+  
+  .tr-column_names-delete {
+    background-color: rgb(194, 194, 194);
+  }
+  
+  .tr-header {
+    background-color: rgb(244, 177, 75);
+  }
+  
+  .btn-delete_add {
+    display: inline-block;
+    background-color: green;
+    background-position: 0%;
+    transition: 0.4s;
+    color: #fff;
+    cursor: pointer;
+    width: 35px;
+    height: 35px;
+    font-size: 12px;
+  }
+  
+  .inputFieldInTable {
+    width: 100%;
+  }
+  
+  .clickable {
+    cursor: pointer;
+  }
+  
+  .click-to-delete {
+    cursor: pointer;
+    color: rgb(255, 167, 167);
+  }
+
+.editable-input {
+    box-shadow: none;
+}
+
+.input-col {
+    flex: 0 0 0%;
+}
+  
+.input-field {
+    flex: 1 0 0%;
+}
+
+.user-modal {
+    min-width: 80vw;
+    min-height: 80vh;
+}
+
+
+.modalBackground {
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(200, 200, 200);
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+  }
+  
+  .modalContainer {
+    width: 500px;
+    height: 500px;
+    border-radius: 12px;
+    background-color: white;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    display: flex;
+    flex-direction: column;
+    padding: 25px;
+  }
+  
+  .modalContainer .title {
+    display: inline-block;
+    text-align: center;
+    margin-top: 10px;
+  }
+  
+  .titleCloseBtn {
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .titleCloseBtn button {
+    background-color: transparent;
+    border: none;
+    font-size: 25px;
+    cursor: pointer;
+  }
+  
+  .modalContainer .body {
+    flex: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.7rem;
+    text-align: center;
+  }
+  
+  .modalContainer .footer {
+    flex: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .modalContainer .footer button {
+    width: 150px;
+    height: 45px;
+    margin: 10px;
+    border: none;
+    background-color: rgb(244, 177, 75);
+    color: rgb(255, 255, 255);
+    border-radius: 8px;
+    font-size: 20px;
+    cursor: pointer;
+  }
+  
+  #confirmBtn {
+    background-color: crimson;
+  }
+  
+  #cancelBtn {
+    background-color: rgb(244, 177, 75);
+  }
+  
+  .modalContainer .modal-form input {
+    max-width: 200px;
+  }
+  
+  .btn-yellowTableSm {
+    display: inline-block;
+    padding: 4px 6px;
+    background-color: rgb(244, 177, 75);
+    transition: 0.4s;
+    color: #fff;
+    font-weight: 400;
+    cursor: pointer;
+  }
+  
+  .btn-yellowTableSm:hover {
+    background-color: #ffdd99;
+  }
+  
+  .btn-yellowclose {
+    display: inline-block;
+    padding: 10px 15px;
+    background-color: rgb(244, 177, 75);
+    transition: 0.4s;
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  
+  .btn-yellowclose:hover {
+    background-color: #ffdd99;
+  }
+  
+  .btn-saveModal {
+    display: inline-block;
+    padding: 8px 10px;
+    background-color: rgb(244, 177, 75);
+    transition: 0.4s;
+    color: #000;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 12px;
+  }
+  
+  .btn-saveModal:hover {
+    background-color: #ffdd99;
+  }
+  
+  .btn-yellow2 {
+    display: inline-block;
+    padding: 8px 6px;
+    border-radius: 8px;
+    background-color: rgb(244, 177, 75);
+    background-size: 200%;
+    background-position: 0%;
+    transition: 0.4s;
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+    width: 400px;
+  }
+  
+  .btn-yellow2:hover {
+    background-color: #ffdd99;
+  }
+
+  .row-changed {
+    background-color: #57aef5;
+  }
+
+  .row-error {
+    background-color: #f55757;
+  }
+
+  .row-duplicate {
+    background-color: #fafd27;
+  }
+
+  .field-error {
+    background-color: #f55757;
+  }
+
+  .field-duplicate {
+    background-color: #fafd27;
+  }
+  

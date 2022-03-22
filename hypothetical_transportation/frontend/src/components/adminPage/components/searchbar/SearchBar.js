@@ -23,13 +23,51 @@ function SearchBar(props){
     
     const searchHandler = (e)=>{
         e.preventDefault();
-        setSearchParams({
-            ...Object.fromEntries([...searchParams]),
-            [`${props.search}ordering`]: values.sort_by,
-            [`${props.search}search`]: values.value,
-            [`${props.search}search_fields`]: values.filter_by,
-            [`${props.search}pageNum`]: searchParams.get(`${props.search}pageNum`) == -1 ? -1 : 1
-        })
+        console.log(values)
+        console.log(values.value.toLowerCase())
+        console.log("admin".includes(values.value.toLowerCase()))
+        var val = 0
+        if(values.filter_by=="groups"){
+            if("admin".includes(values.value.toLowerCase())){     
+                setSearchParams({
+                    [`${props.search}ordering`]: values.sort_by,
+                    [`${props.search}groups`]: 1,
+                    [`${props.search}pageNum`]: searchParams.get(`${props.search}pageNum`) == -1 ? -1 : 1,
+                })
+            }
+            else if("parent".includes(values.value.toLowerCase()) || "guardian".includes(values.value.toLowerCase())){
+                    
+                setSearchParams({
+                    [`${props.search}ordering`]: values.sort_by,
+                    [`${props.search}groups`]: 2,
+                    [`${props.search}pageNum`]: searchParams.get(`${props.search}pageNum`) == -1 ? -1 : 1,                
+    
+                })
+            }
+            else if("school staff".includes(values.value.toLowerCase()) || "schoolstaff".includes(values.value.toLowerCase())){
+                
+                setSearchParams({
+                    [`${props.search}ordering`]: values.sort_by,
+                    [`${props.search}groups`]: 3,
+                    [`${props.search}pageNum`]: searchParams.get(`${props.search}pageNum`) == -1 ? -1 : 1,
+                })
+            }
+            if("bus driver".includes(values.value.toLowerCase()) || "busdriver".includes(values.value.toLowerCase())){
+                setSearchParams({
+                    [`${props.search}ordering`]: values.sort_by,
+                    [`${props.search}groups`]: 4,
+                    [`${props.search}pageNum`]: searchParams.get(`${props.search}pageNum`) == -1 ? -1 : 1,
+                })
+            }
+        }
+        else{
+            setSearchParams({
+                [`${props.search}ordering`]: values.sort_by,
+                [`${props.search}search`]: values.value,
+                [`${props.search}search_fields`]: values.filter_by,
+                [`${props.search}pageNum`]: searchParams.get(`${props.search}pageNum`) == -1 ? -1 : 1
+            })
+        }
     }
     return(
         <Container>

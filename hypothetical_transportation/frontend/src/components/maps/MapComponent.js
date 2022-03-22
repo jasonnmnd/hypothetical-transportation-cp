@@ -15,7 +15,7 @@ function MapComponent(props) {
         width: "100%"};  
     //Geocode for location decoding
     //https://www.npmjs.com/package/react-geocode
-    Geocode.setApiKey("AIzaSyA6nIh9bWUWFOD_y7hEZ7UQh_KmPn5Sq58");
+    Geocode.setApiKey("AIzaSyDsyPs-pIVKGJiy7EVy8aKebN5zg515BCs");
     Geocode.setLanguage("en");
     Geocode.setRegion("us");
     Geocode.setLocationType("ROOFTOP");
@@ -33,6 +33,9 @@ function MapComponent(props) {
     }
 
     const getColoredIcon = (color, icon) => {
+        if(icon == null){
+            return null;
+        }
         return getSVGWithAnchor(getIcon(icon, color));
     }
 
@@ -110,17 +113,18 @@ function MapComponent(props) {
     }
     
     const initializePins = (inPinData) => {
+        //console.log(inPinData)
         inPinData.forEach((pinGroup) => {
             pinGroup.pins.forEach((pin) => {
-                // console.log(pin)
+                //console.log(pin)
                 if(pin.latitude == null || pin.longitude == null){
                     Geocode.fromAddress(pin.address)
                     .then((response) => {  
-                        
+                        //console.log(response)
                         const { lat, lng } = response.results[0].geometry.location;
                         addMarkerFromPin(lat, lng, pinGroup, pin)
                     })
-                    .catch(err => console.log(err));
+                    .catch(err => {}/*console.log(err)*/);
                 }
                 else {
                     // console.log("addmarker")
@@ -181,9 +185,24 @@ function MapComponent(props) {
     useEffect(()=>{
         // console.log(props.center)
         // console.log(set)
-        if(!isNaN(props.center.lat) && !isNaN(props.center.lng) && pos.lng!==props.center.lng && !set){
-            setPos(props.center)
-            // setSet(true)
+        if(props.center != null){
+            if(props.center.lat == null || props.center.lng == null){
+                Geocode.fromAddress(props.center.address)
+                .then((response) => {  
+                    setPos(response.results[0].geometry.location)
+                })
+                .catch(err => {}/*console.log(err)*/);
+            }
+            else{
+                setPos(props.center)
+            }
+        }
+        else {
+
+            if(!isNaN(props.center.lat) && !isNaN(props.center.lng) && pos.lng!==props.center.lng && !set){
+                setPos(props.center)
+                // setSet(true)
+            }
         }
     },[props.center])
 
@@ -204,11 +223,13 @@ function MapComponent(props) {
             setZ(newZoom)
         }
     }
+
+
     
     return (
         <GoogleMap
             mapContainerStyle={mapStyles}
-            zoom={z}
+            zoom={props.zoom ? props.zoom : z}
             center={pos}
             onLoad={handleLoad}
             onCenterChanged={handleCenter}
@@ -254,10 +275,6 @@ MapComponent.propTypes = {
 
 MapComponent.defaultProps = {
     pinData: [],
-    center: {
-        lat: 40.586744, lng: -74.596304
-    },
-    zoom: 13,
     otherMapComponents: null
 }
 

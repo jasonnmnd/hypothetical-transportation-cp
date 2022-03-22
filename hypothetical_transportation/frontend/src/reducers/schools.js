@@ -33,6 +33,13 @@ export default function(state = initialState, action) {
                     results: state.schools.results.filter(school => school.id !== action.payload)
                 }
             }
+        case ADD_SCHOOL:
+            return {
+                ...state,
+                schools: {
+                    results: [...state.schools.results, action.payload]
+                },
+            };
         default:
             return state;
     }
