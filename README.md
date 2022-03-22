@@ -1,7 +1,7 @@
 # ECE-458 LeGoons
 
 Senior design course project!
-
+ 
 ## Getting Started
 
 ### Deployment
@@ -14,7 +14,7 @@ The hosts for these servers are as listed:
 
 #### PRODUCTION
 
-`https://hypothetical-transportation.colab.duke.edu`
+`https://hypothetical-transportation-legoons.colab.duke.edu`
 
 #### DEV
 
@@ -113,6 +113,7 @@ python3 manage.py runserver
 within the host:
 
 ```
+sudo docker-compose -f docker-compose.<ENV>.yml down --volumes --remove-orphans
 sudo docker-compose -f docker-compose.<ENV>.yml up --build
 ```
 

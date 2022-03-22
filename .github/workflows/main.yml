@@ -2,7 +2,7 @@ name: Build & Deploy [PROD]
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, new-prod-host ]
     
 jobs:
   build:
@@ -30,3 +30,5 @@ jobs:
             sudo docker-compose -f docker-compose.prod.yml pull
             sudo docker-compose -f docker-compose.prod.yml down --volumes
             sudo docker-compose -f docker-compose.prod.yml up -d --build
+            cd postgres
+            sudo docker cp pg_hba.conf ece-458_db_1:var/lib/postgresql/data/pg_hba.conf
