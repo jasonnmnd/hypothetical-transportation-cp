@@ -71,15 +71,15 @@ function GeneralManageStudentPage(props) {
           // console.log(finalSchoolList)
           const createVals = fieldValues.groups==3 ? {
               ...fieldValues,
-              groups: [2],
+              groups:[fieldValues.groups],
               address: address,
               longitude: coord.lng.toFixed(6),
               latitude: coord.lat.toFixed(6),
               managed_schools: finalSchoolList,
           }:{
               ...fieldValues,
-              groups: [2],
               address: address,
+              groups:[fieldValues.groups],
               longitude: coord.lng.toFixed(6),
               latitude: coord.lat.toFixed(6),
               managed_schools: []
@@ -99,7 +99,7 @@ function GeneralManageStudentPage(props) {
         else{
           const createVals = {
             ...fieldValues,
-            groups: [2],
+            groups: [fieldValues.groups],
             address: address,
             longitude: coord.lng.toFixed(6),
             latitude: coord.lat.toFixed(6),
@@ -119,14 +119,14 @@ function GeneralManageStudentPage(props) {
         const finalSchoolList = staffSchool.map((item)=>{return item.value})
         const createVals = fieldValues.groups==3 ? {
           ...fieldValues,
-          groups: [2],
+          groups: [fieldValues.groups],
           address: address,
           longitude: coord.lng.toFixed(6),
           latitude: coord.lat.toFixed(6),
           managed_schools: finalSchoolList,
       }:{
           ...fieldValues,
-          groups: [2],
+          groups: [fieldValues.groups],
           address: address,
           longitude: coord.lng.toFixed(6),
           latitude: coord.lat.toFixed(6),
