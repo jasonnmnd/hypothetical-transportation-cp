@@ -7,7 +7,7 @@ services:
       - postgres_data:/var/lib/postgresql/data/
     environment:
       - POSTGRES_DB=prod_db_legoons_3482397
-      - POSTGRES_USER=waterkeysflow198237
+      - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=30JHDfw]{7126salmon!
     ports:
       - 5432:5432
@@ -23,7 +23,7 @@ services:
       - "8000"
     environment:
       - POSTGRES_DB=prod_db_legoons_3482397
-      - POSTGRES_USER=waterkeysflow198237
+      - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=30JHDfw]{7126salmon!g
       - VIRTUAL_HOST=hypothetical-transportation-legoons.colab.duke.edu
       - VIRTUAL_PORT=8000
