@@ -19,16 +19,20 @@ function GeneralBulkImportSuccessPage(props) {
     return (
       <div>
           <AdminHeader></AdminHeader>
-          <Alert variant="success">
-            <Alert.Heading>Uploading Data</Alert.Heading>
-            <p>
-              Your data is being processed, please wait....
-            </p>
-            <hr />
-              <Spinner animation="border" role="status" size="lg">
-                  <span className="visually-hidden">Loading...</span>
-              </Spinner>
-          </Alert>
+          <Container className='d-flex flex-column justify-content-center' style={{gap: "10px", marginTop: "20px"}}>
+            <div>
+              <Alert variant="success">
+                <Alert.Heading>Uploading Data</Alert.Heading>
+                <p>
+                  Your data is being processed, please wait....
+                </p>
+                <hr />
+                  <Spinner animation="border" role="status" size="lg">
+                      <span className="visually-hidden">Loading...</span>
+                  </Spinner>
+              </Alert>
+            </div>
+          </Container>
       </div>
     )
   }
