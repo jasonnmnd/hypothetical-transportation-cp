@@ -19,6 +19,8 @@ function GeneralBulkImportSuccessPage(props) {
     return (
       <div>
           <AdminHeader></AdminHeader>
+          <Container className='d-flex flex-column justify-content-center' style={{gap: "10px", marginTop: "20px"}}>
+          <div></div>
           <Alert variant="success">
             <Alert.Heading>Uploading Data</Alert.Heading>
             <p>
@@ -29,6 +31,7 @@ function GeneralBulkImportSuccessPage(props) {
                   <span className="visually-hidden">Loading...</span>
               </Spinner>
           </Alert>
+          </Container>
       </div>
     )
   }
