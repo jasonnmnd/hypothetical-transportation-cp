@@ -8,10 +8,6 @@ services:
     environment:
       - POSTGRES_DB=admin
       - POSTGRES_USER=admin
-<<<<<<< HEAD
-      - POSTGRES_HOST_AUTH_METHOD=md5 
-=======
->>>>>>> 320c5ac437f1546a2daf1b992300b3f571d7a019
       - POSTGRES_PASSWORD=admin
     ports:
       - 5432:5432
