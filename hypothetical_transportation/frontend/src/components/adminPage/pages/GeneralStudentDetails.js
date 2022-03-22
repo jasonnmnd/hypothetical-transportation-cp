@@ -73,6 +73,11 @@ function GeneralAdminStudentDetails(props) {
                         <Link to={`/${getType(props.user)}/user/${student.guardian.id}`}>
                             <h5>{student.guardian.full_name}</h5>
                         </Link>
+                        
+                        <Card.Text><strong>Email: </strong> {student.guardian.email}</Card.Text>
+                        <Card.Text><strong>Phone: </strong> {student.guardian.phone_number}</Card.Text>
+
+
                     </Card.Body>
                 </Card>
 

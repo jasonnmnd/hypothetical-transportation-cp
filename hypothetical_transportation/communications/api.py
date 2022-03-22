@@ -119,9 +119,7 @@ class SendRouteAnnouncementAPI(generics.GenericAPIView):
     Email content will include information from the parent interface, tailored to each parent.
     """
     serializer_class = SendAnnouncementSerializer
-    permission_classes = [
-        IsAdmin
-    ]
+    permission_classes = [IsAdmin | IsSchoolStaff]
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)

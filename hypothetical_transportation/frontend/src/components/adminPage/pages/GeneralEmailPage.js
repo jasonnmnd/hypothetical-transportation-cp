@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Header from '../../header/AdminHeader';
 import "../NEWadminPage.css";
-import { Container, Form, Button, ButtonGroup, ToggleButton,Collapse, Card } from 'react-bootstrap'; 
+import { Container, Form, Button, ButtonGroup, ToggleButton,Collapse, Card, Row, Alert } from 'react-bootstrap'; 
 import { connect } from 'react-redux';
 import { getSchools } from '../../../actions/schools';
 import { getRoutes } from '../../../actions/routes';
@@ -10,6 +10,8 @@ import { filterObjectForKeySubstring } from '../../../utils/utils';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import config from '../../../utils/config';
+import Select from 'react-select';
+import getType from '../../../utils/user2';
 
 
 
@@ -160,7 +162,7 @@ function GeneralAdminEmailPage(props) {
 
 
     useEffect(() => {
-        props.getSchools();
+        props.getSchools({ordering:"name"});
         if(param.school_id!==null && param.school_id!==undefined){
             setCurrSchool(param.school_id);
             routeSearchParams.school = param.school_id;
@@ -177,38 +179,72 @@ function GeneralAdminEmailPage(props) {
         }
     }, [param]);
 
+    const [schoolSelected, setSchoolSelected] = useState({value:null, label: "------Select School------"})
 
-    // useEffect(() => {            
-    //     console.log(props.schoollist[0])
-    //     if(props.schoollist!==null && props.schoollist!==undefined && props.schoollist.length!==0){
-    //         routeSearchParams.school = props.schoollist[0].id
-    //         props.getRoutes(routeSearchParams);
-    //         setCurrSchool(props.schoollist[0].id);
-    //     }
-    // },[props.schoollist]);
+    const [routeSelected, setRouteSelected] = useState({value: null, label: "------Select Route------"})
 
-    // useEffect(() => {
-    //     if(props.routes!==null && props.routes!==undefined && props.routes.length!==0){
-    //         setCurrRoute(props.routes[0].id);
-    //     }
-    // },[props.routes]);
+    const changeSchool = (e)=>{
+        setSchoolSelected(e)
+        setCurrSchool(e.value)
+      }
+    const changeRoute = (e)=>{
+        setRouteSelected(e)
+        setCurrRoute(e.value)
+      }
+
+
+  const getSchoolOPtion = ()=>{
+    var opt = [{value: null, label: "------Select School------"}]
+    if(props.schoollist!==null && props.schoollist!==undefined && props.schoollist.length!==0){
+        const x = props.schoollist.map((item)=> {
+            if(item.id==currSchool && schoolSelected.value!==item.id){
+                setSchoolSelected({value:item.id, label:item.name})
+            }
+            return ({value:item.id, label:item.name})
+        })    
+        opt = [...opt, ...x]
+    }
+    // console.log(opt)
+    return opt
+}
+
+
+const getRouteOption = ()=>{
+    var opt = [{value: null, label: "------Select Route------"}]
+    if(props.routes!==null && props.routes!==undefined && props.routes.length!==0){
+        const x = props.routes.map((item)=> {
+            if(item.id==currRoute && routeSelected.value!==item.id){
+                setRouteSelected({value:item.id, label:item.name})
+            }
+            return ({value:item.id, label:item.name})
+        })    
+        opt = [...opt, ...x]
+    }
+    else{
+        opt = [{value: null, label: "---There is no route for this school!---"}]
+    }
+    // console.log(opt)
+    return opt
+}
+
+
     
   return (
     <>
         <Header></Header>
 
-
+        {getType(props.user) == "staff" || getType(props.user) == "admin" ?
         <Container className="container-main">
             <div className="shadow-sm p-3 mb-5 bg-white rounded d-flex flex-row justify-content-center">
                 <h1>Send Email</h1>
             </div>
             <br></br>
             <Form className="shadow-lg p-3 mb-5 bg-white rounded"
-            onKeyPress={event => {
-                if (event.key === 'Enter' /* Enter */) {
-                  event.preventDefault();
-                }
-              }}
+            // onKeyPress={event => {
+            //     if (event.key === 'Enter' /* Enter */) {
+            //       event.preventDefault();
+            //     }
+            //   }}
             >
                 <Container className='d-flex justify-content-center'>
                     <Form.Group className="mb-3" controlId="validationCustom01">
@@ -244,22 +280,28 @@ function GeneralAdminEmailPage(props) {
                     <></>
                     :
                     <Container className='d-flex flex-row justify-content-center' style={{gap: "20px"}}>
-                        <Form.Select size="sm" style={{width: "300px"}} value={currSchool} onChange={setSchool}>
+                        {/* <Form.Select size="sm" style={{width: "300px"}} value={currSchool} onChange={setSchool}>
                                 <option value={"null"} >{"-----"}</option>
                                 {props.schoollist!==null && props.schoollist!==undefined && props.schoollist.length!==0?props.schoollist.map((u,i)=>{
                                     return <option value={u.id} key={i}>{u.name}</option>
                                 }):null}
-                        </Form.Select>
+                        </Form.Select> */}
+                        <Form.Group  style={{width: "300px"}} className="mb-3" controlId="">
+                            <Select style={{width: "300px"}}  options={getSchoolOPtion()} value={schoolSelected} onChange={changeSchool}/>
+                        </Form.Group>
                         {
                             emailSelection == 2 ? 
                             <></>
                             :
-                            <Form.Select size="sm" style={{width: "300px"}} value={currRoute} onChange={setRoute}>
-                                <option value={"null"} >{"-----"}</option>
-                                {props.routes!==null && props.routes!==undefined && props.routes.length!==0?props.routes.map((u,i)=>{
-                                    return <option value={u.id} key={i}>{u.name}</option>
-                                }):null}
-                            </Form.Select>  
+                            <Form.Group  style={{width: "300px"}} className="mb-3" controlId="">
+                                <Select style={{width: "300px"}}  options={getRouteOption()} value={routeSelected} onChange={changeRoute}/>
+                            </Form.Group>
+                            // <Form.Select size="sm" style={{width: "300px"}} value={currRoute} onChange={setRoute}>
+                            //     <option value={"null"} >{"-----"}</option>
+                            //     {props.routes!==null && props.routes!==undefined && props.routes.length!==0?props.routes.map((u,i)=>{
+                            //         return <option value={u.id} key={i}>{u.name}</option>
+                            //     }):null}
+                            // </Form.Select>  
                             
                             
                         }
@@ -275,6 +317,11 @@ function GeneralAdminEmailPage(props) {
                     onChange={(e)=>{
                         setSubject(e.target.value)
                     }}
+                    onKeyPress={event => {
+                        if (event.key === 'Enter' /* Enter */) {
+                          event.preventDefault();
+                        }
+                      }}
                     />
                 </Form.Group>
 
@@ -297,7 +344,15 @@ function GeneralAdminEmailPage(props) {
                 </Button>
 
             </Form>
-        </Container>
+        </Container> : <Container className="container-main">
+                <Alert variant="danger">
+                  <Alert.Heading>Access Denied</Alert.Heading>
+                  <p>
+                    You do not have access to this page. If you believe this is an error, contact an administrator.          
+                    </p>
+                  </Alert>
+                </Container>
+        }
 
     </>
   );
@@ -309,6 +364,7 @@ GeneralAdminEmailPage.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
+    user: state.auth.user,
     schoollist: state.schools.schools.results,
     routes: state.routes.routes.results,
     token: state.auth.token

@@ -6,15 +6,15 @@ def is_admin(user):
 
 
 def is_guardian(user):
-    return user.groups.filter(name='Guardian')
+    return user.groups.filter(name='Guardian').exists()
 
 
 def is_school_staff(user):
-    return user.groups.filter(name='SchoolStaff')
+    return user.groups.filter(name='SchoolStaff').exists()
 
 
 def is_driver(user):
-    return user.groups.filter(name='Driver')
+    return user.groups.filter(name='Driver').exists()
 
 
 def is_write_action(action):
