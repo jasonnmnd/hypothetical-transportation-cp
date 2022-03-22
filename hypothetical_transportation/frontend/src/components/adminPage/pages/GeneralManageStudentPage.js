@@ -5,7 +5,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { getSchools } from '../../../actions/schools';
-import { getUsers, getUser } from '../../../actions/users';
+import { getUsers, getUser,emailExpose } from '../../../actions/users';
 import { getStudent, addStudent, updateStudent, addStudentWithParent, updateStudentWithParent } from '../../../actions/students';
 import { getRoutesByID } from '../../../actions/routes';
 import { Form, Button, Row, Col, Container, InputGroup, ButtonGroup, ToggleButton, Card, Alert} from 'react-bootstrap';
@@ -13,6 +13,9 @@ import { resetPostedUser } from '../../../actions/users';
 import AssistedLocationMap from "../../maps/AssistedLocationMap";
 import getType from '../../../utils/user2';
 import Select from 'react-select';
+import { getItemCoord } from "../../../utils/geocode";
+import ParentModal from '../components/modals/ParentModal';
+
 
 
 function GeneralManageStudentPage(props) {
@@ -35,6 +38,8 @@ function GeneralManageStudentPage(props) {
 
 
     const [obj, setObj] = useState(emptyStudent)
+
+    const [parent, setPar] = useState(emptyStudent)
 
 
 
@@ -59,28 +64,33 @@ function GeneralManageStudentPage(props) {
       if(props.action==="new"){
         if(obj.guardian!=="new"){
           props.addStudent(obj)
+          navigate(`/${getType(props.user)}/students/`)
         }
         else{
           const finalSchoolList = staffSchool.map((item)=>{return item.value})
           // console.log(finalSchoolList)
           const createVals = fieldValues.groups==3 ? {
               ...fieldValues,
-              groups: [fieldValues.groups],
+              groups:[fieldValues.groups],
               address: address,
               longitude: coord.lng.toFixed(6),
               latitude: coord.lat.toFixed(6),
               managed_schools: finalSchoolList,
           }:{
               ...fieldValues,
-              groups: [fieldValues.groups],
               address: address,
+              groups:[fieldValues.groups],
               longitude: coord.lng.toFixed(6),
               latitude: coord.lat.toFixed(6),
               managed_schools: []
           }
-          props.addStudentWithParent(createVals, obj)
+          setPar(createVals)
+          props.emailExpose(createVals.email)
+          //hit email expose endpoint
+          //if email expose endpoint gives yes, show popup
+          //if yes clicked on popup,  props.addStudentWithParent(createVals, obj)
+          //else do nothing? don't navigate? Tell user email exist?
         }
-        navigate(`/${getType(props.user)}/students/`)
       }
       else{
         if(obj.guardian!=="new"){
@@ -100,11 +110,38 @@ function GeneralManageStudentPage(props) {
       }
     }
     setValidated(true);
-
   }
 
-  const [schoolSelected, setSchoolSelected] = useState(null)
-  const [guardianSelected, setGuardianSelected] = useState(null)
+
+  useEffect(() => {
+    if(props.exposedUser.id==-1){
+        console.log("?")
+        const finalSchoolList = staffSchool.map((item)=>{return item.value})
+        const createVals = fieldValues.groups==3 ? {
+          ...fieldValues,
+          groups: [fieldValues.groups],
+          address: address,
+          longitude: coord.lng.toFixed(6),
+          latitude: coord.lat.toFixed(6),
+          managed_schools: finalSchoolList,
+      }:{
+          ...fieldValues,
+          groups: [fieldValues.groups],
+          address: address,
+          longitude: coord.lng.toFixed(6),
+          latitude: coord.lat.toFixed(6),
+          managed_schools: []
+      }
+      props.addStudentWithParent(createVals, obj)
+      navigate(`/${getType(props.user)}/students/`)
+    }
+    else{
+      console.log("???")
+    }
+  }, [props.exposedUser]);
+
+  const [schoolSelected, setSchoolSelected] = useState({value: null, label: "-----------------------"})
+  const [guardianSelected, setGuardianSelected] = useState({value: null, label: "-----------------------"})
   const changeSchool = (e)=>{
     // console.log(e)
     setSchoolSelected(e)
@@ -125,21 +162,21 @@ function GeneralManageStudentPage(props) {
       props.getStudent(param.id);
       setObj({...props.student, ["guardian"]:props.student.guardian.id,["school"]:props.student.school.id,["routes"]:props.student.routes?props.student.routes.id:null})
       setSchoolSelected({value: props.student.school.id, label: props.student.school.name})
-      setGuardianSelected({value: props.student.guardian.id, label: props.student.guardian.full_name})
+      setGuardianSelected({value: props.student.guardian.id, label: props.student.guardian.email})
       props.resetPostedUser()
 
       // props.getRoutesByID({school: props.student.school.id}) // Normal to get an api request error on first load
     }
     else{
-      setSchoolSelected(null)
-      setGuardianSelected(null)
+      setSchoolSelected({value: null, label: "-----------------------"})
+      setGuardianSelected({value: null, label: "-----------------------"})
     }
     // console.log("also")
     // console.log(props.selectedUser)
     if(props.selectedUser!==null && props.selectedUser.id!==0&& props.selectedUser.id!==obj.guardian){
       // console.log("setting obj")
       setObj({ ...obj, ["guardian"]: props.selectedUser.id});
-      setGuardianSelected({value: props.selectedUser.id, label: props.selectedUser.full_name})  
+      setGuardianSelected({value: props.selectedUser.id, label: props.selectedUser.email})  
       props.resetPostedUser()
     }
     // else{
@@ -152,7 +189,7 @@ function GeneralManageStudentPage(props) {
   useEffect(() => {
       setObj({...props.student, ["guardian"]:props.student.guardian.id,["school"]:props.student.school.id,["routes"]:props.student.routes?props.student.routes.id:null})
       setSchoolSelected({value: props.student.school.id, label: props.student.school.name})
-      setGuardianSelected({value: props.student.guardian.id, label: props.student.guardian.full_name})
+      setGuardianSelected({value: props.student.guardian.id, label: props.student.guardian.email})
   }, [props.student]);
 
   useEffect(()=>{
@@ -181,7 +218,7 @@ const getParentOption = ()=>{
   var opt = [{value: null, label: "-----------------------"}, {value: "new", label: "---Create New User---"}]
   if(props.users!==null && props.users!==undefined && props.users.length!==0){
       const x = props.users.map((item)=> {
-          return ({value:item.id, label:item.full_name})
+          return ({value:item.id, label:item.email})
       })    
       opt = [...opt, ...x]
   }
@@ -224,14 +261,14 @@ const groupTypes = [
       if(props.selectedUser!==null && props.selectedUser.id!==0 && props.selectedUser.id!==obj.guardian){
         // console.log("action if")
         setObj({ ...emptyStudent, ["guardian"]: props.selectedUser.id});
-        setGuardianSelected({value: props.selectedUser.id, label: props.selectedUser.full_name})  
+        setGuardianSelected({value: props.selectedUser.id, label: props.selectedUser.email})  
         props.resetPostedUser()
       }
       else{
         // console.log("action else")
         setObj({...emptyStudent, ["guardian"]: obj.guardian})
-        setSchoolSelected(null)
-        setGuardianSelected(null)
+        setSchoolSelected({value: null, label: "-----------------------"})
+        setGuardianSelected({value: null, label: "-----------------------"})
       }
     }
     else{
@@ -250,6 +287,7 @@ useEffect(()=>{
     return ( 
       <>
         <Header></Header>
+        <ParentModal student={obj} parent={parent} fieldValue={fieldValues} setFieldValues={setFieldValues}/>
         {getType(props.user) == "staff"  || getType(props.user) == "admin" ?
         <Container className="container-main">
           <Form className="shadow-lg p-3 mb-5 bg-white rounded" noValidate validated={validated} onSubmit={handleSubmit}
@@ -449,7 +487,8 @@ GeneralManageStudentPage.propTypes = {
     updateStudent: PropTypes.func.isRequired,
     resetPostedUser: PropTypes.func.isRequired,
     addStudentWithParent: PropTypes.func.isRequired,
-    updateStudentWithParent: PropTypes.func.isRequired
+    updateStudentWithParent: PropTypes.func.isRequired,
+    emailExpose: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = (state) => ({
@@ -459,7 +498,8 @@ const mapStateToProps = (state) => ({
   users: state.users.users.results,
   student: state.students.viewedStudent,
   routes: state.routes.routes.results,
-  selectedUser: state.users.postedUser
+  selectedUser: state.users.postedUser,
+  exposedUser: state.users.exposedUser,
 });
 
-export default connect(mapStateToProps, {getSchools, getUsers, getStudent, getRoutesByID, getUser, addStudent, updateStudent,resetPostedUser,addStudentWithParent,updateStudentWithParent})(GeneralManageStudentPage)
+export default connect(mapStateToProps, {getSchools, getUsers, getStudent, getRoutesByID, getUser, addStudent, updateStudent,resetPostedUser,emailExpose, addStudentWithParent,updateStudentWithParent})(GeneralManageStudentPage)

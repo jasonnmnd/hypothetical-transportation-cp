@@ -23,7 +23,7 @@ class InviteAPI(generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
 
-        if serializer.is_valid():
+        if serializer.is_valid(raise_exception=True):
             email = serializer.data['email']
             full_name = serializer.data['full_name']
             phone_number = serializer.data['phone_number']
@@ -42,10 +42,9 @@ class InviteAPI(generics.GenericAPIView):
             user.address = address
             user.full_name = full_name
             user.phone_number = phone_number
-            if not groups and Group.objects.filter(pk=2).count() > 0:
-                # Default case for staff privileges
-                user.groups.add(2)
-
+            # Default case for staff privileges
+            if not groups and Group.objects.filter(name="Guardian").count() > 0:
+                user.groups.add(Group.objects.get(name="Guardian"))
             user.groups.add(*groups)
             user.managed_schools.add(*managed_schools)
 

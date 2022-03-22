@@ -2,14 +2,24 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from rest_framework import serializers
 from .models import Route, School, Student, Stop
-from geopy.geocoders import Nominatim
-from .permissions import is_admin
+from geopy.geocoders import Nominatim, GoogleV3
+from .permissions import is_admin, is_school_staff
 
 
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = ('id', 'name')
+
+
+class ExposeUserInputEmailSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True)
+
+
+class ExposeUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = get_user_model()
+        fields = ('id', 'email')
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -111,7 +121,7 @@ class StudentSerializer(serializers.ModelSerializer):
             school = data['school']
             route = data['routes']
             if school.pk != route.school.pk:
-                raise serializers.ValidationError("Student school is not the same as student route!")
+                raise serializers.ValidationError("Student school is not the same as student route")
         if 'guardian' in data:
             if data['guardian'] and len(data['guardian'].address) == 0:
                 raise serializers.ValidationError("User does not have an address configured")
@@ -124,7 +134,7 @@ class StaffStudentSerializer(StudentSerializer):
         staff_user = get_user_model().objects.get(email=staff_email)
         if data in staff_user.managed_schools.all():
             return data
-        raise serializers.ValidationError("Student school is not among schools that you manage!")
+        raise serializers.ValidationError("Student school is not among schools that you manage")
 
 
 class FormatStudentSerializer(StudentSerializer):
@@ -177,25 +187,39 @@ class LoadStudentSerializer(serializers.ModelSerializer):
     parent_email = serializers.CharField(required=True)
 
     def validate_school_name(self, value):
+        user_email = self.context['request'].user
+        user_object = get_user_model().objects.get(email=user_email)
+
         candidates = find_school_match_candidates(value)
         for candidate in candidates:
             if school_names_match(candidate.name, value):
+                if is_school_staff(user_object) and user_object.managed_schools.filter(pk=candidate.pk).count() == 0:
+                    raise serializers.ValidationError(
+                        "Student would be assigned to school you do not manage")
                 return value
-        raise serializers.ValidationError("school name could not be matched")
+        raise serializers.ValidationError("School name could not be matched")
 
     class Meta:
         model = Student
         fields = ("full_name", "student_id", "parent_email", "school_name")
 
 
+class LoadStudentSerializerStrict(LoadStudentSerializer):
+
+    def validate_parent_email(self, value):
+        if get_user_model().objects.filter(email=value).count() > 0:
+            return value
+        raise serializers.ValidationError("Invalid parent email")
+
+
 class LoadUserSerializer(serializers.ModelSerializer):
     def validate_address(self, value):
         # TODO: Uncomment to use paid geolocator API
-        # geolocator = GoogleV3(api_key="AIzaSyA6nIh9bWUWFOD_y7hEZ7UQh_KmPn5Sq58")
-        geolocator = Nominatim(user_agent="bulk import validator")
+        geolocator = GoogleV3(api_key="AIzaSyDsyPs-pIVKGJiy7EVy8aKebN5zg515BCs")
+        # geolocator = Nominatim(user_agent="bulk import validator")
         location = geolocator.geocode(value)
         if not location or not location.latitude or not location.longitude:
-            raise serializers.ValidationError("address could not be geographically matched")
+            raise serializers.ValidationError("Address could not be geographically matched")
         return value
 
     class Meta:

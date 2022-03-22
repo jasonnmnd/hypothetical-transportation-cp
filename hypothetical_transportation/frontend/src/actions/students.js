@@ -5,7 +5,7 @@ import { tokenConfig } from './auth';
 
 import { createMessage, returnErrors } from './messages';
 
-import {GET_IN_RANGE_STOP, ADD_STUDENT, GET_STUDENT, CREATE_MESSAGE, GET_STUDENTS, DELETE_STUDENT, POPULATE_TABLE, DELETE_ITEM, UPDATE_STUDENT } from './types';
+import {GET_IN_RANGE_STOP, ADD_STUDENT, GET_STUDENT, CREATE_MESSAGE, GET_STUDENTS, DELETE_STUDENT, POPULATE_TABLE, DELETE_ITEM, UPDATE_STUDENT, RESET_EXPOSED_USER } from './types';
 import { getOffsetString, getQueryStringsFormatted, getParameters } from './utils';
 
 
@@ -67,12 +67,23 @@ export const addStudent = (student) => (dispatch, getState) => {
     .post('/api/student/', student, tokenConfig(getState))
     .then((res) => {
       dispatch(createMessage({ student: 'Student Created' }));
+      console.log("?")
+      dispatch({
+        type: RESET_EXPOSED_USER,
+      });
+      console.log("xxxxxxxx")
+
       dispatch({
         type: ADD_STUDENT,
         payload: res.data,
       });
     })
-    .catch((err) => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});
+    .catch((err) => {
+      dispatch({
+        type: RESET_EXPOSED_USER
+      })
+      console.log(err);
+      dispatch(returnErrors(err.response.data, err.response.status))});
 };
 
 //addStudentWithParent, updateStudentWithParent
@@ -82,22 +93,31 @@ export const addStudentWithParent = (parent, student) => (dispatch, getState) =>
   axios
       .post('/api/auth/invite', parent, tokenConfig(getState))
       .then((res) => {
-        console.log("ey")
-        console.log(res)
         const stu = ({ ...student, ["guardian"]: res.data.id})
-        console.log(stu)
         axios
         .post('/api/student/', stu, tokenConfig(getState))
         .then((res) => {
           dispatch(createMessage({ student: 'Student Created' }));
           dispatch({
+            type: RESET_EXPOSED_USER,
+          });
+          dispatch({
             type: ADD_STUDENT,
             payload: res.data,
           });
         })
-        .catch((err) => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});    
+        .catch((err) => {/*console.log(err);*/
+
+          dispatch({
+            type: RESET_EXPOSED_USER
+          })
+          dispatch(returnErrors(err.response.data, err.response.status))});    
       })
       .catch((err) => {
+
+      dispatch({
+        type: RESET_EXPOSED_USER
+      })
         dispatch(returnErrors(err.response.data, err.response.status));
       });
 };
@@ -128,6 +148,12 @@ export const updateStudentWithParent = (parent, student) => (dispatch, getState)
         dispatch(returnErrors(err.response.data, err.response.status));
       });
 };
+
+export const resetExposedUser = ()=>(dispatch, getState) =>{
+  dispatch({
+    type: RESET_EXPOSED_USER
+  })
+}
 
 export const updateStudent = (student, id) => (dispatch, getState) => {
   axios
