@@ -26,10 +26,9 @@ jobs:
           password: ${{secrets.PROD_SSH_PASSWORD}}
           script: |
             cd ece-458
-            export POSTGRES_DB=${{secrets.POSTGRES_DB}}
-            export POSTGRES_USER=${{secrets.POSTGRES_USER}}
-            export POSTGRES_PASSWORD=${{secrets.POSTGRES_PASSWORD}}
             sudo docker login --username ${{ secrets.DOCKERHUB_USERNAME }} --password ${{ secrets.DOCKERHUB_TOKEN }}
             sudo docker-compose -f docker-compose.prod.yml pull
             sudo docker-compose -f docker-compose.prod.yml down --volumes
             sudo docker-compose -f docker-compose.prod.yml up -d --build
+            cd postgres
+            sudo docker cp pg_hba.conf ece-458_db_1:var/lib/postgresql/data/pg_hba.conf
