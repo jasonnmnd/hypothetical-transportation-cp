@@ -54,9 +54,8 @@ function AdminHeader( props ) {
                     </NavDropdown> */}
                     {isAdmin(props.user) ? <Nav.Link as={Link} to={`/admin/email`}> Send Email</Nav.Link> : <></>}
                     {isAdmin(props.user) ? <Nav.Link as={Link} to={`/upload_file`}> Upload Data</Nav.Link>: <></>}
-                    <Nav.Link as={Link} to={`/parent?pageNum=1`}> Your Parent Portal</Nav.Link>
-
-                        <Navbar.Brand width="200" height="50">
+                    {/* <Nav.Link as={Link} to={`/parent?pageNum=1`}> Your Parent Portal</Nav.Link> */}
+                        <Navbar.Brand style={{width:'550px'}}>
                         </Navbar.Brand>
                     <Nav.Link as={Link} to={`/account`}> Account</Nav.Link>
                     <Nav.Link onClick={props.logout}> Logout</Nav.Link>
