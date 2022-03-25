@@ -7,6 +7,15 @@ import PropTypes, { string } from 'prop-types';
 import { connect } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import getType from '../../../utils/user2';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import InfoIcon from '@mui/icons-material/Info';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
+
 
 function GeneralUploadFilePage(props) {
     const navigate = useNavigate();
@@ -66,6 +75,7 @@ function GeneralUploadFilePage(props) {
         }
         
     };
+    
 
     useEffect(()=>{
         // console.log(typeof(userRes))
@@ -97,6 +107,24 @@ function GeneralUploadFilePage(props) {
     },[userRes,studentRes])
 
 
+    const [userOpen, setUserOpen] = useState(false);
+    const [studentOpen, setStudentOpen] = useState(false);
+
+    const handleUserClickOpen = () => {
+        setUserOpen(true);
+    };
+
+    const handleUserClose = () => {
+        setUserOpen(false);
+    };
+
+    const handleStudentClickOpen = () => {
+        setUserOpen(true);
+    };
+
+    const handleStudentClose = () => {
+        setUserOpen(false);
+    };
 
 
     return (
@@ -105,14 +133,86 @@ function GeneralUploadFilePage(props) {
             {getType(props.user) == "staff" || getType(props.user) == "admin" ?
             <Container className="container-main" style={{width: "50%"}} >
                 {!loading?<Form className="shadow-lg p-3 mb-5 bg-white rounded"  noValidate onSubmit={handleOnSubmit}>
-                    <Form.Label as="h5">Select USER CSV file</Form.Label>
+                    <Form.Label as="h5">
+                        Select USER CSV file
+
+                            <Tooltip title="Click to view documentation">
+                                <IconButton onClick={handleUserClickOpen}>
+                                    <InfoIcon fontSize="medium" />
+                                </IconButton>
+                            </Tooltip>
+
+                            <Dialog
+                                open={userOpen}
+                                onClose={handleUserClose}
+                                aria-labelledby="alert-dialog-title"
+                                aria-describedby="alert-dialog-description"
+                            >
+                                <DialogTitle id="alert-dialog-title">
+                                {"Import Users Guide"}
+                                </DialogTitle>
+                                <DialogContent>
+                                <DialogContentText id="alert-dialog-description">
+                                    When importing data for users, please make sure to follow this format:
+                                    <div>
+                                        <ul>
+                                            <li><strong>email:</strong></li>
+                                            <li><strong>name:</strong></li>
+                                            <li><strong>address:</strong></li>
+                                            <li><strong>phone_number:</strong></li>
+                                        </ul>
+                                    </div>
+                                </DialogContentText>
+                                </DialogContent>
+                                    <DialogActions>
+                                        <Button variant='yellow' onClick={handleUserClose}>Close</Button>
+                                    </DialogActions>
+                            </Dialog>
+
+                    </Form.Label>
                     <Form.Control
                         type={"file"}
                         id={"csvFileInput"}
                         accept={".csv"}
                         onChange={handleChangeUser}
                     />
-                    <Form.Label as="h5">Select STUDENT CSV file</Form.Label>
+                    <Form.Label as="h5">
+                        Select STUDENT CSV file
+
+                            <Tooltip title="Click to view documentation">
+                                <IconButton onClick={handleStudentClickOpen}>
+                                    <InfoIcon fontSize="medium" />
+                                </IconButton>
+                            </Tooltip>
+
+                            <Dialog
+                                open={studentOpen}
+                                onClose={handleStudentClose}
+                                aria-labelledby="alert-dialog-title"
+                                aria-describedby="alert-dialog-description"
+                            >
+                                <DialogTitle id="alert-dialog-title">
+                                {"Import Students Guide"}
+                                </DialogTitle>
+                                <DialogContent>
+                                <DialogContentText id="alert-dialog-description">
+                                    When importing data for students, please make sure to follow this format:
+                                    <div>
+                                        <ul>
+                                            <li><strong>name:</strong></li>
+                                            <li><strong>parent_email:</strong></li>
+                                            <li><strong>student_id:</strong></li>
+                                            <li><strong>school_name:</strong></li>
+                                        </ul>
+                                    </div>
+                                </DialogContentText>
+                                </DialogContent>
+                                    <DialogActions>
+                                        <Button variant='yellow' onClick={handleStudentClose}>Close</Button>
+                                    </DialogActions>
+                            </Dialog>
+
+                    </Form.Label>
                     <Form.Control
                         type={"file"}
                         id={"csvFileInput"}
