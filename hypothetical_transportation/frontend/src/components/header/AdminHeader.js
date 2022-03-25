@@ -57,8 +57,8 @@ function AdminHeader( props ) {
                         {/* <Nav.Link as={Link} to={`/parent?pageNum=1`}> Your Parent Portal</Nav.Link> */}
                             {/* <Navbar.Brand style={{width:'550px'}}>
                             </Navbar.Brand> */}
-                        <Nav.Link as={Link} to={`/account`} style={{position:'absolute',right:'80px'}}> Account</Nav.Link>
-                        <Nav.Link onClick={props.logout} style={{position:'absolute',right:'10px'}}> Logout</Nav.Link>
+                        <Nav.Link as={Link} to={`/account`} style={{position:'absolute',right:'90px'}}> Account</Nav.Link>
+                        <Nav.Link onClick={props.logout} style={{position:'absolute',right:'20px'}}> Logout</Nav.Link>
                     
                 </Nav>
             </Navbar.Collapse>
