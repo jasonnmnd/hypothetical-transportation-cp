@@ -17,7 +17,9 @@ import Geocode from "react-geocode";
 import IconLegend from '../../common/IconLegend';
 import { isStudentWithinRange } from '../../../utils/geocode';
 import { createMessageDispatch } from '../../../actions/messages';
-
+import InfoIcon from '@mui/icons-material/Info';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
 
 function RouteStopsPlanner(props) {
 
@@ -173,7 +175,15 @@ function RouteStopsPlanner(props) {
           </Card>
 
           <Card>
-            <Card.Header as="h5">Reorganize Stops - Drag Row to Reorder</Card.Header>
+            <Card.Header as="h5">
+              Reorganize Stops - Drag Row to Reorder
+              <Tooltip title="Note: Stops order runs starting from school">
+                <IconButton>
+                  <InfoIcon fontSize="large" />
+                </IconButton>
+              </Tooltip>              
+            </Card.Header>
+              
             <Card.Body>
               <ModifyStopTable 
                 stops={props.stops} 
