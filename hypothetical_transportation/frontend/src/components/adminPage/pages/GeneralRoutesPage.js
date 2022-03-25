@@ -18,13 +18,14 @@ function AdminRoutesPage(props) {
   let [searchParams, setSearchParams] = useSearchParams();
   
   useEffect(() => {
-    if(searchParams.get(`pageNum`) != null){
+    if(searchParams.get(`pageNum`) != null && !(searchParams.get(`ordering`) ==null || searchParams.get(`ordering`) =="")){
       let paramsToSend = Object.fromEntries([...searchParams]);
       props.getRoutes(paramsToSend);
     }
     else{
       setSearchParams({
         [`pageNum`]: 1,
+        [`ordering`]: "name",
       })
     }
   }, [searchParams]);
