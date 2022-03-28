@@ -2,6 +2,7 @@ import React, { Fragment } from 'react';
 import { Container, Card } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import '../adminPage/NEWadminPage.css'
 
 function GeneralLegend(props) {
     
@@ -15,10 +16,9 @@ function GeneralLegend(props) {
                     {
                         props.legend.map((result, index) => {
                         return (
-                            <Fragment key={index}>
-                                {result.key}
-                                {result.color}
-                            </Fragment>
+                            <div key={index}>
+                                    <div className={result.color == "red" ? 'legendDivRed' : 'legendDivBlue'}></div> {result.key}
+                            </div>
                         )})
                     }
                     </Card.Text>

@@ -28,6 +28,17 @@ function AdminPage( props ) {
                   <h1>Welcome, {props.user.full_name}</h1>
               </div>
             </Container>
+
+            <Card>
+              <Card.Header>Test</Card.Header>
+              <Card.Body>
+                <Card.Text>
+                    <div className="legendDiv"></div>
+                    <div>Legend</div>
+                </Card.Text>
+              </Card.Body>
+            </Card>
+
             <Container fluid className="d-flex flex-column justify-content-center align-items-center" style={{gap: "20px 50px"}}>
 
               <Row>

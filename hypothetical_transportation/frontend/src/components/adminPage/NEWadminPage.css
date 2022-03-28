@@ -149,3 +149,17 @@ h1 {
 .btn-yellowEditSmall:hover {
   background-color: #ffdd99;
 }
+
+.legendDivRed {
+  max-width: 20px;
+  min-height: 20px;
+  color: #000;
+  background-color: rgb(255, 136, 136);
+}
+
+.legendDivBlue {
+  max-width: 20px;
+  min-height: 20px;
+  color: #000;
+  background-color: rgb(87, 202, 255);
+}
