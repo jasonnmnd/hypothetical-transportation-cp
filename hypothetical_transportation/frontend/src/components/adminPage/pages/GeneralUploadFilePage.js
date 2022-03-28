@@ -157,9 +157,28 @@ function GeneralUploadFilePage(props) {
                                     <div>
                                         <ul>
                                             <li><strong>email:</strong></li>
+                                                <ul>
+                                                    <li>must be {"<="} 254 characters</li>
+                                                    <li>must be a valid address as per the addr-spec of RFC 5322, Section 3.4.1</li>
+                                                    <li>field is not empty</li>
+                                                </ul>
                                             <li><strong>name:</strong></li>
+                                                <ul>
+                                                    <li>must be {"<="} 150 characters</li>
+                                                    <li>field is not empty</li>
+                                                    <li>some text field containing both a first and last name with potential suffixes (eg Jr, Sr, III, etc)</li>
+                                                </ul>
                                             <li><strong>address:</strong></li>
+                                                <ul>
+                                                    <li>must be {"<="} 150 characters</li>
+                                                    <li>some text that is a Complete Address as per USPS Standard 602.1.4</li>
+                                                    <li>field is not empty</li>
+                                                </ul>
                                             <li><strong>phone_number:</strong></li>
+                                                <ul>
+                                                    <li>must be {"<="} 35 characters</li>
+                                                    <li>field is not empty</li>
+                                                </ul>
                                         </ul>
                                     </div>
                                 </DialogContentText>
@@ -200,9 +219,27 @@ function GeneralUploadFilePage(props) {
                                     <div>
                                         <ul>
                                             <li><strong>name:</strong></li>
+                                                <ul>
+                                                    <li>must be {"<="} 150 characters</li>
+                                                    <li>field is not empty</li>
+                                                    <li>some text field containing both a first and last name with potential suffixes (eg Jr, Sr, III, etc)</li>
+                                                </ul>
                                             <li><strong>parent_email:</strong></li>
+                                                <ul>
+                                                    <li><li>must be {"<="} 254 characters as per RFC 5321, Section 4.5.3.1.3</li></li>
+                                                    <li>must be a valid address as per the addr-spec of RFC 5322, Section 3.4.1</li>
+                                                    <li>field is not empty</li>
+                                                </ul>
                                             <li><strong>student_id:</strong></li>
+                                                <ul>
+                                                    <li>some non-zero, positive (but less than 2147483647) number. As this is an optional field, if there is no desired student id the field is left empty.</li>
+                                                </ul>
                                             <li><strong>school_name:</strong></li>
+                                                <ul>
+                                                    <li>must be {"<="} 150 characters</li>
+                                                    <li>school name must case-insensitively and whitespace-insensitively match an existing school name, or else the record will be rejected with an appropriate error message</li>
+                                                    <li>field is not empty</li>
+                                                </ul>
                                         </ul>
                                     </div>
                                 </DialogContentText>
