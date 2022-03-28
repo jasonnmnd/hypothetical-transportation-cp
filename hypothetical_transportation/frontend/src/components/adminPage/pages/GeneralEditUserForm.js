@@ -7,7 +7,7 @@ import Header from "../../header/AdminHeader";
 import { getUser, updateUser } from "../../../actions/users";
 import { register } from "../../../actions/auth";
 import AssistedLocationMap from "../../maps/AssistedLocationMap";
-import { Form, Button, Row, Col, Container, InputGroup, ButtonGroup, ToggleButton, Alert} from 'react-bootstrap';
+import { Card, Form, Button, Row, Col, Container, InputGroup, ButtonGroup, ToggleButton, Alert} from 'react-bootstrap';
 import { getItemCoord } from "../../../utils/geocode";
 import PageNavigateModal from "../components/modals/PageNavigateModal";
 import { resetPostedUser } from "../../../actions/users";
@@ -203,6 +203,54 @@ function GeneralEditUserForm(props) {
         // console.log(opt)
         return opt
     }
+
+    const emptyStudent={
+        student_id: null,
+        full_name: "",
+        guardian: "",
+        routes: "",
+        school: "",
+    }
+    
+    const [createNew,setCreateNew] = useState(false)
+    const [newStudent,setNewStudent] = useState(emptyStudent)
+    const [studentSchoolSelected, setStudentSchoolSelected] = useState({value: null, label: "-----------------------"})
+
+
+    const getSchoolforStudent = ()=>{
+        var opt = [{value: null, label: "-----------------------"}]
+        if(props.schoollist!==null && props.schoollist!==undefined && props.schoollist.length!==0){
+            const x = props.schoollist.map((item)=> {
+                return ({value:item.id, label:item.name})
+            })    
+            opt = [...opt, ...x]
+        }
+        // console.log(opt)
+        return opt
+    }
+
+    const changeSchool = (e)=>{
+        // console.log(e)
+        setStudentSchoolSelected(e)
+        setNewStudent({...newStudent, ["school"]:e.value, ["routes"]:""})
+    
+        // props.getRoutesByID({school: e.target.value});
+      }
+    
+    const [newStudentList, setNewStudentList] = useState([])
+    const saveStudent = ()=>{
+        var list = newStudentList;
+        list = list.concat(newStudent);
+        setNewStudentList(list);
+        setNewStudent(emptyStudent);
+        setStudentSchoolSelected({value: null, label: "-----------------------"})
+        setCreateNew(false);
+    }
+    
+    useEffect(()=>{
+        console.log(newStudentList)
+    },[newStudentList])
+    
     
     return (
         <div> 
@@ -352,7 +400,68 @@ function GeneralEditUserForm(props) {
                             <AssistedLocationMap address={address} coord={coord} setAddress={setAddress} setCoord={setCoord}></AssistedLocationMap>
 
                         </Form.Group>
+                        {
+                            newStudentList.length>0?
+                            <Card  style={{padding: "20px"}}>
+                                <Form.Label as="h5">New Students To Be Added</Form.Label>
+                                {newStudentList.map((stu, i)=>{
+                                    return <Card  style={{padding: "20px"}} id={i}>
+                                        <Card.Body>
+                                            <Card.Text>{"Name: " + stu.full_name}</Card.Text>
+                                            <Card.Text>{"Student ID: " + stu.student_id}</Card.Text>
+                                            <Card.Text>{"School: " + props.schoollist.find((el)=>{return el.id===stu.school}).name}</Card.Text>
+                                        </Card.Body>
+                                    </Card>
+                                })}
+                            </Card>:
+                            <></>
+                        }
+                        {createNew ? 
+                        <Card  style={{padding: "20px"}}>
+                            <Row className="mb-3">
+                                <Form.Group as={Col} controlId="formGridName" >
+                                    <Form.Label as="h5">Full Name</Form.Label>
+                                    <Form.Control 
+                                    required type="text"
+                                    placeholder="Enter name..." 
+                                    value={newStudent.name}
+                                    onChange={(e)=>{
+                                        setNewStudent({...newStudent, ["full_name"]: e.target.value})
+                                    }}
+                                    />
+                                    <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                                    <Form.Control.Feedback type="invalid">Please provide a valid name.</Form.Control.Feedback>
+                                </Form.Group>
 
+                                <Form.Group as={Col} controlId="formGridID">
+                                    <Form.Label as="h5">Student ID</Form.Label>
+                                    <Form.Control 
+                                    type="text"
+                                    placeholder="Enter A Number For Student ID..." 
+                                    value={newStudent.student_id==null? "":newStudent.student_id}
+                                    onChange={(e)=>{setNewStudent({...newStudent, ["student_id"]: e.target.value===""?null:e.target.value})}}
+                                    />
+                                    <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                                    <Form.Control.Feedback type="invalid">Please provide a valid ID.</Form.Control.Feedback>
+                                </Form.Group>
+                            </Row>
+                            <Form.Group className="mb-3" controlId="">
+                                <Form.Label as="h5">School</Form.Label>
+                                <Select  options={getSchoolforStudent()} value={studentSchoolSelected} onChange={changeSchool}/>
+                            </Form.Group>
+                            <Button variant="yellowsubmit" onClick={saveStudent}>
+                                Save This Student
+                            </Button>
+                        </Card>:
+                        <></>    
+                        }
+                        {createNew ? 
+                        <></>:
+                        <Button variant="yellowsubmit" onClick={()=>setCreateNew(true)}>
+                            Create New Student
+                        </Button>
+                        }
+                        
                         <Button variant="yellowsubmit" type="submit">
                             Submit
                         </Button>
