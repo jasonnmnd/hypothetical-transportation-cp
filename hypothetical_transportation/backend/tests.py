@@ -145,7 +145,7 @@ class TestBulkImport(TestCase):
         response = self.client.post('/api/loaded-data/validate/', json.dumps(loaded_data),
                                     content_type='application/json', HTTP_AUTHORIZATION=f'Token {self.admin_token}')
         self.assertEqual(response.status_code, 200)
-        self.assertIn('address could not be geographically matched', response.data['users'][0]['address']['error'])
+        self.assertIn('Address could not be geographically matched', response.data['users'][0]['address']['error'])
 
     def test_address_timeout(self):
         loaded_data = {
@@ -178,7 +178,7 @@ class TestBulkImport(TestCase):
         response = self.client.post('/api/loaded-data/validate/', json.dumps(loaded_data),
                                     content_type='application/json', HTTP_AUTHORIZATION=f'Token {self.admin_token}')
         self.assertEqual(response.status_code, 200)
-        self.assertIn('school name could not be matched', response.data['students'][0]['school_name']['error'])
+        self.assertIn('School name could not be matched', response.data['students'][0]['school_name']['error'])
 
     def test_user_name_duplication(self):
         loaded_data = {
@@ -1453,7 +1453,7 @@ class PermissionViews(TransactionTestCase):
                                        }),
                                    content_type='application/json',
                                    HTTP_AUTHORIZATION=f'Token {self.admin_token}')
-        self.assertEqual(str(response.data['non_field_errors'][0]), 'Student school is not the same as student route!')
+        self.assertEqual(str(response.data['non_field_errors'][0]), 'Student school is not the same as student route')
         self.assertEqual(response.status_code, 400)
 
         # Change other properties (Capitalization of name) is unaffected

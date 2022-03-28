@@ -197,6 +197,9 @@ function GeneralAdminEmailPage(props) {
     var opt = [{value: null, label: "------Select School------"}]
     if(props.schoollist!==null && props.schoollist!==undefined && props.schoollist.length!==0){
         const x = props.schoollist.map((item)=> {
+            if(item.id==currSchool && schoolSelected.value!==item.id){
+                setSchoolSelected({value:item.id, label:item.name})
+            }
             return ({value:item.id, label:item.name})
         })    
         opt = [...opt, ...x]
@@ -210,6 +213,9 @@ const getRouteOption = ()=>{
     var opt = [{value: null, label: "------Select Route------"}]
     if(props.routes!==null && props.routes!==undefined && props.routes.length!==0){
         const x = props.routes.map((item)=> {
+            if(item.id==currRoute && routeSelected.value!==item.id){
+                setRouteSelected({value:item.id, label:item.name})
+            }
             return ({value:item.id, label:item.name})
         })    
         opt = [...opt, ...x]

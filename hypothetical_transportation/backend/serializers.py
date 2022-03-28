@@ -121,7 +121,7 @@ class StudentSerializer(serializers.ModelSerializer):
             school = data['school']
             route = data['routes']
             if school.pk != route.school.pk:
-                raise serializers.ValidationError("Student school is not the same as student route!")
+                raise serializers.ValidationError("Student school is not the same as student route")
         if 'guardian' in data:
             if data['guardian'] and len(data['guardian'].address) == 0:
                 raise serializers.ValidationError("User does not have an address configured")
@@ -134,7 +134,7 @@ class StaffStudentSerializer(StudentSerializer):
         staff_user = get_user_model().objects.get(email=staff_email)
         if data in staff_user.managed_schools.all():
             return data
-        raise serializers.ValidationError("Student school is not among schools that you manage!")
+        raise serializers.ValidationError("Student school is not among schools that you manage")
 
 
 class FormatStudentSerializer(StudentSerializer):
@@ -197,7 +197,7 @@ class LoadStudentSerializer(serializers.ModelSerializer):
                     raise serializers.ValidationError(
                         "Student would be assigned to school you do not manage")
                 return value
-        raise serializers.ValidationError("school name could not be matched")
+        raise serializers.ValidationError("School name could not be matched")
 
     class Meta:
         model = Student
@@ -215,11 +215,11 @@ class LoadStudentSerializerStrict(LoadStudentSerializer):
 class LoadUserSerializer(serializers.ModelSerializer):
     def validate_address(self, value):
         # TODO: Uncomment to use paid geolocator API
-        geolocator = GoogleV3(api_key="AIzaSyA6nIh9bWUWFOD_y7hEZ7UQh_KmPn5Sq58")
+        geolocator = GoogleV3(api_key="AIzaSyDsyPs-pIVKGJiy7EVy8aKebN5zg515BCs")
         # geolocator = Nominatim(user_agent="bulk import validator")
         location = geolocator.geocode(value)
         if not location or not location.latitude or not location.longitude:
-            raise serializers.ValidationError("address could not be geographically matched")
+            raise serializers.ValidationError("Address could not be geographically matched")
         return value
 
     class Meta:
