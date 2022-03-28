@@ -20,10 +20,10 @@ function ParentHeader(props) {
             
             <Navbar.Collapse>
                 <Nav>
-                    <Navbar.Brand style={{width:'1100px'}}>
-                    </Navbar.Brand>
-                    <Nav.Link as={Link} to={`/account`}> Account</Nav.Link>
-                    <Nav.Link onClick={props.logout}> Logout</Nav.Link>
+                    {/* <Navbar.Brand style={{width:'1100px'}}>
+                    </Navbar.Brand> */}
+                    <Nav.Link as={Link} to={`/account`} style={{position:'absolute',right:'90px'}}> Account</Nav.Link>
+                    <Nav.Link onClick={props.logout} style={{position:'absolute',right:'20px'}}> Logout</Nav.Link>
                 </Nav>
             </Navbar.Collapse>
           </Navbar>
