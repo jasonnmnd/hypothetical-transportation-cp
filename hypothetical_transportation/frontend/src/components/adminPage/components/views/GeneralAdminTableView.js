@@ -63,8 +63,7 @@ function GeneralAdminTableView( props ) {
 
     const routeLegend = [
         {
-            key: "Incomplete Route: ",
-            color: "🟥    ",
+            key: "Incomplete Route ",
             hex: "rgb(255, 136, 136)"
         }
     ]

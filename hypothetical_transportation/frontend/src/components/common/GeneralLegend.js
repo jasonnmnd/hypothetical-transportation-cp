@@ -16,8 +16,8 @@ function GeneralLegend(props) {
                     {
                         props.legend.map((result, index) => {
                         return (
-                            <div key={index}>
-                                    <div className={result.color == "red" ? 'legendDivRed' : 'legendDivBlue'}></div> {result.key}
+                            <div key={index} >
+                                    <div className={result.color == "red" ? 'legendDivRed' : 'legendDivBlue'}>{" "}</div> {result.key}
                             </div>
                         )})
                     }
