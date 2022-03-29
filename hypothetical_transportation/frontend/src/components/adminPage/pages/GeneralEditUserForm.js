@@ -137,7 +137,12 @@ function GeneralEditUserForm(props) {
             }
             else{
                 // console.log(createVals)
-                props.register(createVals, newStudentList);
+                if(fieldValues.groups==2){
+                    props.register(createVals, newStudentList);
+                }
+                else{
+                    props.register(createVals, []);
+                }
                 setOpenModal(true)
             }
         }
