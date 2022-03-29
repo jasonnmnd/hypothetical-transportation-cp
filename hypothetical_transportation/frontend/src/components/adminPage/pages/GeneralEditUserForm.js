@@ -137,7 +137,7 @@ function GeneralEditUserForm(props) {
             }
             else{
                 // console.log(createVals)
-                props.register(createVals);
+                props.register(createVals, newStudentList);
                 setOpenModal(true)
             }
         }
@@ -455,7 +455,7 @@ function GeneralEditUserForm(props) {
                         </Card>:
                         <></>    
                         }
-                        {createNew ? 
+                        {createNew || props.action=="edit" ? 
                         <></>:
                         <Button variant="yellowsubmit" onClick={()=>setCreateNew(true)}>
                             Create New Student
