@@ -284,7 +284,7 @@ function GeneralEditUserForm(props) {
                                 <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                                 <Form.Control.Feedback type="invalid">Please provide a valid name.</Form.Control.Feedback>
                             </Form.Group>
-                            {props.user.groups[0] == 1 && props.user.id!==props.curUser.id ? 
+                            {props.user.groups[0] == 1 && props.user.id!==props.curUser.id && props.action!=="edit" ? 
                                 <Form.Group as={Col}>
                                     <Form.Label as="h5">User Type</Form.Label>
                                     <InputGroup className="mb-3">
@@ -455,7 +455,7 @@ function GeneralEditUserForm(props) {
                         </Card>:
                         <></>    
                         }
-                        {createNew || props.action=="edit" ? 
+                        {createNew || props.action=="edit" || fieldValues.groups!==2 ? 
                         <></>:
                         <Button variant="yellowsubmit" onClick={()=>setCreateNew(true)}>
                             Create New Student
