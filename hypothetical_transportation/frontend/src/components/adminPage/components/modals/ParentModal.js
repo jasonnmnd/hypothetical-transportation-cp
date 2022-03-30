@@ -33,53 +33,77 @@ function ParentModal(props) {
 
     return (
         <Modal dialogClassName="user-modal" show={show}> 
-        {/* //onHide={closeModal}> */}
-            <Modal.Header closeButton>
-                <Container className='d-flex flex-row justify-content-center'>
-                    <Modal.Title>This email already exists in the database. Would you like to use them instead?</Modal.Title>
-                </Container>
-            </Modal.Header>
+        {props.exposedUser.groups[0].id==2 ?
+        // <div>??</div>
+            <div>
+                <Modal.Header closeButton onClick={closeModal}>
+                    <Container className='d-flex flex-row justify-content-center'>
+                        <Modal.Title>This guardian already exists in the database. Would you like to use them instead?</Modal.Title>
+                    </Container>
+                </Modal.Header>
 
-            <Modal.Body>
-                <Container className="d-flex flex-column justify-content-center" style={{gap: "10px"}}>
-                <Card>
-                    <Card.Header as="h5">Name</Card.Header>
-                    <Card.Body>
-                        <Card.Text>{props.exposedUser.full_name}</Card.Text>
-                    </Card.Body>
-                </Card>
+                <Modal.Body>
+                    <Container className="d-flex flex-column justify-content-center" style={{gap: "10px"}}>
+                    <Card>
+                        <Card.Header as="h5">Name</Card.Header>
+                        <Card.Body>
+                            <Card.Text>{props.exposedUser.full_name}</Card.Text>
+                        </Card.Body>
+                    </Card>
 
-                <Card>
-                    <Card.Header as="h5">Email </Card.Header>
-                    <Card.Body>
-                        <Card.Text>{props.exposedUser.email}</Card.Text>
-                    </Card.Body>
-                </Card>
+                    <Card>
+                        <Card.Header as="h5">Email </Card.Header>
+                        <Card.Body>
+                            <Card.Text>{props.exposedUser.email}</Card.Text>
+                        </Card.Body>
+                    </Card>
 
-                <Card>
-                    <Card.Header as="h5">Phone Number </Card.Header>
-                    <Card.Body>
-                        <Card.Text>{props.exposedUser.phone_number}</Card.Text>
-                    </Card.Body>
-                </Card>
+                    <Card>
+                        <Card.Header as="h5">Phone Number </Card.Header>
+                        <Card.Body>
+                            <Card.Text>{props.exposedUser.phone_number}</Card.Text>
+                        </Card.Body>
+                    </Card>
 
-                <Card>
-                    <Card.Header as="h5">Address </Card.Header>
-                    <Card.Body>
-                        <Card.Text>{props.exposedUser.address}</Card.Text>
-                    </Card.Body>
-                </Card>
+                    <Card>
+                        <Card.Header as="h5">Address </Card.Header>
+                        <Card.Body>
+                            <Card.Text>{props.exposedUser.address}</Card.Text>
+                        </Card.Body>
+                    </Card>
 
-                </Container>
-            </Modal.Body>
+                    </Container>
+                </Modal.Body>
 
-            <Modal.Footer>
-                <Container className='d-flex flex-row justify-content-center' style={{gap: "10px"}}>
-                    <Button variant="yellowclose" onClick={closeModal}>Cancel</Button>
-                    <Button variant="yellowclose" onClick={submit}>Save</Button>
-                </Container>
-            </Modal.Footer>
-        </Modal>  
+                <Modal.Footer>
+                    <Container className='d-flex flex-row justify-content-center' style={{gap: "10px"}}>
+                        <Button variant="yellowclose" onClick={closeModal}>Cancel</Button>
+                        <Button variant="yellowclose" onClick={submit}>Save</Button>
+                    </Container>
+                </Modal.Footer>
+                </div>
+              : 
+
+        // <div>.......</div>
+            <div>
+                <Modal.Header closeButton onClick={closeModal}>
+                    <Container className='d-flex flex-row justify-content-center'>
+                        <Modal.Title>This email already exists in the database, but belongs to a privileged user</Modal.Title>
+                    </Container>
+                </Modal.Header>
+
+                <Modal.Body>
+                    <p>Please use a different email if you would like to create a new guardian user.</p>
+                </Modal.Body>
+
+                <Modal.Footer>
+                    <Container className='d-flex flex-row justify-content-center' style={{gap: "10px"}}>
+                        <Button variant="yellowclose" onClick={closeModal}>Back</Button>
+                    </Container>
+                </Modal.Footer>
+            </div>
+        }
+        </Modal> 
     
   );
 }

@@ -355,7 +355,7 @@ useEffect(()=>{
                       <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                       <Form.Control.Feedback type="invalid">Please provide a valid name.</Form.Control.Feedback>
                   </Form.Group>
-                  {props.user.groups[0] == 1 ? 
+                  {/* {props.user.groups[0] == 1 ? 
                     <Form.Group as={Col}>
                       <Form.Label as="h5">User Type</Form.Label>
                       <InputGroup className="mb-3">
@@ -379,17 +379,17 @@ useEffect(()=>{
                         </ButtonGroup>
                       </InputGroup>
                     </Form.Group> : <></>
-                }
+                } */}
               </Row>
 
-              {fieldValues.groups ==3 ?
+              {/* {fieldValues.groups ==3 ?
                 <Row className="mb-3">
                   <Form.Group >
                       <Form.Label>Please select schools that this user can manage</Form.Label>
                       <Select isMulti options={getSchoolOPtion()} value={staffSchool} onChange={setStaffSchoolSelected}/>
                       <Form.Text muted> You can type into the box to filter the options</Form.Text>
                   </Form.Group>
-                </Row>:<></>}
+                </Row>:<></>} */}
 
               <Row className="mb-3">
                   <Form.Group as={Col} controlId="formGridEmail">
