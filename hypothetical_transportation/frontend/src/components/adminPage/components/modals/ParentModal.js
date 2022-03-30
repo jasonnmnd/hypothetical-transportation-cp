@@ -93,7 +93,9 @@ function ParentModal(props) {
                 </Modal.Header>
 
                 <Modal.Body>
-                    <p>Please use a different email if you would like to create a new guardian user.</p>
+                    <Container className='d-flex flex-row justify-content-center'>
+                        <p>Please use a different email if you would like to create a new guardian user.</p>
+                    </Container>
                 </Modal.Body>
 
                 <Modal.Footer>
