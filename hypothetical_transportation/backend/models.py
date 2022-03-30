@@ -18,7 +18,6 @@ class School(models.Model):
     class Meta:
         ordering = ['id']
 
-
 class Route(models.Model):
     name = models.CharField(max_length=150, validators=[MinLengthValidator(1)])
     description = models.TextField(blank=True)
@@ -38,7 +37,6 @@ class Route(models.Model):
     class Meta:
         ordering = ['id']
 
-
 class Stop(models.Model):
     name = models.CharField(max_length=150, blank=True)
     location = models.CharField(max_length=450)
@@ -52,6 +50,16 @@ class Stop(models.Model):
     class Meta:
         ordering = ['route', 'stop_number']
 
+
+class Bus(models.Model):
+    bus_number = models.PositiveIntegerField(null=False, primary_key=True)
+    route = models.ForeignKey(Route, related_name='bus', on_delete=models.CASCADE, unique=True)
+    # hopefully we get a variance that gives us the following commented out things
+    previous_stop = models.PositiveIntegerField(null=False) # note: this is not a foreign key because all we need is the stop number
+    going_towards_school = models.BooleanField(default=True, null=False)
+    
+    class Meta:
+        ordering = ['bus_number']
 
 class Student(models.Model):
     # first_name = models.CharField(max_length=30)

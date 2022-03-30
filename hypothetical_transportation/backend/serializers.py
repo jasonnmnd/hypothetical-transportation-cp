@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from rest_framework import serializers
-from .models import Route, School, Student, Stop
+from .models import Route, School, Student, Stop, Bus
 from geopy.geocoders import Nominatim, GoogleV3
 from .permissions import is_admin, is_school_staff
 
@@ -86,6 +86,12 @@ class RouteSerializer(serializers.ModelSerializer):
 class StopSerializer(serializers.ModelSerializer):
     class Meta:
         model = Stop
+        fields = '__all__'
+
+
+class BusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Bus
         fields = '__all__'
 
 

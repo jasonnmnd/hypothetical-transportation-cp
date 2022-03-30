@@ -3,15 +3,15 @@ from django.db import transaction, IntegrityError
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, status, serializers
 from rest_framework import viewsets, permissions, generics
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view
 from rest_framework.response import Response
 from geopy.geocoders import Nominatim, GoogleV3
-from .models import School, Route, Student, Stop
+from .models import School, Route, Student, Stop, Bus
 from .serializers import UserSerializer, StudentSerializer, RouteSerializer, SchoolSerializer, FormatStudentSerializer, \
     FormatRouteSerializer, FormatUserSerializer, EditUserSerializer, StopSerializer, CheckInrangeSerializer, \
     LoadUserSerializer, LoadModelDataSerializer, find_school_match_candidates, school_names_match, \
     StaffEditUserSerializer, StaffEditSchoolSerializer, StaffStudentSerializer, LoadStudentSerializer, \
-    LoadStudentSerializerStrict, ExposeUserSerializer, ExposeUserInputEmailSerializer
+    LoadStudentSerializerStrict, ExposeUserSerializer, ExposeUserInputEmailSerializer, BusSerializer
 from .search import DynamicSearchFilter
 from .customfilters import StudentCountShortCircuitFilter
 from .permissions import is_admin, is_school_staff, is_driver, IsAdminOrReadOnly, IsAdmin, IsSchoolStaff, is_guardian
@@ -165,6 +165,27 @@ class StopViewSet(viewsets.ModelViewSet):
             return Stop.objects.none()
 
 
+class BusViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAdminOrReadOnly]
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    filterset_fields = get_filter_dict(Bus)
+    ordering_fields = ['bus_number', 'route', 'going_towards_school']
+    ordering = 'bus_number'
+
+    def update(self, request, *args, **kwargs):
+        super().update(request, *args, **kwargs)
+        serializer = BusSerializer(self.get_object(), data={}, partial=True,
+                                             context=self.get_serializer_context())
+        serializer.is_valid(raise_exception=True)
+        return Response(serializer.data)
+
+    def get_serializer_class(self):
+        return BusSerializer
+    
+    def get_queryset(self):
+        return Bus.objects.all().distinct().order_by('bus_number')
+
+
 class RouteViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly | IsSchoolStaff]
     filter_backends = [DjangoFilterBackend, DynamicSearchFilter, StudentCountShortCircuitFilter]
@@ -191,6 +212,15 @@ class RouteViewSet(viewsets.ModelViewSet):
         else:
             students_queryset = self.request.user.students
             return Route.objects.filter(id__in=students_queryset.values('routes_id')).distinct().order_by('name')
+
+    @action(detail=True, methods=['get', 'delete'], permission_classes=[permissions.AllowAny]) # this is sus. a get that deletes.
+    def delete_bus_on_route(self, request, pk=None):
+        # Bus.objects.get(route=route_id).delete()
+        try:
+            route = get_object_or_404(self.get_queryset(), pk=pk)
+            return Response(Bus.objects.get(route=route).delete(), status.HTTP_200_OK)
+        except:
+            return Response("There is no bus on this route to delete", status.HTTP_404_NOT_FOUND)
 
     @action(detail=False, permission_classes=[permissions.AllowAny])
     def fields(self, request):
