@@ -3,8 +3,9 @@ from django.contrib.auth.models import Group
 from rest_framework import serializers
 from .models import Route, School, Student, Stop
 from geopy.geocoders import Nominatim, GoogleV3
-from .permissions import is_admin, is_school_staff
-from .student_account_managers import sync_student_account, send_invite_email, sync_parent_changes_to_student_account
+from .permissions import is_admin, is_school_staff, is_guardian, is_student
+from .student_account_managers import sync_student_account, send_invite_email, sync_parent_changes_to_student_account, \
+    sync_student_account_changes_to_student
 
 
 class GroupSerializer(serializers.ModelSerializer):
@@ -43,7 +44,10 @@ class EditUserSerializer(serializers.ModelSerializer):
                 name='Administrator') not in validated_data['groups']:
             raise serializers.ValidationError("You may not revoke your own administrator privileges")
         updated_user = super().update(instance, validated_data)
-        sync_parent_changes_to_student_account(updated_user)
+        if is_guardian(updated_user):
+            sync_parent_changes_to_student_account(updated_user)
+        if is_student(updated_user):
+            sync_student_account_changes_to_student(updated_user)
         return updated_user
 
     class Meta:

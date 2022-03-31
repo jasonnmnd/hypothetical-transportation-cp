@@ -38,6 +38,18 @@ def sync_parent_changes_to_student_account(parent):
             student_account.longitude = parent.longitude
 
 
+def sync_student_account_changes_to_student(student_account):
+    """
+    Ensure that changes to parents will propagate to the original student information
+
+    :param student_account: Auth User object
+    :return: None
+    """
+    student = student_account.linked_student
+    student.email = student_account.email
+    student.full_name = student_account.full_name
+
+
 def sync_student_account(student: Student, prev_email):
     """
     Synchronizes information between a student and their associated account.
