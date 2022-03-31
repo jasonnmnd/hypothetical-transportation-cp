@@ -15,6 +15,10 @@ import getType from '../../../utils/user2';
 import Select from 'react-select';
 import { getItemCoord } from "../../../utils/geocode";
 import ParentModal from '../components/modals/ParentModal';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+
 
 
 
@@ -25,7 +29,11 @@ function GeneralManageStudentPage(props) {
     const [openModal, setOpenModal] = useState(false);
     const [validated, setValidated] = useState(false);
     const[coord,setCoord]=useState({lat:36.0016944, lng:-78.9480547});
+    const [studentChecked, setStudentChecked] = useState(false);
 
+    const handleStudentChecked = () => {
+        setStudentChecked(!studentChecked);
+    }
 
     const emptyStudent={
       student_id: null,
@@ -36,12 +44,9 @@ function GeneralManageStudentPage(props) {
     }
   
 
-
+    const [studentEmail, setStudentEmail] = useState("");
     const [obj, setObj] = useState(emptyStudent)
-
     const [parent, setPar] = useState(emptyStudent)
-
-
 
   const setParent = (e)=>{
     if(e.value!=="new"){
@@ -326,13 +331,42 @@ useEffect(()=>{
             </Row>
             
             <Form.Group className="mb-3" controlId="">
-            <Form.Label as="h5">Guardian</Form.Label>
-              <Select  options={getParentOption()} value={guardianSelected} onChange={setParent}/>
+              <Form.Label as="h5">Guardian</Form.Label>
+                <Select  options={getParentOption()} value={guardianSelected} onChange={setParent}/>
+              </Form.Group>
+              <Form.Group className="mb-3" controlId="">
+                <Form.Label as="h5">School</Form.Label>
+                <Select  options={getSchoolOPtion()} value={schoolSelected} onChange={changeSchool}/>
             </Form.Group>
-            <Form.Group className="mb-3" controlId="">
-              <Form.Label as="h5">School</Form.Label>
-              <Select  options={getSchoolOPtion()} value={schoolSelected} onChange={changeSchool}/>
-            </Form.Group>
+
+            <Row className="mb-3">
+                <Form.Group as={Col} controlId="formGridName" >
+                    <Form.Label as="h5">Student Account</Form.Label>
+                    <FormGroup>
+                        <FormControlLabel control={<Checkbox size="medium" checked={studentChecked} onChange={handleStudentChecked}/>} label="Create Account for this Student" />
+                    </FormGroup>
+                </Form.Group>
+                
+                {studentChecked ?
+                <Form.Group as={Col} controlId="formGridEmail">
+                    <Form.Label as="h5">Student Email</Form.Label>
+                        <Form.Control 
+                        required 
+                        type="email" 
+                        placeholder="Enter email..." 
+                        value={studentEmail}
+                        onChange={
+                        (e)=>{
+                            setStudentEmail(e.target.value);
+                            }
+                        }/>
+                        <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                    <Form.Control.Feedback type="invalid">Please provide a valid email.</Form.Control.Feedback>
+                </Form.Group>
+                :
+                <></>
+                }
+            </Row>
 
             { newParent===true ? 
               <>
