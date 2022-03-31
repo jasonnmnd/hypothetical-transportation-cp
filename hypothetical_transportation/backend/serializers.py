@@ -4,6 +4,7 @@ from rest_framework import serializers
 from .models import Route, School, Student, Stop
 from geopy.geocoders import Nominatim, GoogleV3
 from .permissions import is_admin, is_school_staff
+from .student_account_managers import sync_student_account, send_invite_email
 
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:
@@ -25,7 +26,8 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
         fields = (
-            'id', 'email', 'full_name', 'phone_number', 'address', 'latitude', 'longitude', 'groups', 'managed_schools', 'linked_student')
+            'id', 'email', 'full_name', 'phone_number', 'address', 'latitude', 'longitude', 'groups', 'managed_schools',
+            'linked_student')
         # fields = ('email', 'password')
 
     def validate(self, data):
@@ -125,6 +127,20 @@ class StudentSerializer(serializers.ModelSerializer):
             if data['guardian'] and len(data['guardian'].address) == 0:
                 raise serializers.ValidationError("User does not have an address configured")
         return data
+
+    def create(self, validated_data):
+        # Student accounts created with an email will initiate the process
+        created_student = super().create(validated_data)
+        if created_student.email is not None:
+            send_invite_email(created_student)
+        return created_student
+
+    def update(self, instance, validated_data):
+        # Previous email has to be cached so setting up a new user account can be initiated
+        prev_email = instance.email
+        updated_student = super().update(instance, validated_data)
+        sync_student_account(updated_student, prev_email)
+        return updated_student
 
 
 class StaffStudentSerializer(StudentSerializer):

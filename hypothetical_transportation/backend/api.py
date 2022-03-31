@@ -245,8 +245,10 @@ class StudentViewSet(viewsets.ModelViewSet):
     ordering_fields = ['school__name', 'student_id', 'full_name', 'id', 'email']
     ordering = 'full_name'
 
+
     def update(self, request, *args, **kwargs):
         super().update(request, *args, **kwargs)
+        # print(request.data)
         # patch already handled by initial serializer, so we allow maximum flexibility here
         serializer = FormatStudentSerializer(self.get_object(), data={}, partial=True,
                                              context=self.get_serializer_context())
