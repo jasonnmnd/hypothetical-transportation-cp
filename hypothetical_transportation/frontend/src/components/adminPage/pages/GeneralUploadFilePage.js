@@ -240,6 +240,7 @@ function GeneralUploadFilePage(props) {
                                                     <li>school name must case-insensitively and whitespace-insensitively match an existing school name, or else the record will be rejected with an appropriate error message</li>
                                                     <li>field is not empty</li>
                                                 </ul>
+                                            <li><strong>student_email:</strong></li>
                                         </ul>
                                     </div>
                                 </DialogContentText>

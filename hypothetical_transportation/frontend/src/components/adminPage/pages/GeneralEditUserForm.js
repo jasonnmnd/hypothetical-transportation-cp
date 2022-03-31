@@ -403,16 +403,6 @@ function GeneralEditUserForm(props) {
                                     (e) => setFieldValues({...fieldValues, phone_number: e.target.value})
                                 }
                                 />
-                                {/* <PhoneInput
-                                    placeholder="Phone number"
-                                    defaultCountry="US"
-                                    value={fieldValues.phone_number}
-                                    onChange={
-                                    (e)=>{
-                                        setFieldValues({...fieldValues, phone_number: e.target.value});
-                                        }
-                                    }
-                                    /> */}
                                 
                                 <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                                 <Form.Control.Feedback type="invalid">
