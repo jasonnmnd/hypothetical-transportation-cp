@@ -19,6 +19,11 @@ import Select from 'react-select';
 import 'react-phone-number-input/style.css'
 import PhoneInput from 'react-phone-number-input'
 
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+
+
 //Edit/New user form
 function GeneralEditUserForm(props) {
     const navigate = useNavigate();
@@ -27,6 +32,11 @@ function GeneralEditUserForm(props) {
     const [validated, setValidated] = useState(false);
     const[coord,setCoord]=useState({lat:36.0016944, lng:-78.9480547});
     const [schoolSelected, setSchoolSelected] = useState([])
+    const [studentChecked, setStudentChecked] = useState(false);
+
+    const handleStudentChecked = () => {
+        setStudentChecked(!studentChecked);
+    }
     
     const [fieldValues, setFieldValues] = useState({
         id: 0,
@@ -37,6 +47,7 @@ function GeneralEditUserForm(props) {
         groups: 2,
     });
     const [address, setAddress] = useState("");
+    const [studentEmail, setStudentEmail] = useState("");
 
 
     useEffect(() => {
@@ -454,6 +465,40 @@ function GeneralEditUserForm(props) {
                                 <Form.Label as="h5">School</Form.Label>
                                 <Select  options={getSchoolforStudent()} value={studentSchoolSelected} onChange={changeSchool}/>
                             </Form.Group>
+
+
+
+                            <Row className="mb-3">
+                                <Form.Group as={Col} controlId="formGridName" >
+                                    <Form.Label as="h5">Student Account</Form.Label>
+                                    <FormGroup>
+                                        <FormControlLabel control={<Checkbox size="medium" checked={studentChecked} onChange={handleStudentChecked}/>} label="Create Account for this Student" />
+                                    </FormGroup>
+                                </Form.Group>
+                                
+                                {studentChecked ?
+                                <Form.Group as={Col} controlId="formGridEmail">
+                                    <Form.Label as="h5">Student Email</Form.Label>
+                                        <Form.Control 
+                                        required 
+                                        type="email" 
+                                        placeholder="Enter email..." 
+                                        value={studentEmail}
+                                        onChange={
+                                        (e)=>{
+                                            setStudentEmail(e.target.value);
+                                            }
+                                        }/>
+                                        <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                                    <Form.Control.Feedback type="invalid">Please provide a valid email.</Form.Control.Feedback>
+                                </Form.Group>
+                                :
+                                <></>
+                                }
+                            </Row>
+
+
+
                             <Button variant="yellowsubmit" onClick={saveStudent}>
                                 Save This Student
                             </Button>
