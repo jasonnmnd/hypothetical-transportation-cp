@@ -4,6 +4,7 @@ from django.core.validators import MinLengthValidator
 from django.contrib.postgres.fields import CICharField
 from django.conf import settings
 import datetime
+from .validators import validate_available_user_email
 from .geo_utils import get_straightline_distance, LEN_OF_MILE
 
 
@@ -56,6 +57,8 @@ class Stop(models.Model):
 class Student(models.Model):
     # first_name = models.CharField(max_length=30)
     # last_name = models.CharField(max_length=30)
+    email = models.EmailField(max_length=255, unique=True, null=True, blank=True,
+                              validators=[validate_available_user_email])
     full_name = models.CharField(max_length=150, validators=[MinLengthValidator(1)])
     active = models.BooleanField(default=True)
     school = models.ForeignKey(

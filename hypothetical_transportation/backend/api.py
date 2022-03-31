@@ -242,7 +242,7 @@ class StudentViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly | IsSchoolStaff]
     filter_backends = [DjangoFilterBackend, DynamicSearchFilter, filters.OrderingFilter]
     filterset_fields = get_filter_dict(Student)
-    ordering_fields = ['school__name', 'student_id', 'full_name', 'id']
+    ordering_fields = ['school__name', 'student_id', 'full_name', 'id', 'email']
     ordering = 'full_name'
 
     def update(self, request, *args, **kwargs):
