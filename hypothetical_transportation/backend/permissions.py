@@ -17,6 +17,10 @@ def is_driver(user):
     return user.groups.filter(name='Driver').exists()
 
 
+def is_student(user):
+    return user.groups.filter(name='Student').exists()
+
+
 def is_write_action(action):
     if action in ['retrieve', 'update', 'partial_update', 'destroy', 'create']:
         return True

@@ -74,7 +74,7 @@ class Student(models.Model):
         on_delete=models.CASCADE
     )
     student_id = models.PositiveIntegerField(null=True, blank=True)
-
+    phone_number = models.CharField(max_length=35, blank=True, null=True)
     # has_inrange_stop = models.BooleanField(default=False, blank=True)
 
     @property

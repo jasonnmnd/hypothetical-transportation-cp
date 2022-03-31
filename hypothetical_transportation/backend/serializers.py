@@ -5,7 +5,6 @@ from .models import Route, School, Student, Stop
 from geopy.geocoders import Nominatim, GoogleV3
 from .permissions import is_admin, is_school_staff
 
-
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
