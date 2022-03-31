@@ -39,6 +39,7 @@ import GeneralUploadFilePage from '../adminPage/pages/GeneralUploadFilePage';
 import GeneralBulkImportSuccessPage from '../adminPage/pages/GeneralBulkImportSuccessPage';
 
 import StudentPage from '../studentPage/StudentPage';
+import GeneralDriveStartPage from '../adminPage/pages/GeneralDriveStartPage';
 
 const Router = (props) => {
     return (
@@ -129,6 +130,7 @@ const Router = (props) => {
           <Route exact path="/upload_data" element={<PrivateRoute><GeneralUploadDataPage/></PrivateRoute>}></Route>
           <Route exact path="/upload_data/success" element={<PrivateRoute><GeneralBulkImportSuccessPage/></PrivateRoute>}></Route>
           <Route exact path="/print/:route_id" element={<GeneralPrintableRoster/>}></Route>
+          <Route exact path="/drive/" element={<GeneralDriveStartPage/>}></Route>
 
           {/* Student Routes */}
           <Route exact path="/student/:student_id" element={<StudentPage />}></Route>
