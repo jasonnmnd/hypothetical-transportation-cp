@@ -1,3 +1,4 @@
+from email.policy import default
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinLengthValidator
@@ -51,15 +52,74 @@ class Stop(models.Model):
         ordering = ['route', 'stop_number']
 
 
-class Bus(models.Model):
-    bus_number = models.PositiveIntegerField(null=False, primary_key=True)
-    route = models.ForeignKey(Route, related_name='bus', on_delete=models.CASCADE, unique=True)
-    # hopefully we get a variance that gives us the following commented out things
-    previous_stop = models.PositiveIntegerField(null=False) # note: this is not a foreign key because all we need is the stop number
+class ActiveBusRun(models.Model):
+    bus_number = models.PositiveIntegerField(null=False)
+    driver = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name='active_bus_run',
+        on_delete=models.CASCADE,
+        unique=True,
+        null=False
+    )
     going_towards_school = models.BooleanField(default=True, null=False)
-    
+    previous_stop = models.PositiveIntegerField(null=False) # note: this is not a foreign key because all we need is the stop number
+    route = models.ForeignKey(Route, related_name='active_bus_run', on_delete=models.CASCADE, unique=True)
+    start_time = models.TimeField(blank=False)
+
     class Meta:
         ordering = ['bus_number']
+
+class TransitLog(models.Model):
+    bus_number = models.PositiveIntegerField(null=False)
+    driver = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name='transit_log',
+        on_delete=models.CASCADE,
+        unique=True,
+        null=False
+    )
+    duration = models.TimeField(blank=True)
+    end_time = models.TimeField(blank=True)
+    going_towards_school = models.BooleanField(default=True, null=False)
+    route = models.ForeignKey(Route, related_name='transit_log', on_delete=models.CASCADE, unique=True)
+    school = models.ForeignKey(School, related_name='transit_log', on_delete=models.CASCADE)
+    start_time = models.TimeField(null=False, blank=False)
+
+    class Meta:
+        ordering = ['start_time']
+
+class BusRun(models.Model):
+    bus_number = models.PositiveIntegerField(null=False)
+    driver = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name='bus_run',
+        on_delete=models.CASCADE,
+        null=False,
+    )
+    duration = models.TimeField(blank=True, null=True)
+    end_time = models.TimeField(blank=True, null=True)
+    going_towards_school = models.BooleanField(default=True, null=False)
+    # previous_stop = models.ForeignKey(
+    #     Stop,
+    #     related_name='bus_run',
+    #     on_delete=models.SET_NULL,
+    #     null=True
+    # )
+    previous_stop = models.PositiveIntegerField(blank=True, null=True, default=0)
+    route = models.ForeignKey(
+        Route,
+        related_name='bus_run', 
+        on_delete=models.CASCADE,
+    )
+    school = models.ForeignKey(
+        School,
+        related_name='bus_run',
+        on_delete=models.CASCADE
+    )
+    start_time = models.TimeField(null=False, blank=False)
+
+    class Meta:
+        ordering = ['start_time']
 
 class Student(models.Model):
     # first_name = models.CharField(max_length=30)

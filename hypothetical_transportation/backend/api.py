@@ -6,12 +6,13 @@ from rest_framework import viewsets, permissions, generics
 from rest_framework.decorators import action, api_view
 from rest_framework.response import Response
 from geopy.geocoders import Nominatim, GoogleV3
-from .models import School, Route, Student, Stop, Bus
+from .models import School, Route, Student, Stop, ActiveBusRun, TransitLog, BusRun
 from .serializers import UserSerializer, StudentSerializer, RouteSerializer, SchoolSerializer, FormatStudentSerializer, \
     FormatRouteSerializer, FormatUserSerializer, EditUserSerializer, StopSerializer, CheckInrangeSerializer, \
     LoadUserSerializer, LoadModelDataSerializer, find_school_match_candidates, school_names_match, \
     StaffEditUserSerializer, StaffEditSchoolSerializer, StaffStudentSerializer, LoadStudentSerializer, \
-    LoadStudentSerializerStrict, ExposeUserSerializer, ExposeUserInputEmailSerializer, BusSerializer
+    LoadStudentSerializerStrict, ExposeUserSerializer, ExposeUserInputEmailSerializer, ActiveBusRunSerializer, \
+    TransitLogSerializer, BusRunSerializer
 from .search import DynamicSearchFilter
 from .customfilters import StudentCountShortCircuitFilter
 from .permissions import is_admin, is_school_staff, is_driver, IsAdminOrReadOnly, IsAdmin, IsSchoolStaff, is_guardian
@@ -165,26 +166,72 @@ class StopViewSet(viewsets.ModelViewSet):
             return Stop.objects.none()
 
 
-class BusViewSet(viewsets.ModelViewSet):
+class ActiveBusRunViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
-    filterset_fields = get_filter_dict(Bus)
-    ordering_fields = ['bus_number', 'route', 'going_towards_school']
+    filterset_fields = get_filter_dict(ActiveBusRun)
+    ordering_fields = ['bus_number', 'driver', 'start_time', 'route', 'going_towards_school']
     ordering = 'bus_number'
 
     def update(self, request, *args, **kwargs):
         super().update(request, *args, **kwargs)
-        serializer = BusSerializer(self.get_object(), data={}, partial=True,
+        serializer = ActiveBusRunSerializer(self.get_object(), data={}, partial=True,
                                              context=self.get_serializer_context())
         serializer.is_valid(raise_exception=True)
         return Response(serializer.data)
 
     def get_serializer_class(self):
-        return BusSerializer
+        return ActiveBusRunSerializer
     
     def get_queryset(self):
-        return Bus.objects.all().distinct().order_by('bus_number')
+        return ActiveBusRun.objects.all().distinct().order_by('bus_number')
 
+
+class TransitLogViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAdminOrReadOnly]
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    filterset_fields = get_filter_dict(TransitLog)
+
+    def get_serializer_class(self):
+        return TransitLogSerializer
+    
+    def get_queryset(self):
+        return TransitLog.objects.all().distinct().order_by('start_time')
+
+
+class BusRunViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAdminOrReadOnly]
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    filterset_fields = get_filter_dict(BusRun)
+
+    def get_serializer_class(self):
+        return BusRunSerializer
+    
+    def get_queryset(self):
+        return BusRun.objects.all().distinct().order_by('start_time')
+
+    @action(detail=True, methods=['get'], permission_classes=[permissions.AllowAny])
+    def next_stop(self, request, pk):
+        try:
+            run = get_object_or_404(self.get_queryset(), pk=pk)
+            try:
+                # reason the index doesn't make sense: we don't store stop 0, which is the school
+                next_stop = Stop.objects.filter(route=run.route).order_by('stop_number')[run.previous_stop]
+                return Response(StopSerializer(instance=next_stop).data, status.HTTP_200_OK)
+            except:
+                return Response("There are no more stops on this route", status.HTTP_204_NO_CONTENT)
+        except:
+            return Response("This run no longer exists", status.HTTP_404_NOT_FOUND)
+
+    @action(detail=True, methods=['put', 'get'], permission_classes=[permissions.AllowAny]) # this is sus. a get that updates...
+    def reached_next_stop(self, request, pk):
+        try:
+            run = get_object_or_404(self.get_queryset(), pk=pk)
+            run.previous_stop = run.previous_stop+1
+            run.save(update_fields=['previous_stop'])
+            return Response(BusRunSerializer(instance=run).data, status.HTTP_204_NO_CONTENT)
+        except:
+            return Response("This run no longer exists", status.HTTP_404_NOT_FOUND)
 
 class RouteViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly | IsSchoolStaff]
@@ -213,14 +260,14 @@ class RouteViewSet(viewsets.ModelViewSet):
             students_queryset = self.request.user.students
             return Route.objects.filter(id__in=students_queryset.values('routes_id')).distinct().order_by('name')
 
-    @action(detail=True, methods=['get', 'delete'], permission_classes=[permissions.AllowAny]) # this is sus. a get that deletes.
-    def delete_bus_on_route(self, request, pk=None):
-        # Bus.objects.get(route=route_id).delete()
-        try:
-            route = get_object_or_404(self.get_queryset(), pk=pk)
-            return Response(Bus.objects.get(route=route).delete(), status.HTTP_200_OK)
-        except:
-            return Response("There is no bus on this route to delete", status.HTTP_404_NOT_FOUND)
+    # @action(detail=True, methods=['get', 'delete'], permission_classes=[permissions.AllowAny]) # this is sus. a get that deletes.
+    # def delete_bus_on_route(self, request, pk=None):
+    #     # ActiveBusRun.objects.get(route=route_id).delete()
+    #     try:
+    #         route = get_object_or_404(self.get_queryset(), pk=pk)
+    #         return Response(ActiveBusRun.objects.get(route=route).delete(), status.HTTP_200_OK)
+    #     except:
+    #         return Response("There is no active bus on this route to delete", status.HTTP_404_NOT_FOUND)
 
     @action(detail=False, permission_classes=[permissions.AllowAny])
     def fields(self, request):
