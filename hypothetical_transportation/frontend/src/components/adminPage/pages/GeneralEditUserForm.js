@@ -413,49 +413,42 @@ function GeneralEditUserForm(props) {
                                     (e) => setFieldValues({...fieldValues, phone_number: e.target.value})
                                 }
                                 />
-                                {/* <PhoneInput
-                                    placeholder="Phone number"
-                                    defaultCountry="US"
-                                    value={fieldValues.phone_number}
-                                    onChange={
-                                    (e)=>{
-                                        setFieldValues({...fieldValues, phone_number: e.target.value});
-                                        }
-                                    }
-                                    /> */}
                                 
                                 <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                                 <Form.Control.Feedback type="invalid">
                                     Please provide a valid phone number.
                                 </Form.Control.Feedback>
                             </Form.Group>
-
-
-                        </Row>
-                                                
-                        <Form.Group className="mb-3" controlId="formGridAddress1">
-                            <Form.Label as="h5">Address</Form.Label>
-                            <Form.Control 
-                            required
-                            type="text"
-                            placeholder="Enter address..." 
-                            value={address}
-                            onChange={
-                              (e)=>{
-                                setAddress(e.target.value);
-                                getItemCoord(e.target.value,setCoord);
+                        </Row>     
+                        
+                        {fieldValues.groups == 2 ? 
+                        <>
+                            <Form.Group className="mb-3" controlId="formGridAddress1">
+                                <Form.Label as="h5">Address</Form.Label>
+                                <Form.Control 
+                                required
+                                type="text"
+                                placeholder="Enter address..." 
+                                value={address}
+                                onChange={
+                                (e)=>{
+                                    setAddress(e.target.value);
+                                    getItemCoord(e.target.value,setCoord);
+                                    }
                                 }
-                            }
-                            />
-                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                            <Form.Control.Feedback type="invalid">Please provide a valid address.</Form.Control.Feedback>
-                        </Form.Group>
+                                />
+                                <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                                <Form.Control.Feedback type="invalid">Please provide a valid address.</Form.Control.Feedback>
+                            </Form.Group>
 
-                        <Form.Group className="mb-3">
-                            <Form.Label as="h5">Location Assistance</Form.Label>
-                            <AssistedLocationMap address={address} coord={coord} setAddress={setAddress} setCoord={setCoord}></AssistedLocationMap>
+                            <Form.Group className="mb-3">
+                                <Form.Label as="h5">Location Assistance</Form.Label>
+                                <AssistedLocationMap address={address} coord={coord} setAddress={setAddress} setCoord={setCoord}></AssistedLocationMap>
 
-                        </Form.Group>
+                            </Form.Group>
+                        </>
+                        : <></>}
+
                         {
                             newStudentList.length>0?
                             <Card  style={{padding: "20px"}}>
