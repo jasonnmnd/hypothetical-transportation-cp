@@ -28,7 +28,7 @@ function SearchBar(props){
         console.log("admin".includes(values.value.toLowerCase()))
         var val = 0
         if(values.filter_by=="groups"){
-            if("admin".includes(values.value.toLowerCase())){     
+            if("administrator".includes(values.value.toLowerCase())){     
                 setSearchParams({
                     [`${props.search}ordering`]: values.sort_by,
                     [`${props.search}groups`]: 1,

@@ -26,40 +26,40 @@ function AdminHeader( props ) {
             <Navbar.Toggle/>
             
             <Navbar.Collapse>
-                <Nav>
-                    <NavDropdown title="Users">
-                        <NavDropdown.Item as={Link} to={`/${getType(props.user)}/users?pageNum=1`}><IoIcons.IoIosWoman /> View Users</NavDropdown.Item>
-                        {isAdmin(props.user) ? <NavDropdown.Divider/>: <></>}
-                        {isAdmin(props.user) ? <NavDropdown.Item as={Link} to={`/${getType(props.user)}/new/user/`}><IoIcons5.IoCreate /> Create Users</NavDropdown.Item> : <></>}
-                    </NavDropdown>
-                    <NavDropdown title="Students">
-                        <NavDropdown.Item as={Link} to={`/${getType(props.user)}/students?pageNum=1`}><IoIcons.IoIosBody /> View Students</NavDropdown.Item>
-                        {isAdmin(props.user) ? <NavDropdown.Divider/>: <></>}
-                        {isAdmin(props.user) ? <NavDropdown.Item as={Link} to={`/${getType(props.user)}/new_student/`}><IoIcons5.IoCreate /> Create Students</NavDropdown.Item> : <></>}
-                    </NavDropdown>
-                    <NavDropdown title="Schools">
-                        <NavDropdown.Item as={Link} to={`/${getType(props.user)}/schools?pageNum=1`}><FaIcons.FaSchool /> View Schools</NavDropdown.Item>
-                        {isAdmin(props.user) ? <NavDropdown.Divider/>: <></>}
-                        {isAdmin(props.user) ? <NavDropdown.Item as={Link} to={`/${getType(props.user)}/new/school/`}><IoIcons5.IoCreate /> Create Schools</NavDropdown.Item> :<></>}
-                    </NavDropdown>
-                    <NavDropdown title="Routes">
-                        <NavDropdown.Item as={Link} to={`/${getType(props.user)}/routes?pageNum=1`}><GiIcons.GiPathDistance /> View Routes</NavDropdown.Item>
-                        {isAdmin(props.user) ? <NavDropdown.Divider/>: <></>}
-                        {isAdmin(props.user) ? <NavDropdown.Item as={Link} to={`/${getType(props.user)}/new/route/`}><IoIcons5.IoCreate /> Create Routes</NavDropdown.Item> : <></>}
-                    </NavDropdown>
-                    {/* <NavDropdown title="Stops">
-                        <NavDropdown.Item as={Link} to={`/`}><GiIcons.GiBusStop /> View Stops</NavDropdown.Item>
-                        <NavDropdown.Divider/>
-                        <NavDropdown.Item as={Link} to={`/`}><IoIcons5.IoCreate /> Create Stops</NavDropdown.Item>
-                    </NavDropdown> */}
-                    {isAdmin(props.user) ? <Nav.Link as={Link} to={`/admin/email`}> Send Email</Nav.Link> : <></>}
-                    {isAdmin(props.user) ? <Nav.Link as={Link} to={`/upload_file`}> Upload Data</Nav.Link>: <></>}
-                    <Nav.Link as={Link} to={`/parent?pageNum=1`}> Your Parent Portal</Nav.Link>
-
-                        <Navbar.Brand width="200" height="50">
-                        </Navbar.Brand>
-                    <Nav.Link as={Link} to={`/account`}> Account</Nav.Link>
-                    <Nav.Link onClick={props.logout}> Logout</Nav.Link>
+                <Nav >
+                        <NavDropdown title="Users">
+                            <NavDropdown.Item as={Link} to={`/${getType(props.user)}/users?pageNum=1`}><IoIcons.IoIosWoman /> View Users</NavDropdown.Item>
+                            {isAdmin(props.user) ? <NavDropdown.Divider/>: <></>}
+                            {isAdmin(props.user) ? <NavDropdown.Item as={Link} to={`/${getType(props.user)}/new/user/`}><IoIcons5.IoCreate /> Create Users</NavDropdown.Item> : <></>}
+                        </NavDropdown>
+                        <NavDropdown title="Students">
+                            <NavDropdown.Item as={Link} to={`/${getType(props.user)}/students?pageNum=1`}><IoIcons.IoIosBody /> View Students</NavDropdown.Item>
+                            {isAdmin(props.user) ? <NavDropdown.Divider/>: <></>}
+                            {isAdmin(props.user) ? <NavDropdown.Item as={Link} to={`/${getType(props.user)}/new_student/`}><IoIcons5.IoCreate /> Create Students</NavDropdown.Item> : <></>}
+                        </NavDropdown>
+                        <NavDropdown title="Schools">
+                            <NavDropdown.Item as={Link} to={`/${getType(props.user)}/schools?pageNum=1`}><FaIcons.FaSchool /> View Schools</NavDropdown.Item>
+                            {isAdmin(props.user) ? <NavDropdown.Divider/>: <></>}
+                            {isAdmin(props.user) ? <NavDropdown.Item as={Link} to={`/${getType(props.user)}/new/school/`}><IoIcons5.IoCreate /> Create Schools</NavDropdown.Item> :<></>}
+                        </NavDropdown>
+                        <NavDropdown title="Routes">
+                            <NavDropdown.Item as={Link} to={`/${getType(props.user)}/routes?pageNum=1`}><GiIcons.GiPathDistance /> View Routes</NavDropdown.Item>
+                            {isAdmin(props.user) ? <NavDropdown.Divider/>: <></>}
+                            {isAdmin(props.user) ? <NavDropdown.Item as={Link} to={`/${getType(props.user)}/new/route/`}><IoIcons5.IoCreate /> Create Routes</NavDropdown.Item> : <></>}
+                        </NavDropdown>
+                        {/* <NavDropdown title="Stops">
+                            <NavDropdown.Item as={Link} to={`/`}><GiIcons.GiBusStop /> View Stops</NavDropdown.Item>
+                            <NavDropdown.Divider/>
+                            <NavDropdown.Item as={Link} to={`/`}><IoIcons5.IoCreate /> Create Stops</NavDropdown.Item>
+                        </NavDropdown> */}
+                        {getType(props.user) == 'driver' ? <Nav.Link as={Link} to={`/drive`}>Start Drive</Nav.Link> : <></>}
+                        {isAdmin(props.user) ? <Nav.Link as={Link} to={`/admin/email`}> Send Email</Nav.Link> : <></>}
+                        {isAdmin(props.user) ? <Nav.Link as={Link} to={`/upload_file`}> Upload Data</Nav.Link>: <></>}
+                        {/* <Nav.Link as={Link} to={`/parent?pageNum=1`}> Your Parent Portal</Nav.Link> */}
+                            {/* <Navbar.Brand style={{width:'550px'}}>
+                            </Navbar.Brand> */}
+                        <Nav.Link as={Link} to={`/account`} style={{position:'absolute',right:'90px'}}> Account</Nav.Link>
+                        <Nav.Link onClick={props.logout} style={{position:'absolute',right:'20px'}}> Logout</Nav.Link>
                     
                 </Nav>
             </Navbar.Collapse>

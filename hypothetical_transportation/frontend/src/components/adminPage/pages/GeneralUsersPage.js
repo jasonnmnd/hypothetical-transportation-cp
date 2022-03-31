@@ -18,13 +18,14 @@ function GeneralAdminUsersPage(props) {
   let [searchParams, setSearchParams] = useSearchParams();
   
   useEffect(() => {
-    if(searchParams.get(`pageNum`) != null){
+    if(searchParams.get(`pageNum`) != null  && !(searchParams.get(`ordering`) ==null || searchParams.get(`ordering`) =="")){
       let paramsToSend = Object.fromEntries([...searchParams]);
       props.getUsers(paramsToSend);
     }
     else{
       setSearchParams({
         [`pageNum`]: 1,
+        [`ordering`]: "full_name",
       })
     }
   }, [searchParams]);

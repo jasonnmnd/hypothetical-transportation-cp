@@ -28,6 +28,7 @@ function AdminPage( props ) {
                   <h1>Welcome, {props.user.full_name}</h1>
               </div>
             </Container>
+
             <Container fluid className="d-flex flex-column justify-content-center align-items-center" style={{gap: "20px 50px"}}>
 
               <Row>

@@ -89,7 +89,18 @@ function IconLegend(props) {
             icon: STUDENT_CHECK_LEGEND("green")
         },
         {
-            key: " Stops that are in range ",
+            key: " Stops That Are in Range ",
+            icon: STOP_LEGEND("blue")
+        }
+    ]
+
+    const studentLegend = [
+        {
+            key: " Your Address ",
+            icon: STUDENT_CHECK_LEGEND("green")
+        },
+        {
+            key: " Stops That Are in Range ",
             icon: STOP_LEGEND("blue")
         }
     ]
@@ -103,6 +114,8 @@ function IconLegend(props) {
             return stopPlannerLegend;
         } else if (props.legendType=="parentStudent"){
             return parentStudentLegned;
+        } else if (props.legendType=="student"){
+            return studentLegend;
         }
     }
 

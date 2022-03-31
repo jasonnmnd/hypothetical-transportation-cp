@@ -241,7 +241,13 @@ function GeneralAdminRouteDetails(props) {
                             <Button variant="yellowLong" size="lg">Print Route Roster</Button>
                         </Link>
                     </Col>
-                    </Row></Container>
+                    {/* <Col>
+                        <Link to={`/print/${props.route.id}`} target="_blank">
+                            <Button variant="yellowLong" size="lg">Start Drive</Button>
+                        </Link>
+                    </Col> */}
+                </Row>
+            </Container>
         }
         
         <Row style={{gap: "10px"}}>
