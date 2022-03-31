@@ -262,13 +262,22 @@ function GeneralEditUserForm(props) {
     const [newStudentList, setNewStudentList] = useState([])
     const saveStudent = ()=>{
         var list = newStudentList;
-        list = list.concat(newStudent);
-        setNewStudentList(list);
-        setNewStudent(emptyStudent);
-        setStudentSchoolSelected({value: null, label: "-----------------------"})
-        setCreateNew(false);
+        if(newStudent.full_name!=="" && newStudent.school!==""){
+            list = list.concat(newStudent);
+            setNewStudentList(list);
+            setNewStudent(emptyStudent);
+            setStudentSchoolSelected({value: null, label: "-----------------------"})
+            setCreateNew(false);
+            setValidated(false);
+        }
+        else{
+            setValidated(true);
+        }
     }
     
+    const removeFromList = (stu)=>{
+        setNewStudentList(newStudentList.filter((i)=>i!==stu))
+    }
     useEffect(()=>{
         console.log(newStudentList)
     },[newStudentList])
@@ -452,13 +461,16 @@ function GeneralEditUserForm(props) {
                             <Card  style={{padding: "20px"}}>
                                 <Form.Label as="h5">New Students To Be Added</Form.Label>
                                 {newStudentList.map((stu, i)=>{
-                                    return <Card  style={{padding: "20px"}} id={i}>
+                                    return <Card  style={{padding: "20px", display: "inline-block"}} id={i}>
                                         <Card.Body>
                                             <Card.Text>{"Name: " + stu.full_name}</Card.Text>
                                             <Card.Text>{"Student ID: " + stu.student_id}</Card.Text>
                                             <Card.Text>{"School: " + props.schoollist.find((el)=>{return el.id===stu.school}).name}</Card.Text>
                                             <Card.Text>{stu.email!==undefined ? ("Email: " + stu.email) : null}</Card.Text>
                                         </Card.Body>
+                                        <Button variant="yellowsubmit" onClick={()=>{removeFromList(stu)}}>
+                                            Remove
+                                        </Button>
                                     </Card>
                                 })}
                             </Card>:
