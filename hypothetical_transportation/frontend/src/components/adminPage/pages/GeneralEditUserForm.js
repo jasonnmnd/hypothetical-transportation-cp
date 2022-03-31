@@ -273,7 +273,6 @@ function GeneralEditUserForm(props) {
         console.log(newStudentList)
     },[newStudentList])
     
-    
     return (
         <div> 
             {/* <div>{openModal && <PageNavigateModal closeModal={setOpenModal} yesFunc={navToNewStudent} noFunc={navToUsers} message={`You have created a new User!`} question={`Would you like to navigate to the create a new student for them?`}/>}</div> */}
@@ -346,6 +345,8 @@ function GeneralEditUserForm(props) {
                                                     checked={fieldValues.groups == radio.value}
                                                     onChange={(e)=>{
                                                         setFieldValues({...fieldValues, groups: e.target.value});
+                                                        console.log(fieldValues)
+                                                        console.log(e.target.value)
                                                     }}
                                                 >
                                                     {radio.name}
@@ -536,7 +537,7 @@ function GeneralEditUserForm(props) {
                         </Card>:
                         <></>    
                         }
-                        {createNew || props.action=="edit" || fieldValues.groups!==2 ? 
+                        {createNew || props.action=="edit" || fieldValues.groups!=2 ? 
                         <></>:
                         <Button variant="yellowsubmit" onClick={()=>setCreateNew(true)}>
                             Create New Student
