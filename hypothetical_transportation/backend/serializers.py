@@ -4,7 +4,8 @@ from rest_framework import serializers
 from .models import Route, School, Student, Stop
 from geopy.geocoders import Nominatim, GoogleV3
 from .permissions import is_admin, is_school_staff
-from .student_account_managers import sync_student_account, send_invite_email
+from .student_account_managers import sync_student_account, send_invite_email, sync_parent_changes_to_student_account
+
 
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:
@@ -41,7 +42,9 @@ class EditUserSerializer(serializers.ModelSerializer):
         if is_admin(user) and user_email == instance and 'groups' in validated_data and Group.objects.get(
                 name='Administrator') not in validated_data['groups']:
             raise serializers.ValidationError("You may not revoke your own administrator privileges")
-        return super().update(instance, validated_data)
+        updated_user = super().update(instance, validated_data)
+        sync_parent_changes_to_student_account(updated_user)
+        return updated_user
 
     class Meta:
         model = get_user_model()
@@ -49,7 +52,7 @@ class EditUserSerializer(serializers.ModelSerializer):
             'id', 'email', 'full_name', 'phone_number', 'address', 'latitude', 'longitude', 'groups', 'managed_schools')
 
 
-class StaffEditUserSerializer(serializers.ModelSerializer):
+class StaffEditUserSerializer(EditUserSerializer):
     def validate(self, attrs):
         # print(self.context['request'].user)
         return attrs

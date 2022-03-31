@@ -23,6 +23,21 @@ def send_invite_email(student: Student):
     invite_code.send_invitation_email()
 
 
+def sync_parent_changes_to_student_account(parent):
+    """
+    Ensure that changes to parents will propagate to the accounts of children
+
+    :param parent: Auth User object
+    :return: None
+    """
+    for student in parent.students.all():
+        if student.email is not None:
+            student_account = get_user_model().objects.get(email=student.email)
+            student_account.address = parent.address
+            student_account.latitude = parent.latitude
+            student_account.longitude = parent.longitude
+
+
 def sync_student_account(student: Student, prev_email):
     """
     Synchronizes information between a student and their associated account.
