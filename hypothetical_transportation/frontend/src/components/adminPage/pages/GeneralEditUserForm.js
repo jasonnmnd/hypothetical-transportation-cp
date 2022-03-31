@@ -426,6 +426,7 @@ function GeneralEditUserForm(props) {
                                             <Card.Text>{"Name: " + stu.full_name}</Card.Text>
                                             <Card.Text>{"Student ID: " + stu.student_id}</Card.Text>
                                             <Card.Text>{"School: " + props.schoollist.find((el)=>{return el.id===stu.school}).name}</Card.Text>
+                                            <Card.Text>{stu.email!==undefined ? ("Email: " + stu.email) : null}</Card.Text>
                                         </Card.Body>
                                     </Card>
                                 })}
@@ -483,10 +484,10 @@ function GeneralEditUserForm(props) {
                                         required 
                                         type="email" 
                                         placeholder="Enter email..." 
-                                        value={studentEmail}
+                                        value={newStudent.email!==undefined ? newStudent.email : ""}
                                         onChange={
                                         (e)=>{
-                                            setStudentEmail(e.target.value);
+                                            setNewStudent({...newStudent, ["email"]: e.target.value===""?undefined:e.target.value})
                                             }
                                         }/>
                                         <Form.Control.Feedback>Looks good!</Form.Control.Feedback>

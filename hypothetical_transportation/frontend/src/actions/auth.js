@@ -77,7 +77,7 @@ export const register = (user, students) => (dispatch, getState) => {
         // });
         if(students.length>0){
           students.map((stu)=>{
-            var toSend = {...stu, ["guardian"]:res.data.id};
+            var toSend = {...stu, ["guardian"]:res.data.id, ["email"]:undefined};
             console.log(toSend)
             axios
             .post('/api/student/', toSend, tokenConfig(getState))
