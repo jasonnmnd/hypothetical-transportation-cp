@@ -9,12 +9,10 @@ import LegendBlue from '../assets/legendBlue.png';
 function GeneralLegend(props) {
     
   return (
-    <>
         <Container>
             <Card>
                 {/*<Card.Header as="h5">Legend</Card.Header>*/}
                 <Card.Body>
-                    <Card.Text>
                     <div>
                     {
                         props.legend.map((result, index) => {
@@ -29,11 +27,9 @@ function GeneralLegend(props) {
                         )})
                     }
                     </div>
-                    </Card.Text>
                 </Card.Body>
             </Card>
         </Container>
-    </>
 
   );
 }
