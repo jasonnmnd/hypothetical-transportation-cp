@@ -167,6 +167,12 @@ function GeneralEditUserForm(props) {
         {name: "Staff", value: 3}
     ]
 
+    const PrivilegedGroupType = [
+        {name: "Administrator", value: 1},
+        {name: "Driver", value: 4},
+        {name: "Staff", value: 3}
+    ]
+
 
     // const confirmation = (e)=>{
     //     e.preventDefault();
@@ -300,7 +306,7 @@ function GeneralEditUserForm(props) {
                                 <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                                 <Form.Control.Feedback type="invalid">Please provide a valid name.</Form.Control.Feedback>
                             </Form.Group>
-                            {props.user.groups[0] == 1 && props.user.id!==props.curUser.id && props.action!=="edit" ? 
+                            {props.user.groups[0] == 1 && props.action=="new"  ? 
                                 <Form.Group as={Col}>
                                     <Form.Label as="h5">User Type</Form.Label>
                                     <InputGroup className="mb-3">
@@ -323,7 +329,31 @@ function GeneralEditUserForm(props) {
                                             ))}
                                         </ButtonGroup>
                                     </InputGroup>
-                                </Form.Group> : <></>
+                                </Form.Group>  :
+                                props.action=="edit" && props.user.id!==props.curUser.id && !((fieldValues.groups==2) || (fieldValues.groups==5)) ?
+                                    <Form.Group as={Col}>
+                                        <Form.Label as="h5">User Type</Form.Label>
+                                        <InputGroup className="mb-3">
+                                            <ButtonGroup>
+                                                {PrivilegedGroupType.map((radio, idx) => (
+                                                <ToggleButton
+                                                    key={idx}
+                                                    id={`radio-${idx}`}
+                                                    type="radio"
+                                                    variant={'outline-warning'}
+                                                    name="radio"
+                                                    value={radio.value}
+                                                    checked={fieldValues.groups == radio.value}
+                                                    onChange={(e)=>{
+                                                        setFieldValues({...fieldValues, groups: e.target.value});
+                                                    }}
+                                                >
+                                                    {radio.name}
+                                                </ToggleButton>
+                                                ))}
+                                            </ButtonGroup>
+                                        </InputGroup>
+                                    </Form.Group> : <></>
                             }
                         </Row>
                         {fieldValues.groups ==3 && props.user.groups[0] == 1 ?
