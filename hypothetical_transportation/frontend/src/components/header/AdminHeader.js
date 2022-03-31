@@ -52,7 +52,7 @@ function AdminHeader( props ) {
                             <NavDropdown.Divider/>
                             <NavDropdown.Item as={Link} to={`/`}><IoIcons5.IoCreate /> Create Stops</NavDropdown.Item>
                         </NavDropdown> */}
-                        {getType(props.user) == 'driver' ? <Nav.Link as={Link} to={`/drive`}>Start Drive</Nav.Link> : <></>}
+                        {getType(props.user) == 'driver' ? <Nav.Link as={Link} to={`/drive`}>Drive Actions</Nav.Link> : <></>}
                         {isAdmin(props.user) ? <Nav.Link as={Link} to={`/admin/email`}> Send Email</Nav.Link> : <></>}
                         {isAdmin(props.user) ? <Nav.Link as={Link} to={`/upload_file`}> Upload Data</Nav.Link>: <></>}
                         {/* <Nav.Link as={Link} to={`/parent?pageNum=1`}> Your Parent Portal</Nav.Link> */}
