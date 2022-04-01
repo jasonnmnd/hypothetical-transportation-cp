@@ -22,7 +22,7 @@ export const EXAMPLE_ACTIVE_RUN_1 = {
         id: 5,
         name: "A SCHOOL's name"
     },
-    duration: "2:01"
+    duration: "Ongoing"
 }
 
 export const EXAMPLE_ACTIVE_RUN_2 = {
@@ -48,7 +48,7 @@ export const EXAMPLE_ACTIVE_RUN_2 = {
         id: 5,
         name: "A SCHOOL's name"
     },
-    duration: "1:31"
+    duration: "Ongoing"
 }
 
 export const EXAMPLE_ACTIVE_RUNS = {

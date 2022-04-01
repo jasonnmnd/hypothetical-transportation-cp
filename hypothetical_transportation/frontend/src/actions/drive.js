@@ -176,24 +176,45 @@ export const getRunsBySchool = (schools, onSuccess = () => {}) => (dispatch, get
 
 }
 
-export const getLogBySchool = (schools, onSuccess = () => {}) => (dispatch, getState) => {
-    let config = tokenConfig(getState);
+// export const getLogBySchool = (schools, onSuccess = () => {}) => (dispatch, getState) => {
+//     let config = tokenConfig(getState);
 
+//     axios
+//     .get(`/api/transit_log/?school=${schools}`, config)
+//     .then((res) => {
+//         dispatch({
+//             type: GET_LOG,
+//             payload: res.data,
+//           });
+//           onSuccess();
+//     })
+    // .catch((err) => {/*console.log(err);*/
+    //     dispatch({
+    //         type: DRIVE_ERROR,
+    //         payload: err,
+    //     });
+    // });
+// }
+
+export const getLog = (parameters) => (dispatch, getState) => {
+    let config = tokenConfig(getState);
+    if(parameters){
+      config.params = getParameters(parameters);
+    }
     axios
-    .get(`/api/transit_log/?school=${schools}`, config)
-    .then((res) => {
+      .get('/api/transit_log/', config)
+      .then((res) => {
         dispatch({
             type: GET_LOG,
             payload: res.data,
-          });
-          onSuccess();
-    })
-    .catch((err) => {/*console.log(err);*/
+        });
+      })
+      .catch((err) => {/*console.log(err);*/
         dispatch({
             type: DRIVE_ERROR,
             payload: err,
         });
     });
-
-}
+  
+  }
 

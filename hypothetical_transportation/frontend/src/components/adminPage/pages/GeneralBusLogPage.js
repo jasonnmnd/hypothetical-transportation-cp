@@ -10,6 +10,7 @@ import { getRoutes } from '../../../actions/routes';
 import Select from 'react-select';
 import ActiveRunsTable from '../components/driver_bus_run/ActiveRunsTable';
 import CompletedRunsTable from '../components/driver_bus_run/CompletedRunsTable';
+import { EXAMPLE_ACTIVE_RUNS } from '../../../utils/drive';
 
 
 
@@ -20,6 +21,15 @@ function GeneralBusLogPage(props) {
     const activityIsActive = () => {
         return searchParams.get("activity") == null || searchParams.get("activity") == "active"
     }
+
+    useEffect(() => {
+        let paramsToSend = Object.fromEntries([...searchParams]);
+        if(paramsToSend.pageNum == null){
+            paramsToSend.pageNum = "1";
+        }
+
+        //props.getRoutes(paramsToSend);
+    }, [searchParams]);
 
   
   return (
@@ -63,7 +73,7 @@ function GeneralBusLogPage(props) {
                     Completed runs
                 </ToggleButton>
             </ButtonGroup>
-            {activityIsActive() ? <ActiveRunsTable /> : <CompletedRunsTable />}
+            {activityIsActive() ? <ActiveRunsTable data={props.activeBusesData} count={props.activeBusesCount}/> : <ActiveRunsTable data={props.completedBusesData} count={props.completedBusesCount}/>}
             
             
         </Container>
@@ -72,7 +82,17 @@ function GeneralBusLogPage(props) {
 }
 
 GeneralBusLogPage.propTypes = {
-    
+    activeBusesData: PropTypes.array,
+    activeBusesCount: PropTypes.number,
+    completedBusesData: PropTypes.array,
+    completedBusesCount: PropTypes.number,
+}
+
+GeneralBusLogPage.defaultProps = {
+    activeBusesData: EXAMPLE_ACTIVE_RUNS.results,
+    activeBusesCount: EXAMPLE_ACTIVE_RUNS.count,
+    completedBusesData: [],
+    completedBusesCount: 0,
 }
 
 const mapStateToProps = (state) => ({

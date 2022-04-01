@@ -1,5 +1,8 @@
 
 export default function getType(user){
+    if(user.groups == null){
+        return ""
+    }
     if(user.groups[0] == 1){
         return "admin"
     }
