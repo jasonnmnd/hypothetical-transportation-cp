@@ -104,7 +104,10 @@ class TransitLogSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class BusRunSerializer(serializers.ModelSerializer):
-    start_time = datetime.now()
+
+    def validate(self, attrs):
+        return super().validate(attrs)
+
     class Meta:
         model = BusRun
         fields = '__all__'
@@ -114,6 +117,11 @@ class FormatBusRunSerializer(BusRunSerializer):
     route = RouteSerializer()
     school = SchoolSerializer()
     driver = FormatUserSerializer()
+
+class StartBusRunSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BusRun
+        fields = ['bus_number', 'driver', 'going_towards_school', 'route']
 
 class FormatRouteSerializer(RouteSerializer):
     school = SchoolSerializer()
