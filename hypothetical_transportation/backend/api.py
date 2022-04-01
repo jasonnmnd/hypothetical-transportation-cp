@@ -5,6 +5,7 @@ from rest_framework import filters, status, serializers
 from rest_framework import viewsets, permissions, generics
 from rest_framework.decorators import action, api_view
 from rest_framework.response import Response
+from datetime import datetime
 from geopy.geocoders import Nominatim, GoogleV3
 from .models import School, Route, Student, Stop, ActiveBusRun, TransitLog, BusRun
 from .serializers import UserSerializer, StudentSerializer, RouteSerializer, SchoolSerializer, FormatStudentSerializer, \
@@ -209,14 +210,29 @@ class BusRunViewSet(viewsets.ModelViewSet):
     ordering = 'bus_number'
 
     def get_serializer_class(self):
+        if self.action == 'list' or self.action == 'retrieve':
+            return FormatBusRunSerializer
         if is_school_staff(self.request.user):
             return FormatBusRunSerializer
-        return FormatBusRunSerializer
+        return BusRunSerializer
     
     def get_queryset(self):
         if is_school_staff(self.request.user):
             return BusRun.objects.filter(id__in=self.request.user.managed_schools.distinct().values('run_id')).distinct().order_by('start_time')
         return BusRun.objects.all().distinct().order_by('start_time')
+
+
+    def post(self, request, *args, **kwargs):
+        print("hit!")
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            print(request)
+            start_time = datetime.now()
+            school = request.route.school
+
+            # return Response(students_response, status.HTTP_200_OK)
+        return Response(serializer.errors)
+
 
     @action(detail=True, methods=['get'], permission_classes=[permissions.AllowAny])
     def next_stop(self, request, pk):
