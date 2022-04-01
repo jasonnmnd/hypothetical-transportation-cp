@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from django.core.validators import MinLengthValidator
 from authemail.models import EmailUserManager, EmailAbstractUser, _generate_code, SignupCodeManager, \
     send_multi_format_email
-from backend.models import School
+from backend.models import School, Student
 
 """
 Heavily inspired by the design of django-rest-authemail
@@ -31,6 +31,9 @@ class User(EmailAbstractUser):
     longitude = models.FloatField(blank=False)
     phone_number = models.CharField(max_length=35, blank=False, null=False, validators=[MinLengthValidator(1)])
     managed_schools = models.ManyToManyField(School, related_name="managers", blank=True)
+    linked_student = models.ForeignKey(Student, related_name="student_user_account", null=True, blank=True,
+                                       on_delete=models.CASCADE)
+
     objects = CustomEmailUserManager()
 
     REQUIRED_FIELDS = []

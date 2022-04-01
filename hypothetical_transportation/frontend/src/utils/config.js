@@ -275,8 +275,8 @@ const activeDriveColumns = {
     },
     direction: {
         colTitle: "Direction",
-        dataPath: "direction",
-        search_key: "direction",
+        dataPath: "going_towards_school",
+        search_key: "going_towards_school",
         sortable: true,
         filterable: false
     },

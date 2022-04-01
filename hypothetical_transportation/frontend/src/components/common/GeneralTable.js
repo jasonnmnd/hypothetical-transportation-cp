@@ -20,7 +20,18 @@ function GeneralTable( props ) {
         <tr className={"tr-clickable"} onClick={() => extra===true?props.extraAction(rowData):props.action(rowData)} style={{backgroundColor: !rowData.is_complete && props.tableType=='route' ? "rgb(255, 136, 136)" : (rowData["routes"] === null ? "rgb(255, 136, 136)" : (!rowData.has_inrange_stop && props.tableType=='student' ? "rgb(87, 202, 255)" : "" ))}}>
             {
                 props.columnNames.map((columnInfo, index) => {
-                    const cellData = getValueFromPath(columnInfo.dataPath, rowData)
+                    let cellData = getValueFromPath(columnInfo.dataPath, rowData)
+                    if(columnInfo.dataPath == "going_towards_school"){
+                      if(cellData) {
+                        cellData = "Going Towards School"
+                      } else {
+                        cellData = "Going Away From School"
+                      }
+                    }
+                    if(columnInfo.dataPath == "duration" && cellData == null){
+                      cellData = "Ongoing"
+                      
+                    }
                     return (
                         <td key={`${cellData}--${index}`}>
                             {cellData}

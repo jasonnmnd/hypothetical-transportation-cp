@@ -18,7 +18,7 @@ function ActiveRunsTable(props) {
     
     <>
         <GeneralAdminTableView 
-            title='Active Runs'
+            title='Bus Log'
             tableType='activeDrive'
             values={props.data}
             totalCount={props.count}

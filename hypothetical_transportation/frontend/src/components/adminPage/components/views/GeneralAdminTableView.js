@@ -71,6 +71,8 @@ function GeneralAdminTableView( props ) {
     if(props.totalCount == 0){
         return (
             <div className="d-flex justify-content-space-between flex-column" style={{gap: "10px"}}>
+                {props.search != null && props.search != "stop" && props.search != undefined ? <Button onClick={toggleSort} variant="yellowToggle">Search Options {showSort ? "▲" : "▼"}</Button> : <></>}
+                {showSort ? (props.search != null && props.search != "stop" && props.search != undefined ? <SearchBar buttons={getFilterOptions(props.tableType)} sortBy={getSortOptions(props.tableType)} search={props.search}></SearchBar> : null) : <></>}
                 <h1>NO RESULTS</h1>
             </div>
         )

@@ -187,7 +187,7 @@ export const getLog = (parameters) => (dispatch, getState) => {
       config.params = getParameters(parameters);
     }
     axios
-      .get('/api/transit_log/', config)
+      .get('/api/run/', config)
       .then((res) => {
         dispatch({
             type: GET_LOG,

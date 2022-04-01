@@ -11,6 +11,7 @@ import Select from 'react-select';
 import ActiveRunsTable from '../components/driver_bus_run/ActiveRunsTable';
 import CompletedRunsTable from '../components/driver_bus_run/CompletedRunsTable';
 import { EXAMPLE_ACTIVE_RUNS } from '../../../utils/drive';
+import { getLog } from '../../../actions/drive';
 
 
 
@@ -18,17 +19,13 @@ function GeneralBusLogPage(props) {
 
     let [searchParams, setSearchParams] = useSearchParams();
 
-    const activityIsActive = () => {
-        return searchParams.get("activity") == null || searchParams.get("activity") == "active"
-    }
-
     useEffect(() => {
         let paramsToSend = Object.fromEntries([...searchParams]);
         if(paramsToSend.pageNum == null){
             paramsToSend.pageNum = "1";
         }
 
-        //props.getRoutes(paramsToSend);
+        props.getLog(paramsToSend);
     }, [searchParams]);
 
   
@@ -36,46 +33,10 @@ function GeneralBusLogPage(props) {
     <div>          
         <AdminHeader/>
         <Container className="container-main d-flex flex-column" style={{gap: "20px"}}>
-            <ButtonGroup>
-                <ToggleButton
-                    key={"active"}
-                    id={`radio-active`}
-                    type="radio"
-                    variant={'outline-warning'}
-                    name="active"
-                    value={"active"}
-                    checked={activityIsActive()}
-                    onChange={(e)=>{
-                        console.log(e)
-                        setSearchParams({
-                            ...Object.fromEntries([...searchParams]),
-                            activity: "active"
-                        })
-                    }}
-                >
-                    Active runs
-                </ToggleButton>
-                <ToggleButton
-                    key={"completed"}
-                    id={`radio-completed`}
-                    type="radio"
-                    variant={'outline-warning'}
-                    name="completed"
-                    value={"completed"}
-                    checked={!activityIsActive()}
-                    onChange={(e)=>{
-                        setSearchParams({
-                            ...Object.fromEntries([...searchParams]),
-                            activity: "completed"
-                        })
-                    }}
-                >
-                    Completed runs
-                </ToggleButton>
-            </ButtonGroup>
-            {activityIsActive() ? <ActiveRunsTable data={props.activeBusesData} count={props.activeBusesCount}/> : <ActiveRunsTable data={props.completedBusesData} count={props.completedBusesCount}/>}
-            
-            
+            <div className="shadow-sm p-3 mb-5 bg-white rounded d-flex flex-row justify-content-center">
+                <h1>Bus Log</h1>
+            </div>
+            <ActiveRunsTable data={props.activeBusesData} count={props.activeBusesCount}/> 
         </Container>
     </div>
     );
@@ -86,6 +47,7 @@ GeneralBusLogPage.propTypes = {
     activeBusesCount: PropTypes.number,
     completedBusesData: PropTypes.array,
     completedBusesCount: PropTypes.number,
+    getLog: PropTypes.func.isRequired
 }
 
 GeneralBusLogPage.defaultProps = {
@@ -96,7 +58,10 @@ GeneralBusLogPage.defaultProps = {
 }
 
 const mapStateToProps = (state) => ({
+    activeBusesData: state.drive.log.results,
+    activeBusesCount: state.drive.log.count,
+
 });
 
-export default connect(mapStateToProps, {})(GeneralBusLogPage)
+export default connect(mapStateToProps, {getLog})(GeneralBusLogPage)
 

@@ -5,7 +5,7 @@ export const EXAMPLE_ACTIVE_RUN_1 = {
         name: "A ROUTE IS BORN"
     },
     bus_number: 8017,
-    direction: "Toward School",
+    going_towards_school: false,
     previous_stop: {
         id: 5,
         name: "A STOPPPP"
@@ -22,7 +22,7 @@ export const EXAMPLE_ACTIVE_RUN_1 = {
         id: 5,
         name: "A SCHOOL's name"
     },
-    duration: "Ongoing"
+    duration: "1:17"
 }
 
 export const EXAMPLE_ACTIVE_RUN_2 = {
@@ -31,7 +31,7 @@ export const EXAMPLE_ACTIVE_RUN_2 = {
         name: "another route name"
     },
     bus_number: 8011,
-    direction: "Away From School",
+    going_towards_school: true,
     previous_stop: {
         id: 3,
         name: "Another STOooop"
@@ -48,7 +48,7 @@ export const EXAMPLE_ACTIVE_RUN_2 = {
         id: 5,
         name: "A SCHOOL's name"
     },
-    duration: "Ongoing"
+    duration: null
 }
 
 export const EXAMPLE_ACTIVE_RUNS = {
