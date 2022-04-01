@@ -7,14 +7,11 @@ import PropTypes from 'prop-types';
 import AdminHeader from '../../header/AdminHeader';
 import { Container, Form, Col, Button, Card } from 'react-bootstrap';
 import { getRoutes } from '../../../actions/routes';
-import { getRunByDriver } from '../../../actions/drive';
+import { getRunByDriver, startRun, endRun, reachStop } from '../../../actions/drive';
 import Select from 'react-select';
 import StartDriveSection from '../components/driver_bus_run/StartDriveSection';
 import CurrentDriveSection from '../components/driver_bus_run/CurrentDriveSection';
 import { EXAMPLE_ACTIVE_RUNS, EXAMPLE_ACTIVE_RUN_1 } from '../../../utils/drive';
-
-const NULL_OPTION = {value: null, label: "-----------------------"}
-
 
 function GeneralDriveStartPage(props) {
 
@@ -27,14 +24,24 @@ function GeneralDriveStartPage(props) {
 
     
     
-    const startRun = () => {
+    const startRun = (routeId, busNumber, going_towards_school) => {
         console.log("STARTING")
+
+        props.startRun({
+            route: routeId,
+            bus_number: busNumber,
+            going_towards_school: going_towards_school,
+            driver: props.driverId
+        })
     }
     const endRun = () => {
         console.log("ENDING")
+        props.endRun(props.currentRun.route.id)
+        
     }
     const arrivedAtStop = () => {
         console.log("NEXT STOP")
+        props.reachStop(props.currentRun.route.id)
     }
 
     const driverInRun = () => {
@@ -70,7 +77,10 @@ GeneralDriveStartPage.propTypes = {
     getRunByDriver: PropTypes.func.isRequired,
     routes: PropTypes.array,
     currentRun: PropTypes.object,
-    driverId: PropTypes.number
+    driverId: PropTypes.number,
+    startRun: PropTypes.func.isRequired,
+    endRun: PropTypes.func.isRequired,
+    reachStop: PropTypes.func.isRequired
 }
 
 // GeneralDriveStartPage.defaultProps = {
@@ -83,5 +93,5 @@ const mapStateToProps = (state) => ({
     driverId: state.auth.user.id
 });
 
-export default connect(mapStateToProps, {getRoutes, getRunByDriver})(GeneralDriveStartPage)
+export default connect(mapStateToProps, {getRoutes, getRunByDriver, startRun, endRun, reachStop})(GeneralDriveStartPage)
 

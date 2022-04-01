@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ONE_RUN_SET, DRIVE_ERROR, MANY_RUN_SET, GET_LOG } from "./types"; 
+import { ONE_RUN_SET, DRIVE_ERROR, MANY_RUN_SET, GET_LOG, ADD_BUS_LOCATION } from "./types"; 
 import { tokenConfig } from './auth';
 import { getParameters } from "./utils";
 
@@ -11,11 +11,11 @@ export const startRun = (data, onSuccess = () => {}) => (dispatch, getState) => 
 
 
     axios
-    .post('/api/run/', data, config)
+    .post('/api/start_run/', data, config)
     .then((res) => {
         dispatch({
             type: ONE_RUN_SET,
-            payload: {},
+            payload: res,
         });
         onSuccess();
     })
@@ -51,7 +51,7 @@ export const endRun = (routeId, onSuccess = () => {}) => (dispatch, getState) =>
     
 }
 
-export const reachStop = (routeId, stop, onSuccess = () => {}) => (dispatch, getState) => {
+export const reachStop = (routeId, onSuccess = () => {}) => (dispatch, getState) => {
     let config = tokenConfig(getState);
 
     axios
@@ -59,7 +59,7 @@ export const reachStop = (routeId, stop, onSuccess = () => {}) => (dispatch, get
     .then((res) => {
         dispatch({
             type: ONE_RUN_SET,
-            payload: {},
+            payload: res,
         });
         onSuccess();
     })
@@ -117,26 +117,26 @@ export const getRunByBus = (busNum, onSuccess = () => {}) => (dispatch, getState
 export const getRunByDriver = (driverId, onSuccess = () => {}) => (dispatch, getState) => {
     let config = tokenConfig(getState);
     console.log(driverId)
-    dispatch({
-        type: ONE_RUN_SET,
-        payload: EXAMPLE_ACTIVE_RUN_1,
-      });
+    // dispatch({
+    //     type: ONE_RUN_SET,
+    //     payload: EXAMPLE_ACTIVE_RUN_1,
+    //   });
 
-    // axios
-    // .get(`/api/bus/driver/${driverId}`, config)
-    // .then((res) => {
-    //     dispatch({
-    //         type: ONE_RUN_SET,
-    //         payload: res.data,
-    //       });
-    //       onSuccess();
-    // })
-    // .catch((err) => {/*console.log(err);*/
-    //     dispatch({
-    //         type: DRIVE_ERROR,
-    //         payload: err,
-    //     });
-    // });
+    axios
+    .get(`/api/bus/driver/${driverId}`, config)
+    .then((res) => {
+        dispatch({
+            type: ONE_RUN_SET,
+            payload: res.data,
+          });
+          onSuccess();
+    })
+    .catch((err) => {/*console.log(err);*/
+        dispatch({
+            type: DRIVE_ERROR,
+            payload: err,
+        });
+    });
 
 }
 
@@ -191,6 +191,25 @@ export const getLog = (parameters) => (dispatch, getState) => {
       .then((res) => {
         dispatch({
             type: GET_LOG,
+            payload: res.data,
+        });
+      })
+      .catch((err) => {/*console.log(err);*/
+        dispatch({
+            type: DRIVE_ERROR,
+            payload: err,
+        });
+    });
+  
+  }
+
+  export const getBusLocation = (busNum) => (dispatch, getState) => {
+    let config = tokenConfig(getState);
+    axios
+      .get(`http://tranzit.colab.duke.edu:8000/get?bus=${busNum}`, config)
+      .then((res) => {
+        dispatch({
+            type: ADD_BUS_LOCATION,
             payload: res.data,
         });
       })

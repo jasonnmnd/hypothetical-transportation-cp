@@ -15,6 +15,10 @@ function StartDriveSection(props) {
     const [isTowardSchool, setIsTowardSchool] = useState({value: true, label: "Toward School"});
 
 
+    const startRun = () => {
+        props.startRun(routeId.value, busNum, isTowardSchool.value)
+    }
+
     
     const getRouteOptions = () => {
         return props.routes.map((item)=> {
@@ -66,7 +70,7 @@ function StartDriveSection(props) {
                         <Form.Label as="h5">Direction</Form.Label>
                         <Select  options={getDirectionOptions()} value={isTowardSchool} onChange={setIsTowardSchool}/>
                     </Form.Group>
-                    <Button variant="yellowsubmit" onClick={props.startRun}>
+                    <Button variant="yellowsubmit" onClick={startRun}>
                                 Start Drive
                     </Button>
                 </Form>

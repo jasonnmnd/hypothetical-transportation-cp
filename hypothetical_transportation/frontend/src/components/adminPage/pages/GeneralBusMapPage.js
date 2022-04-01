@@ -12,6 +12,10 @@ import BusRunsMap from '../components/driver_bus_run/BusRunsMap';
 
 
 function GeneralBusMapPage(props) {
+
+    useEffect(() => {
+        
+    }, [props.busNumbers]);
   
   return (
     <div>          
@@ -25,8 +29,14 @@ function GeneralBusMapPage(props) {
 }
 
 GeneralBusMapPage.propTypes = {
-
+    busNumbers: PropTypes.array
 }
+
+GeneralBusMapPage.defaultProps = {
+    busNumbers: [8019, 8002, 8055],
+    
+}
+
 
 const mapStateToProps = (state) => ({
 
