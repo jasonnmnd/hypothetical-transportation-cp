@@ -2,7 +2,10 @@ import { DRIVE_ERROR, MANY_RUN_SET, ONE_RUN_SET } from "../actions/types";
 
 const initialState = {
     currentRun: {},
-    manyRuns: [],
+    manyRuns: {
+        results: [],
+        count: 0
+    },
     errors: "",
     log: []
 };
