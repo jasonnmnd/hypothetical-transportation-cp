@@ -109,6 +109,12 @@ class BusRunSerializer(serializers.ModelSerializer):
         model = BusRun
         fields = '__all__'
 
+
+class FormatBusRunSerializer(BusRunSerializer):
+    route = RouteSerializer()
+    school = SchoolSerializer()
+    driver = FormatUserSerializer()
+
 class FormatRouteSerializer(RouteSerializer):
     school = SchoolSerializer()
     # stops = StopSerializer(many=True)
