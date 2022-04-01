@@ -1,0 +1,1226 @@
+[
+  {
+    "model": "backend.school",
+    "pk": 1,
+    "fields": {
+      "name": "Lyons Preparatory",
+      "address": "222 Holiday Circle, Savannah, GA 31419",
+      "latitude": 32.0260631,
+      "longitude": -81.24120239999999,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 2,
+    "fields": {
+      "name": "Fraser Preparatory",
+      "address": "31 Buckland Hills Drive, Manchester, CT 06042",
+      "latitude": 41.8082909,
+      "longitude": -72.5541262,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 3,
+    "fields": {
+      "name": "Harvey Preparatory",
+      "address": "3537 West Chevaux Drive, Fayetteville, AR 72704",
+      "latitude": 36.0798772,
+      "longitude": -94.21002179999999,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 4,
+    "fields": {
+      "name": "Long Preparatory",
+      "address": "8277 Lamar Place, Arvada, CO 80003",
+      "latitude": 39.8481265,
+      "longitude": -105.0666782,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 5,
+    "fields": {
+      "name": "Roback School",
+      "address": "537 East Waldburg Street, Savannah, GA 31401",
+      "latitude": 32.063655,
+      "longitude": -81.090109,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 6,
+    "fields": {
+      "name": "Braegelmann Preparatory",
+      "address": "8001 West 71st Avenue, Arvada, CO 80004",
+      "latitude": 39.8261933,
+      "longitude": -105.084923,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 7,
+    "fields": {
+      "name": "Patterson High",
+      "address": "2508 Grant Avenue, Panama City, FL 32405",
+      "latitude": 30.1939445,
+      "longitude": -85.7124989,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 8,
+    "fields": {
+      "name": "Everett School",
+      "address": "3111 West Ika Lane, Fayetteville, AR 72704",
+      "latitude": 36.1098478,
+      "longitude": -94.20334899999999,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 9,
+    "fields": {
+      "name": "Willard School",
+      "address": "12816 West 65th Way, Arvada, CO 80004",
+      "latitude": 39.8135765,
+      "longitude": -105.1420224,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 10,
+    "fields": {
+      "name": "Bowden Preparatory",
+      "address": "644 West Maple Street, Fayetteville, AR 72701",
+      "latitude": 36.0703325,
+      "longitude": -94.168634,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 11,
+    "fields": {
+      "name": "Davis Elementary",
+      "address": "3770 North Front Street, Fayetteville, AR 72703",
+      "latitude": 36.1188029,
+      "longitude": -94.14375199999999,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 12,
+    "fields": {
+      "name": "Aldridge Elementary",
+      "address": "4876 Norris Road, Fremont, CA 94536",
+      "latitude": 37.5435266,
+      "longitude": -122.0081542,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 13,
+    "fields": {
+      "name": "Ortiz Elementary",
+      "address": "5108 Franklin Street, Savannah, GA 31405",
+      "latitude": 32.0349743,
+      "longitude": -81.12187,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 14,
+    "fields": {
+      "name": "Pender Preparatory",
+      "address": "1838 North Scull Creek Drive, Fayetteville, AR 72703",
+      "latitude": 36.08705399999999,
+      "longitude": -94.1683425,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 15,
+    "fields": {
+      "name": "Thompson High",
+      "address": "1804 Calhoun Avenue, Panama City, FL 32405",
+      "latitude": 30.1813524,
+      "longitude": -85.6938632,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 16,
+    "fields": {
+      "name": "Coker School",
+      "address": "1376 Oakland Avenue, Fayetteville, AR 72703",
+      "latitude": 36.0810082,
+      "longitude": -94.1725543,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 17,
+    "fields": {
+      "name": "Jenkins Preparatory",
+      "address": "1931 Beauvoir Lake Drive, Montgomery, AL 36117",
+      "latitude": 32.3545003,
+      "longitude": -86.19357049999999,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 18,
+    "fields": {
+      "name": "Davilla School",
+      "address": "111 Edgewater Road, Savannah, GA 31406",
+      "latitude": 31.994032,
+      "longitude": -81.1166124,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 19,
+    "fields": {
+      "name": "Miller High",
+      "address": "1770 Colony Way, Fayetteville, AR 72704",
+      "latitude": 36.0867241,
+      "longitude": -94.22975110000002,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 20,
+    "fields": {
+      "name": "Dunnagan Preparatory",
+      "address": "37 Rushforde Drive, Manchester, CT 06040",
+      "latitude": 41.7382598,
+      "longitude": -72.53843719999999,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 21,
+    "fields": {
+      "name": "Elio Elementary",
+      "address": "4738 Mallard Common, Fremont, CA 94555",
+      "latitude": 37.5666169,
+      "longitude": -122.0444796,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 22,
+    "fields": {
+      "name": "Roach High",
+      "address": "112 Coleman Boulevard, Savannah, GA 31408",
+      "latitude": 32.1138485,
+      "longitude": -81.22320979999999,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 23,
+    "fields": {
+      "name": "Strope Preparatory",
+      "address": "5836 Red Barn Road, Montgomery, AL 36116",
+      "latitude": 32.3374557,
+      "longitude": -86.2208125,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 24,
+    "fields": {
+      "name": "Mcculley Elementary",
+      "address": "5706 Worchester Drive, Montgomery, AL 36116",
+      "latitude": 32.3403337,
+      "longitude": -86.2187282,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 25,
+    "fields": {
+      "name": "Lee High",
+      "address": "52 Oleary Drive, Manchester, CT 06040",
+      "latitude": 41.7716791,
+      "longitude": -72.552116,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 26,
+    "fields": {
+      "name": "Tucker High",
+      "address": "40 Highwood Drive, Manchester, CT 06040",
+      "latitude": 41.7687462,
+      "longitude": -72.4930981,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 27,
+    "fields": {
+      "name": "Richardson Preparatory",
+      "address": "422 Richmond Street, El Cerrito, CA 94530",
+      "latitude": 37.9028231,
+      "longitude": -122.298106,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 28,
+    "fields": {
+      "name": "Travis Elementary",
+      "address": "6725 Pamela Court, Montgomery, AL 36116",
+      "latitude": 32.3345286,
+      "longitude": -86.2035199,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 29,
+    "fields": {
+      "name": "Allen School",
+      "address": "8117 Mountain View Circle, Pasadena, MD 21122",
+      "latitude": 39.1331699,
+      "longitude": -76.5674039,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 30,
+    "fields": {
+      "name": "Parson Elementary",
+      "address": "27 Church Street, Manchester, CT 06040",
+      "latitude": 41.7737382,
+      "longitude": -72.5240183,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 31,
+    "fields": {
+      "name": "Higgins Elementary",
+      "address": "4971 Janet Court, Livermore, CA 94550",
+      "latitude": 37.6842067,
+      "longitude": -121.7341288,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 32,
+    "fields": {
+      "name": "Leary High",
+      "address": "406 East Waldburg Street, Savannah, GA 31401",
+      "latitude": 32.0646418,
+      "longitude": -81.09225889999999,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 33,
+    "fields": {
+      "name": "Guzman Elementary",
+      "address": "140 West Cooper Avenue, Aspen, CO 81611",
+      "latitude": 39.1893186,
+      "longitude": -106.8242344,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 34,
+    "fields": {
+      "name": "Cook Elementary",
+      "address": "1403 Lincoln Street, Savannah, GA 31401",
+      "latitude": 32.0614817,
+      "longitude": -81.09490459999999,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 35,
+    "fields": {
+      "name": "Nelms Preparatory",
+      "address": "1731 West 18th Street, Fayetteville, AR 72701",
+      "latitude": 36.044298,
+      "longitude": -94.18599999999999,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 36,
+    "fields": {
+      "name": "Mortell Elementary",
+      "address": "5620 Lilly Street, Panama City, FL 32404",
+      "latitude": 30.1480619,
+      "longitude": -85.5897045,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 37,
+    "fields": {
+      "name": "Sierra Preparatory",
+      "address": "1602 East 14th Court, Lynn Haven, FL 32444",
+      "latitude": 30.23733189999999,
+      "longitude": -85.6311013,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 38,
+    "fields": {
+      "name": "Hudson Preparatory",
+      "address": "467 Biscayne Avenue Northwest, Palm Bay, FL 32907",
+      "latitude": 28.0090776,
+      "longitude": -80.6896666,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 39,
+    "fields": {
+      "name": "Reed School",
+      "address": "8347 Ames Way, Arvada, CO 80003",
+      "latitude": 39.8483014,
+      "longitude": -105.055262,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 40,
+    "fields": {
+      "name": "Corley Preparatory",
+      "address": "5306 Ritchie Highway, Baltimore, MD 21225",
+      "latitude": 39.2220008,
+      "longitude": -76.614126,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 41,
+    "fields": {
+      "name": "Daliva School",
+      "address": "5 Hibiscus Avenue, Savannah, GA 31404",
+      "latitude": 32.0454762,
+      "longitude": -81.0731868,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 42,
+    "fields": {
+      "name": "Vazquez Preparatory",
+      "address": "1693 Alice Court, Annapolis, MD 21401",
+      "latitude": 39.0132837,
+      "longitude": -76.5463395,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 43,
+    "fields": {
+      "name": "Borror School",
+      "address": "72 Milford Road, Manchester, CT 06042",
+      "latitude": 41.7904787,
+      "longitude": -72.49845970000001,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 44,
+    "fields": {
+      "name": "Hayes High",
+      "address": "1701 Atlantic Street, Union City, CA 94587",
+      "latitude": 37.6023586,
+      "longitude": -122.0466476,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 45,
+    "fields": {
+      "name": "Folkerts Preparatory",
+      "address": "103 Edgewater Road, Severna Park, MD 21146",
+      "latitude": 39.0587029,
+      "longitude": -76.5407398,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 46,
+    "fields": {
+      "name": "Mcintire Elementary",
+      "address": "7966 Chase Circle, Arvada, CO 80003",
+      "latitude": 39.8404135,
+      "longitude": -105.0557643,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 47,
+    "fields": {
+      "name": "Mccloughan Elementary",
+      "address": "5814 Carriage Brook Road, Montgomery, AL 36116",
+      "latitude": 32.3361869,
+      "longitude": -86.2197803,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 48,
+    "fields": {
+      "name": "Gordon School",
+      "address": "124 Crane Street, Panama City, FL 32413",
+      "latitude": 30.2029899,
+      "longitude": -85.84608430000002,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 49,
+    "fields": {
+      "name": "Cress Preparatory",
+      "address": "1489 Falcon Nest Court, Arnold, MD 21012",
+      "latitude": 39.0368629,
+      "longitude": -76.467516,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 50,
+    "fields": {
+      "name": "Jones Elementary",
+      "address": "316 Sourwood Court, Millersville, MD 21108",
+      "latitude": 39.100198,
+      "longitude": -76.606707,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 51,
+    "fields": {
+      "name": "Hazel Preparatory",
+      "address": "9399 Yucca Way, Arvada, CO 80007",
+      "latitude": 39.8664703,
+      "longitude": -105.2071398,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 52,
+    "fields": {
+      "name": "Salters School",
+      "address": "424 North Powderhorn Drive, Fayetteville, AR 72704",
+      "latitude": 36.070041,
+      "longitude": -94.21407479999999,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 53,
+    "fields": {
+      "name": "Larosa High",
+      "address": "1418 Paddocks Court, Crownsville, MD 21032",
+      "latitude": 39.05377,
+      "longitude": -76.6231751,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 54,
+    "fields": {
+      "name": "Mullins High",
+      "address": "970 Old Oak Road, Livermore, CA 94550",
+      "latitude": 37.6538032,
+      "longitude": -121.7966913,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 55,
+    "fields": {
+      "name": "Vang Elementary",
+      "address": "309 Water Street, North Little Rock, AR 72117",
+      "latitude": 34.753611,
+      "longitude": -92.2101211,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 56,
+    "fields": {
+      "name": "Miller Elementary",
+      "address": "618 Watts Street, Montgomery, AL 36104",
+      "latitude": 32.37152700000001,
+      "longitude": -86.294285,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 57,
+    "fields": {
+      "name": "Kradel Preparatory",
+      "address": "2534 Willena Avenue, Montgomery, AL 36107",
+      "latitude": 32.3961184,
+      "longitude": -86.2784056,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 58,
+    "fields": {
+      "name": "Carrillo School",
+      "address": "4250 North Valley Lake Drive, Fayetteville, AR 72703",
+      "latitude": 36.1280153,
+      "longitude": -94.12151399999999,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 59,
+    "fields": {
+      "name": "Smith Preparatory",
+      "address": "7000 Hugh Drive, Panama City, FL 32404",
+      "latitude": 30.1339916,
+      "longitude": -85.5702755,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 60,
+    "fields": {
+      "name": "Vanwormer Preparatory",
+      "address": "614 East Duffy Lane, Savannah, GA 31401",
+      "latitude": 32.061738,
+      "longitude": -81.089951,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 61,
+    "fields": {
+      "name": "English High",
+      "address": "424 Callan Avenue, San Leandro, CA 94577",
+      "latitude": 37.7278832,
+      "longitude": -122.1523406,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 62,
+    "fields": {
+      "name": "Lavole Elementary",
+      "address": "813 Linda Lane, Panama City Beach, FL 32407",
+      "latitude": 30.2003576,
+      "longitude": -85.7509826,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 63,
+    "fields": {
+      "name": "Yoxall Elementary",
+      "address": "1428 Flatwood Court, Crofton, MD 21114",
+      "latitude": 39.0144015,
+      "longitude": -76.69462419999999,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 64,
+    "fields": {
+      "name": "Maisano School",
+      "address": "5118 Augusta Road, Garden City, GA 31408",
+      "latitude": 32.1157566,
+      "longitude": -81.1644544,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 65,
+    "fields": {
+      "name": "Rosa High",
+      "address": "208 Timrod Road, Manchester, CT 06040",
+      "latitude": 41.7591877,
+      "longitude": -72.4942074,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 66,
+    "fields": {
+      "name": "Cobb School",
+      "address": "1643 North Jordan Lane, Fayetteville, AR 72703",
+      "latitude": 36.0830347,
+      "longitude": -94.1427798,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 67,
+    "fields": {
+      "name": "Kercheval School",
+      "address": "3436 Lexington Road, Montgomery, AL 36111",
+      "latitude": 32.3428569,
+      "longitude": -86.2981107,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 68,
+    "fields": {
+      "name": "Regan Elementary",
+      "address": "16772 West 70th Avenue, Arvada, CO 80007",
+      "latitude": 39.8236433,
+      "longitude": -105.1879904,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 69,
+    "fields": {
+      "name": "Craig High",
+      "address": "2531 Prestwick Avenue, Concord, CA 94519",
+      "latitude": 37.9965955,
+      "longitude": -122.0280503,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 70,
+    "fields": {
+      "name": "Callahan High",
+      "address": "146 Walnut Street, Manchester, CT 06040",
+      "latitude": 41.76946119999999,
+      "longitude": -72.5365309,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 71,
+    "fields": {
+      "name": "Bolden Elementary",
+      "address": "3652 East Blue Stone Drive, Fayetteville, AR 72764",
+      "latitude": 36.1392673,
+      "longitude": -94.1078278,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 72,
+    "fields": {
+      "name": "Alexandre Elementary",
+      "address": "7090 West 64th Avenue, Arvada, CO 80003",
+      "latitude": 39.812576,
+      "longitude": -105.0764936,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 73,
+    "fields": {
+      "name": "Gomez High",
+      "address": "112 North Hunter Street, Farmington, AR 72730",
+      "latitude": 36.0468755,
+      "longitude": -94.24032470000002,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 74,
+    "fields": {
+      "name": "Mckinney Preparatory",
+      "address": "7010 Fulton Court, Montgomery, AL 36117",
+      "latitude": 32.3419832,
+      "longitude": -86.1700772,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 75,
+    "fields": {
+      "name": "Streater High",
+      "address": "1695 Archer Street, Savannah, GA 31405",
+      "latitude": 32.0476588,
+      "longitude": -81.1347325,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 76,
+    "fields": {
+      "name": "Jensen Preparatory",
+      "address": "13 Breezy Palm Way, Savannah, GA 31406",
+      "latitude": 31.9948624,
+      "longitude": -81.0664747,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 77,
+    "fields": {
+      "name": "Walsh School",
+      "address": "2375 South School Avenue, Fayetteville, AR 72701",
+      "latitude": 36.037576,
+      "longitude": -94.1683619,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 78,
+    "fields": {
+      "name": "Archey Elementary",
+      "address": "8522 Ingalls Circle, Arvada, CO 80003",
+      "latitude": 39.8528379,
+      "longitude": -105.0630021,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 79,
+    "fields": {
+      "name": "Stevenson Elementary",
+      "address": "1320 Dunbarton Road, Montgomery, AL 36117",
+      "latitude": 32.4016902,
+      "longitude": -86.1939081,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 80,
+    "fields": {
+      "name": "Bowden School",
+      "address": "1983 Reidsville Street, Annapolis, MD 21401",
+      "latitude": 38.9814103,
+      "longitude": -76.5304491,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 81,
+    "fields": {
+      "name": "Campbell School",
+      "address": "3300 Gatsby Lane, Montgomery, AL 36106",
+      "latitude": 32.3617057,
+      "longitude": -86.26327460000002,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 82,
+    "fields": {
+      "name": "Patterson Elementary",
+      "address": "545 Tracey Drive, Panama City, FL 32404",
+      "latitude": 30.1354001,
+      "longitude": -85.55728979999999,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 83,
+    "fields": {
+      "name": "Moore School",
+      "address": "2849 Quail Drive, Fayetteville, AR 72704",
+      "latitude": 36.0953003,
+      "longitude": -94.2003644,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 84,
+    "fields": {
+      "name": "Dominique Elementary",
+      "address": "7024 Johnny Mercer Boulevard, Savannah, GA 31410",
+      "latitude": 32.022447,
+      "longitude": -80.9698557,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 85,
+    "fields": {
+      "name": "Strong School",
+      "address": "52 Linnmore Drive, Manchester, CT 06040",
+      "latitude": 41.7772097,
+      "longitude": -72.5467093,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 86,
+    "fields": {
+      "name": "Council High",
+      "address": "105 West Wareingwood Drive, Montgomery, AL 36109",
+      "latitude": 32.3864822,
+      "longitude": -86.2558761,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 87,
+    "fields": {
+      "name": "Shank High",
+      "address": "2113 Bowen Drive, Montgomery, AL 36106",
+      "latitude": 32.3488188,
+      "longitude": -86.2490716,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 88,
+    "fields": {
+      "name": "Mellow Elementary",
+      "address": "11140 West 60th Avenue, Arvada, CO 80004",
+      "latitude": 39.8056656,
+      "longitude": -105.1227206,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 89,
+    "fields": {
+      "name": "Kloeck High",
+      "address": "4125 Cobia Street, Panama City, FL 32408",
+      "latitude": 30.16287999999999,
+      "longitude": -85.78361699999999,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 90,
+    "fields": {
+      "name": "Freeman School",
+      "address": "6912 Sunrise Drive, Panama City, FL 32407",
+      "latitude": 30.2010954,
+      "longitude": -85.7585814,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 91,
+    "fields": {
+      "name": "Ramirez Preparatory",
+      "address": "2505 North Hampton Court, Fayetteville, AR 72703",
+      "latitude": 36.0959176,
+      "longitude": -94.1238121,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 92,
+    "fields": {
+      "name": "Peters Preparatory",
+      "address": "525 Middle Turnpike West, Manchester, CT 06040",
+      "latitude": 41.7813696,
+      "longitude": -72.54901629999999,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 93,
+    "fields": {
+      "name": "Ong High",
+      "address": "37 Spring Street, Groton, CT 06340",
+      "latitude": 41.3207488,
+      "longitude": -71.99137309999999,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 94,
+    "fields": {
+      "name": "Miller School",
+      "address": "1309 Clay Avenue, Panama City, FL 32401",
+      "latitude": 30.1728744,
+      "longitude": -85.69338189999999,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 95,
+    "fields": {
+      "name": "Powers School",
+      "address": "40 Strawberry Lane, Manchester, CT 06040",
+      "latitude": 41.7468476,
+      "longitude": -72.5423833,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 96,
+    "fields": {
+      "name": "Proctor Elementary",
+      "address": "405 Savannah Park Way, Panama City Beach, FL 32407",
+      "latitude": 30.2004241,
+      "longitude": -85.8346859,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 97,
+    "fields": {
+      "name": "Corbitt High",
+      "address": "7950 West 51st Avenue, Arvada, CO 80002",
+      "latitude": 39.7882244,
+      "longitude": -105.0848813,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 98,
+    "fields": {
+      "name": "Drish High",
+      "address": "12 Knox Street, Manchester, CT 06040",
+      "latitude": 41.774166,
+      "longitude": -72.527697,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 99,
+    "fields": {
+      "name": "Dawkins High",
+      "address": "150 Manistee Drive, Panama City Beach, FL 32413",
+      "latitude": 30.2353794,
+      "longitude": -85.891493,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 100,
+    "fields": {
+      "name": "Halliburton School",
+      "address": "182 Irving Street, Manchester, CT 06042",
+      "latitude": 41.7886633,
+      "longitude": -72.5343242,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 101,
+    "fields": {
+      "name": "George Watts Elementary",
+      "address": "700 Watts St, Durham, NC 27701",
+      "latitude": 36.0080068,
+      "longitude": -78.91070130000001,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  },
+  {
+    "model": "backend.school",
+    "pk": 102,
+    "fields": {
+      "name": "Durham School of the Arts",
+      "address": "400 N Duke St, Durham, NC 27701",
+      "latitude": 36.0011763,
+      "longitude": -78.90769519999999,
+      "bus_arrival_time": "07:45:00",
+      "bus_departure_time": "15:30:00"
+    }
+  }
+]
