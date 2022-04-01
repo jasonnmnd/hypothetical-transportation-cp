@@ -64,7 +64,7 @@ function AdminHeader( props ) {
                             {/* <Navbar.Brand style={{width:'550px'}}>
                             </Navbar.Brand> */}
                         <Nav.Link as={Link} to={`/account`} style={{position:'absolute',right:'90px'}}> Account</Nav.Link>
-                        <Nav.Link onClick={props.logout} style={{position:'absolute',right:'20px'}}> Logout</Nav.Link>
+                        <Nav.Link as={Link} to={`/`} onClick={props.logout} style={{position:'absolute',right:'20px'}}> Logout</Nav.Link>
                     
                 </Nav>
             </Navbar.Collapse>
