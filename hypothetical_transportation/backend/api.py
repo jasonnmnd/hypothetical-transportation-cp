@@ -12,7 +12,7 @@ from .serializers import UserSerializer, StudentSerializer, RouteSerializer, Sch
     LoadUserSerializer, LoadModelDataSerializer, find_school_match_candidates, school_names_match, \
     StaffEditUserSerializer, StaffEditSchoolSerializer, StaffStudentSerializer, LoadStudentSerializer, \
     LoadStudentSerializerStrict, ExposeUserSerializer, ExposeUserInputEmailSerializer, ActiveBusRunSerializer, \
-    TransitLogSerializer, BusRunSerializer
+    TransitLogSerializer, BusRunSerializer, FormatBusRunSerializer
 from .search import DynamicSearchFilter
 from .customfilters import StudentCountShortCircuitFilter
 from .permissions import is_admin, is_school_staff, is_driver, IsAdminOrReadOnly, IsAdmin, IsSchoolStaff, is_guardian
@@ -200,15 +200,18 @@ class TransitLogViewSet(viewsets.ModelViewSet):
 
 
 class BusRunViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAdminOrReadOnly]
+    permission_classes = [IsAdminOrReadOnly | IsSchoolStaff]
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
-    filterset_fields = get_filter_dict(BusRun)
+    filterset_fields = ['bus_number', 'driver', 'route', 'school']
+    ordering_fields = ['bus_number', 'driver', 'start_time', 'route', 'going_towards_school']
+    ordering = 'bus_number'
 
     def get_serializer_class(self):
-        return BusRunSerializer
+        return FormatBusRunSerializer
     
     def get_queryset(self):
         return BusRun.objects.all().distinct().order_by('start_time')
+        # todo change based on admin or staff
 
     @action(detail=True, methods=['get'], permission_classes=[permissions.AllowAny])
     def next_stop(self, request, pk):
@@ -229,7 +232,7 @@ class BusRunViewSet(viewsets.ModelViewSet):
             run = get_object_or_404(self.get_queryset(), pk=pk)
             run.previous_stop = run.previous_stop+1
             run.save(update_fields=['previous_stop'])
-            return Response(BusRunSerializer(instance=run).data, status.HTTP_204_NO_CONTENT)
+            return Response(FormatBusRunSerializer(instance=run).data, status.HTTP_204_NO_CONTENT)
         except:
             return Response("This run no longer exists", status.HTTP_404_NOT_FOUND)
 
