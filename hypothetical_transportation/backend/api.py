@@ -201,17 +201,22 @@ class TransitLogViewSet(viewsets.ModelViewSet):
 
 class BusRunViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly | IsSchoolStaff]
-    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    filter_backends = [DjangoFilterBackend, DynamicSearchFilter, filters.OrderingFilter]
+    
+    # filterset_fields = get_filter_dict(BusRun)
     filterset_fields = ['bus_number', 'driver', 'route', 'school']
     ordering_fields = ['bus_number', 'driver', 'start_time', 'route', 'going_towards_school']
     ordering = 'bus_number'
 
     def get_serializer_class(self):
+        if is_school_staff(self.request.user):
+            return FormatBusRunSerializer
         return FormatBusRunSerializer
     
     def get_queryset(self):
+        if is_school_staff(self.request.user):
+            return BusRun.objects.filter(id__in=self.request.user.managed_schools.distinct().values('run_id')).distinct().order_by('start_time')
         return BusRun.objects.all().distinct().order_by('start_time')
-        # todo change based on admin or staff
 
     @action(detail=True, methods=['get'], permission_classes=[permissions.AllowAny])
     def next_stop(self, request, pk):
@@ -262,15 +267,6 @@ class RouteViewSet(viewsets.ModelViewSet):
         else:
             students_queryset = self.request.user.students
             return Route.objects.filter(id__in=students_queryset.values('routes_id')).distinct().order_by('name')
-
-    # @action(detail=True, methods=['get', 'delete'], permission_classes=[permissions.AllowAny]) # this is sus. a get that deletes.
-    # def delete_bus_on_route(self, request, pk=None):
-    #     # ActiveBusRun.objects.get(route=route_id).delete()
-    #     try:
-    #         route = get_object_or_404(self.get_queryset(), pk=pk)
-    #         return Response(ActiveBusRun.objects.get(route=route).delete(), status.HTTP_200_OK)
-    #     except:
-    #         return Response("There is no active bus on this route to delete", status.HTTP_404_NOT_FOUND)
 
     @action(detail=False, permission_classes=[permissions.AllowAny])
     def fields(self, request):
