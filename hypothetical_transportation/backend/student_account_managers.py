@@ -62,15 +62,12 @@ def sync_student_account(student: Student, prev_email):
     """
     if prev_email is None and student.email is not None:
         # If student is provided an email, initiate the account process
-        print('case 1')
         send_invite_email(student)
     elif prev_email is not None and student.email is None:
         # If an email is taken from a student, remove the account from logging in
-        print('case 2')
         get_user_model().objects.get(email=prev_email).delete()
     elif student.email is not None and get_user_model().objects.filter(email=prev_email).count() > 0:
         # If student paired account exists, update with the correct information
-        print('case 3')
         user = get_user_model().objects.get(email=prev_email)
         user.full_name = student.full_name
         user.email = student.email

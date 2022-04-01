@@ -163,6 +163,7 @@ class TestBulkImport(TestCase):
         """
         self.loc = (36.00352740209603, -78.93814858774756)
         admin_group = Group.objects.create(name='Administrator')
+        parent_group = Group.objects.create(name='Guardian')
 
         self.admin = get_user_model().objects.create_verified_user(email='admin@example.com', password='wordpass',
                                                                    full_name='admin', address='Duke University',
