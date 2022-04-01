@@ -2,7 +2,7 @@ from rest_framework import routers
 from django.urls import path
 
 from .api import ActiveBusRunViewSet, BusRunViewSet, UserViewSet, StudentViewSet, RouteViewSet, SchoolViewSet, StopPlannerAPI, StopViewSet, \
-    VerifyLoadedDataAPI, SubmitLoadedDataAPI, TransitLogViewSet
+    VerifyLoadedDataAPI, SubmitLoadedDataAPI, TransitLogViewSet, StartBusRunAPI
 from rest_framework.urlpatterns import format_suffix_patterns
 
 router = routers.DefaultRouter()
@@ -17,6 +17,7 @@ router.register('run', BusRunViewSet, 'run')
 
 additional_patterns = [
     path('stopplanner/inrangecheck', StopPlannerAPI.as_view()),
+    path('start_run/', StartBusRunAPI.as_view()),
     path('loaded-data/validate/', VerifyLoadedDataAPI.as_view()),
     path('loaded-data/', SubmitLoadedDataAPI.as_view()),
 ]
