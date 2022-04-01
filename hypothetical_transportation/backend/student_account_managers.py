@@ -1,6 +1,7 @@
 from accounts.models import InvitationCode
 from .models import Student
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
 
 
 def send_invite_email(student: Student):
@@ -10,15 +11,14 @@ def send_invite_email(student: Student):
     :param student:
     :return: None
     """
-    print("SENDING EMAIL")
     user = get_user_model().objects.create_user(email=student.email, latitude=student.guardian.latitude,
                                                 longitude=student.guardian.longitude)
-    user.full_name = student.full_name
     user.address = student.guardian.address
-    user.latitude = student.guardian.latitude
-    user.longitude = student.guardian.longitude
+    user.full_name = student.full_name
+    user.phone_number = student.guardian.phone_number
+    if Group.objects.filter(name="Student").count() > 0:
+        user.groups.add(Group.objects.get(name="Student"))
     user.save()
-    # ipaddr = request.META.get('REMOTE_ADDR', '0.0.0.0')
     invite_code = InvitationCode.objects.create_signup_code(user=user, ipaddr='0.0.0.0')
     invite_code.send_invitation_email()
 
@@ -36,6 +36,7 @@ def sync_parent_changes_to_student_account(parent):
             student_account.address = parent.address
             student_account.latitude = parent.latitude
             student_account.longitude = parent.longitude
+            student_account.save()
 
 
 def sync_student_account_changes_to_student(student_account):
@@ -48,6 +49,7 @@ def sync_student_account_changes_to_student(student_account):
     student = student_account.linked_student
     student.email = student_account.email
     student.full_name = student_account.full_name
+    student.save()
 
 
 def sync_student_account(student: Student, prev_email):
@@ -65,10 +67,11 @@ def sync_student_account(student: Student, prev_email):
     elif prev_email is not None and student.email is None:
         # If an email is taken from a student, remove the account from logging in
         print('case 2')
-        get_user_model().objects.get(email=student.email).delete()
-    elif student.email is not None and get_user_model().objects.filter(email=student.email).count() > 0:
+        get_user_model().objects.get(email=prev_email).delete()
+    elif student.email is not None and get_user_model().objects.filter(email=prev_email).count() > 0:
         # If student paired account exists, update with the correct information
         print('case 3')
-        user = get_user_model().objects.get(email=student.email)
+        user = get_user_model().objects.get(email=prev_email)
         user.full_name = student.full_name
         user.email = student.email
+        user.save()
