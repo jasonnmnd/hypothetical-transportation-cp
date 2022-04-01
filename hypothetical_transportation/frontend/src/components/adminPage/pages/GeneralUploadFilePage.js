@@ -119,11 +119,11 @@ function GeneralUploadFilePage(props) {
     };
 
     const handleStudentClickOpen = () => {
-        setUserOpen(true);
+        setStudentOpen(true);
     };
 
     const handleStudentClose = () => {
-        setUserOpen(false);
+        setStudentOpen(false);
     };
 
 
@@ -238,6 +238,17 @@ function GeneralUploadFilePage(props) {
                                                 <ul>
                                                     <li>must be {"<="} 150 characters</li>
                                                     <li>school name must case-insensitively and whitespace-insensitively match an existing school name, or else the record will be rejected with an appropriate error message</li>
+                                                    <li>field is not empty</li>
+                                                </ul>
+                                            <li><strong>student_email:</strong></li>
+                                                <ul>
+                                                    <li>must be {"<="} 254 characters</li>
+                                                    <li>must be a valid address as per the addr-spec of RFC 5322, Section 3.4.1</li>
+                                                    <li>field is not empty</li>
+                                                </ul>
+                                            <li><strong>phone_number</strong></li>
+                                                <ul>
+                                                    <li>must be {"<="} 35 characters</li>
                                                     <li>field is not empty</li>
                                                 </ul>
                                         </ul>

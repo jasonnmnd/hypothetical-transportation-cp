@@ -262,17 +262,25 @@ function GeneralEditUserForm(props) {
     const [newStudentList, setNewStudentList] = useState([])
     const saveStudent = ()=>{
         var list = newStudentList;
-        list = list.concat(newStudent);
-        setNewStudentList(list);
-        setNewStudent(emptyStudent);
-        setStudentSchoolSelected({value: null, label: "-----------------------"})
-        setCreateNew(false);
+        if(newStudent.full_name!=="" && newStudent.school!==""){
+            list = list.concat(newStudent);
+            setNewStudentList(list);
+            setNewStudent(emptyStudent);
+            setStudentSchoolSelected({value: null, label: "-----------------------"})
+            setCreateNew(false);
+            setValidated(false);
+        }
+        else{
+            setValidated(true);
+        }
     }
     
+    const removeFromList = (stu)=>{
+        setNewStudentList(newStudentList.filter((i)=>i!==stu))
+    }
     useEffect(()=>{
         console.log(newStudentList)
     },[newStudentList])
-    
     
     return (
         <div> 
@@ -346,6 +354,8 @@ function GeneralEditUserForm(props) {
                                                     checked={fieldValues.groups == radio.value}
                                                     onChange={(e)=>{
                                                         setFieldValues({...fieldValues, groups: e.target.value});
+                                                        console.log(fieldValues)
+                                                        console.log(e.target.value)
                                                     }}
                                                 >
                                                     {radio.name}
@@ -403,61 +413,57 @@ function GeneralEditUserForm(props) {
                                     (e) => setFieldValues({...fieldValues, phone_number: e.target.value})
                                 }
                                 />
-                                {/* <PhoneInput
-                                    placeholder="Phone number"
-                                    defaultCountry="US"
-                                    value={fieldValues.phone_number}
-                                    onChange={
-                                    (e)=>{
-                                        setFieldValues({...fieldValues, phone_number: e.target.value});
-                                        }
-                                    }
-                                    /> */}
                                 
                                 <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                                 <Form.Control.Feedback type="invalid">
                                     Please provide a valid phone number.
                                 </Form.Control.Feedback>
                             </Form.Group>
-
-
-                        </Row>
-                                                
-                        <Form.Group className="mb-3" controlId="formGridAddress1">
-                            <Form.Label as="h5">Address</Form.Label>
-                            <Form.Control 
-                            required
-                            type="text"
-                            placeholder="Enter address..." 
-                            value={address}
-                            onChange={
-                              (e)=>{
-                                setAddress(e.target.value);
-                                getItemCoord(e.target.value,setCoord);
+                        </Row>     
+                        
+                        {fieldValues.groups == 2 ? 
+                        <>
+                            <Form.Group className="mb-3" controlId="formGridAddress1">
+                                <Form.Label as="h5">Address</Form.Label>
+                                <Form.Control 
+                                required
+                                type="text"
+                                placeholder="Enter address..." 
+                                value={address}
+                                onChange={
+                                (e)=>{
+                                    setAddress(e.target.value);
+                                    getItemCoord(e.target.value,setCoord);
+                                    }
                                 }
-                            }
-                            />
-                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                            <Form.Control.Feedback type="invalid">Please provide a valid address.</Form.Control.Feedback>
-                        </Form.Group>
+                                />
+                                <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                                <Form.Control.Feedback type="invalid">Please provide a valid address.</Form.Control.Feedback>
+                            </Form.Group>
 
-                        <Form.Group className="mb-3">
-                            <Form.Label as="h5">Location Assistance</Form.Label>
-                            <AssistedLocationMap address={address} coord={coord} setAddress={setAddress} setCoord={setCoord}></AssistedLocationMap>
+                            <Form.Group className="mb-3">
+                                <Form.Label as="h5">Location Assistance</Form.Label>
+                                <AssistedLocationMap address={address} coord={coord} setAddress={setAddress} setCoord={setCoord}></AssistedLocationMap>
 
-                        </Form.Group>
+                            </Form.Group>
+                        </>
+                        : <></>}
+
                         {
                             newStudentList.length>0?
                             <Card  style={{padding: "20px"}}>
                                 <Form.Label as="h5">New Students To Be Added</Form.Label>
                                 {newStudentList.map((stu, i)=>{
-                                    return <Card  style={{padding: "20px"}} id={i}>
+                                    return <Card  style={{padding: "20px", display: "inline-block"}} id={i}>
                                         <Card.Body>
                                             <Card.Text>{"Name: " + stu.full_name}</Card.Text>
                                             <Card.Text>{"Student ID: " + stu.student_id}</Card.Text>
                                             <Card.Text>{"School: " + props.schoollist.find((el)=>{return el.id===stu.school}).name}</Card.Text>
                                             <Card.Text>{stu.email!==undefined ? ("Email: " + stu.email) : null}</Card.Text>
                                         </Card.Body>
+                                        <Button variant="yellowsubmit" onClick={()=>{removeFromList(stu)}}>
+                                            Remove
+                                        </Button>
                                     </Card>
                                 })}
                             </Card>:
@@ -536,7 +542,7 @@ function GeneralEditUserForm(props) {
                         </Card>:
                         <></>    
                         }
-                        {createNew || props.action=="edit" || fieldValues.groups!==2 ? 
+                        {createNew || props.action=="edit" || fieldValues.groups!=2 ? 
                         <></>:
                         <Button variant="yellowsubmit" onClick={()=>setCreateNew(true)}>
                             Create New Student
