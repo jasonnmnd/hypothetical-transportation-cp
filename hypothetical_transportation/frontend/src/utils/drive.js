@@ -1,0 +1,60 @@
+
+export const EXAMPLE_ACTIVE_RUN_1 = {
+    route: {
+        id: 1,
+        name: "A ROUTE IS BORN"
+    },
+    bus_number: 8017,
+    direction: "Toward School",
+    previous_stop: {
+        id: 5,
+        name: "A STOPPPP"
+    },
+    start_time: "5:07",
+    driver: {
+        email: "driver@example.com",
+        full_name: "Driver McDriverFace",
+        address: "52 Walters Brook Drive",
+        phone_num: "908505966",
+        id: 12
+    },
+    school: {
+        id: 5,
+        name: "A SCHOOL's name"
+    },
+    duration: "2:01"
+}
+
+export const EXAMPLE_ACTIVE_RUN_2 = {
+    route: {
+        id: 4,
+        name: "another route name"
+    },
+    bus_number: 8011,
+    direction: "Away From School",
+    previous_stop: {
+        id: 3,
+        name: "Another STOooop"
+    },
+    start_time: "15:07",
+    driver: {
+        email: "driver@example.com",
+        full_name: "TheSecond DriverPerson",
+        address: "52 Walters Brook Drive",
+        phone_num: "908505966",
+        id: 12
+    },
+    school: {
+        id: 5,
+        name: "A SCHOOL's name"
+    },
+    duration: "1:31"
+}
+
+export const EXAMPLE_ACTIVE_RUNS = {
+    results: [
+        EXAMPLE_ACTIVE_RUN_1,
+        EXAMPLE_ACTIVE_RUN_2
+    ],
+    count: 2
+}

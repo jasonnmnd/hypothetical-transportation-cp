@@ -41,6 +41,16 @@ const stopDefaultCOls = [
     "stop_number"
 ]
 
+const activeDriveDefaultCols = [
+    "driver",
+    "bus_number",
+    "route",
+    "school",
+    "direction",
+    "start_time",
+    "duration"
+]
+
 const stopColumns = {
     name: {
         colTitle: "Name",
@@ -234,12 +244,65 @@ const routeColumns = {
     }
 }
 
+const activeDriveColumns = {
+    driver: {
+        colTitle: "Driver Name",
+        dataPath: "driver.full_name",
+        search_key: "driver__full_name",
+        sortable: true,
+        filterable: true
+    },
+    bus_number: {
+        colTitle: "Bus Number",
+        dataPath: "bus_number",
+        search_key: "bus_number",
+        sortable: true,
+        filterable: true
+    },
+    school: {
+        colTitle: "School",
+        dataPath: "school.name",
+        search_key: "school__name",
+        sortable: true,
+        filterable: true
+    },
+    route: {
+        colTitle: "Route",
+        dataPath: "route.name",
+        search_key: "route__name",
+        sortable: true,
+        filterable: true
+    },
+    direction: {
+        colTitle: "Direction",
+        dataPath: "direction",
+        search_key: "direction",
+        sortable: true,
+        filterable: false
+    },
+    start_time: {
+        colTitle: "Start Time",
+        dataPath: "start_time",
+        search_key: "start_time",
+        sortable: true,
+        filterable: false
+    },
+    duration: {
+        colTitle: "Duration",
+        dataPath: "duration",
+        search_key: "duration",
+        sortable: true,
+        filterable: false
+    }
+}
+
 const allColumns = {
     user: userColumns,
     student: studentColumns,
     school: schoolColumns,
     route: routeColumns,
     stop: stopColumns,
+    activeDrive: activeDriveColumns
 }
 
 const defaultColumns = {
@@ -248,6 +311,7 @@ const defaultColumns = {
     school: schoolDefaultCols,
     route: routeDefaultCols,
     stop: stopDefaultCOls,
+    activeDrive: activeDriveDefaultCols
 }
 
 const getColsFromArr = (colObj, colTitles) => {

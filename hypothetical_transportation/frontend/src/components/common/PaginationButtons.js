@@ -19,21 +19,28 @@ function PaginationButtons( props ) {
         })
     }
 
+    const getSearchParamPageNum = () => {
+        if(searchParams.get(pageNumWithPrefix) == null){
+            return 1
+        }
+        return searchParams.get(pageNumWithPrefix)
+    }
+
     const isTablePage = (page) => {
-        return searchParams.get(pageNumWithPrefix) == page;
+        return getSearchParamPageNum() == page;
     }
 
     const getCurrentPage = () => {
-        return parseInt(searchParams.get(pageNumWithPrefix));
+        return parseInt(getSearchParamPageNum());
     }
 
 
     const handlePrevClick = () => {
-        setTablePage(parseInt(searchParams.get(pageNumWithPrefix)) - 1)
+        setTablePage(parseInt(getSearchParamPageNum()) - 1)
     }
     
     const handleNextClick = () => {
-        setTablePage(parseInt(searchParams.get(pageNumWithPrefix)) + 1)
+        setTablePage(parseInt(getSearchParamPageNum()) + 1)
     }
 
     const handleAllClick = () => {
@@ -98,7 +105,7 @@ function PaginationButtons( props ) {
     return (
         <div className='d-flex flex-row justify-content-center'>
             <div>
-                {searchParams.get(pageNumWithPrefix) == -1 ? <Button className='btn-prevnext' onClick={handleLessClick}>Show Less</Button> : getPagination()}
+                {getSearchParamPageNum() == -1 ? <Button className='btn-prevnext' onClick={handleLessClick}>Show Less</Button> : getPagination()}
             </div>
         </div>
     )
