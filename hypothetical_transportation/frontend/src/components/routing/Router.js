@@ -40,6 +40,8 @@ import GeneralBulkImportSuccessPage from '../adminPage/pages/GeneralBulkImportSu
 
 import StudentPage from '../studentPage/StudentPage';
 import GeneralDriveStartPage from '../adminPage/pages/GeneralDriveStartPage';
+import GeneralBusMapPage from '../adminPage/pages/GeneralBusMapPage';
+import GeneralBusLogPage from '../adminPage/pages/GeneralBusLogPage';
 
 const Router = (props) => {
     return (
@@ -131,6 +133,10 @@ const Router = (props) => {
           <Route exact path="/upload_data/success" element={<PrivateRoute><GeneralBulkImportSuccessPage/></PrivateRoute>}></Route>
           <Route exact path="/print/:route_id" element={<GeneralPrintableRoster/>}></Route>
           <Route exact path="/drive/" element={<GeneralDriveStartPage/>}></Route>
+          <Route exact path="/bus/map" element={<GeneralBusMapPage/>}></Route>
+          <Route exact path="/bus/log" element={<GeneralBusLogPage/>}></Route>
+
+
 
           {/* Student Routes */}
           <Route exact path="/student/:student_id" element={<StudentPage />}></Route>

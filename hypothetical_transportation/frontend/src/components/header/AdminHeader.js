@@ -47,6 +47,11 @@ function AdminHeader( props ) {
                             {isAdmin(props.user) ? <NavDropdown.Divider/>: <></>}
                             {isAdmin(props.user) ? <NavDropdown.Item as={Link} to={`/${getType(props.user)}/new/route/`}><IoIcons5.IoCreate /> Create Routes</NavDropdown.Item> : <></>}
                         </NavDropdown>
+                        {getType(props.user) == 'admin' || getType(props.user) == 'staff' ?  <NavDropdown title="Buses">
+                            <NavDropdown.Item as={Link} to={`/bus/map`}><GiIcons.GiPathDistance />Active Buses Map</NavDropdown.Item>
+                            <NavDropdown.Divider/>
+                            <NavDropdown.Item as={Link} to={`/bus/log`}><IoIcons5.IoCreate />Bus Log</NavDropdown.Item>
+                        </NavDropdown> : null}
                         {/* <NavDropdown title="Stops">
                             <NavDropdown.Item as={Link} to={`/`}><GiIcons.GiBusStop /> View Stops</NavDropdown.Item>
                             <NavDropdown.Divider/>
