@@ -52,7 +52,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         model = get_user_model()
         fields = (
             'id', 'email', 'full_name', 'phone_number', 'password', 'address', 'latitude', 'longitude', 'groups',
-            'managed_schools')
+            'managed_schools', 'linked_student')
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):

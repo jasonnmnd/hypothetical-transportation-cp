@@ -644,6 +644,14 @@
         }
     },
     {
+        "model": "auth.group",
+        "pk": 5,
+        "fields": {
+            "name": "Student",
+            "permissions": []
+        }
+    },
+    {
         "model": "contenttypes.contenttype",
         "pk": 1,
         "fields": {

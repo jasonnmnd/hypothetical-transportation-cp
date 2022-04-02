@@ -12,6 +12,145 @@ from django.core import mail
 from django.test import tag
 
 
+class TestStudentLoginAccount(TestCase):
+    def setUp(self) -> None:
+        self.loc = (36.00352740209603, -78.93814858774756)
+        admin_group = Group.objects.create(name='Administrator')
+        Group.objects.create(name='Student')
+        self.admin = get_user_model().objects.create_verified_user(email='admin@example.com', password='wordpass',
+                                                                   full_name='admin', address='Duke University',
+                                                                   latitude=self.loc[0],
+                                                                   longitude=self.loc[1])
+        self.admin.groups.add(admin_group)
+        login_response = self.client.post('/api/auth/login',
+                                          json.dumps(
+                                              {'email': 'admin@example.com', 'password': 'wordpass'}),
+                                          content_type='application/json')
+        self.admin_token = login_response.data['token']
+        self.school = School.objects.create(address='Duke University', longitude=self.loc[0], latitude=self.loc[1],
+                                            name='Duke University')
+
+        response = self.client.post('/api/student/',
+                                    json.dumps({
+                                        'email': "student@example.com",
+                                        'full_name': 'first last',
+                                        'active': True,
+                                        'school': self.school.pk,
+                                        'student_id': None,
+                                        'routes': None,
+                                        'guardian': self.admin.pk
+                                    }),
+                                    content_type='application/json',
+                                    HTTP_AUTHORIZATION=f'Token {self.admin_token}')
+        self.UNIQUE_FULL_NAME = "UNIQUE FULL NAME RESERVED"
+
+    def test_post_student_with_email_creates_user_account(self):
+        self.assertEqual(get_user_model().objects.count(), 2)
+
+    def test_post_student_without_email_does_not_create_user_account(self):
+        response = self.client.post('/api/student/',
+                                    json.dumps({
+                                        'full_name': self.UNIQUE_FULL_NAME,
+                                        'active': True,
+                                        'school': self.school.pk,
+                                        'student_id': None,
+                                        'routes': None,
+                                        'guardian': self.admin.pk
+                                    }),
+                                    content_type='application/json',
+                                    HTTP_AUTHORIZATION=f'Token {self.admin_token}')
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(get_user_model().objects.count(), 2)
+
+    def test_update_student_email_to_none_deletes_account(self):
+        response = self.client.put(f'/api/student/{Student.objects.get(email="student@example.com").id}/',
+                                   json.dumps({
+                                       'email': None,
+                                       'full_name': 'Sam',
+                                       'school': self.school.pk,
+                                       'guardian': self.admin.pk,
+                                   }),
+                                   content_type='application/json',
+                                   HTTP_AUTHORIZATION=f'Token {self.admin_token}')
+        self.assertEqual(get_user_model().objects.count(), 1)
+
+    def test_update_student_email_to_not_none_creates_new_account(self):
+        self.client.post('/api/student/',
+                         json.dumps({
+                             'full_name': self.UNIQUE_FULL_NAME,
+                             'active': True,
+                             'school': self.school.pk,
+                             'student_id': None,
+                             'routes': None,
+                             'guardian': self.admin.pk,
+                         }),
+                         content_type='application/json',
+                         HTTP_AUTHORIZATION=f'Token {self.admin_token}')
+        self.assertEqual(get_user_model().objects.count(), 2)
+        self.client.put(f'/api/student/{Student.objects.get(full_name=self.UNIQUE_FULL_NAME).id}/',
+                        json.dumps({
+                            'email': "student2@example.com",
+                            'full_name': 'first last',
+                            'school': self.school.pk,
+                            'guardian': self.admin.pk,
+                        }),
+                        content_type='application/json',
+                        HTTP_AUTHORIZATION=f'Token {self.admin_token}')
+        self.assertEqual(get_user_model().objects.count(), 3)
+
+    def test_update_student_also_updates_corresponding_user_account(self):
+        NEW_FULL_NAME = 'last first'
+        NEW_EMAIL = 'zstudents@example.com'
+        student = Student.objects.get(email="student@example.com")
+        response = self.client.put(f'/api/student/{student.id}/',
+                                   json.dumps({
+                                       'email': NEW_EMAIL,
+                                       'full_name': NEW_FULL_NAME,
+                                       'school': self.school.pk,
+                                       'guardian': self.admin.pk,
+                                   }),
+                                   content_type='application/json',
+                                   HTTP_AUTHORIZATION=f'Token {self.admin_token}')
+        self.assertEqual(response.status_code, 200)
+        student_account = get_user_model().objects.get(email=NEW_EMAIL)
+        self.assertEqual(student_account.email, NEW_EMAIL)
+        self.assertEqual(student_account.full_name, NEW_FULL_NAME)
+
+    def test_update_to_parent_also_updates_student(self):
+        parent = get_user_model().objects.create_verified_user(email='parent@example.com', password='wordpass',
+                                                               full_name='parent', address='Duke University',
+                                                               latitude=self.loc[0],
+                                                               longitude=self.loc[1])
+        parent_group = Group.objects.create(name="Guardian")
+        parent.groups.add(parent_group)
+        response = self.client.post('/api/student/',
+                                    json.dumps({
+                                        'email': "student2@example.com",
+                                        'full_name': 'first last',
+                                        'active': True,
+                                        'school': self.school.pk,
+                                        'student_id': None,
+                                        'routes': None,
+                                        'guardian': parent.id
+                                    }),
+                                    content_type='application/json',
+                                    HTTP_AUTHORIZATION=f'Token {self.admin_token}')
+
+        address = ["4932 Stoney Creek Dr., Rapid City, SD", 44.0354113538215, -103.27045120181496]
+        response = self.client.patch(f'/api/user/{parent.id}/',
+                                     json.dumps({
+                                         "address": address[0],
+                                         "latitude": address[1],
+                                         "longitude": address[2],
+                                     }),
+                                     content_type='application/json',
+                                     HTTP_AUTHORIZATION=f'Token {self.admin_token}')
+        student_account = get_user_model().objects.get(email="student2@example.com")
+        self.assertEqual(student_account.address, address[0])
+        self.assertEqual(student_account.latitude, address[1])
+        self.assertEqual(student_account.longitude, address[2])
+
+
 class TestBulkImport(TestCase):
     def setUp(self) -> None:
         """
@@ -52,7 +191,8 @@ class TestBulkImport(TestCase):
                                student_id=None)
 
     def test_school_staff_student_post_handling(self):
-        inside_school = School.objects.create(address='Duke University, Durham NC', longitude=self.loc[0], latitude=self.loc[1],
+        inside_school = School.objects.create(address='Duke University, Durham NC', longitude=self.loc[0],
+                                              latitude=self.loc[1],
                                               name='Staff Managed School')
         staff_group = Group.objects.create(name="SchoolStaff")
         staff = get_user_model().objects.create_verified_user(email='staff@example.com', password='wordpass',
@@ -321,7 +461,6 @@ class TestBulkImport(TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(get_user_model().objects.count(), 3)
         self.assertEqual(Student.objects.count(), 2)
-
 
     def test_successful_transaction_large(self):
         loaded_data = {
