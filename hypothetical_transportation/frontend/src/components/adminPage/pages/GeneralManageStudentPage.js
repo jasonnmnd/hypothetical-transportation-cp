@@ -33,8 +33,8 @@ function GeneralManageStudentPage(props) {
 
     const handleStudentChecked = () => {
         setStudentChecked(!studentChecked);
-        setObj({...obj, ["phone_number"]: ""});
-        setObj({...obj, ["email"]: null})
+        // setObj({...obj, ["phone_number"]: ""});
+        // setObj({...obj, ["email"]: null})
 
     }
 
@@ -72,9 +72,14 @@ function GeneralManageStudentPage(props) {
     } else {
       if(!studentChecked || (obj.phone_number!=="" && obj.email!=="")){
         if(props.action==="new"){
-        
           if(obj.guardian!=="new"){
-            props.addStudent(obj)
+
+            if(studentChecked) {
+              props.addStudent(obj);
+            }
+            else {
+              props.addStudent({...obj, ["email"]:null,["phone_number"]:""});
+            }
             navigate(`/${getType(props.user)}/students/`)
           }
           else{
@@ -105,7 +110,13 @@ function GeneralManageStudentPage(props) {
         }
         else{
           if(obj.guardian!=="new"){
-            props.updateStudent(obj,param.id);
+            if(studentChecked) {
+              props.updateStudent(obj,param.id);
+            }
+            else {
+              props.updateStudent({...obj, ["email"]:null,["phone_number"]:""},param.id);
+            }
+            
           }
           else{
             const createVals = {
