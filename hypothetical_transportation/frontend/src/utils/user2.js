@@ -15,4 +15,7 @@ export default function getType(user){
     if(user.groups[0] == 3){
         return "staff"
     }
+    if (user.groups[0] == 5) {
+        return "student"
+    }
 }
