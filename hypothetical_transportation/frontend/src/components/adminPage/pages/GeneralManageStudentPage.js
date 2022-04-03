@@ -111,9 +111,11 @@ function GeneralManageStudentPage(props) {
         else{
           if(obj.guardian!=="new"){
             if(studentChecked) {
+              delete obj.email
               props.updateStudent(obj,param.id);
             }
             else {
+              delete obj.email
               props.updateStudent({...obj, ["email"]:null,["phone_number"]:""},param.id);
             }
             
@@ -126,6 +128,7 @@ function GeneralManageStudentPage(props) {
               longitude: coord.lng.toFixed(6),
               latitude: coord.lat.toFixed(6),
             }
+            delete obj.email
             props.updateStudentWithParent(createVals, obj)
           }
           navigate(`/${getType(props.user)}/students/`)
