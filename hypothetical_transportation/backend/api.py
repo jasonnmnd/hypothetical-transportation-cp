@@ -98,17 +98,19 @@ def count_active_run_for_driver(driver) -> int:
     return len(BusRun.objects.filter(driver=driver, duration=None))
 
 
-def time_now_h_m_s():
+def time_now():
     date = datetime.now()
-    return time(date.hour, date.minute, date.second)
+    return date
 
 
 def end_run_now(run: BusRun):
-    t = time_now_h_m_s()
+    t = time_now()
     run.end_time = t
     end_time_in_sec = run.end_time.hour*3600 + run.end_time.minute*60 + run.end_time.second
     start_time_in_sec = run.start_time.hour*3600 + run.start_time.minute*60 + run.start_time.second
     delta = end_time_in_sec-start_time_in_sec
+    # if delta > 24*3600:
+        # delta = 24*3600
     run.duration = time(delta//3600, (delta%3600)//60, delta%60)
     run.save(update_fields=['end_time', 'duration'])
     return Response(FormatBusRunSerializer(instance=run).data, status.HTTP_204_NO_CONTENT)
@@ -148,7 +150,7 @@ class StartBusRunAPI(generics.GenericAPIView):
 
     def post(self, request):
         data = {}
-        data['start_time'] = time_now_h_m_s()
+        data['start_time'] = time_now()
         data['bus_number'] = request.data['bus_number']
         if request.data.get('force'):
             data['force'] = request.data['force']
@@ -356,7 +358,7 @@ class BusRunViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         if is_school_staff(self.request.user):
             return BusRun.objects.filter(id__in=self.request.user.managed_schools.distinct().values('run_id')).distinct().order_by('start_time')
-        return BusRun.objects.all().distinct().order_by('start_time')
+        return BusRun.objects.all().distinct().order_by('bus_number')
 
     @action(detail=True, methods=['get'], permission_classes=[permissions.AllowAny])
     def next_stop(self, request, pk):
@@ -379,9 +381,11 @@ class BusRunViewSet(viewsets.ModelViewSet):
         try:
             run = get_active_bus_on_route_from_pk(pk) 
             run.previous_stop_index = run.previous_stop_index+1
+            print(Stop.objects.filter(route=run.route))
             if len(Stop.objects.filter(route=run.route)) != run.previous_stop_index:
                 run.save(update_fields=['previous_stop_index'])
-                return Response(FormatBusRunSerializer(instance=run).data, status.HTTP_204_NO_CONTENT)
+                return self.next_stop(self, pk=pk)
+                # return Response(FormatBusRunSerializer(instance=run).data, status.HTTP_204_NO_CONTENT)
             return end_run_now(run)
         except:
             return Response("This run is no longer active", status.HTTP_404_NOT_FOUND)
