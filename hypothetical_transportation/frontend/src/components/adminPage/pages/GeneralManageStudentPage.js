@@ -200,6 +200,7 @@ function GeneralManageStudentPage(props) {
       // console.log("setting obj")
       setObj({ ...obj, ["guardian"]: props.selectedUser.id});
       setGuardianSelected({value: props.selectedUser.id, label: props.selectedUser.email})  
+      setSchoolSelected({value: null, label: "-----------------------"})
       props.resetPostedUser()
     }
     // else{
@@ -220,6 +221,8 @@ function GeneralManageStudentPage(props) {
     if(props.selectedUser!==null && props.selectedUser.id!==0 && props.selectedUser.id!==obj.guardian){
       // console.log("setting obj useeffecgt selecteds user")
       setObj({ ...obj, ["guardian"]: props.selectedUser.id});
+      setGuardianSelected({value: props.selectedUser.id, label: props.selectedUser.email})  
+      setSchoolSelected({value: null, label: "-----------------------"})
     }
   },[props.selectedUser])
 
@@ -285,6 +288,7 @@ const groupTypes = [
         // console.log("action if")
         setObj({ ...emptyStudent, ["guardian"]: props.selectedUser.id});
         setGuardianSelected({value: props.selectedUser.id, label: props.selectedUser.email})  
+        setSchoolSelected({value: null, label: "-----------------------"})
         props.resetPostedUser()
       }
       else{

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import getType from '../../utils/user2';
-import { getUsers } from '../../actions/users';
+import { getUsers,resetPostedUser } from '../../actions/users';
 
 
 function Alerts(props) {
@@ -47,12 +47,17 @@ function Alerts(props) {
           console.log(prevMessageRef.current)
           if (message.student) alert(message.student);
           if (message.user && message.user.includes("Create")){
-            if(confirm(message.user + " Would you like to navigate to create a new student for them?")){
-              navigate(`/${getType(props.user)}/new_student`)
-            }
-            else{
-              navigate(`/${getType(props.user)}/users`)
-            }
+            alert(message.user);              
+            props.resetPostedUser();
+            navigate(`/${getType(props.user)}/users`)
+
+            // if(confirm(message.user + " Would you like to navigate to create a new student for them?")){
+            //   navigate(`/${getType(props.user)}/new_student`)
+            // }
+            // else{
+            //   props.resetPostedUser();
+            //   navigate(`/${getType(props.user)}/users`)
+            // }
           }
           else if (message.user && message.user.includes("Update")){
             alert(message.user);
@@ -94,4 +99,4 @@ const mapStateToProps = (state) => ({
   message: state.messages,
 });
 
-export default connect(mapStateToProps, {getUsers} )(withAlert()(Alerts));
+export default connect(mapStateToProps, {resetPostedUser,getUsers} )(withAlert()(Alerts));
