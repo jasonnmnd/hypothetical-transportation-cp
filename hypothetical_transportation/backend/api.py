@@ -64,12 +64,6 @@ def parse_repr(repr_str: str) -> dict:
     return repr_fields
 
 
-# def check_no_active_running(route, driver, bus_number):
-#     route_run = get_active_bus_on_route(route)
-#     driver_run = BusRun.objects.filter(driver=driver, duration=None).distinct()
-#     bus_number_run = BusRun.objects.filter(bus_number=bus_number, duration=None).distinct()
-#     return route_run is None and driver_run is None and bus_number_run is None
-
 def get_active_bus_for_bus_number(bus_number):
     return BusRun.objects.filter(bus_number=bus_number, duration=None).distinct()[0]
 
@@ -164,7 +158,6 @@ class StartBusRunAPI(generics.GenericAPIView):
         if count_active_run_for_bus_number(request.data['bus_number']) is not 0:
             if not data['force']:
                 return Response("Bus is already active on another route", status.HTTP_409_CONFLICT)
-            print("BUS!")
             run = get_active_bus_for_bus_number(request.data['bus_number'])
             end_run_now(run)
         
@@ -172,7 +165,6 @@ class StartBusRunAPI(generics.GenericAPIView):
         if count_active_run_for_route(request.data['route']) is not 0:
             if not data['force']:
                 return Response("Route already has an active run", status.HTTP_409_CONFLICT)
-            print("ROUTE!")
             run = get_active_bus_for_route(request.data['route'])
             end_run_now(run)
 
@@ -182,7 +174,6 @@ class StartBusRunAPI(generics.GenericAPIView):
         if count_active_run_for_driver(request.data['driver']) is not 0:
             if not data['force']:
                 return Response("Driver is already active on a run", status.HTTP_409_CONFLICT)
-            print("DRIVER!")
             run = get_active_bus_for_driver(request.data['driver'])
             end_run_now(run)
         
@@ -198,10 +189,6 @@ class StartBusRunAPI(generics.GenericAPIView):
             return Response(serializer.data, status.HTTP_200_OK)
         return Response(serializer.errors)
 
-    @action(detail=True, methods=['get'], permission_classes=[permissions.AllowAny])
-    def force(self, request):
-        route = get_object_or_404(self.get_queryset(), pk=pk)
-        return Response(navigation_link_dropoff(route))
 
 class UserViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly | IsSchoolStaff]
@@ -377,7 +364,10 @@ class BusRunViewSet(viewsets.ModelViewSet):
             run = get_active_bus_on_route_from_pk(pk)
             try:
                 # reason the index doesn't make sense: we don't store stop 0, which is the school
-                next_stop = Stop.objects.filter(route=run.route).order_by('stop_number')[run.previous_stop]
+                if run.going_towards_school:
+                    next_stop = Stop.objects.filter(route=run.route).order_by('-stop_number')
+                else:
+                    next_stop = Stop.objects.filter(route=run.route).order_by('stop_number')[run.previous_stop_index]
                 return Response(StopSerializer(instance=next_stop).data, status.HTTP_200_OK)
             except:
                 return Response("There are no more stops on this route", status.HTTP_204_NO_CONTENT)
@@ -387,12 +377,14 @@ class BusRunViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['post', 'get'], permission_classes=[permissions.AllowAny]) # this is sus. a get that updates...
     def reached_next_stop(self, request, pk):
         try:
-            run = get_active_bus_on_route_from_pk(pk)
-            run.previous_stop = run.previous_stop+1
-            run.save(update_fields=['previous_stop'])
-            return Response(FormatBusRunSerializer(instance=run).data, status.HTTP_204_NO_CONTENT)
+            run = get_active_bus_on_route_from_pk(pk) 
+            run.previous_stop_index = run.previous_stop_index+1
+            if len(Stop.objects.filter(route=run.route)) != run.previous_stop_index:
+                run.save(update_fields=['previous_stop_index'])
+                return Response(FormatBusRunSerializer(instance=run).data, status.HTTP_204_NO_CONTENT)
+            return end_run_now(run)
         except:
-            return Response("This run no longer exists", status.HTTP_404_NOT_FOUND)
+            return Response("This run is no longer active", status.HTTP_404_NOT_FOUND)
 
     @action(detail=True, methods=['post', 'get'], permission_classes=[permissions.AllowAny]) # this is sus. a get that updates...
     def end_run(self, request, pk):
