@@ -12,6 +12,7 @@ router.register('stop', StopViewSet, 'stop')
 router.register('school', SchoolViewSet, 'school')
 router.register('student', StudentViewSet, 'student')
 router.register('run', BusRunViewSet, 'run')
+router.register('active_bus', ActiveBusRunViewSet, 'active_bus')
 
 additional_patterns = [
     path('stopplanner/inrangecheck', StopPlannerAPI.as_view()),
