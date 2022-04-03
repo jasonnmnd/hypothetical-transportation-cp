@@ -33,19 +33,22 @@ function GeneralManageStudentPage(props) {
 
     const handleStudentChecked = () => {
         setStudentChecked(!studentChecked);
+        setObj({...obj, ["phone_number"]: ""});
+        setObj({...obj, ["email"]: null})
+
     }
 
-    const emptyStudent={
+    const emptyStudent = {
       student_id: null,
       full_name: "",
       guardian: "",
       routes: "",
       school: "",
+      email: null,
+      phone_number: "",
     }
   
 
-    const [studentEmail, setStudentEmail] = useState("");
-    const [studentPhone, setStudentPhone] = useState("");
     const [obj, setObj] = useState(emptyStudent)
     const [parent, setPar] = useState(emptyStudent)
 
@@ -67,7 +70,7 @@ function GeneralManageStudentPage(props) {
       event.preventDefault();
       event.stopPropagation();
     } else {
-      if(!studentChecked || (studentPhone!=="" && studentEmail!=="")){
+      if(!studentChecked || (obj.phone_number!=="" && obj.email!=="")){
         if(props.action==="new"){
         
           if(obj.guardian!=="new"){
@@ -360,10 +363,10 @@ useEffect(()=>{
                           required 
                           type="email" 
                           placeholder="Enter email..." 
-                          value={studentEmail}
+                          value={obj.email}
                           onChange={
                           (e)=>{
-                              setStudentEmail(e.target.value);
+                              setObj({...obj, ["email"]: e.target.value})
                               }
                           }/>
                           <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
@@ -375,10 +378,10 @@ useEffect(()=>{
                           required 
                           type="text" 
                           placeholder="Enter phone number..." 
-                          value={studentPhone}
+                          value={obj.phone_number}
                           onChange={
                           (e)=>{
-                            setStudentPhone(e.target.value);
+                            setObj({...obj, ["phone_number"]: e.target.value})
                               }
                           }/>
                           <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
