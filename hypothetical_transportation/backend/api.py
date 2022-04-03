@@ -14,7 +14,8 @@ from .serializers import UserSerializer, StudentSerializer, RouteSerializer, Sch
     LoadStudentSerializerStrict, ExposeUserSerializer, ExposeUserInputEmailSerializer
 from .search import DynamicSearchFilter
 from .customfilters import StudentCountShortCircuitFilter
-from .permissions import is_admin, is_school_staff, is_driver, IsAdminOrReadOnly, IsAdmin, IsSchoolStaff, is_guardian
+from .permissions import is_admin, is_school_staff, is_driver, IsAdminOrReadOnly, IsAdmin, IsSchoolStaff, is_guardian, \
+    is_student
 from django.shortcuts import get_object_or_404
 from .geo_utils import get_straightline_distance, LEN_OF_MILE
 from .nav_utils import navigation_link_dropoff, navigation_link_pickup
@@ -57,6 +58,7 @@ def parse_repr(repr_str: str) -> dict:
         key, value = key_value_pair[:equal_dex], key_value_pair[equal_dex + 1: open_paren_dex]
         repr_fields[key] = value
     return repr_fields
+
 
 class StopPlannerAPI(generics.GenericAPIView):
     serializer_class = CheckInrangeSerializer
@@ -124,6 +126,7 @@ class UserViewSet(viewsets.ModelViewSet):
             return get_user_model().objects.filter(id__in=students_queryset.values('guardian_id')).distinct().order_by(
                 'full_name')
         else:
+            # Students and Parents can only see themselves
             return get_user_model().objects.filter(id=self.request.user.id).distinct().order_by('full_name')
 
     @action(detail=False, permission_classes=[permissions.AllowAny])
@@ -162,6 +165,7 @@ class StopViewSet(viewsets.ModelViewSet):
                     stops_queryset = (stops_queryset | route.stops.all())
             return stops_queryset.distinct()
         else:
+            # Parent and Student view slices of stops are based on the action within student
             return Stop.objects.none()
 
 
@@ -188,6 +192,10 @@ class RouteViewSet(viewsets.ModelViewSet):
             for school in managed_schools:
                 routes_queryset = (routes_queryset | school.routes.all())
             return routes_queryset.distinct().order_by('name')
+        elif is_student(self.request.user):
+            student_route = self.request.user.linked_student.routes
+            route_id = None if not student_route else student_route.id
+            return Route.objects.filter(id=route_id).distinct().order_by('name')
         else:
             students_queryset = self.request.user.students
             return Route.objects.filter(id__in=students_queryset.values('routes_id')).distinct().order_by('name')
@@ -232,6 +240,8 @@ class SchoolViewSet(viewsets.ModelViewSet):
             return School.objects.all().distinct().order_by('name')
         elif is_school_staff(self.request.user):
             return self.request.user.managed_schools.distinct().order_by('name')
+        elif is_student(self.request.user):
+            return School.objects.none()
         else:
             # Only return schools associated with children of current user
             students_queryset = self.request.user.students
@@ -244,7 +254,6 @@ class StudentViewSet(viewsets.ModelViewSet):
     filterset_fields = get_filter_dict(Student)
     ordering_fields = ['school__name', 'student_id', 'full_name', 'id', 'email']
     ordering = 'full_name'
-
 
     def update(self, request, *args, **kwargs):
         super().update(request, *args, **kwargs)
@@ -272,6 +281,9 @@ class StudentViewSet(viewsets.ModelViewSet):
             for school in managed_schools:
                 students_queryset = (students_queryset | school.students.all())
             return students_queryset.distinct().order_by('full_name')
+        elif is_student(self.request.user):
+            linked_student_id = self.request.user.linked_student.id
+            return Student.objects.filter(id=linked_student_id).distinct().order_by('full_name')
         else:
             return self.request.user.students.all().distinct().order_by('full_name')
 
