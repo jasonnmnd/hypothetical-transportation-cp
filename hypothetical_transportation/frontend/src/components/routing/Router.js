@@ -139,7 +139,7 @@ const Router = (props) => {
 
 
           {/* Student Routes */}
-          <Route exact path="/student/:student_id" element={<StudentPage />}></Route>
+          <Route exact path="/student/:student_id" element={<PrivateRoute><StudentPage /></PrivateRoute>}></Route>
         </Routes>
       </BrowserRouter>
     )

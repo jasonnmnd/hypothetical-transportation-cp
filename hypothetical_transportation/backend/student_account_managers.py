@@ -18,6 +18,7 @@ def send_invite_email(student: Student):
     user.phone_number = student.guardian.phone_number
     if Group.objects.filter(name="Student").count() > 0:
         user.groups.add(Group.objects.get(name="Student"))
+    user.linked_student = student
     user.save()
     invite_code = InvitationCode.objects.create_signup_code(user=user, ipaddr='0.0.0.0')
     invite_code.send_invitation_email()
