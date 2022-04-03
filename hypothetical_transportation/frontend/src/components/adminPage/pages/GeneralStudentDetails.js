@@ -89,6 +89,28 @@ function GeneralAdminStudentDetails(props) {
                     </Card.Body>
                 </Card>
             </Row>
+
+            {student.email != null && student.phone_number != "" ?
+            <Row  style={{gap: "10px"}}>
+                <Card as={Col} style={{padding: "0px"}}>
+                    <Card.Header as="h5">Student Email</Card.Header>
+                    <Card.Body>
+                        <Card.Text>{student.email}</Card.Text>
+                    </Card.Body>
+                </Card>
+
+                <br></br>
+                <Card as={Col} style={{padding: "0px"}}>
+                    <Card.Header as="h5">Student Phone Number </Card.Header>
+                    <Card.Body>
+                        <Card.Text>{student.phone_number}</Card.Text>
+                    </Card.Body>
+                </Card>
+            </Row>
+            :
+            <></>
+            }
+
             <Row style={{gap: "10px"}}>
                 <Card as={Col} style={{padding: "0px"}}>
                     <Card.Header as="h5">School </Card.Header>
