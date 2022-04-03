@@ -22,7 +22,7 @@ function StudentPage(props) {
   const [extraComponents, setExtraComponents] = useState(null);
 
   useEffect(() => {
-    props.getStudentInfo(param.student_id);
+    props.getStudentInfo(props.user.linked_student);
   }, []);
 
 
@@ -34,8 +34,8 @@ function StudentPage(props) {
     useEffect(() => {
         if(searchParams.get(`pageNum`) != null){
             let paramsToSend = Object.fromEntries([...searchParams]);
-            paramsToSend.student = param.student_id;
-            props.getInRangeStop(param.student_id, paramsToSend);
+            paramsToSend.student = props.user.linked_student;
+            props.getInRangeStop(props.user.linked_student, paramsToSend);
         }
         else{
             setSearchParams({
