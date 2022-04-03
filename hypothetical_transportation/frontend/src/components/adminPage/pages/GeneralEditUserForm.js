@@ -263,7 +263,12 @@ function GeneralEditUserForm(props) {
     const saveStudent = ()=>{
         var list = newStudentList;
         if(newStudent.full_name!=="" && newStudent.school!=="" && (!studentChecked ||(newStudent.email!==undefined && newStudent.phone_number!==undefined))){
-            list = list.concat(newStudent);
+            if(!studentChecked){
+                list = list.concat({...newStudent, ["email"]:undefined,["phone_number"]:undefined});
+            }
+            else{
+                list = list.concat(newStudent);
+            }
             setNewStudentList(list);
             setNewStudent(emptyStudent);
             setStudentSchoolSelected({value: null, label: "-----------------------"})
