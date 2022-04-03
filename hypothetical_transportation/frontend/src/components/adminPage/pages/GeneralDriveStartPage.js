@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import AdminHeader from '../../header/AdminHeader';
 import { Container, Form, Col, Button, Card } from 'react-bootstrap';
 import { getRoutes } from '../../../actions/routes';
-import { getRunByDriver, startRun, endRun, reachStop, resetError } from '../../../actions/drive';
+import { getRunByDriver, startRun, endRun, reachStop, resetError, getNextStop } from '../../../actions/drive';
 import Select from 'react-select';
 import StartDriveSection from '../components/driver_bus_run/StartDriveSection';
 import CurrentDriveSection from '../components/driver_bus_run/CurrentDriveSection';
@@ -35,6 +35,12 @@ function GeneralDriveStartPage(props) {
             setShowConfirmModal(true);
         }
     }, [props.errorMessage]);
+
+    useEffect(() => {
+        if(props.currentRun.route != null){
+            props.getNextStop(props.currentRun.route.id)
+        }
+    }, [props.currentRun]);
 
 
     const startRun = (force = false) => {
@@ -65,7 +71,7 @@ function GeneralDriveStartPage(props) {
         return (
             <StartDriveSection 
                 routes={props.routes}
-                startRun={startRun}
+                startRun={() => startRun(false)}
                 routeId={routeId}
                 setRouteId={setRouteId}
                 busNum={busNum}
@@ -83,7 +89,7 @@ function GeneralDriveStartPage(props) {
         <BusRunStartConfirmModal show={showConfirmModal} saveModal={() => startRun(true)} errorMessage={props.errorMessage} closeModal={() => setShowConfirmModal(false)}/>
         <Container className="container-main d-flex flex-column" style={{gap: "20px"}}>
             {driverInRun() ? 
-               <CurrentDriveSection busRun={props.currentRun} endRun={endRun} arriveAtStop={arrivedAtStop} /> : 
+               <CurrentDriveSection busRun={props.currentRun} endRun={endRun} arriveAtStop={arrivedAtStop} nextStop={props.nextStop} /> : 
                 null
             }
             {driverInRun() ? 
@@ -111,6 +117,8 @@ GeneralDriveStartPage.propTypes = {
     endRun: PropTypes.func.isRequired,
     reachStop: PropTypes.func.isRequired,
     resetError: PropTypes.func.isRequired,
+    nextStop: PropTypes.object,
+    getNextStop: PropTypes.func.isRequired
 }
 
 // GeneralDriveStartPage.defaultProps = {
@@ -121,8 +129,10 @@ const mapStateToProps = (state) => ({
     routes: state.routes.routes.results,
     currentRun: state.drive.currentRun,
     driverId: state.auth.user.id,
-    errorMessage: state.drive.error
+    errorMessage: state.drive.error,
+    nextStop: state.drive.nextStop
+
 });
 
-export default connect(mapStateToProps, {getRoutes, getRunByDriver, startRun, endRun, reachStop, resetError})(GeneralDriveStartPage)
+export default connect(mapStateToProps, {getRoutes, getRunByDriver, startRun, endRun, reachStop, resetError, getNextStop})(GeneralDriveStartPage)
 

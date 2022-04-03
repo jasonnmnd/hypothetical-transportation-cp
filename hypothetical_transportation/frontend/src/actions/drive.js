@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ONE_RUN_SET, DRIVE_ERROR, MANY_RUN_SET, GET_LOG, ADD_BUS_LOCATION, RESET_BUS_LOCATIONS } from "./types"; 
+import { ONE_RUN_SET, DRIVE_ERROR, MANY_RUN_SET, GET_LOG, ADD_BUS_LOCATION, RESET_BUS_LOCATIONS, SET_NEXT_STOP } from "./types"; 
 import { tokenConfig, tokenConfigDrive } from './auth';
 import { getParameters } from "./utils";
 
@@ -13,6 +13,7 @@ export const startRun = (data, onSuccess = () => {}) => (dispatch, getState) => 
     axios
     .post('/api/start_run/', data, config)
     .then((res) => {
+        console.log(res)
         dispatch({
             type: ONE_RUN_SET,
             payload: res.data,
@@ -20,9 +21,10 @@ export const startRun = (data, onSuccess = () => {}) => (dispatch, getState) => 
         onSuccess();
     })
     .catch((err) => {/*console.log(err);*/
+        console.log('caught:::', JSON.stringify(err, null, 2))
         dispatch({
             type: DRIVE_ERROR,
-            payload: err,
+            payload: err.response.data,
         });
     });
 
@@ -55,11 +57,11 @@ export const reachStop = (routeId, onSuccess = () => {}) => (dispatch, getState)
     let config = tokenConfig(getState);
 
     axios
-    .put(`/api/bus/${routeId}/`, {previous_stop: stop}, config)
+    .post(`/api/run/${routeId}/reached_next_stop/`, config)
     .then((res) => {
         dispatch({
-            type: ONE_RUN_SET,
-            payload: res,
+            type: SET_NEXT_STOP,
+            payload: res.data,
         });
         onSuccess();
     })
@@ -72,47 +74,68 @@ export const reachStop = (routeId, onSuccess = () => {}) => (dispatch, getState)
 
 }
 
-export const getRunByRoute = (routeId, onSuccess = () => {}) => (dispatch, getState) => {
+export const getNextStop = (routeId, onSuccess = () => {}) => (dispatch, getState) => {
     let config = tokenConfig(getState);
 
     axios
-    .get(`/api/bus/route/${routeId}`, config)
+    .get(`/api/run/${routeId}/next_stop/`, config)
     .then((res) => {
         dispatch({
-            type: ONE_RUN_SET,
-            payload: res.data,
-          });
-          onSuccess();
+            type: SET_NEXT_STOP,
+            payload: res,
+        });
+        onSuccess();
     })
     .catch((err) => {/*console.log(err);*/
         dispatch({
-            type: DRIVE_ERROR,
-            payload: err,
+            type: SET_NEXT_STOP,
+            payload: null,
         });
     });
 
 }
 
-export const getRunByBus = (busNum, onSuccess = () => {}) => (dispatch, getState) => {
-    let config = tokenConfig(getState);
+// export const getRunByRoute = (routeId, onSuccess = () => {}) => (dispatch, getState) => {
+//     let config = tokenConfig(getState);
 
-    axios
-    .get(`/api/bus/bus/${busNum}`, config)
-    .then((res) => {
-        dispatch({
-            type: ONE_RUN_SET,
-            payload: res.data,
-          });
-          onSuccess();
-    })
-    .catch((err) => {/*console.log(err);*/
-        dispatch({
-            type: DRIVE_ERROR,
-            payload: err,
-        });
-    });
+//     axios
+//     .get(`/api/bus/route/${routeId}`, config)
+//     .then((res) => {
+//         dispatch({
+//             type: ONE_RUN_SET,
+//             payload: res.data,
+//           });
+//           onSuccess();
+//     })
+//     .catch((err) => {/*console.log(err);*/
+//         dispatch({
+//             type: DRIVE_ERROR,
+//             payload: err,
+//         });
+//     });
 
-}
+// }
+
+// export const getRunByBus = (busNum, onSuccess = () => {}) => (dispatch, getState) => {
+//     let config = tokenConfig(getState);
+
+//     axios
+//     .get(`/api/bus/bus/${busNum}`, config)
+//     .then((res) => {
+//         dispatch({
+//             type: ONE_RUN_SET,
+//             payload: res.data,
+//           });
+//           onSuccess();
+//     })
+//     .catch((err) => {/*console.log(err);*/
+//         dispatch({
+//             type: DRIVE_ERROR,
+//             payload: err,
+//         });
+//     });
+
+// }
 
 export const getRunByDriver = (driverId, onSuccess = () => {}) => (dispatch, getState) => {
     let config = tokenConfig(getState);
@@ -140,26 +163,26 @@ export const getRunByDriver = (driverId, onSuccess = () => {}) => (dispatch, get
 
 }
 
-export const getRunsBySchool = (schools, onSuccess = () => {}) => (dispatch, getState) => {
-    let config = tokenConfig(getState);
+// export const getRunsBySchool = (schools, onSuccess = () => {}) => (dispatch, getState) => {
+//     let config = tokenConfig(getState);
 
-    axios
-    .get(`/api/bus/school/?school=${schools}`, config)
-    .then((res) => {
-        dispatch({
-            type: MANY_RUN_SET,
-            payload: res.data,
-          });
-          onSuccess();
-    })
-    .catch((err) => {/*console.log(err);*/
-        dispatch({
-            type: DRIVE_ERROR,
-            payload: err,
-        });
-    });
+//     axios
+//     .get(`/api/bus/school/?school=${schools}`, config)
+//     .then((res) => {
+//         dispatch({
+//             type: MANY_RUN_SET,
+//             payload: res.data,
+//           });
+//           onSuccess();
+//     })
+//     .catch((err) => {/*console.log(err);*/
+//         dispatch({
+//             type: DRIVE_ERROR,
+//             payload: err,
+//         });
+//     });
 
-}
+// }
 
 export const getActiveRuns = () => (dispatch, getState) => {
     let config = tokenConfig(getState);
