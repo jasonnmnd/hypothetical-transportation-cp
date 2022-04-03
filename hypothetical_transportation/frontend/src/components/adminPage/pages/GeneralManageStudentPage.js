@@ -291,6 +291,9 @@ const groupTypes = [
 useEffect(()=>{
   if(props.action == "edit"){
     setObj({...props.student, ["guardian"]:props.student.guardian.id,["school"]:props.student.school.id,["routes"]:props.student.routes?props.student.routes.id:null})
+    if(props.student.email!==undefined && props.student.email!==null && props.student.phone_number!==undefined && props.student.phone_number!==""){
+      setStudentChecked(true)
+    }
   }
 
 },[props.student])
