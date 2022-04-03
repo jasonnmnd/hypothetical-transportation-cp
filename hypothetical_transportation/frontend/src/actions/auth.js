@@ -197,3 +197,19 @@ export const tokenConfig = (getState) => {
 
   return config;
 };
+
+export const tokenConfigDrive = (getState) => {
+  // Get token from state
+  //const token = getState().auth.token;
+
+  // Headers
+  const config = {
+    headers: {
+      // 'Content-Type': 'application/json',
+      //'Access-Control-Allow-Origin': '*',
+    },
+  };
+
+
+  return config;
+};

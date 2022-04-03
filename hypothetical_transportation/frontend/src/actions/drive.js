@@ -1,12 +1,34 @@
 import axios from "axios";
 import { ONE_RUN_SET, DRIVE_ERROR, MANY_RUN_SET, GET_LOG, ADD_BUS_LOCATION } from "./types"; 
-import { tokenConfig } from './auth';
+import { tokenConfig, tokenConfigDrive } from './auth';
 import { getParameters } from "./utils";
 
 import { createMessage, returnErrors } from './messages';
 import { EXAMPLE_ACTIVE_RUN_1 } from "../utils/drive";
 
 export const startRun = (data, onSuccess = () => {}) => (dispatch, getState) => {
+    let config = tokenConfig(getState);
+
+
+    axios
+    .post('/api/start_run/', data, config)
+    .then((res) => {
+        dispatch({
+            type: ONE_RUN_SET,
+            payload: res,
+        });
+        onSuccess();
+    })
+    .catch((err) => {/*console.log(err);*/
+        dispatch({
+            type: DRIVE_ERROR,
+            payload: err,
+        });
+    });
+
+}
+
+export const startRunForce = (data, onSuccess = () => {}) => (dispatch, getState) => {
     let config = tokenConfig(getState);
 
 
@@ -123,7 +145,7 @@ export const getRunByDriver = (driverId, onSuccess = () => {}) => (dispatch, get
     //   });
 
     axios
-    .get(`/api/bus/driver/${driverId}`, config)
+    .get(`/api/run/driver/${driverId}`, config)
     .then((res) => {
         dispatch({
             type: ONE_RUN_SET,
@@ -204,21 +226,34 @@ export const getLog = (parameters) => (dispatch, getState) => {
   }
 
   export const getBusLocation = (busNum) => (dispatch, getState) => {
-    let config = tokenConfig(getState);
-    axios
-      .get(`http://tranzit.colab.duke.edu:8000/get?bus=${busNum}`, config)
-      .then((res) => {
-        dispatch({
-            type: ADD_BUS_LOCATION,
-            payload: res.data,
-        });
-      })
-      .catch((err) => {/*console.log(err);*/
+    let config = tokenConfigDrive(getState);
+    fetch(`http://tranzit.colab.duke.edu:8000/get?bus=${busNum}`, {mode: 'cors',
+    credentials: 'include'})
+    // axios
+    //   .get(`http://tranzit.colab.duke.edu:8000/get?bus=${busNum}`)
+    //   .then((res) => {
+    //     dispatch({
+    //         type: ADD_BUS_LOCATION,
+    //         payload: res.data,
+    //     });
+    //   })
+    //   .catch((err) => {/*console.log(err);*/
+    //     dispatch({
+    //         type: DRIVE_ERROR,
+    //         payload: err,
+    //     });
+    // });
+  
+  }
+
+
+  export const resetError = () => (dispatch, getState) => {
+   
+    
         dispatch({
             type: DRIVE_ERROR,
-            payload: err,
+            payload: "",
         });
-    });
   
   }
 

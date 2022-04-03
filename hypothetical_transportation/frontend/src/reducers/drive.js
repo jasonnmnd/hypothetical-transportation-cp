@@ -6,7 +6,7 @@ const initialState = {
         results: [],
         count: 0
     },
-    errors: "",
+    error: "",
     log: {
         results: [],
         count: 0
@@ -34,7 +34,7 @@ export default function(state = initialState, action) {
         case DRIVE_ERROR:
             return {
                 ...state,
-                errors: action.payload
+                error: action.payload
             }
         case DRIVE_ERROR:
             return {

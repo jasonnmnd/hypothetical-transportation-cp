@@ -45,22 +45,17 @@ function GeneralBusLogPage(props) {
 GeneralBusLogPage.propTypes = {
     activeBusesData: PropTypes.array,
     activeBusesCount: PropTypes.number,
-    completedBusesData: PropTypes.array,
-    completedBusesCount: PropTypes.number,
     getLog: PropTypes.func.isRequired
 }
 
 GeneralBusLogPage.defaultProps = {
     activeBusesData: EXAMPLE_ACTIVE_RUNS.results,
     activeBusesCount: EXAMPLE_ACTIVE_RUNS.count,
-    completedBusesData: [],
-    completedBusesCount: 0,
 }
 
 const mapStateToProps = (state) => ({
     activeBusesData: state.drive.log.results,
     activeBusesCount: state.drive.log.count,
-
 });
 
 export default connect(mapStateToProps, {getLog})(GeneralBusLogPage)
