@@ -1,4 +1,6 @@
 from distutils.sysconfig import get_config_h_filename
+from re import T
+from urllib import request
 from django.contrib.auth import get_user_model
 from django.db import transaction, IntegrityError
 from django_filters.rest_framework import DjangoFilterBackend
@@ -61,6 +63,17 @@ def parse_repr(repr_str: str) -> dict:
         repr_fields[key] = value
     return repr_fields
 
+
+def get_active_bus_on_route(route_id):
+    route = Route.objects.filter(id=route_id).distinct()[0]
+    return BusRun.objects.filter(route=route, duration=None).distinct()[0]
+
+
+def time_now_h_m_s():
+    date = datetime.now()
+    return time(date.hour, date.minute, date.second)
+
+
 class StopPlannerAPI(generics.GenericAPIView):
     serializer_class = CheckInrangeSerializer
     permission_classes = [
@@ -95,8 +108,7 @@ class StartBusRunAPI(generics.GenericAPIView):
 
     def post(self, request):
         data = {}
-        date = datetime.now()
-        data['start_time'] = time(date.hour, date.minute, date.second)
+        data['start_time'] = time_now_h_m_s()
         data['bus_number'] = request.data['bus_number']
         data['route'] = request.data['route']
         data['school'] = Route.objects.filter(id=request.data['route']).distinct()[0].school.id
@@ -113,7 +125,6 @@ class StartBusRunAPI(generics.GenericAPIView):
         
             return Response(serializer.data, status.HTTP_200_OK)
         return Response(serializer.errors)
-        
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -199,57 +210,13 @@ class StopViewSet(viewsets.ModelViewSet):
 
 
 class ActiveBusRunViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAdminOrReadOnly]
-    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
-    filterset_fields = get_filter_dict(ActiveBusRun)
-    ordering_fields = ['bus_number', 'driver', 'start_time', 'route', 'going_towards_school']
-    ordering = 'bus_number'
-
-    def update(self, request, *args, **kwargs):
-        super().update(request, *args, **kwargs)
-        serializer = ActiveBusRunSerializer(self.get_object(), data={}, partial=True,
-                                             context=self.get_serializer_context())
-        serializer.is_valid(raise_exception=True)
-        return Response(serializer.data)
-
-    def get_serializer_class(self):
-        return ActiveBusRunSerializer
-    
-    def get_queryset(self):
-        return ActiveBusRun.objects.all().distinct().order_by('bus_number')
-
-
-class TransitLogViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAdminOrReadOnly]
-    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
-    filterset_fields = get_filter_dict(TransitLog)
-
-    def get_serializer_class(self):
-        return TransitLogSerializer
-    
-    def get_queryset(self):
-        return TransitLog.objects.all().distinct().order_by('start_time')
-
-
-class BusRunViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly | IsSchoolStaff]
     filter_backends = [DjangoFilterBackend, DynamicSearchFilter, filters.OrderingFilter]
     
     # filterset_fields = get_filter_dict(BusRun)
     filterset_fields = ['bus_number', 'driver', 'route', 'school']
     ordering_fields = ['bus_number', 'driver', 'start_time', 'route', 'going_towards_school']
-    ordering = 'bus_number'
-
-    @action(detail=True, methods=['post', 'get'], permission_classes=[permissions.AllowAny])
-    def start_run(self, request):
-        print("hit!")
-        serializer = self.serializer_class(data=request.data)
-        if serializer.is_valid():
-            print(request.data)
-            start_time = datetime.now()
-
-            # return Response(students_response, status.HTTP_200_OK)
-        return Response(serializer.errors)
+    ordering = 'start_time'
 
     def get_serializer_class(self):
         if self.action == 'list' or self.action == 'retrieve':
@@ -260,32 +227,9 @@ class BusRunViewSet(viewsets.ModelViewSet):
     
     def get_queryset(self):
         if is_school_staff(self.request.user):
-            return BusRun.objects.filter(id__in=self.request.user.managed_schools.distinct().values('run_id')).distinct().order_by('start_time')
-        return BusRun.objects.all().distinct().order_by('start_time')
+            return BusRun.objects.filter(id__in=self.request.user.managed_schools.distinct().values('run_id'), duration=None).distinct().order_by('start_time')
+        return BusRun.objects.filter(duration=None).distinct().order_by('start_time')
 
-
-    @action(detail=True, methods=['get'], permission_classes=[permissions.AllowAny])
-    def next_stop(self, request, pk):
-        try:
-            run = get_object_or_404(self.get_queryset(), pk=pk)
-            try:
-                # reason the index doesn't make sense: we don't store stop 0, which is the school
-                next_stop = Stop.objects.filter(route=run.route).order_by('stop_number')[run.previous_stop]
-                return Response(StopSerializer(instance=next_stop).data, status.HTTP_200_OK)
-            except:
-                return Response("There are no more stops on this route", status.HTTP_204_NO_CONTENT)
-        except:
-            return Response("This run no longer exists", status.HTTP_404_NOT_FOUND)
-
-    @action(detail=True, methods=['put', 'get'], permission_classes=[permissions.AllowAny]) # this is sus. a get that updates...
-    def reached_next_stop(self, request, pk):
-        try:
-            run = get_object_or_404(self.get_queryset(), pk=pk)
-            run.previous_stop = run.previous_stop+1
-            run.save(update_fields=['previous_stop'])
-            return Response(FormatBusRunSerializer(instance=run).data, status.HTTP_204_NO_CONTENT)
-        except:
-            return Response("This run no longer exists", status.HTTP_404_NOT_FOUND)
 
 class RouteViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly | IsSchoolStaff]
@@ -328,6 +272,66 @@ class RouteViewSet(viewsets.ModelViewSet):
     def nav_link_dropoff(self, request, pk=None):
         route = get_object_or_404(self.get_queryset(), pk=pk)
         return Response(navigation_link_dropoff(route))
+
+
+class BusRunViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAdminOrReadOnly | IsSchoolStaff]
+    filter_backends = [DjangoFilterBackend, DynamicSearchFilter, filters.OrderingFilter]
+    
+    # filterset_fields = get_filter_dict(BusRun)
+    filterset_fields = ['bus_number', 'driver', 'route', 'school']
+    ordering_fields = ['bus_number', 'driver', 'start_time', 'route', 'going_towards_school']
+    ordering = 'start_time'
+
+    def get_serializer_class(self):
+        if self.action == 'list' or self.action == 'retrieve':
+            return FormatBusRunSerializer
+        if is_school_staff(self.request.user):
+            return FormatBusRunSerializer
+        return BusRunSerializer
+    
+    def get_queryset(self):
+        if is_school_staff(self.request.user):
+            return BusRun.objects.filter(id__in=self.request.user.managed_schools.distinct().values('run_id')).distinct().order_by('start_time')
+        return BusRun.objects.all().distinct().order_by('start_time')
+
+    @action(detail=True, methods=['get'], permission_classes=[permissions.AllowAny])
+    def next_stop(self, request, pk):
+        try:
+            run = get_object_or_404(self.get_queryset(), pk=pk)
+            try:
+                # reason the index doesn't make sense: we don't store stop 0, which is the school
+                next_stop = Stop.objects.filter(route=run.route).order_by('stop_number')[run.previous_stop]
+                return Response(StopSerializer(instance=next_stop).data, status.HTTP_200_OK)
+            except:
+                return Response("There are no more stops on this route", status.HTTP_204_NO_CONTENT)
+        except:
+            return Response("This run no longer exists", status.HTTP_404_NOT_FOUND)
+
+    @action(detail=True, methods=['put', 'get'], permission_classes=[permissions.AllowAny]) # this is sus. a get that updates...
+    def reached_next_stop(self, request, pk):
+        try:
+            run = get_object_or_404(self.get_queryset(), pk=pk)
+            run.previous_stop = run.previous_stop+1
+            run.save(update_fields=['previous_stop'])
+            return Response(FormatBusRunSerializer(instance=run).data, status.HTTP_204_NO_CONTENT)
+        except:
+            return Response("This run no longer exists", status.HTTP_404_NOT_FOUND)
+
+    @action(detail=True, methods=['put', 'get'], permission_classes=[permissions.AllowAny]) # this is sus. a get that updates...
+    def end_run(self, request, pk):
+        try:
+            run = get_active_bus_on_route(pk)
+            t = time_now_h_m_s()
+            run.end_time = t
+            end_time_in_sec = run.end_time.hour*3600 + run.end_time.minute*60 + run.end_time.second
+            start_time_in_sec = run.start_time.hour*3600 + run.start_time.minute*60 + run.start_time.second
+            delta = end_time_in_sec-start_time_in_sec
+            run.duration = time(delta//3600, (delta%3600)//60, delta%60)
+            run.save(update_fields=['end_time', 'duration'])
+            return Response(FormatBusRunSerializer(instance=run).data, status.HTTP_204_NO_CONTENT)
+        except:
+            return Response("There is no active bus on this route", status.HTTP_404_NOT_FOUND)
 
 
 class SchoolViewSet(viewsets.ModelViewSet):
