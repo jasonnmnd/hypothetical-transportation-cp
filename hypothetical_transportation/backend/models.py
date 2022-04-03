@@ -97,7 +97,7 @@ class BusRun(models.Model):
         null=False,
     )
     duration = models.TimeField(blank=True, null=True)
-    end_time = models.TimeField(blank=True, null=True)
+    end_time = models.DateTimeField(blank=True, null=True)
     going_towards_school = models.BooleanField(default=True, null=False)
     # previous_stop = models.ForeignKey(
     #     Stop,
@@ -116,7 +116,7 @@ class BusRun(models.Model):
         related_name='bus_run',
         on_delete=models.CASCADE
     )
-    start_time = models.TimeField(null=False, blank=False)
+    start_time = models.DateTimeField(null=False, blank=False)
 
     class Meta:
         ordering = ['start_time']

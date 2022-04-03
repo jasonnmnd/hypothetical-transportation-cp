@@ -100,7 +100,7 @@ def count_active_run_for_driver(driver) -> int:
 
 def time_now_h_m_s():
     date = datetime.now()
-    return time(date.hour, date.minute, date.second)
+    return date
 
 
 def end_run_now(run: BusRun):
@@ -356,7 +356,7 @@ class BusRunViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         if is_school_staff(self.request.user):
             return BusRun.objects.filter(id__in=self.request.user.managed_schools.distinct().values('run_id')).distinct().order_by('start_time')
-        return BusRun.objects.all().distinct().order_by('start_time')
+        return BusRun.objects.all().distinct().order_by('bus_number')
 
     @action(detail=True, methods=['get'], permission_classes=[permissions.AllowAny])
     def next_stop(self, request, pk):
