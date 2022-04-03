@@ -173,6 +173,8 @@ class StartBusRunAPI(generics.GenericAPIView):
         data['school'] = Route.objects.filter(id=request.data['route']).distinct()[0].school.id
 
         data['driver'] = request.data['driver']
+        # data['driver'] = UserSerializer(instance=get_user_model().objects.filter(id=request.data['driver']).distinct()[0]).data
+        
         if count_active_run_for_driver(request.data['driver']) is not 0:
             if not data['force']:
                 return Response("Driver is already active on a run", status.HTTP_409_CONFLICT)
@@ -187,9 +189,13 @@ class StartBusRunAPI(generics.GenericAPIView):
         serializer = BusRunSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
+        else:
+            return Response(serializer.errors)
+
+        # data['driver'] = UserSerializer(instance=get_user_model().objects.filter(id=request.data['driver']).distinct()[0]).data
+        run = BusRun.objects.filter(id=serializer.data['id']).distinct()[0]
+        return Response(FormatBusRunSerializer(instance=run).data, status.HTTP_204_NO_CONTENT)
         
-            return Response(serializer.data, status.HTTP_200_OK)
-        return Response(serializer.errors)
 
 
 class UserViewSet(viewsets.ModelViewSet):
