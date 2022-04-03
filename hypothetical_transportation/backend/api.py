@@ -70,21 +70,54 @@ def parse_repr(repr_str: str) -> dict:
 #     bus_number_run = BusRun.objects.filter(bus_number=bus_number, duration=None).distinct()
 #     return route_run is None and driver_run is None and bus_number_run is None
 
+def get_active_bus_for_bus_number(bus_number):
+    return BusRun.objects.filter(bus_number=bus_number, duration=None).distinct()[0]
 
-def get_active_bus_on_route(route_id):
+
+def get_active_bus_for_route(route):
+    return BusRun.objects.filter(route=route, duration=None).distinct()[0]
+
+
+def get_active_bus_for_driver(driver):
+    return BusRun.objects.filter(driver=driver, duration=None).distinct()[0]
+
+
+def get_active_bus_on_route_from_pk(route_id):
     route = Route.objects.filter(id=route_id).distinct()[0]
     return BusRun.objects.filter(route=route, duration=None).distinct()[0]
 
 
-def get_active_bus_for_driver(driver_id):
+def get_active_bus_for_driver_from_pk(driver_id):
     driver = get_user_model().objects.filter(id=driver_id)[0]
-    # print(driver)
     return BusRun.objects.filter(driver=driver, duration=None).distinct()[0]
+
+
+def count_active_run_for_bus_number(bus_number) -> int:
+    return len(BusRun.objects.filter(bus_number=bus_number, duration=None))
+
+
+def count_active_run_for_route(route) -> int:
+    return len(BusRun.objects.filter(route=route, duration=None))
+
+
+def count_active_run_for_driver(driver) -> int:
+    return len(BusRun.objects.filter(driver=driver, duration=None))
 
 
 def time_now_h_m_s():
     date = datetime.now()
     return time(date.hour, date.minute, date.second)
+
+
+def end_run_now(run: BusRun):
+    t = time_now_h_m_s()
+    run.end_time = t
+    end_time_in_sec = run.end_time.hour*3600 + run.end_time.minute*60 + run.end_time.second
+    start_time_in_sec = run.start_time.hour*3600 + run.start_time.minute*60 + run.start_time.second
+    delta = end_time_in_sec-start_time_in_sec
+    run.duration = time(delta//3600, (delta%3600)//60, delta%60)
+    run.save(update_fields=['end_time', 'duration'])
+    return Response(FormatBusRunSerializer(instance=run).data, status.HTTP_204_NO_CONTENT)
 
 
 class StopPlannerAPI(generics.GenericAPIView):
@@ -123,10 +156,36 @@ class StartBusRunAPI(generics.GenericAPIView):
         data = {}
         data['start_time'] = time_now_h_m_s()
         data['bus_number'] = request.data['bus_number']
-        data['route'] = request.data['route']
-        data['school'] = Route.objects.filter(id=request.data['route']).distinct()[0].school.id
-        data['driver'] = request.data['driver']
+        if request.data.get('force'):
+            data['force'] = request.data['force']
+        else:
+            data['force'] = False
 
+        if count_active_run_for_bus_number(request.data['bus_number']) is not 0:
+            if not data['force']:
+                return Response("Bus is already active on another route", status.HTTP_409_CONFLICT)
+            print("BUS!")
+            run = get_active_bus_for_bus_number(request.data['bus_number'])
+            end_run_now(run)
+        
+        data['route'] = request.data['route']
+        if count_active_run_for_route(request.data['route']) is not 0:
+            if not data['force']:
+                return Response("Route already has an active run", status.HTTP_409_CONFLICT)
+            print("ROUTE!")
+            run = get_active_bus_for_route(request.data['route'])
+            end_run_now(run)
+
+        data['school'] = Route.objects.filter(id=request.data['route']).distinct()[0].school.id
+
+        data['driver'] = request.data['driver']
+        if count_active_run_for_driver(request.data['driver']) is not 0:
+            if not data['force']:
+                return Response("Driver is already active on a run", status.HTTP_409_CONFLICT)
+            print("DRIVER!")
+            run = get_active_bus_for_driver(request.data['driver'])
+            end_run_now(run)
+        
         if request.data.get('going_towards_school'):
             data['going_towards_school'] = request.data['going_towards_school']
         else:
@@ -139,6 +198,10 @@ class StartBusRunAPI(generics.GenericAPIView):
             return Response(serializer.data, status.HTTP_200_OK)
         return Response(serializer.errors)
 
+    @action(detail=True, methods=['get'], permission_classes=[permissions.AllowAny])
+    def force(self, request):
+        route = get_object_or_404(self.get_queryset(), pk=pk)
+        return Response(navigation_link_dropoff(route))
 
 class UserViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly | IsSchoolStaff]
@@ -311,7 +374,7 @@ class BusRunViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['get'], permission_classes=[permissions.AllowAny])
     def next_stop(self, request, pk):
         try:
-            run = get_active_bus_on_route(pk)
+            run = get_active_bus_on_route_from_pk(pk)
             try:
                 # reason the index doesn't make sense: we don't store stop 0, which is the school
                 next_stop = Stop.objects.filter(route=run.route).order_by('stop_number')[run.previous_stop]
@@ -321,35 +384,28 @@ class BusRunViewSet(viewsets.ModelViewSet):
         except:
             return Response("This run no longer exists", status.HTTP_404_NOT_FOUND)
 
-    @action(detail=True, methods=['put', 'get'], permission_classes=[permissions.AllowAny]) # this is sus. a get that updates...
+    @action(detail=True, methods=['post', 'get'], permission_classes=[permissions.AllowAny]) # this is sus. a get that updates...
     def reached_next_stop(self, request, pk):
         try:
-            run = get_active_bus_on_route(pk)
+            run = get_active_bus_on_route_from_pk(pk)
             run.previous_stop = run.previous_stop+1
             run.save(update_fields=['previous_stop'])
             return Response(FormatBusRunSerializer(instance=run).data, status.HTTP_204_NO_CONTENT)
         except:
             return Response("This run no longer exists", status.HTTP_404_NOT_FOUND)
 
-    @action(detail=True, methods=['put', 'get'], permission_classes=[permissions.AllowAny]) # this is sus. a get that updates...
+    @action(detail=True, methods=['post', 'get'], permission_classes=[permissions.AllowAny]) # this is sus. a get that updates...
     def end_run(self, request, pk):
         try:
-            run = get_active_bus_on_route(pk)
-            t = time_now_h_m_s()
-            run.end_time = t
-            end_time_in_sec = run.end_time.hour*3600 + run.end_time.minute*60 + run.end_time.second
-            start_time_in_sec = run.start_time.hour*3600 + run.start_time.minute*60 + run.start_time.second
-            delta = end_time_in_sec-start_time_in_sec
-            run.duration = time(delta//3600, (delta%3600)//60, delta%60)
-            run.save(update_fields=['end_time', 'duration'])
-            return Response(FormatBusRunSerializer(instance=run).data, status.HTTP_204_NO_CONTENT)
+            run = get_active_bus_on_route_from_pk(pk)
+            return end_run_now(run)
         except:
             return Response("There is no active bus on this route", status.HTTP_404_NOT_FOUND)
 
     @action(detail=True, methods=['get'], permission_classes=[permissions.AllowAny]) # this is sus. a get that updates...
     def driver(self, request, pk):
         try:
-            run = get_active_bus_for_driver(pk)
+            run = get_active_bus_for_driver_from_pk(pk)
             return Response(FormatBusRunSerializer(instance=run).data, status.HTTP_200_OK)
         except:
             return Response("There is no active bus for this driver", status.HTTP_404_NOT_FOUND)

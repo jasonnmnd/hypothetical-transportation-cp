@@ -125,11 +125,14 @@ class FormatBusRunSerializer(BusRunSerializer):
     route = RouteSerializer()
     school = SchoolSerializer()
     driver = FormatUserSerializer()
+    # previous_stop = StopSerializer()
 
 class StartBusRunSerializer(serializers.ModelSerializer):
+    force = serializers.BooleanField()
+
     class Meta:
         model = BusRun
-        fields = ['bus_number', 'driver', 'going_towards_school', 'route']
+        fields = ['bus_number', 'driver', 'going_towards_school', 'route', 'force']
 
 class FormatRouteSerializer(RouteSerializer):
     school = SchoolSerializer()
