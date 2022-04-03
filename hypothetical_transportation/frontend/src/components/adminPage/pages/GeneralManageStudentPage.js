@@ -129,7 +129,6 @@ function GeneralManageStudentPage(props) {
             delete obj.email
             props.updateStudentWithParent(createVals, obj)
           }
-          navigate(`/${getType(props.user)}/students/`)
         }
       }
     }
