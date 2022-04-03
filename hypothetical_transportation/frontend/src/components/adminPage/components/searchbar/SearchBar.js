@@ -52,10 +52,17 @@ function SearchBar(props){
                     [`${props.search}pageNum`]: searchParams.get(`${props.search}pageNum`) == -1 ? -1 : 1,
                 })
             }
-            if("bus driver".includes(values.value.toLowerCase()) || "busdriver".includes(values.value.toLowerCase())){
+            else if("bus driver".includes(values.value.toLowerCase()) || "busdriver".includes(values.value.toLowerCase())){
                 setSearchParams({
                     [`${props.search}ordering`]: values.sort_by,
                     [`${props.search}groups`]: 4,
+                    [`${props.search}pageNum`]: searchParams.get(`${props.search}pageNum`) == -1 ? -1 : 1,
+                })
+            }
+            else if("student".includes(values.value.toLowerCase()) || "child".includes(values.value.toLowerCase())){
+                setSearchParams({
+                    [`${props.search}ordering`]: values.sort_by,
+                    [`${props.search}groups`]: 5,
                     [`${props.search}pageNum`]: searchParams.get(`${props.search}pageNum`) == -1 ? -1 : 1,
                 })
             }
