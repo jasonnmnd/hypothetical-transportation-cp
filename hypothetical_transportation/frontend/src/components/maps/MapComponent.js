@@ -275,7 +275,10 @@ MapComponent.propTypes = {
 
 MapComponent.defaultProps = {
     pinData: [],
-    otherMapComponents: null
+    otherMapComponents: null,
+    center: {
+        address: "52 Walters brook drive, bridgewater, nj"
+    },
 }
 
 const mapStateToProps = (state) => ({

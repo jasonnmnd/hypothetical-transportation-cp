@@ -161,6 +161,26 @@ export const getRunsBySchool = (schools, onSuccess = () => {}) => (dispatch, get
 
 }
 
+export const getActiveRuns = () => (dispatch, getState) => {
+    let config = tokenConfig(getState);
+
+    axios
+    .get(`/api/run/active/`, config)
+    .then((res) => {
+        dispatch({
+            type: MANY_RUN_SET,
+            payload: res.data,
+          });
+    })
+    .catch((err) => {/*console.log(err);*/
+        dispatch({
+            type: DRIVE_ERROR,
+            payload: err,
+        });
+    });
+
+}
+
 // export const getLogBySchool = (schools, onSuccess = () => {}) => (dispatch, getState) => {
 //     let config = tokenConfig(getState);
 
@@ -204,6 +224,7 @@ export const getLog = (parameters) => (dispatch, getState) => {
   }
 
   export const getBusLocation = (busNum) => (dispatch, getState) => {
+    console.log(busNum)
     let config = tokenConfigDrive(getState);
     dispatch({
         type: ADD_BUS_LOCATION,
@@ -222,12 +243,20 @@ export const getLog = (parameters) => (dispatch, getState) => {
   
   }
 
+
   export const getBusLocations = (busNums) => (dispatch, getState) => {
-    
+    console.log(busNums)
     dispatch({
         type: RESET_BUS_LOCATIONS,
     });
-    busNums.forEach(busNum => getBusLocation(busNum));
+    busNums.forEach(busNum => {
+        console.log(busNum)
+        let config = tokenConfigDrive(getState);
+        dispatch({
+            type: ADD_BUS_LOCATION,
+            payload: EXAMPLE_BUS_LOCATION_1,
+        });
+    });
   }
 
 

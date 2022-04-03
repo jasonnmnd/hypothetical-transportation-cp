@@ -18,10 +18,11 @@ function BusRunsMap(props) {
 }
 
 BusRunsMap.propTypes = {
-    
+    activeRuns: PropTypes.array
 }
 
 const mapStateToProps = (state) => ({
+  activeRuns: state.drive.manyRuns
 });
 
 export default connect(mapStateToProps, {})(BusRunsMap)
