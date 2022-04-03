@@ -298,7 +298,7 @@ class BusRunViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['get'], permission_classes=[permissions.AllowAny])
     def next_stop(self, request, pk):
         try:
-            run = get_object_or_404(self.get_queryset(), pk=pk)
+            run = get_active_bus_on_route(pk)
             try:
                 # reason the index doesn't make sense: we don't store stop 0, which is the school
                 next_stop = Stop.objects.filter(route=run.route).order_by('stop_number')[run.previous_stop]
@@ -311,7 +311,7 @@ class BusRunViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['put', 'get'], permission_classes=[permissions.AllowAny]) # this is sus. a get that updates...
     def reached_next_stop(self, request, pk):
         try:
-            run = get_object_or_404(self.get_queryset(), pk=pk)
+            run = get_active_bus_on_route(pk)
             run.previous_stop = run.previous_stop+1
             run.save(update_fields=['previous_stop'])
             return Response(FormatBusRunSerializer(instance=run).data, status.HTTP_204_NO_CONTENT)
