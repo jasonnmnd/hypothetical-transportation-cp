@@ -79,7 +79,7 @@ function GeneralManageStudentPage(props) {
             else {
               props.addStudent({...obj, ["email"]:null,["phone_number"]:""});
             }
-            navigate(`/${getType(props.user)}/students/`)
+            // navigate(`/${getType(props.user)}/students/`)
           }
           else{
             const finalSchoolList = staffSchool.map((item)=>{return item.value})
