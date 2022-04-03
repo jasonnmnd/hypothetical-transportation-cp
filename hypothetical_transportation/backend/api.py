@@ -64,9 +64,22 @@ def parse_repr(repr_str: str) -> dict:
     return repr_fields
 
 
+# def check_no_active_running(route, driver, bus_number):
+#     route_run = get_active_bus_on_route(route)
+#     driver_run = BusRun.objects.filter(driver=driver, duration=None).distinct()
+#     bus_number_run = BusRun.objects.filter(bus_number=bus_number, duration=None).distinct()
+#     return route_run is None and driver_run is None and bus_number_run is None
+
+
 def get_active_bus_on_route(route_id):
     route = Route.objects.filter(id=route_id).distinct()[0]
     return BusRun.objects.filter(route=route, duration=None).distinct()[0]
+
+
+def get_active_bus_for_driver(driver_id):
+    driver = get_user_model().objects.filter(id=driver_id)[0]
+    # print(driver)
+    return BusRun.objects.filter(driver=driver, duration=None).distinct()[0]
 
 
 def time_now_h_m_s():
@@ -332,6 +345,14 @@ class BusRunViewSet(viewsets.ModelViewSet):
             return Response(FormatBusRunSerializer(instance=run).data, status.HTTP_204_NO_CONTENT)
         except:
             return Response("There is no active bus on this route", status.HTTP_404_NOT_FOUND)
+
+    @action(detail=True, methods=['get'], permission_classes=[permissions.AllowAny]) # this is sus. a get that updates...
+    def driver(self, request, pk):
+        try:
+            run = get_active_bus_for_driver(pk)
+            return Response(FormatBusRunSerializer(instance=run).data, status.HTTP_200_OK)
+        except:
+            return Response("There is no active bus for this driver", status.HTTP_404_NOT_FOUND)
 
 
 class SchoolViewSet(viewsets.ModelViewSet):
