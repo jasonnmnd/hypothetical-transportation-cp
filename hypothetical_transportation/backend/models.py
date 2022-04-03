@@ -63,7 +63,7 @@ class ActiveBusRun(models.Model):
         null=False
     )
     going_towards_school = models.BooleanField(default=True, null=False)
-    previous_stop = models.PositiveIntegerField(null=False) # note: this is not a foreign key because all we need is the stop number
+    previous_stop_index = models.PositiveIntegerField(null=False) # note: this is not a foreign key because all we need is the stop number
     route = models.ForeignKey(Route, related_name='active_bus_run', on_delete=models.CASCADE, unique=True)
     start_time = models.TimeField(blank=False)
 
@@ -106,7 +106,7 @@ class BusRun(models.Model):
     #     on_delete=models.SET_NULL,
     #     null=True
     # )
-    previous_stop = models.PositiveIntegerField(blank=True, null=True, default=0)
+    previous_stop_index = models.PositiveIntegerField(blank=True, null=True, default=0)
     route = models.ForeignKey(
         Route,
         related_name='bus_run', 
