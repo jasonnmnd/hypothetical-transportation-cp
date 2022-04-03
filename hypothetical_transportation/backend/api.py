@@ -193,8 +193,9 @@ class RouteViewSet(viewsets.ModelViewSet):
                 routes_queryset = (routes_queryset | school.routes.all())
             return routes_queryset.distinct().order_by('name')
         elif is_student(self.request.user):
-            linked_student = self.request.user.linked_student
-            return Route.objects.filter(id=linked_student.routes.id).distinct().order_by('name')
+            student_route = self.request.user.linked_student.routes
+            route_id = None if not student_route else student_route.id
+            return Route.objects.filter(id=route_id).distinct().order_by('name')
         else:
             students_queryset = self.request.user.students
             return Route.objects.filter(id__in=students_queryset.values('routes_id')).distinct().order_by('name')
