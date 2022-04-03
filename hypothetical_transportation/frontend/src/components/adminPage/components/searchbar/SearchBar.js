@@ -66,6 +66,12 @@ function SearchBar(props){
                     [`${props.search}pageNum`]: searchParams.get(`${props.search}pageNum`) == -1 ? -1 : 1,
                 })
             }
+            else{
+                setSearchParams({
+                    [`${props.search}ordering`]: values.sort_by,
+                    [`${props.search}pageNum`]: searchParams.get(`${props.search}pageNum`) == -1 ? -1 : 1
+                })    
+            }
         }
         else{
             setSearchParams({
