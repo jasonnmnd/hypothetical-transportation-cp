@@ -25,7 +25,7 @@ import Checkbox from '@mui/material/Checkbox';
 function GeneralManageStudentPage(props) {
     const param = useParams()
     const navigate = useNavigate();
-
+    const [emailChanged, setEmailChanged] = useState(false)
     const [openModal, setOpenModal] = useState(false);
     const [validated, setValidated] = useState(false);
     const[coord,setCoord]=useState({lat:36.0016944, lng:-78.9480547});
@@ -111,11 +111,10 @@ function GeneralManageStudentPage(props) {
         else{
           if(obj.guardian!=="new"){
             if(studentChecked) {
-              delete obj.email
+              if(!emailChanged) delete obj.email
               props.updateStudent(obj,param.id);
             }
             else {
-              delete obj.email
               props.updateStudent({...obj, ["email"]:null,["phone_number"]:""},param.id);
             }
             
@@ -209,7 +208,7 @@ function GeneralManageStudentPage(props) {
     // else{
     //   props.getRoutesByID({school: obj.school})
     // }
-    
+    setEmailChanged(false)
   }, []);
 
 
@@ -388,6 +387,7 @@ useEffect(()=>{
                           onChange={
                           (e)=>{
                               setObj({...obj, ["email"]: e.target.value})
+                              setEmailChanged(true)
                               }
                           }/>
                           <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
