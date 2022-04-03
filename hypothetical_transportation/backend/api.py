@@ -338,7 +338,7 @@ class BusRunViewSet(viewsets.ModelViewSet):
         except:
             return Response("This run no longer exists", status.HTTP_404_NOT_FOUND)
 
-    @action(detail=True, methods=['put', 'get'], permission_classes=[permissions.AllowAny]) # this is sus. a get that updates...
+    @action(detail=True, methods=['post', 'get'], permission_classes=[permissions.AllowAny]) # this is sus. a get that updates...
     def reached_next_stop(self, request, pk):
         try:
             run = get_active_bus_on_route(pk)
@@ -348,7 +348,7 @@ class BusRunViewSet(viewsets.ModelViewSet):
         except:
             return Response("This run no longer exists", status.HTTP_404_NOT_FOUND)
 
-    @action(detail=True, methods=['put', 'get'], permission_classes=[permissions.AllowAny]) # this is sus. a get that updates...
+    @action(detail=True, methods=['post', 'get'], permission_classes=[permissions.AllowAny]) # this is sus. a get that updates...
     def end_run(self, request, pk):
         try:
             run = get_active_bus_on_route(pk)
