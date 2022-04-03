@@ -58,3 +58,24 @@ export const EXAMPLE_ACTIVE_RUNS = {
     ],
     count: 2
 }
+
+export const EXAMPLE_BUS_LOCATION_1 = {
+    "bus": "8066", 
+    "lat": 38.17055019844234, 
+    "lng": -87.255859375
+}
+
+export const EXAMPLE_BUS_LOCATION_2 = {
+    "bus": "8066", 
+    "lat": 37.17055019844234, 
+    "lng": -86.255859375
+}
+
+export const EXAMPLE_BUS_LOCATION_3 = {
+    "bus": "8066", 
+    "lat": 48.17055019844234, 
+    "lng": -67.255859375
+}
+
+export const EXAMPLE_BUS_LOCATION_INVALID = "unknown bus"
+

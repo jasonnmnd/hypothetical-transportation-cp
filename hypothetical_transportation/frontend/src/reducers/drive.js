@@ -1,4 +1,4 @@
-import { DRIVE_ERROR, GET_LOG, MANY_RUN_SET, ONE_RUN_SET } from "../actions/types";
+import { ADD_BUS_LOCATION, DRIVE_ERROR, GET_LOG, MANY_RUN_SET, ONE_RUN_SET } from "../actions/types";
 
 const initialState = {
     currentRun: {},
@@ -10,7 +10,8 @@ const initialState = {
     log: {
         results: [],
         count: 0
-    }
+    },
+    busLocations: {}
 };
 
 
@@ -40,6 +41,22 @@ export default function(state = initialState, action) {
             return {
                 ...state,
                 log: action.payload
+            }
+        case ADD_BUS_LOCATION: 
+            return {
+                ...state,
+                busLocations: {
+                    ...state.busLocations,
+                    [action.payload.bus]: {
+                        latitude: action.payload.lat,
+                        longitude: action.payload.lng
+                    }
+                }
+            }
+        case ADD_BUS_LOCATION: 
+            return {
+                ...state,
+                busLocations: {}
             }
         default:
             return state;

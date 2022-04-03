@@ -20,8 +20,7 @@ function CurrentDriveSection(props) {
                 <Container className="container-main d-flex flex-column" style={{gap: "20px"}}>
                     <Card.Text><strong>Route: </strong> {props.busRun?.route?.name}</Card.Text>
                     <Card.Text><strong>Bus Number: </strong> {props.busRun?.bus_number}</Card.Text>
-                    <Card.Text><strong>Direction: </strong> {props.busRun?.direction}</Card.Text>
-                    <Card.Text><strong>Last Seen Stop: </strong> {props.busRun?.previous_stop?.name}</Card.Text>
+                    <Card.Text><strong>Direction: </strong> {props.busRun?.is_towards_school ? "Toward School" : "Away From School"}</Card.Text>
                 </Container>
             </Card.Body>
         </Card>

@@ -1,10 +1,10 @@
 import axios from "axios";
-import { ONE_RUN_SET, DRIVE_ERROR, MANY_RUN_SET, GET_LOG, ADD_BUS_LOCATION } from "./types"; 
+import { ONE_RUN_SET, DRIVE_ERROR, MANY_RUN_SET, GET_LOG, ADD_BUS_LOCATION, RESET_BUS_LOCATIONS } from "./types"; 
 import { tokenConfig, tokenConfigDrive } from './auth';
 import { getParameters } from "./utils";
 
 import { createMessage, returnErrors } from './messages';
-import { EXAMPLE_ACTIVE_RUN_1 } from "../utils/drive";
+import { EXAMPLE_ACTIVE_RUN_1, EXAMPLE_BUS_LOCATION_1 } from "../utils/drive";
 
 export const startRun = (data, onSuccess = () => {}) => (dispatch, getState) => {
     let config = tokenConfig(getState);
@@ -15,29 +15,7 @@ export const startRun = (data, onSuccess = () => {}) => (dispatch, getState) => 
     .then((res) => {
         dispatch({
             type: ONE_RUN_SET,
-            payload: res,
-        });
-        onSuccess();
-    })
-    .catch((err) => {/*console.log(err);*/
-        dispatch({
-            type: DRIVE_ERROR,
-            payload: err,
-        });
-    });
-
-}
-
-export const startRunForce = (data, onSuccess = () => {}) => (dispatch, getState) => {
-    let config = tokenConfig(getState);
-
-
-    axios
-    .post('/api/start_run/', data, config)
-    .then((res) => {
-        dispatch({
-            type: ONE_RUN_SET,
-            payload: res,
+            payload: res.data,
         });
         onSuccess();
     })
@@ -55,7 +33,7 @@ export const endRun = (routeId, onSuccess = () => {}) => (dispatch, getState) =>
     
 
     axios
-    .post('/api/bus/finished_run', {route: routeId}, config)
+    .post(`/api/run/${routeId}/end_run/`, {route: routeId}, config)
     .then((res) => {
         dispatch({
             type: ONE_RUN_SET,
@@ -145,7 +123,7 @@ export const getRunByDriver = (driverId, onSuccess = () => {}) => (dispatch, get
     //   });
 
     axios
-    .get(`/api/run/driver/${driverId}`, config)
+    .get(`/api/run/${driverId}/driver/`, config)
     .then((res) => {
         dispatch({
             type: ONE_RUN_SET,
@@ -227,23 +205,29 @@ export const getLog = (parameters) => (dispatch, getState) => {
 
   export const getBusLocation = (busNum) => (dispatch, getState) => {
     let config = tokenConfigDrive(getState);
-    fetch(`http://tranzit.colab.duke.edu:8000/get?bus=${busNum}`, {mode: 'cors',
-    credentials: 'include'})
+    dispatch({
+        type: ADD_BUS_LOCATION,
+        payload: EXAMPLE_BUS_LOCATION_1,
+    });
     // axios
     //   .get(`http://tranzit.colab.duke.edu:8000/get?bus=${busNum}`)
     //   .then((res) => {
-    //     dispatch({
-    //         type: ADD_BUS_LOCATION,
-    //         payload: res.data,
-    //     });
+        // dispatch({
+        //     type: ADD_BUS_LOCATION,
+        //     payload: res.data,
+        // });
     //   })
     //   .catch((err) => {/*console.log(err);*/
-    //     dispatch({
-    //         type: DRIVE_ERROR,
-    //         payload: err,
-    //     });
     // });
   
+  }
+
+  export const getBusLocations = (busNums) => (dispatch, getState) => {
+    
+    dispatch({
+        type: RESET_BUS_LOCATIONS,
+    });
+    busNums.forEach(busNum => getBusLocation(busNum));
   }
 
 
