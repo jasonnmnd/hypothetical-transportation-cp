@@ -16,7 +16,7 @@ class InviteSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
         fields = (
-        'id', 'email', 'full_name', 'phone_number', 'address', 'latitude', 'longitude', 'groups', 'managed_schools')
+            'id', 'email', 'full_name', 'phone_number', 'address', 'latitude', 'longitude', 'groups', 'managed_schools')
 
 
 class StaffInviteSerializer(serializers.ModelSerializer):
@@ -43,7 +43,9 @@ class ChangePasswordSerializer(serializers.Serializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = ('id', 'email', 'full_name', 'phone_number', 'address', 'latitude', 'longitude', 'groups')
+        fields = (
+        'id', 'email', 'full_name', 'phone_number', 'address', 'latitude', 'longitude', 'groups', 'managed_schools',
+        'linked_student')
 
 
 # Register Serializer
