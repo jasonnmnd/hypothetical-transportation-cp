@@ -152,7 +152,7 @@ function GeneralEditUserForm(props) {
                     props.register(createVals, newStudentList);
                 }
                 else{
-                    props.register(createVals, []);
+                    props.register({...createVals, ["address"]:undefined}, []);
                 }
                 setOpenModal(true)
             }
@@ -459,7 +459,7 @@ function GeneralEditUserForm(props) {
                         : <></>}
 
                         {
-                            newStudentList.length>0?
+                            fieldValues.groups == 2 && newStudentList.length>0?
                             <Card  style={{padding: "20px"}}>
                                 <Form.Label as="h5">New Students To Be Added</Form.Label>
                                 {newStudentList.map((stu, i)=>{
