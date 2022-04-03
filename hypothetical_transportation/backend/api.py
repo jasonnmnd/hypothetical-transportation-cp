@@ -78,9 +78,17 @@ def get_active_bus_on_route(route_id):
 
 def get_active_bus_for_driver(driver_id):
     driver = get_user_model().objects.filter(id=driver_id)[0]
-    # print(driver)
     return BusRun.objects.filter(driver=driver, duration=None).distinct()[0]
 
+
+def count_active_run_for_bus_number(bus_number) -> int:
+    return len(BusRun.objects.filter(bus_number=bus_number, duration=None))
+
+def count_active_run_for_route(route) -> int:
+    return len(BusRun.objects.filter(route=route, duration=None))
+
+def count_active_run_for_driver(driver) -> int:
+    return len(BusRun.objects.filter(driver=driver, duration=None))
 
 def time_now_h_m_s():
     date = datetime.now()
@@ -123,9 +131,18 @@ class StartBusRunAPI(generics.GenericAPIView):
         data = {}
         data['start_time'] = time_now_h_m_s()
         data['bus_number'] = request.data['bus_number']
+        if count_active_run_for_bus_number(request.data['bus_number']) is not 0 :
+            return Response("Bus is already active on another route", status.HTTP_409_CONFLICT)
+        
         data['route'] = request.data['route']
+        if count_active_run_for_route(request.data['route']) is not 0:
+            return Response("Route already has an active run", status.HTTP_409_CONFLICT)
+
         data['school'] = Route.objects.filter(id=request.data['route']).distinct()[0].school.id
+
         data['driver'] = request.data['driver']
+        if count_active_run_for_driver(request.data['driver']) is not 0:
+            return Response("Driver is already active on a run", status.HTTP_409_CONFLICT)
 
         if request.data.get('going_towards_school'):
             data['going_towards_school'] = request.data['going_towards_school']
