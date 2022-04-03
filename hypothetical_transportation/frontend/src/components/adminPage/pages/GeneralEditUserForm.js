@@ -262,7 +262,7 @@ function GeneralEditUserForm(props) {
     const [newStudentList, setNewStudentList] = useState([])
     const saveStudent = ()=>{
         var list = newStudentList;
-        if(newStudent.full_name!=="" && newStudent.school!==""){
+        if(newStudent.full_name!=="" && newStudent.school!=="" && (!studentChecked ||(newStudent.email!==undefined && newStudent.phone_number!==undefined))){
             list = list.concat(newStudent);
             setNewStudentList(list);
             setNewStudent(emptyStudent);
@@ -281,6 +281,10 @@ function GeneralEditUserForm(props) {
     useEffect(()=>{
         console.log(newStudentList)
     },[newStudentList])
+
+    useEffect(()=>{
+        console.log(newStudent)
+    },[newStudent])
     
     return (
         <div> 
@@ -460,6 +464,7 @@ function GeneralEditUserForm(props) {
                                             <Card.Text>{"Student ID: " + stu.student_id}</Card.Text>
                                             <Card.Text>{"School: " + props.schoollist.find((el)=>{return el.id===stu.school}).name}</Card.Text>
                                             <Card.Text>{stu.email!==undefined ? ("Email: " + stu.email) : null}</Card.Text>
+                                            <Card.Text>{stu.phone_number!==undefined ? ("Phone: " + stu.phone_number) : null}</Card.Text>
                                         </Card.Body>
                                         <Button variant="yellowsubmit" onClick={()=>{removeFromList(stu)}}>
                                             Remove
@@ -513,28 +518,46 @@ function GeneralEditUserForm(props) {
                                     </FormGroup>
                                 </Form.Group>
                                 
+                            </Row>
                                 {studentChecked ?
-                                <Form.Group as={Col} controlId="formGridEmail">
-                                    <Form.Label as="h5">Student Email</Form.Label>
+                                <Row>
+                                    <Form.Group as={Col} controlId="formGridEmail">
+                                        <Form.Label as="h5">Student Email</Form.Label>
+                                            <Form.Control 
+                                            required 
+                                            type="email" 
+                                            placeholder="Enter email..." 
+                                            value={newStudent.email!==undefined ? newStudent.email : ""}
+                                            onChange={
+                                            (e)=>{
+                                                setNewStudent({...newStudent, ["email"]: e.target.value===""?undefined:e.target.value})
+                                                }
+                                            }/>
+                                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                                        <Form.Control.Feedback type="invalid">Please provide a valid email.</Form.Control.Feedback>
+                                    </Form.Group>
+                                    <Form.Group as={Col} controlId="formGridPhone">
+                                    <Form.Label as="h5">Phone Number</Form.Label>
                                         <Form.Control 
                                         required 
-                                        type="email" 
-                                        placeholder="Enter email..." 
-                                        value={newStudent.email!==undefined ? newStudent.email : ""}
+                                        type="text" 
+                                        placeholder="Enter phone number..." 
+                                        value={newStudent.phone_number!==undefined ? newStudent.phone_number : ""}
                                         onChange={
                                         (e)=>{
-                                            setNewStudent({...newStudent, ["email"]: e.target.value===""?undefined:e.target.value})
+                                            setNewStudent({...newStudent, ["phone_number"]: e.target.value===""?undefined:e.target.value})
                                             }
                                         }/>
                                         <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                                    <Form.Control.Feedback type="invalid">Please provide a valid email.</Form.Control.Feedback>
-                                </Form.Group>
+                                    </Form.Group>
+
+                                <br></br>
+                                </Row>
                                 :
                                 <></>
                                 }
-                            </Row>
 
-
+                            <br></br>
 
                             <Button variant="yellowsubmit" onClick={saveStudent}>
                                 Save This Student

@@ -369,7 +369,7 @@ useEffect(()=>{
                           <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                       <Form.Control.Feedback type="invalid">Please provide a valid email.</Form.Control.Feedback>
                   </Form.Group>
-                  <Form.Group as={Col} controlId="formGridEmail">
+                  <Form.Group as={Col} controlId="formGridPhone">
                       <Form.Label as="h5">Phone Number</Form.Label>
                           <Form.Control 
                           required 
