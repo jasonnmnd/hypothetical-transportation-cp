@@ -25,7 +25,6 @@ import Checkbox from '@mui/material/Checkbox';
 function GeneralManageStudentPage(props) {
     const param = useParams()
     const navigate = useNavigate();
-
     const [openModal, setOpenModal] = useState(false);
     const [validated, setValidated] = useState(false);
     const[coord,setCoord]=useState({lat:36.0016944, lng:-78.9480547});
@@ -81,7 +80,7 @@ function GeneralManageStudentPage(props) {
             else {
               props.addStudent({...obj, ["email"]:null,["phone_number"]:""});
             }
-            navigate(`/${getType(props.user)}/students/`)
+            // navigate(`/${getType(props.user)}/students/`)
           }
           else{
             const finalSchoolList = staffSchool.map((item)=>{return item.value})
@@ -141,7 +140,6 @@ function GeneralManageStudentPage(props) {
             
             props.updateStudentWithParent(createVals, obj)
           }
-          navigate(`/${getType(props.user)}/students/`)
         }
       }
     }
@@ -220,7 +218,6 @@ function GeneralManageStudentPage(props) {
     // else{
     //   props.getRoutesByID({school: obj.school})
     // }
-    
   }, []);
 
 

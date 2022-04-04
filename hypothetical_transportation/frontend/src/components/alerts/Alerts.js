@@ -45,7 +45,10 @@ function Alerts(props) {
         if(message!==prevMessageRef.current){
           console.log(message)
           console.log(prevMessageRef.current)
-          if (message.student) alert(message.student);
+          if (message.student){
+            alert(message.student);
+            navigate(`/${getType(props.user)}/students/`)
+          }
           if (message.user && message.user.includes("Create")){
             alert(message.user);              
             props.resetPostedUser();
