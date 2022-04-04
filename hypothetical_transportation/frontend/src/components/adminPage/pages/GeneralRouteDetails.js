@@ -317,7 +317,7 @@ function GeneralAdminRouteDetails(props) {
                     <Card.Header as="h5">Map View of School, Students, and Stops</Card.Header>
                     <Container className='d-flex flex-column justify-content-center' style={{marginTop: "20px"}}>
                         <IconLegend legendType='routeDetails'></IconLegend>
-                        <Card.Body>
+                        <Card.Body  style={{padding: "0px",marginTop: "20px",marginBottom: "20px"}}>
                             {props.route.school.id===-1?
                                 <></>:
                                 <MapComponent pinData={pinData} otherMapComponents={extraComponents} center={{lng: Number(props.route.school.longitude),lat: Number(props.route.school.latitude)}}></MapComponent>}

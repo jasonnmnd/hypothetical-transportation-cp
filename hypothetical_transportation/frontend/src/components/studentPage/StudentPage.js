@@ -178,7 +178,7 @@ function StudentPage(props) {
                     {(student.routes !==undefined && student.routes!==null) ?
                     <Container className='d-flex flex-column justify-content-center' style={{marginTop: "20px"}}>
                         <IconLegend legendType='student'></IconLegend>
-                        <Card.Body style={{padding: "0px",marginTop: "10px",marginBottom: "10px"}}>
+                        <Card.Body style={{padding: "0px",marginTop: "20px",marginBottom: "20px"}}>
                             <MapComponent pinData={pinData} otherMapComponents={extraComponents} center={{lng: Number(props.student.guardian.longitude),lat: Number(props.student.guardian.latitude)}}></MapComponent>
                         </Card.Body>    
                     </Container>
