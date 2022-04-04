@@ -123,6 +123,9 @@ function StudentPage(props) {
         <ParentHeader></ParentHeader>
 
         <Container className="container-main d-flex flex-column" style={{gap: "20px"}}>
+            <div className=" p-3 bg-white rounded d-flex flex-row justify-content-center">
+                <h1>Your Information</h1>
+            </div>
             <Row  style={{gap: "10px"}}>
                 <Card as={Col} style={{padding: "0px"}}>
                     <Card.Header as="h5">Name</Card.Header>
