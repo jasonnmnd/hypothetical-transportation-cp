@@ -401,7 +401,8 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
     def get_repr_of_students_with_name(self, full_name: str):
         matching_students = Student.objects.filter(full_name=full_name)
         return [
-            self.StudentRepresentation(usid=student.id, full_name=student.full_name, student_id=student.school_id,
+            self.StudentRepresentation(usid=student.id, email=student.email, phone_number=student.phone_number,
+                                       full_name=student.full_name, student_id=student.school_id,
                                        parent_email=student.guardian.email,
                                        school_name=student.school.name,
                                        in_db=True) for student in matching_students]
@@ -441,6 +442,7 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
         student_name_duplication = defaultdict(set)
         student_representations = list()
         students_response = list()
+
         for student_dex, student in enumerate(serializer.data["students"]):
             full_name = student.get("full_name")
             parent_email = student.get("parent_email", "")
@@ -453,14 +455,16 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
                 serializer_errors["students"][student_dex]["parent_email"].append(
                     "Parent email does not exist in database or loaded data")
 
-            representation = self.StudentRepresentation(usid=student_dex, full_name=student.get("full_name"),
+            representation = self.StudentRepresentation(usid=student_dex, email=student.get("email"),
+                                                        phone_number=student.get("phone_number"),
+                                                        full_name=student.get("full_name"),
                                                         student_id=student.get("student_id"),
                                                         parent_email=student.get("parent_email"),
                                                         school_name=student.get("school_name"))
             student_representations.append(representation)
 
             student_email_duplication[student_email].add(representation)
-            student_email_duplication[student_email].add(self.get_repr_of_students_with_email(student_email))
+            student_email_duplication[student_email].update(self.get_repr_of_students_with_email(student_email))
             student_name_duplication[full_name].add(representation)
             student_name_duplication[full_name].update(self.get_repr_of_students_with_name(full_name))
 
@@ -512,7 +516,7 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
                                                                                   current_student_email_duplicates)
             student_object_response["phone_number"] = self.get_val_field_response_format(student.phone_number,
                                                                                          serializer_errors[
-                                                                                             "phone_number"][
+                                                                                             "students"][
                                                                                              student_dex].get(
                                                                                              "phone_number", []), [])
             student_object_response["full_name"] = self.get_val_field_response_format(student.full_name,
@@ -577,7 +581,9 @@ class SubmitLoadedDataAPI(generics.GenericAPIView):
                                 school = candidate
                                 break
                         guardian = get_user_model().objects.get(email=student_data["parent_email"])
-                        student = Student.objects.create(full_name=student_data["full_name"], active=True,
+                        student = Student.objects.create(full_name=student_data["full_name"],
+                                                         email=student_data["email"],
+                                                         phone_number=student_data["phone_number"], active=True,
                                                          school=school,
                                                          guardian=guardian, routes=None,
                                                          student_id=student_data["student_id"])
