@@ -22,6 +22,8 @@ from .nav_utils import navigation_link_dropoff, navigation_link_pickup
 from collections import defaultdict
 from django.contrib.auth.models import Group
 
+from .student_account_managers import send_invite_email
+
 
 def get_filter_dict(model):
     """
@@ -357,9 +359,12 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
                     "address": self.address}
 
     class StudentRepresentation:
-        def __init__(self, usid: int, full_name: str, student_id: int, parent_email: str, school_name: str,
+        def __init__(self, usid: int, email: str, phone_number: str, full_name: str, student_id: int, parent_email: str,
+                     school_name: str,
                      in_db=False):
             self.usid = f"{usid}" if not in_db else f"indb{usid}"
+            self.email = email
+            self.phone_number = phone_number
             self.full_name = full_name
             self.student_id = student_id
             self.parent_email = parent_email
@@ -372,8 +377,8 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
             return isinstance(other, self.__class__) and self.usid == other.usid
 
         def get_representation(self):
-            return {"full_name": self.full_name, "student_id": self.student_id, "parent_email": self.parent_email,
-                    "school_name": self.school_name}
+            return {"email": self.email, "phone_number": self.phone_number, "full_name": self.full_name,
+                    "student_id": self.student_id, "parent_email": self.parent_email, "school_name": self.school_name}
 
     def get_repr_of_users_with_email(self, email: str):
         matching_users = get_user_model().objects.filter(email=email)
@@ -387,10 +392,19 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
                                         phone_number=user.phone_number, address=user.address, in_db=True) for user in
                 matching_users]
 
+    def get_repr_of_students_with_email(self, email: str):
+        matching_students = Student.objects.filter(email=email)
+        return [
+            self.StudentRepresentation(usid=student.id, email=student.email, phone_number=student.phone_number,
+                                       full_name=student.full_name, student_id=student.school_id,
+                                       parent_email=student.guardian.email, school_name=student.school.name,
+                                       in_db=True) for student in matching_students]
+
     def get_repr_of_students_with_name(self, full_name: str):
         matching_students = Student.objects.filter(full_name=full_name)
         return [
-            self.StudentRepresentation(usid=student.id, full_name=student.full_name, student_id=student.school_id,
+            self.StudentRepresentation(usid=student.id, email=student.email, phone_number=student.phone_number,
+                                       full_name=student.full_name, student_id=student.school_id,
                                        parent_email=student.guardian.email,
                                        school_name=student.school.name,
                                        in_db=True) for student in matching_students]
@@ -415,30 +429,63 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
         users_response = list()
 
         for user_dex, user in enumerate(serializer.data["users"]):
-            email = user.get("email")
+            user_email = user.get("email")
             full_name = user.get("full_name")
             representation = self.UserRepresentation(uuid=user_dex, full_name=user.get("full_name"),
                                                      email=user.get("email"), phone_number=user.get("phone_number"),
                                                      address=user.get("address"))
             user_representations.append(representation)
-            user_email_duplication[email].add(representation)
-            user_email_duplication[email].update(self.get_repr_of_users_with_email(email))
+            user_email_duplication[user_email].add(representation)
+            user_email_duplication[user_email].update(self.get_repr_of_users_with_email(user_email))
             user_name_duplication[full_name].add(representation)
             user_name_duplication[full_name].update(self.get_repr_of_users_with_name(full_name))
+
+        student_email_duplication = defaultdict(set)
+        student_name_duplication = defaultdict(set)
+        student_representations = list()
+        students_response = list()
+
+        for student_dex, student in enumerate(serializer.data["students"]):
+            full_name = student.get("full_name")
+            parent_email = student.get("parent_email", "")
+            student_email = student.get("email")
+
+            if parent_email not in user_email_duplication and get_user_model().objects.filter(
+                    email=parent_email).count() == 0:
+                if "parent_email" not in serializer_errors["students"][student_dex]:
+                    serializer_errors["students"][student_dex]["parent_email"] = list()
+                serializer_errors["students"][student_dex]["parent_email"].append(
+                    "Parent email does not exist in database or loaded data")
+
+            representation = self.StudentRepresentation(usid=student_dex, email=student.get("email"),
+                                                        phone_number=student.get("phone_number"),
+                                                        full_name=student.get("full_name"),
+                                                        student_id=student.get("student_id"),
+                                                        parent_email=student.get("parent_email"),
+                                                        school_name=student.get("school_name"))
+            student_representations.append(representation)
+
+            student_email_duplication[student_email].add(representation)
+            student_email_duplication[student_email].update(self.get_repr_of_students_with_email(student_email))
+            student_name_duplication[full_name].add(representation)
+            student_name_duplication[full_name].update(self.get_repr_of_students_with_name(full_name))
+
         for user_dex, user in enumerate(user_representations):
             user_object_response = dict()
-            current_email_duplicates = [dup.get_representation() for dup in user_email_duplication[user.email] if
-                                        dup != user]
-            is_valid &= len(current_email_duplicates) == 0
-            duplicate_email_address_alert = [] if len(current_email_duplicates) == 0 else [
-                "Duplicate email addresses must be corrected before continuing"]
-            paired_email_alert = [] if is_admin(request.user) or user.email in user_emails_in_student else [
-                "This parent would be created without corresponding students"]
-            user_object_response["email"] = self.get_val_field_response_format(user.email,
-                                                                               serializer_errors["users"][user_dex].get(
-                                                                                   "email",
-                                                                                   []) + duplicate_email_address_alert + paired_email_alert,
-                                                                               current_email_duplicates)
+            current_user_email_duplicates = [dup.get_representation() for dup in user_email_duplication[user.email] if
+                                             dup != user]
+            is_valid &= len(current_user_email_duplicates) == 0
+            user_email_errors = serializer_errors["users"][user_dex].get("email", [])
+            if len(current_user_email_duplicates) != 0:
+                user_email_errors.append("Duplicate email addresses must be corrected before continuing")
+            if not is_admin(request.user) and user.email not in user_emails_in_student:
+                # Due to variance request, school staff must create parents paired with students or result in disappearing guardians
+                user_email_errors.append("This parent would be created without corresponding students")
+            if user.email in student_email_duplication:
+                user_email_errors.append(
+                    "This email conflicts with a student email that would be loaded as part of this transaction")
+            user_object_response["email"] = self.get_val_field_response_format(user.email, user_email_errors,
+                                                                               current_user_email_duplicates)
             current_name_duplicates = [dup.get_representation() for dup in user_name_duplication[user.full_name] if
                                        dup != user]
             user_object_response["full_name"] = self.get_val_field_response_format(user.full_name,
@@ -455,33 +502,25 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
                                                                                      "address", []), [])
             users_response.append(user_object_response)
 
-        student_name_duplication = defaultdict(set)
-        student_representations = list()
-        students_response = list()
-
-        for student_dex, student in enumerate(serializer.data["students"]):
-            full_name = student.get("full_name")
-            parent_email = student.get("parent_email", "")
-
-            if parent_email not in user_email_duplication and get_user_model().objects.filter(
-                    email=parent_email).count() == 0:
-                if "parent_email" not in serializer_errors["students"][student_dex]:
-                    serializer_errors["students"][student_dex]["parent_email"] = list()
-                serializer_errors["students"][student_dex]["parent_email"].append(
-                    "Parent email does not exist in database or loaded data")
-
-            representation = self.StudentRepresentation(usid=student_dex, full_name=student.get("full_name"),
-                                                        student_id=student.get("student_id"),
-                                                        parent_email=student.get("parent_email"),
-                                                        school_name=student.get("school_name"))
-            student_representations.append(representation)
-            student_name_duplication[full_name].add(representation)
-            student_name_duplication[full_name].update(self.get_repr_of_students_with_name(full_name))
-
         for student_dex, student in enumerate(student_representations):
             student_object_response = dict()
+            current_student_email_duplicates = [dup.get_representation() for dup in
+                                                student_email_duplication[student.email] if
+                                                dup != student]
+            student_email_errors = serializer_errors["students"][student_dex].get("full_name", [])
+            if student.email in student_email_duplication:
+                student_email_errors.append(
+                    "This email conflicts with a user email that would be loaded as part of this transaction")
             current_name_duplicates = [dup.get_representation() for dup in student_name_duplication[student.full_name]
                                        if dup != student]
+            student_object_response["email"] = self.get_val_field_response_format(student.email,
+                                                                                  student_email_errors,
+                                                                                  current_student_email_duplicates)
+            student_object_response["phone_number"] = self.get_val_field_response_format(student.phone_number,
+                                                                                         serializer_errors[
+                                                                                             "students"][
+                                                                                             student_dex].get(
+                                                                                             "phone_number", []), [])
             student_object_response["full_name"] = self.get_val_field_response_format(student.full_name,
                                                                                       serializer_errors["students"][
                                                                                           student_dex].get(
@@ -544,10 +583,14 @@ class SubmitLoadedDataAPI(generics.GenericAPIView):
                                 school = candidate
                                 break
                         guardian = get_user_model().objects.get(email=student_data["parent_email"])
-                        student = Student.objects.create(full_name=student_data["full_name"], active=True,
+                        student = Student.objects.create(full_name=student_data["full_name"],
+                                                         email=student_data["email"],
+                                                         phone_number=student_data["phone_number"], active=True,
                                                          school=school,
                                                          guardian=guardian, routes=None,
                                                          student_id=student_data["student_id"])
+                        if student.email is not None and student.email != "":
+                            send_invite_email(student)
                     else:
                         rollback_at_end = True
                     student_errors.append(student_serializer.errors)
