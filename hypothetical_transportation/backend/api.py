@@ -113,7 +113,7 @@ def end_run_now(run: BusRun):
         # delta = 24*3600
     run.duration = time(delta//3600, (delta%3600)//60, delta%60)
     run.save(update_fields=['end_time', 'duration'])
-    return Response(FormatBusRunSerializer(instance=run).data, status.HTTP_204_NO_CONTENT)
+    return Response(FormatBusRunSerializer(instance=run).data, status.HTTP_200_OK)
 
 
 class StopPlannerAPI(generics.GenericAPIView):
@@ -148,6 +148,7 @@ class StartBusRunAPI(generics.GenericAPIView):
         permissions.AllowAny
     ]
 
+    # def post(self, request, *args, **kwargs):
     def post(self, request):
         data = {}
         data['start_time'] = time_now()
@@ -194,7 +195,7 @@ class StartBusRunAPI(generics.GenericAPIView):
 
         # data['driver'] = UserSerializer(instance=get_user_model().objects.filter(id=request.data['driver']).distinct()[0]).data
         run = BusRun.objects.filter(id=serializer.data['id']).distinct()[0]
-        return Response(FormatBusRunSerializer(instance=run).data, status.HTTP_204_NO_CONTENT)
+        return Response(FormatBusRunSerializer(instance=run).data, status.HTTP_200_OK)
         
 
 
