@@ -1807,12 +1807,14 @@ class PermissionViews(TransactionTestCase):
                                         {
                                             'email': 'bob@gmail.com',
                                             'full_name': 'bob smith',
+                                            'phone_number': 'abcdef',
                                             'password': 'wordpass',
-                                            'address': '',
+                                            'address': None,
                                             'latitude': 0,
                                             'longitude': 0,
                                             'groups': [],
+                                            'managed_schools': [],
                                         }),
                                     content_type='application/json',
                                     HTTP_AUTHORIZATION=f'Token {self.admin_token}')
-        self.assertEqual(response.data['address'][0].code, 'blank')
+        self.assertEqual(response.data['user']['address'], None)
