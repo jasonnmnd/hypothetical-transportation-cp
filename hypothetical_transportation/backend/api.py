@@ -22,6 +22,8 @@ from .nav_utils import navigation_link_dropoff, navigation_link_pickup
 from collections import defaultdict
 from django.contrib.auth.models import Group
 
+from .student_account_managers import send_invite_email
+
 
 def get_filter_dict(model):
     """
@@ -587,6 +589,8 @@ class SubmitLoadedDataAPI(generics.GenericAPIView):
                                                          school=school,
                                                          guardian=guardian, routes=None,
                                                          student_id=student_data["student_id"])
+                        if student.email is not None and student.email != "":
+                            send_invite_email(student)
                     else:
                         rollback_at_end = True
                     student_errors.append(student_serializer.errors)
