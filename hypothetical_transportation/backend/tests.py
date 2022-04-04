@@ -1750,7 +1750,6 @@ class PermissionViews(TransactionTestCase):
                                         'phone_number': '0000000000',
                                         'latitude': 0,
                                         'longitude': 0,
-                                        'groups': [],
                                         }),
                                    content_type='application/json',
                                    HTTP_AUTHORIZATION=f'Token {self.admin_token}')
@@ -1763,7 +1762,6 @@ class PermissionViews(TransactionTestCase):
                                         'phone_number': '0000000000',
                                         'longitude': 0,
                                         'latitude': 0,
-                                        'groups': [],
                                         }),
                                    content_type='application/json',
                                    HTTP_AUTHORIZATION=f'Token {self.user1_token}')

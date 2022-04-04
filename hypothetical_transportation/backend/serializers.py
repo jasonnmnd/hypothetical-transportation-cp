@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
+from django.db.models import Q
 from rest_framework import serializers
 from .models import Route, School, Student, Stop
 from geopy.geocoders import Nominatim, GoogleV3
@@ -49,6 +50,16 @@ class EditUserSerializer(serializers.ModelSerializer):
         if is_student(updated_user):
             sync_student_account_changes_to_student(updated_user)
         return updated_user
+
+    def validate_groups(self, value):
+        if len(value) != 1:
+            raise serializers.ValidationError("Users may not have more than one role")
+        group_name = value[0].name
+        if group_name in ["Guardian", "Student"]:
+            raise serializers.ValidationError("Users cannot be changed to the Guardian or Student role")
+        if self.instance.groups.filter(Q(name='Guardian') | Q(name='Student')).count() > 0:
+            raise serializers.ValidationError("Users in the Guardian or Student role cannot have their role changed")
+        return value
 
     class Meta:
         model = get_user_model()
