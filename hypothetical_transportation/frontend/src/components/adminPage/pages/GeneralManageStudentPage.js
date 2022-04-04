@@ -51,6 +51,7 @@ function GeneralManageStudentPage(props) {
 
     const [obj, setObj] = useState(emptyStudent)
     const [parent, setPar] = useState(emptyStudent)
+    const [oldEmail, setOldEmail] = useState("");
 
   const setParent = (e)=>{
     if(e.value!=="new"){
@@ -111,11 +112,17 @@ function GeneralManageStudentPage(props) {
         else{
           if(obj.guardian!=="new"){
             if(studentChecked) {
-              delete obj.email
+              
+              if (oldEmail == obj.email){
+                delete obj.email
+              } 
+
               props.updateStudent(obj,param.id);
             }
             else {
-              delete obj.email
+              if (oldEmail == obj.email){
+                delete obj.email
+              } 
               props.updateStudent({...obj, ["email"]:null,["phone_number"]:""},param.id);
             }
             
@@ -128,7 +135,10 @@ function GeneralManageStudentPage(props) {
               longitude: coord.lng.toFixed(6),
               latitude: coord.lat.toFixed(6),
             }
-            delete obj.email
+            if (oldEmail == obj.email){
+              delete obj.email
+            } 
+            
             props.updateStudentWithParent(createVals, obj)
           }
           navigate(`/${getType(props.user)}/students/`)
@@ -186,6 +196,7 @@ function GeneralManageStudentPage(props) {
     props.getUsers({ordering:"email", groups:2});
     if(props.action==="edit"){
       props.getStudent(param.id);
+      setOldEmail(props.student.email);
       setObj({...props.student, ["guardian"]:props.student.guardian.id,["school"]:props.student.school.id,["routes"]:props.student.routes?props.student.routes.id:null})
       setSchoolSelected({value: props.student.school.id, label: props.student.school.name})
       setGuardianSelected({value: props.student.guardian.id, label: props.student.guardian.email})
@@ -303,6 +314,7 @@ const groupTypes = [
     }
     else{
       props.getStudent(param.id);
+      setOldEmail(props.student.email)
     }
   },[props.action])
 
