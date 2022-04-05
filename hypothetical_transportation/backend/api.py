@@ -405,10 +405,18 @@ class BusRunViewSet(viewsets.ModelViewSet):
         except:
             return Response("There is no active bus on this route", status.HTTP_404_NOT_FOUND)
 
-    @action(detail=True, methods=['get'], permission_classes=[permissions.AllowAny]) # this is sus. a get that updates...
+    @action(detail=True, methods=['get'], permission_classes=[permissions.AllowAny])
     def driver(self, request, pk):
         try:
             run = get_active_bus_for_driver_from_pk(pk)
+            return Response(FormatBusRunSerializer(instance=run).data, status.HTTP_200_OK)
+        except:
+            return Response("There is no active bus for this driver", status.HTTP_404_NOT_FOUND)
+
+    @action(detail=True, methods=['get'], permission_classes=[permissions.AllowAny])
+    def route(self, request, pk):
+        try:
+            run = get_active_bus_on_route_from_pk(pk)
             return Response(FormatBusRunSerializer(instance=run).data, status.HTTP_200_OK)
         except:
             return Response("There is no active bus for this driver", status.HTTP_404_NOT_FOUND)
