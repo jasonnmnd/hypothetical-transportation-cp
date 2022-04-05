@@ -27,7 +27,7 @@ function BusRunStartConfirmModal(props){
                 <Modal.Footer>
                     <Container className='d-flex flex-row justify-content-center' style={{gap: "10px"}}>
                         <Button variant="yellowclose" onClick={props.closeModal}>Close</Button>
-                        <Button variant="yellowclose" onClick={() => props.saveModal(studentInfo)}>Start Run</Button>
+                        <Button variant="yellowclose" onClick={() => props.saveModal()}>Start Run</Button>
                     </Container>
                 </Modal.Footer>
         </Modal>  

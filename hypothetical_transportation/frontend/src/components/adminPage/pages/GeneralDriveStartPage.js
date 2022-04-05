@@ -46,7 +46,7 @@ function GeneralDriveStartPage(props) {
     const startRun = (force = false) => {
         props.startRun({
             route: routeId.value ? routeId.value : props.routes[0].id,
-            bus_number: busNum,
+            bus_number: parseInt(busNum),
             going_towards_school: isTowardSchool.value,
             driver: props.driverId,
             force: force

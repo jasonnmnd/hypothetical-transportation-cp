@@ -155,10 +155,10 @@ export const getRunByDriver = (driverId, onSuccess = () => {}) => (dispatch, get
           onSuccess();
     })
     .catch((err) => {/*console.log(err);*/
-        dispatch({
-            type: DRIVE_ERROR,
-            payload: err,
-        });
+        // dispatch({
+        //     type: DRIVE_ERROR,
+        //     payload: err.message,
+        // });
     });
 
 }
@@ -188,11 +188,11 @@ export const getActiveRuns = () => (dispatch, getState) => {
     let config = tokenConfig(getState);
 
     axios
-    .get(`/api/run/active/`, config)
+    .get(`/api/active_bus/`, config)
     .then((res) => {
         dispatch({
             type: MANY_RUN_SET,
-            payload: res.data,
+            payload: res,
           });
     })
     .catch((err) => {/*console.log(err);*/

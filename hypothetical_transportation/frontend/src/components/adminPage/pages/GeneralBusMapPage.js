@@ -19,7 +19,7 @@ function GeneralBusMapPage(props) {
 
 
     useEffect(() => {
-        //props.getActiveRuns();
+        props.getActiveRuns();
     }, []);
 
     useEffect(() => {
