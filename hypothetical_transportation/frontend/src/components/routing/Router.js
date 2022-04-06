@@ -134,7 +134,9 @@ const Router = (props) => {
           <Route exact path="/print/:route_id" element={<GeneralPrintableRoster/>}></Route>
           <Route exact path="/drive/" element={<GeneralDriveStartPage/>}></Route>
           <Route exact path="/bus/map" element={<GeneralBusMapPage/>}></Route>
+          <Route exact path="/bus/log/:filter/:id" element={<GeneralBusLogPage/>}></Route>
           <Route exact path="/bus/log" element={<GeneralBusLogPage/>}></Route>
+          
 
 
 
