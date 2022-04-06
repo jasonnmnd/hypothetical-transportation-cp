@@ -1,6 +1,7 @@
 from distutils.sysconfig import get_config_h_filename
 from re import T
-from urllib import request
+from urllib import request, response
+import requests, json, html
 from django.contrib.auth import get_user_model
 from django.db import transaction, IntegrityError
 from django_filters.rest_framework import DjangoFilterBackend
@@ -197,6 +198,17 @@ class StartBusRunAPI(generics.GenericAPIView):
         run = BusRun.objects.filter(id=serializer.data['id']).distinct()[0]
         return Response(FormatBusRunSerializer(instance=run).data, status.HTTP_200_OK)
         
+
+class TranzitTraqApi(generics.GenericAPIView):
+    def get(self, request, *args, **kwargs):
+        try:
+            url =  f"http://tranzit.colab.duke.edu:8000/get"
+            params = {'bus': request.GET['bus']}
+            req = requests.get(url=url, params=params)
+            ret = json.loads(req.text)
+            return Response(ret, status.HTTP_200_OK)
+        except:
+            return Response("Something went wrong", status.HTTP_404_NOT_FOUND)
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -405,10 +417,18 @@ class BusRunViewSet(viewsets.ModelViewSet):
         except:
             return Response("There is no active bus on this route", status.HTTP_404_NOT_FOUND)
 
-    @action(detail=True, methods=['get'], permission_classes=[permissions.AllowAny]) # this is sus. a get that updates...
+    @action(detail=True, methods=['get'], permission_classes=[permissions.AllowAny])
     def driver(self, request, pk):
         try:
             run = get_active_bus_for_driver_from_pk(pk)
+            return Response(FormatBusRunSerializer(instance=run).data, status.HTTP_200_OK)
+        except:
+            return Response("There is no active bus for this driver", status.HTTP_404_NOT_FOUND)
+
+    @action(detail=True, methods=['get'], permission_classes=[permissions.AllowAny])
+    def route(self, request, pk):
+        try:
+            run = get_active_bus_on_route_from_pk(pk)
             return Response(FormatBusRunSerializer(instance=run).data, status.HTTP_200_OK)
         except:
             return Response("There is no active bus for this driver", status.HTTP_404_NOT_FOUND)
