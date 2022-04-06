@@ -27,6 +27,7 @@ from .nav_utils import navigation_link_dropoff, navigation_link_pickup
 from collections import defaultdict
 from django.contrib.auth.models import Group
 
+BUS_RUN_TIMEOUT_THRESHOLD = 3*3600
 
 def get_filter_dict(model):
     """
@@ -65,38 +66,80 @@ def parse_repr(repr_str: str) -> dict:
     return repr_fields
 
 
+def duration_check_multiple(active_runs):
+    for run in active_runs:
+        duration_check(run)
+
+def duration_check(run: BusRun):
+    if run.duration is None or run.duration.hour < 3:
+        t = time_now()
+        time_in_sec = t.hour*3600 + t.minute*60 + t.second
+        start_time_in_sec = run.start_time.hour*3600 + run.start_time.minute*60 + run.start_time.second
+        delta = time_in_sec-start_time_in_sec
+            # print(delta)
+        if delta > BUS_RUN_TIMEOUT_THRESHOLD or delta<0:
+            # HASTAG HACKINNGGGGGGGG
+            new_hour = (run.start_time.hour+3)%24
+            if run.start_time.hour >=21:
+                new_day=run.start_time.day+1
+            else:
+                new_day = run.start_time.day
+                # print(new_hour)
+            run.end_time = datetime(
+                run.start_time.year,
+                run.start_time.month,
+                new_day,
+                new_hour, 
+                run.start_time.minute,
+                run.start_time.second
+            )
+                # print(delta//3600)
+            run.duration = time(3, 0, 0)
+        else:
+            run.duration = time(delta//3600, (delta%3600)//60, delta%60)
+        run.save(update_fields=['end_time', 'duration'])
+
+
 def get_active_bus_for_bus_number(bus_number):
-    return BusRun.objects.filter(bus_number=bus_number, duration=None).distinct()[0]
+    duration_check(BusRun.objects.filter(bus_number=bus_number, end_time=None).distinct()[0])
+    return BusRun.objects.filter(bus_number=bus_number, end_time=None).distinct()[0]
 
 
 def get_active_bus_for_route(route):
-    return BusRun.objects.filter(route=route, duration=None).distinct()[0]
+    duration_check(BusRun.objects.filter(route=route, end_time=None).distinct()[0])
+    return BusRun.objects.filter(route=route, end_time=None).distinct()[0]
 
 
 def get_active_bus_for_driver(driver):
-    return BusRun.objects.filter(driver=driver, duration=None).distinct()[0]
+    duration_check(BusRun.objects.filter(driver=driver, end_time=None).distinct()[0])
+    return BusRun.objects.filter(driver=driver, end_time=None).distinct()[0]
 
 
 def get_active_bus_on_route_from_pk(route_id):
     route = Route.objects.filter(id=route_id).distinct()[0]
-    return BusRun.objects.filter(route=route, duration=None).distinct()[0]
+    duration_check(BusRun.objects.filter(route=route, end_time=None).distinct()[0])
+    return BusRun.objects.filter(route=route, end_time=None).distinct()[0]
 
 
 def get_active_bus_for_driver_from_pk(driver_id):
     driver = get_user_model().objects.filter(id=driver_id)[0]
-    return BusRun.objects.filter(driver=driver, duration=None).distinct()[0]
+    duration_check(BusRun.objects.filter(driver=driver, end_time=None).distinct()[0])
+    return BusRun.objects.filter(driver=driver, end_time=None).distinct()[0]
 
 
 def count_active_run_for_bus_number(bus_number) -> int:
-    return len(BusRun.objects.filter(bus_number=bus_number, duration=None))
+    duration_check_multiple(BusRun.objects.filter(bus_number=bus_number, end_time=None))
+    return len(BusRun.objects.filter(bus_number=bus_number, end_time=None))
 
 
 def count_active_run_for_route(route) -> int:
-    return len(BusRun.objects.filter(route=route, duration=None))
+    duration_check_multiple(BusRun.objects.filter(route=route, end_time=None))
+    return len(BusRun.objects.filter(route=route, end_time=None))
 
 
 def count_active_run_for_driver(driver) -> int:
-    return len(BusRun.objects.filter(driver=driver, duration=None))
+    duration_check_multiple(BusRun.objects.filter(driver=driver, end_time=None))
+    return len(BusRun.objects.filter(driver=driver, end_time=None))
 
 
 def time_now():
@@ -110,8 +153,6 @@ def end_run_now(run: BusRun):
     end_time_in_sec = run.end_time.hour*3600 + run.end_time.minute*60 + run.end_time.second
     start_time_in_sec = run.start_time.hour*3600 + run.start_time.minute*60 + run.start_time.second
     delta = end_time_in_sec-start_time_in_sec
-    # if delta > 24*3600:
-        # delta = 24*3600
     run.duration = time(delta//3600, (delta%3600)//60, delta%60)
     run.save(update_fields=['end_time', 'duration'])
     return Response(FormatBusRunSerializer(instance=run).data, status.HTTP_200_OK)
@@ -310,9 +351,10 @@ class ActiveBusRunViewSet(viewsets.ModelViewSet):
         return BusRunSerializer
     
     def get_queryset(self):
+        duration_check_multiple(BusRun.objects.filter(end_time=None).distinct().order_by('start_time'))
         if is_school_staff(self.request.user):
-            return BusRun.objects.filter(id__in=self.request.user.managed_schools.distinct().values('run_id'), duration=None).distinct().order_by('start_time')
-        return BusRun.objects.filter(duration=None).distinct().order_by('start_time')
+            return BusRun.objects.filter(id__in=self.request.user.managed_schools.distinct().values('run_id'), end_time=None).distinct().order_by('start_time')
+        return BusRun.objects.filter(end_time=None).distinct().order_by('start_time')
 
 
 class RouteViewSet(viewsets.ModelViewSet):
@@ -386,12 +428,14 @@ class BusRunViewSet(viewsets.ModelViewSet):
             try:
                 # reason the index doesn't make sense: we don't store stop 0, which is the school
                 if run.going_towards_school:
-                    next_stop = Stop.objects.filter(route=run.route).order_by('-stop_number')
+                    next_stop = Stop.objects.filter(route=run.route).order_by('-stop_number')[run.previous_stop_index]
                 else:
+                    if run.previous_stop_index == len(Stop.objects.filter(route=run.route))-1:
+                        return Response("Current stop is the second to last stop on the route", status.HTTP_404_NOT_FOUND)
                     next_stop = Stop.objects.filter(route=run.route).order_by('stop_number')[run.previous_stop_index]
                 return Response(StopSerializer(instance=next_stop).data, status.HTTP_200_OK)
             except:
-                return Response("There are no more stops on this route", status.HTTP_204_NO_CONTENT)
+                return Response("There are no more stops on this route", status.HTTP_404_NOT_FOUND)
         except:
             return Response("This run no longer exists", status.HTTP_404_NOT_FOUND)
 
