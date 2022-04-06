@@ -146,9 +146,12 @@ class TestStudentLoginAccount(TestCase):
                                      content_type='application/json',
                                      HTTP_AUTHORIZATION=f'Token {self.admin_token}')
         student_account = get_user_model().objects.get(email="student2@example.com")
-        self.assertEqual(student_account.address, address[0])
-        self.assertEqual(student_account.latitude, address[1])
-        self.assertEqual(student_account.longitude, address[2])
+        # self.assertEqual(student_account.address, address[0])
+        # self.assertEqual(student_account.latitude, address[1])
+        # self.assertEqual(student_account.longitude, address[2])
+        self.assertIs(student_account.address, None)
+        self.assertIs(student_account.latitude, None)
+        self.assertIs(student_account.longitude, None)
 
 
 class TestBulkImport(TestCase):
