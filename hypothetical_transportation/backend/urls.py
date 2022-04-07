@@ -2,7 +2,7 @@ from rest_framework import routers
 from django.urls import path
 
 from .api import BusRunViewSet, TranzitTraqApi, UserViewSet, StudentViewSet, RouteViewSet, SchoolViewSet, StopPlannerAPI, StopViewSet, \
-    VerifyLoadedDataAPI, SubmitLoadedDataAPI, StartBusRunAPI, ActiveBusRunViewSet
+    VerifyLoadedDataAPI, SubmitLoadedDataAPI, StartBusRunAPI, ActiveBusRunViewSet, ActiveBusLocationsViewSet
 from rest_framework.urlpatterns import format_suffix_patterns
 
 router = routers.DefaultRouter()
@@ -13,6 +13,7 @@ router.register('school', SchoolViewSet, 'school')
 router.register('student', StudentViewSet, 'student')
 router.register('run', BusRunViewSet, 'run')
 router.register('active_bus', ActiveBusRunViewSet, 'active_bus')
+router.register('tranzit_traq', ActiveBusLocationsViewSet, 'tranzit_traq')
 # router.register()
 
 additional_patterns = [
@@ -20,7 +21,7 @@ additional_patterns = [
     path('start_run/', StartBusRunAPI.as_view()),
     path('loaded-data/validate/', VerifyLoadedDataAPI.as_view()),
     path('loaded-data/', SubmitLoadedDataAPI.as_view()),
-    path('tranzit_traq/', TranzitTraqApi.as_view())
+    path('tranzit_tracker/', TranzitTraqApi.as_view())
 ]
 
 urlpatterns = router.urls
