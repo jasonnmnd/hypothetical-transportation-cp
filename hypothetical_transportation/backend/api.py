@@ -1,23 +1,20 @@
-from distutils.sysconfig import get_config_h_filename
-from re import T
-from urllib import request, response
-import requests, json, html
+import requests, json
 from django.contrib.auth import get_user_model
-from django.db import transaction, IntegrityError
+from django.db import transaction
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, status, serializers
 from rest_framework import viewsets, permissions, generics
-from rest_framework.decorators import action, api_view
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from datetime import datetime, time
-from geopy.geocoders import Nominatim, GoogleV3
-from .models import School, Route, Student, Stop, ActiveBusRun, TransitLog, BusRun
+from geopy.geocoders import GoogleV3
+from .models import School, Route, Student, Stop, ActiveBusRun, TransitLog, BusRun, Bus
 from .serializers import StartBusRunSerializer, UserSerializer, StudentSerializer, RouteSerializer, SchoolSerializer, FormatStudentSerializer, \
     FormatRouteSerializer, FormatUserSerializer, EditUserSerializer, StopSerializer, CheckInrangeSerializer, \
     LoadUserSerializer, LoadModelDataSerializer, find_school_match_candidates, school_names_match, \
     StaffEditUserSerializer, StaffEditSchoolSerializer, StaffStudentSerializer, LoadStudentSerializer, \
     LoadStudentSerializerStrict, ExposeUserSerializer, ExposeUserInputEmailSerializer, ActiveBusRunSerializer, \
-    TransitLogSerializer, BusRunSerializer, FormatBusRunSerializer
+    TransitLogSerializer, BusRunSerializer, FormatBusRunSerializer, BusSerializer
 from .search import DynamicSearchFilter
 from .customfilters import StudentCountShortCircuitFilter
 from .permissions import is_admin, is_school_staff, is_driver, IsAdminOrReadOnly, IsAdmin, IsSchoolStaff, is_guardian
@@ -26,6 +23,7 @@ from .geo_utils import get_straightline_distance, LEN_OF_MILE
 from .nav_utils import navigation_link_dropoff, navigation_link_pickup
 from collections import defaultdict
 from django.contrib.auth.models import Group
+
 
 BUS_RUN_TIMEOUT_THRESHOLD = 3*3600
 
@@ -157,6 +155,9 @@ def end_run_now(run: BusRun):
     delta = end_time_in_sec-start_time_in_sec
     run.duration = time(delta//3600, (delta%3600)//60, delta%60)
     run.save(update_fields=['end_time', 'duration'])
+    # route = Route.objects.get(id=route)
+    run.route.has_active_run = False
+    run.route.save(update_fields=['has_active_run'])
     return Response(FormatBusRunSerializer(instance=run).data, status.HTTP_200_OK)
 
 
@@ -239,19 +240,10 @@ class StartBusRunAPI(generics.GenericAPIView):
 
         # data['driver'] = UserSerializer(instance=get_user_model().objects.filter(id=request.data['driver']).distinct()[0]).data
         run = BusRun.objects.filter(id=serializer.data['id']).distinct()[0]
-        return Response(FormatBusRunSerializer(instance=run).data, status.HTTP_200_OK)
         
-
-class TranzitTraqApi(generics.GenericAPIView):
-    def get(self, request, *args, **kwargs):
-        try:
-            url =  f"http://tranzit.colab.duke.edu:8000/get"
-            params = {'bus': request.GET['bus']}
-            req = requests.get(url=url, params=params)
-            ret = json.loads(req.text)
-            return Response(ret, status.HTTP_200_OK)
-        except:
-            return Response("Something went wrong", status.HTTP_404_NOT_FOUND)
+        run.route.has_active_run = True
+        run.route.save(update_fields=['has_active_run'])
+        return Response(FormatBusRunSerializer(instance=run).data, status.HTTP_200_OK)
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -479,6 +471,46 @@ class BusRunViewSet(viewsets.ModelViewSet):
             return Response(FormatBusRunSerializer(instance=run).data, status.HTTP_200_OK)
         except:
             return Response("There is no active bus for this driver", status.HTTP_404_NOT_FOUND)
+
+
+class ActiveBusLocationsViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAdminOrReadOnly]
+    filter_backends = [DjangoFilterBackend, DynamicSearchFilter, filters.OrderingFilter]
+    
+    filterset_fields = get_filter_dict(Bus)
+    ordering = 'bus'
+
+    def get_serializer_class(self):
+        return BusSerializer
+    
+    def get_queryset(self):
+        # if is_school_staff(self.request.user):
+            # return Bus.objects.filter(id__in=self.request.user.managed_schools.distinct().values('run_id')).distinct().order_by('start_time')
+        return Bus.objects.all().distinct().order_by('bus_number')
+
+
+class TranzitTraqApi(generics.GenericAPIView):
+
+    def talk_to_tranzit_traq(self, bus):
+        try:
+            url =  f"http://tranzit.colab.duke.edu:8000/get"
+            params = {'bus': bus}
+            req = requests.get(url=url, params=params)
+            ret = json.loads(req.text)
+            return Response(ret, status.HTTP_200_OK)
+        except:
+            return Response("Something went wrong", status.HTTP_404_NOT_FOUND)
+
+    def get(self, request, *args, **kwargs):
+        active_buses = BusRun.objects.filter(end_time=None)
+        for bus in active_buses:
+            # bus_id=request.GET['bus']
+            duration_check(bus)
+            if bus.end_time is None:
+                self.talk_to_tranzit_traq(bus)
+            else:
+                # delete bus from table
+                pass
 
 
 class SchoolViewSet(viewsets.ModelViewSet):

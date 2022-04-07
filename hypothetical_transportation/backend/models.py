@@ -5,6 +5,8 @@ from django.core.validators import MinLengthValidator
 from django.contrib.postgres.fields import CICharField
 from django.conf import settings
 import datetime
+
+from numpy import False_
 from .geo_utils import get_straightline_distance, LEN_OF_MILE
 
 
@@ -21,6 +23,7 @@ class School(models.Model):
 
 class Route(models.Model):
     name = models.CharField(max_length=150, validators=[MinLengthValidator(1)])
+    has_active_run = models.BooleanField(default=False, null=False)
     description = models.TextField(blank=True)
     school = models.ForeignKey(
         School, related_name='routes',
@@ -77,6 +80,12 @@ class ActiveBusRun(models.Model):
     class Meta:
         ordering = ['bus_number']
 
+
+class Bus(models.Model):
+    bus_number = models.PositiveIntegerField(null=False)
+    latitude = models.FloatField(blank=False)
+    longitude = models.FloatField(blank=False)
+
 class TransitLog(models.Model):
     bus_number = models.PositiveIntegerField(null=False)
     driver = models.ForeignKey(
@@ -107,12 +116,6 @@ class BusRun(models.Model):
     duration = models.TimeField(blank=True, null=True)
     end_time = models.DateTimeField(blank=True, null=True)
     going_towards_school = models.BooleanField(default=True, null=False)
-    # previous_stop = models.ForeignKey(
-    #     Stop,
-    #     related_name='bus_run',
-    #     on_delete=models.SET_NULL,
-    #     null=True
-    # )
     previous_stop_index = models.PositiveIntegerField(blank=True, null=True, default=0)
     route = models.ForeignKey(
         Route,
