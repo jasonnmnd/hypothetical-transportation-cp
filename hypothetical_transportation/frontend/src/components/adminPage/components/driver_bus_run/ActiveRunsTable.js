@@ -22,6 +22,7 @@ function ActiveRunsTable(props) {
             tableType='activeDrive'
             values={props.data}
             totalCount={props.count}
+            action={props.handleViewClick}
         />
     </>
     );
@@ -29,7 +30,8 @@ function ActiveRunsTable(props) {
 
 ActiveRunsTable.propTypes = {
     data: PropTypes.array,
-    count: PropTypes.number
+    count: PropTypes.number,
+    handleViewClick: PropTypes.func
 }
 
 ActiveRunsTable.defaultProps = {

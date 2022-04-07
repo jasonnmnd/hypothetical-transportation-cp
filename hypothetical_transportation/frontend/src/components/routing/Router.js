@@ -42,6 +42,7 @@ import StudentPage from '../studentPage/StudentPage';
 import GeneralDriveStartPage from '../adminPage/pages/GeneralDriveStartPage';
 import GeneralBusMapPage from '../adminPage/pages/GeneralBusMapPage';
 import GeneralBusLogPage from '../adminPage/pages/GeneralBusLogPage';
+import BusRunDetailPage from '../adminPage/pages/BusRunDetailPage';
 
 const Router = (props) => {
     return (
@@ -136,6 +137,7 @@ const Router = (props) => {
           <Route exact path="/bus/map" element={<GeneralBusMapPage/>}></Route>
           <Route exact path="/bus/log/:filter/:id" element={<GeneralBusLogPage/>}></Route>
           <Route exact path="/bus/log" element={<GeneralBusLogPage/>}></Route>
+          <Route exact path="/bus/run/:run_id" element={<BusRunDetailPage/>}></Route>
           
 
 

@@ -14,12 +14,14 @@ import { EXAMPLE_ACTIVE_RUNS } from '../../../utils/drive';
 import { getLog } from '../../../actions/drive';
 import { getRouteInfo } from '../../../actions/routes';
 import { getSchool } from '../../../actions/schools';
+import getType from '../../../utils/user2';
 
 
 
 function GeneralBusLogPage(props) {
 
     let [searchParams, setSearchParams] = useSearchParams();
+    const nav = useNavigate();
     const param = useParams();
 
     const paramFilterExists = () => {
@@ -59,6 +61,10 @@ function GeneralBusLogPage(props) {
         return ""
     }
 
+    const handleViewClick = (d) => {
+        nav(`/bus/run/${d.id}`);
+    }
+
   
   return (
     <div>          
@@ -67,7 +73,7 @@ function GeneralBusLogPage(props) {
             <div className="shadow-sm p-3 mb-5 bg-white rounded d-flex flex-row justify-content-center">
                 <h1>{getTitlePrefix()} Bus Log</h1>
             </div>
-            <ActiveRunsTable data={props.activeBusesData} count={props.activeBusesCount}/> 
+            <ActiveRunsTable data={props.activeBusesData} count={props.activeBusesCount} handleViewClick={handleViewClick}/> 
         </Container>
     </div>
     );
@@ -90,7 +96,8 @@ const mapStateToProps = (state) => ({
     activeBusesData: state.drive.log.results,
     activeBusesCount: state.drive.log.count,
     currentRoute: state.routes.viewedRoute,
-    currentSchool: state.schools.viewedSchool
+    currentSchool: state.schools.viewedSchool,
+    user: state.auth.user
 });
 
 export default connect(mapStateToProps, {getLog, getRouteInfo, getSchool})(GeneralBusLogPage)

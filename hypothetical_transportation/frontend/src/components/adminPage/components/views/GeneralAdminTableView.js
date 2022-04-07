@@ -100,7 +100,8 @@ GeneralAdminTableView.propTypes = {
     extraRow: PropTypes.object,
     search: PropTypes.string,
     pagination: PropTypes.string,
-    totalCount: PropTypes.number
+    totalCount: PropTypes.number,
+    action: PropTypes.func
 }
 
 GeneralAdminTableView.defaultProps = {
