@@ -299,7 +299,17 @@ function GeneralAdminRouteDetails(props) {
                         </Link>
                     </Col>
                 </Row>
-            </Container></>: 
+            </Container>
+            <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
+                <Row>
+                    <Col>
+                        <Link to={`/bus/log/route/${props.route.id}`}>
+                            <Button variant="yellowLong" size="lg">Bus Log For This Route</Button>
+                        </Link>
+                    </Col>
+                </Row>
+            </Container>
+            </>: 
             <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
                 <Row>
                     <Col>
@@ -314,6 +324,7 @@ function GeneralAdminRouteDetails(props) {
                     </Col> */}
                 </Row>
             </Container>
+            
         }
         
         <Row style={{gap: "10px"}}>
