@@ -34,6 +34,16 @@
   cursor: pointer;
 }
 
+.btn-redrun {
+  display: inline-block;
+  padding: 10px 15px;
+  background-color: rgb(184, 28, 28);
+  transition: 0.4s;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
 .btn-yellowsubmit:hover {
   background-color: #ffdd99;
 }
