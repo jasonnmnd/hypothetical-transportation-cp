@@ -20,6 +20,7 @@ class School(models.Model):
     class Meta:
         ordering = ['id']
 
+
 class Route(models.Model):
     name = models.CharField(max_length=150, validators=[MinLengthValidator(1)])
     description = models.TextField(blank=True)
@@ -39,6 +40,7 @@ class Route(models.Model):
     class Meta:
         ordering = ['id']
 
+
 class Stop(models.Model):
     name = models.CharField(max_length=150, blank=True)
     location = models.CharField(max_length=450)
@@ -48,9 +50,9 @@ class Stop(models.Model):
     stop_number = models.PositiveIntegerField(null=False)
     pickup_time = models.TimeField(blank=True, default=datetime.time(9, 0, 0))
     dropoff_time = models.TimeField(blank=True, default=datetime.time(15, 0, 0))
+
     # time_to_next_stop_when_pickup = models.TimeField(blank=True, default=datetime.time(9, 0, 0))
     # time_to_next_stop_when_dropoff = models.TimeField(blank=True, default=datetime.time(9, 0, 0))
-    
 
     class Meta:
         ordering = ['route', 'stop_number']
@@ -60,6 +62,7 @@ class EstimatedTimeToNextStop(models.Model):
     stop = models.ForeignKey(Stop, related_name='estimated_time_to_next_stop', on_delete=models.CASCADE)
     seconds_when_pickup = models.PositiveIntegerField(blank=True, null=True)
     seconds_when_dropoff = models.PositiveIntegerField(blank=True, null=True)
+
 
 class ActiveBusRun(models.Model):
     bus_number = models.PositiveIntegerField(null=False)
@@ -71,12 +74,14 @@ class ActiveBusRun(models.Model):
         null=False
     )
     going_towards_school = models.BooleanField(default=True, null=False)
-    previous_stop_index = models.PositiveIntegerField(null=False) # note: this is not a foreign key because all we need is the stop number
+    previous_stop_index = models.PositiveIntegerField(
+        null=False)  # note: this is not a foreign key because all we need is the stop number
     route = models.ForeignKey(Route, related_name='active_bus_run', on_delete=models.CASCADE, unique=True)
     start_time = models.TimeField(blank=False)
 
     class Meta:
         ordering = ['bus_number']
+
 
 class TransitLog(models.Model):
     bus_number = models.PositiveIntegerField(null=False)
@@ -96,6 +101,7 @@ class TransitLog(models.Model):
 
     class Meta:
         ordering = ['start_time']
+
 
 class BusRun(models.Model):
     bus_number = models.PositiveIntegerField(null=False)
@@ -117,7 +123,7 @@ class BusRun(models.Model):
     previous_stop_index = models.PositiveIntegerField(blank=True, null=True, default=0)
     route = models.ForeignKey(
         Route,
-        related_name='bus_run', 
+        related_name='bus_run',
         on_delete=models.CASCADE,
     )
     school = models.ForeignKey(
@@ -129,6 +135,15 @@ class BusRun(models.Model):
 
     class Meta:
         ordering = ['start_time']
+
+
+class CachedLocation(models.Model):
+    query = models.CharField(max_length=150, unique=True)
+    address = models.CharField(max_length=256)
+    latitude = models.FloatField()
+    longitude = models.FloatField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
 
 class Student(models.Model):
     # first_name = models.CharField(max_length=30)
@@ -151,6 +166,7 @@ class Student(models.Model):
     )
     student_id = models.PositiveIntegerField(null=True, blank=True)
     phone_number = models.CharField(max_length=35, blank=True, null=True)
+
     # has_inrange_stop = models.BooleanField(default=False, blank=True)
 
     @property
