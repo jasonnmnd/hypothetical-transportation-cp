@@ -82,7 +82,7 @@ export const getNextStop = (routeId, onSuccess = () => {}) => (dispatch, getStat
     .then((res) => {
         dispatch({
             type: SET_NEXT_STOP,
-            payload: res,
+            payload: res.data,
         });
         onSuccess();
     })

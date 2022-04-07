@@ -40,26 +40,28 @@ function GeneralDriveStartPage(props) {
         if(props.currentRun.route != null){
             props.getNextStop(props.currentRun.route.id)
         }
+        setRouteId(NULL_OPTION);
+        setBusNum(null);
+        setIsTowardSchool({value: true, label: "Toward School"})
     }, [props.currentRun]);
 
 
     const startRun = (force = false) => {
+        console.log(isTowardSchool)
         props.startRun({
             route: routeId.value ? routeId.value : props.routes[0].id,
             bus_number: parseInt(busNum),
             going_towards_school: isTowardSchool.value,
             driver: props.driverId,
             force: force
-        })
+        });
     }
 
     const endRun = () => {
-        console.log("ENDING")
         props.endRun(props.currentRun.route.id)
         
     }
     const arrivedAtStop = () => {
-        console.log("NEXT STOP")
         props.reachStop(props.currentRun.route.id)
     }
 

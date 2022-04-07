@@ -17,6 +17,10 @@ function CurrentDriveSection(props) {
         setShowConfirm(true);
     }
 
+    const nextStopExists = () => {
+        return props.nextStop?.name != null
+    }
+
   return (
     <>
         <NextStopConfirmModal closeModal={() => setShowConfirm(false)} saveModal={props.arriveAtStop} stopAddress={props.nextStop?.location} show={showConfirm} />
@@ -26,7 +30,7 @@ function CurrentDriveSection(props) {
                 <Container className="container-main d-flex flex-column" style={{gap: "20px"}}>
                     <Card.Text><strong>Route: </strong> {props.busRun?.route?.name}</Card.Text>
                     <Card.Text><strong>Bus Number: </strong> {props.busRun?.bus_number}</Card.Text>
-                    <Card.Text><strong>Direction: </strong> {props.busRun?.is_towards_school ? "Toward School" : "Away From School"}</Card.Text>
+                    <Card.Text><strong>Direction: </strong> {props.busRun?.going_towards_school ? "Toward School" : "Away From School"}</Card.Text>
                 </Container>
             </Card.Body>
         </Card>
@@ -34,7 +38,7 @@ function CurrentDriveSection(props) {
             <Card.Header as="h5">Current Run Actions</Card.Header>
             <Card.Body>
                 <Container className="container-main d-flex flex-column" style={{gap: "20px"}}>
-                    <Button variant="yellowsubmit" onClick={onArriveAtStop} >Arrived at {props.nextStop?.name}</Button>
+                    {nextStopExists() ? <Button variant="yellowsubmit" onClick={onArriveAtStop} >Arrived at {props.nextStop?.name}</Button> : null}
                     <Button onClick={props.endRun}>End Bus Run</Button>
                 </Container>
             </Card.Body>

@@ -32,7 +32,7 @@ function NextStopConfirmModal(props){
                 <Modal.Footer>
                     <Container className='d-flex flex-row justify-content-center' style={{gap: "10px"}}>
                         <Button variant="yellowclose" onClick={props.closeModal}>Close</Button>
-                        <Button variant="yellowclose" onClick={() => props.saveModal()}>Confirm</Button>
+                        <Button variant="yellowclose" onClick={() => {props.saveModal(); props.closeModal();}}>Confirm</Button>
                     </Container>
                 </Modal.Footer>
         </Modal>  
