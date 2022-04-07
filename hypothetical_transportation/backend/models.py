@@ -125,7 +125,7 @@ class BusRun(models.Model):
         on_delete=models.CASCADE
     )
     start_time = models.DateTimeField(null=False, blank=False)
-
+    timeout = models.BooleanField(blank=True, default=False)
     class Meta:
         ordering = ['start_time']
 

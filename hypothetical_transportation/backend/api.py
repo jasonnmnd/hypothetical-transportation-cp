@@ -95,9 +95,11 @@ def duration_check(run: BusRun):
             )
                 # print(delta//3600)
             run.duration = time(3, 0, 0)
+            run.timeout = True
         else:
             run.duration = time(delta//3600, (delta%3600)//60, delta%60)
-        run.save(update_fields=['end_time', 'duration'])
+            run.timeout = False
+        run.save(update_fields=['end_time', 'duration', 'timeout'])
 
 
 def get_active_bus_for_bus_number(bus_number):
