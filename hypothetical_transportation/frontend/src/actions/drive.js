@@ -213,7 +213,7 @@ export const getActiveRuns = () => (dispatch, getState) => {
     .then((res) => {
         dispatch({
             type: MANY_RUN_SET,
-            payload: res,
+            payload: res.data,
           });
     })
     .catch((err) => {/*console.log(err);*/
@@ -268,37 +268,37 @@ export const getLog = (parameters) => (dispatch, getState) => {
   }
 
   export const getBusLocation = (busNum) => (dispatch, getState) => {
-    console.log(busNum)
-    let config = tokenConfigDrive(getState);
-    dispatch({
-        type: ADD_BUS_LOCATION,
-        payload: EXAMPLE_BUS_LOCATION_1,
+    
+    let config = tokenConfig(getState);
+    axios
+      .get(`/api/tranzit_traq?bus=/${busNum}`, config)
+      .then((res) => {
+        dispatch({
+            type: ADD_BUS_LOCATION,
+            payload: res.data,
+        });
+      })
+      .catch((err) => {/*console.log(err);*/
+        console.log(err)
     });
-    // axios
-    //   .get(`http://tranzit.colab.duke.edu:8000/get?bus=${busNum}`)
-    //   .then((res) => {
-        // dispatch({
-        //     type: ADD_BUS_LOCATION,
-        //     payload: res.data,
-        // });
-    //   })
-    //   .catch((err) => {/*console.log(err);*/
-    // });
-  
   }
 
 
   export const getBusLocations = (busNums) => (dispatch, getState) => {
-    console.log(busNums)
-    dispatch({
-        type: RESET_BUS_LOCATIONS,
-    });
+    let config = tokenConfigDrive(getState);
     busNums.forEach(busNum => {
-        console.log(busNum)
-        let config = tokenConfigDrive(getState);
-        dispatch({
-            type: ADD_BUS_LOCATION,
-            payload: EXAMPLE_BUS_LOCATION_1,
+        
+
+        axios
+        .get(`/api/tranzit_traq/?bus=${busNum}`, config)
+        .then((res) => {
+            dispatch({
+                type: ADD_BUS_LOCATION,
+                payload: res.data,
+            });
+        })
+        .catch((err) => {/*console.log(err);*/
+            console.log(err)
         });
     });
   }

@@ -11,6 +11,7 @@ import { getActiveRuns, getBusLocations } from '../../../actions/drive';
 import { EXAMPLE_ACTIVE_RUNS } from '../../../utils/drive';
 import MapComponent from '../../maps/MapComponent';
 import { InfoWindow } from '@react-google-maps/api';
+import getType from '../../../utils/user2';
 
 
 function GeneralBusMapPage(props) {
@@ -37,8 +38,19 @@ function GeneralBusMapPage(props) {
         return (
             <>
                 <h4>Bus {pinStuff.bus_number}</h4>
-                <h4>Driver: {pinStuff.driver.full_name}</h4>
-                <h4>Route: {pinStuff.route.name}</h4> {/* make link */}
+                <h5>Driver: 
+                    <Link to={`/${getType(props.user)}/user/${pinStuff.driver.id}?pageNum=1`}>
+                        {pinStuff.driver.full_name}
+                    </Link>
+                </h5>
+                <h5>Route: 
+                    <Link to={`/${getType(props.user)}/route/${pinStuff.route.id}?pageNum=1`}>
+                        {pinStuff.route.name}
+                    </Link>
+                </h5>
+                {/* <Link to={`/${getType(props.user)}/route/${pinStuff.route.id}?pageNum=1`}>
+                    <h4>Route: {pinStuff.route.name}</h4>
+                </Link> */}
             </>
             
         )
@@ -74,6 +86,9 @@ function GeneralBusMapPage(props) {
     <div>          
         <AdminHeader/>
         <Container className="container-main d-flex flex-column" style={{gap: "20px"}}>
+            <div className="shadow-sm p-3 mb-5 bg-white rounded d-flex flex-row justify-content-center">
+                <h1>Bus Map</h1>
+            </div>
             <MapComponent pinData={getPinData()} otherMapComponents={extraComponents}/>
         </Container>
     </div>
@@ -87,15 +102,16 @@ GeneralBusMapPage.propTypes = {
     busLocations: PropTypes.object
 }
 
-GeneralBusMapPage.defaultProps = {
-    activeRuns: EXAMPLE_ACTIVE_RUNS.results,
+// GeneralBusMapPage.defaultProps = {
+//     activeRuns: EXAMPLE_ACTIVE_RUNS.results,
     
-}
+// }
 
 
 const mapStateToProps = (state) => ({
     busLocations: state.drive.busLocations,
-    //activeRuns: state.drive.manyRuns.results
+    activeRuns: state.drive.manyRuns.results,
+    user: state.auth.user
 });
 
 export default connect(mapStateToProps, {getBusLocations, getActiveRuns})(GeneralBusMapPage)
