@@ -44,6 +44,9 @@ function GeneralAdminStudentDetails(props) {
 
   useEffect(() => {
     props.getStudentInfo(param.id);
+  }, []);
+  
+  useEffect(() => {
     setObj({...student, ["guardian"]:student.guardian.id,["school"]:student.school.id,["routes"]:student.routes?student.routes.id:null})
   }, [props.student]);
 
