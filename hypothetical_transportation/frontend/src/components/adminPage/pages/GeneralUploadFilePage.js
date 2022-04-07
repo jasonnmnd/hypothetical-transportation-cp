@@ -249,7 +249,7 @@ function GeneralUploadFilePage(props) {
                                                 </ul>
                                             <li><strong>phone_number: (mandatory only if email is included)</strong></li>
                                                 <ul>
-                                                    <li>if an email is provided for account creation, a phone number is mandatory</li>
+                                                    <li>field must be empty if student_email is empty</li>
                                                     <li>must be {"<="} 35 characters</li>
                                                     <li>field is not empty</li>
                                                 </ul>
