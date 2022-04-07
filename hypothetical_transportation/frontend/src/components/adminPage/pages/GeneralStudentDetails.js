@@ -47,6 +47,7 @@ function GeneralAdminStudentDetails(props) {
   }, []);
 
   useEffect(() => {
+      console.log(props.student)
     setObj({...student, ["guardian"]:student.guardian.id,["school"]:student.school.id,["routes"]:student.routes?student.routes.id:null})
   }, [props.student]);
 
@@ -142,7 +143,7 @@ function GeneralAdminStudentDetails(props) {
                 <Card as={Col} style={{padding: "0px"}}>
                     <Card.Header as="h5">Student Phone Number </Card.Header>
                     <Card.Body>
-                        <Card.Text>{student.phone_number==""? "No Phone Record Found":student.phone_number}</Card.Text>
+                        <Card.Text>{student.phone_number=="" || student.phone_number==null? "No Phone Record Found":student.phone_number}</Card.Text>
                     </Card.Body>
                 </Card>
             </Row>
