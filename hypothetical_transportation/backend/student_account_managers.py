@@ -15,7 +15,7 @@ def send_invite_email(student: Student):
                                                 longitude=None)
     user.address = None
     user.full_name = student.full_name
-    user.phone_number = student.guardian.phone_number
+    user.phone_number = student.phone_number
     if Group.objects.filter(name="Student").count() > 0:
         user.groups.add(Group.objects.get(name="Student"))
     user.linked_student = student
