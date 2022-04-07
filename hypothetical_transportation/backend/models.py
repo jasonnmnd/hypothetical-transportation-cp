@@ -1,9 +1,11 @@
+from email.policy import default
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinLengthValidator
 from django.contrib.postgres.fields import CICharField
 from django.conf import settings
 import datetime
+from .validators import validate_available_user_email
 from .geo_utils import get_straightline_distance, LEN_OF_MILE
 
 
@@ -21,6 +23,7 @@ class School(models.Model):
 
 class Route(models.Model):
     name = models.CharField(max_length=150, validators=[MinLengthValidator(1)])
+    has_active_run = models.BooleanField(default=False, null=False)
     description = models.TextField(blank=True)
     school = models.ForeignKey(
         School, related_name='routes',
@@ -49,13 +52,104 @@ class Stop(models.Model):
     pickup_time = models.TimeField(blank=True, default=datetime.time(9, 0, 0))
     dropoff_time = models.TimeField(blank=True, default=datetime.time(15, 0, 0))
 
+    # time_to_next_stop_when_pickup = models.TimeField(blank=True, default=datetime.time(9, 0, 0))
+    # time_to_next_stop_when_dropoff = models.TimeField(blank=True, default=datetime.time(9, 0, 0))
+
     class Meta:
         ordering = ['route', 'stop_number']
+
+
+class EstimatedTimeToNextStop(models.Model):
+    stop = models.ForeignKey(Stop, related_name='estimated_time_to_next_stop', on_delete=models.CASCADE)
+    seconds_when_pickup = models.PositiveIntegerField(blank=True, null=True)
+    seconds_when_dropoff = models.PositiveIntegerField(blank=True, null=True)
+
+
+class ActiveBusRun(models.Model):
+    bus_number = models.PositiveIntegerField(null=False)
+    driver = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name='active_bus_run',
+        on_delete=models.CASCADE,
+        unique=True,
+        null=False
+    )
+    going_towards_school = models.BooleanField(default=True, null=False)
+    previous_stop_index = models.PositiveIntegerField(
+        null=False)  # note: this is not a foreign key because all we need is the stop number
+    route = models.ForeignKey(Route, related_name='active_bus_run', on_delete=models.CASCADE, unique=True)
+    start_time = models.TimeField(blank=False)
+
+    class Meta:
+        ordering = ['bus_number']
+
+
+class Bus(models.Model):
+    bus_number = models.PositiveIntegerField(null=False)
+    latitude = models.FloatField(blank=False)
+    longitude = models.FloatField(blank=False)
+
+class TransitLog(models.Model):
+    bus_number = models.PositiveIntegerField(null=False)
+    driver = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name='transit_log',
+        on_delete=models.CASCADE,
+        unique=True,
+        null=False
+    )
+    duration = models.TimeField(blank=True)
+    end_time = models.TimeField(blank=True)
+    going_towards_school = models.BooleanField(default=True, null=False)
+    route = models.ForeignKey(Route, related_name='transit_log', on_delete=models.CASCADE, unique=True)
+    school = models.ForeignKey(School, related_name='transit_log', on_delete=models.CASCADE)
+    start_time = models.TimeField(null=False, blank=False)
+
+    class Meta:
+        ordering = ['start_time']
+
+
+class BusRun(models.Model):
+    bus_number = models.PositiveIntegerField(null=False)
+    driver = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name='bus_run',
+        on_delete=models.CASCADE,
+        null=False,
+    )
+    duration = models.TimeField(blank=True, null=True)
+    end_time = models.DateTimeField(blank=True, null=True)
+    going_towards_school = models.BooleanField(default=True, null=False)
+    previous_stop_index = models.PositiveIntegerField(blank=True, null=True, default=0)
+    route = models.ForeignKey(
+        Route,
+        related_name='bus_run',
+        on_delete=models.CASCADE,
+    )
+    school = models.ForeignKey(
+        School,
+        related_name='bus_run',
+        on_delete=models.CASCADE
+    )
+    start_time = models.DateTimeField(null=False, blank=False)
+    timeout = models.BooleanField(blank=True, default=False)
+    class Meta:
+        ordering = ['start_time']
+
+
+class CachedLocation(models.Model):
+    query = models.CharField(max_length=150, unique=True)
+    address = models.CharField(max_length=256, null=True)
+    latitude = models.FloatField(null=True)
+    longitude = models.FloatField(null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
 
 class Student(models.Model):
     # first_name = models.CharField(max_length=30)
     # last_name = models.CharField(max_length=30)
+    email = models.EmailField(max_length=255, unique=True, null=True, blank=True,
+                              validators=[validate_available_user_email])
     full_name = models.CharField(max_length=150, validators=[MinLengthValidator(1)])
     active = models.BooleanField(default=True)
     school = models.ForeignKey(
@@ -71,6 +165,7 @@ class Student(models.Model):
         on_delete=models.CASCADE
     )
     student_id = models.PositiveIntegerField(null=True, blank=True)
+    phone_number = models.CharField(max_length=35, blank=True, null=True)
 
     # has_inrange_stop = models.BooleanField(default=False, blank=True)
 

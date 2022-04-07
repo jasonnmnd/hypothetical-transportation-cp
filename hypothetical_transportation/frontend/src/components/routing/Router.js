@@ -38,6 +38,12 @@ import GeneralUploadDataPage from '../adminPage/pages/GeneralUploadDataPage';
 import GeneralUploadFilePage from '../adminPage/pages/GeneralUploadFilePage';
 import GeneralBulkImportSuccessPage from '../adminPage/pages/GeneralBulkImportSuccessPage';
 
+import StudentPage from '../studentPage/StudentPage';
+import GeneralDriveStartPage from '../adminPage/pages/GeneralDriveStartPage';
+import GeneralBusMapPage from '../adminPage/pages/GeneralBusMapPage';
+import GeneralBusLogPage from '../adminPage/pages/GeneralBusLogPage';
+import BusRunDetailPage from '../adminPage/pages/BusRunDetailPage';
+
 const Router = (props) => {
     return (
         <BrowserRouter>
@@ -127,6 +133,17 @@ const Router = (props) => {
           <Route exact path="/upload_data" element={<PrivateRoute><GeneralUploadDataPage/></PrivateRoute>}></Route>
           <Route exact path="/upload_data/success" element={<PrivateRoute><GeneralBulkImportSuccessPage/></PrivateRoute>}></Route>
           <Route exact path="/print/:route_id" element={<GeneralPrintableRoster/>}></Route>
+          <Route exact path="/drive/" element={<GeneralDriveStartPage/>}></Route>
+          <Route exact path="/bus/map" element={<GeneralBusMapPage/>}></Route>
+          <Route exact path="/bus/log/:filter/:id" element={<GeneralBusLogPage/>}></Route>
+          <Route exact path="/bus/log" element={<GeneralBusLogPage/>}></Route>
+          <Route exact path="/bus/run/:run_id" element={<BusRunDetailPage/>}></Route>
+          
+
+
+
+          {/* Student Routes */}
+          <Route exact path="/student/:student_id" element={<PrivateRoute><StudentPage /></PrivateRoute>}></Route>
         </Routes>
       </BrowserRouter>
     )

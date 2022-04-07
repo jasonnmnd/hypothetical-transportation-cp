@@ -20,6 +20,8 @@ import getType from '../../../utils/user2';
 import isBusDriver from '../../../utils/userBusDriver';
 import axios from 'axios';
 import config from '../../../utils/config';
+import { getRunByRoute } from '../../../actions/drive';
+import { getBusLocation } from '../../../actions/drive';
 
 function GeneralAdminRouteDetails(props) {
 
@@ -69,15 +71,29 @@ function GeneralAdminRouteDetails(props) {
     }
   }, [searchParams]);
 
+  useEffect(() => {
+    props.getRunByRoute(props.route.id)
+  }, [props.route]);
+
+  useEffect(() => {
+    props.getBusLocation(props.activeRun.bus_number)
+  }, [props.activeRun]);
+
+
+
+
+
   useEffect(()=>{
     setExtra({id: props.route.school.id,name: props.route.school.name, dropoff_time: props.route.school.bus_departure_time, pickup_time: props.route.school.bus_arrival_time, stop_number: 0})
     setPinData(getPinData());
-  },[props.students,props.route,props.stops]);
+  },[props.students,props.route,props.stops, props.busLocation]);
 
     const getPinData = () => {
         let pinData = getStudentsPinData();
         addSchoolPin(pinData, props.route.school, onSchoolClick)
         pinData = pinData.concat(getStopPinData());
+        pinData = pinData.concat(getBusPinData());
+        console.log(pinData)
         // console.log(pinData);
         return pinData;
     }
@@ -95,6 +111,56 @@ function GeneralAdminRouteDetails(props) {
                 pins: props.stops.map(stop => getStopPin(stop))
             },
         ]
+    }
+
+    const getRunPin = () => {
+
+        return {
+            ...props.activeRun, 
+            latitude: props.busLocation.lat, 
+            longitude: props.busLocation.lng, 
+        }
+    }
+
+    const getBusPinData = () => {
+        console.log(props)
+        if(props.activeRun.route?.id != props.route.id || props.busLocation?.lat == null || props.busLocation?.lng == null){
+            return []
+        }
+        console.log(getRunPin());
+        return [
+            {
+                iconColor: "green",
+                iconType: "stop",
+                markerProps: {
+                    onClick: onBusClick,
+                },
+                pins: [getRunPin()]
+            },
+        ]
+    }
+
+    const getBusInfoForWindow = (pinStuff) => {
+        return (
+            <>
+                <h4>Bus {pinStuff.bus_number}</h4>
+                <h5>Driver: 
+                    <Link to={`/${getType(props.user)}/user/${pinStuff.driver.id}?pageNum=1`}>
+                        {pinStuff.driver.full_name}
+                    </Link>
+                </h5>
+                <h5>Route: 
+                    <Link to={`/${getType(props.user)}/route/${pinStuff.route.id}?pageNum=1`}>
+                        {pinStuff.route.name}
+                    </Link>
+                </h5>
+            </>
+            
+        )
+    }
+
+    const onBusClick = (pinStuff, position) => {
+        createInfoWindow(position, getBusInfoForWindow(pinStuff))
     }
 
     const onStopClick = (pinStuff, position) => {
@@ -233,7 +299,17 @@ function GeneralAdminRouteDetails(props) {
                         </Link>
                     </Col>
                 </Row>
-            </Container></>: 
+            </Container>
+            <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
+                <Row>
+                    <Col>
+                        <Link to={`/bus/log/route/${props.route.id}`}>
+                            <Button variant="yellowLong" size="lg">Bus Log For This Route</Button>
+                        </Link>
+                    </Col>
+                </Row>
+            </Container>
+            </>: 
             <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
                 <Row>
                     <Col>
@@ -241,7 +317,14 @@ function GeneralAdminRouteDetails(props) {
                             <Button variant="yellowLong" size="lg">Print Route Roster</Button>
                         </Link>
                     </Col>
-                    </Row></Container>
+                    {/* <Col>
+                        <Link to={`/print/${props.route.id}`} target="_blank">
+                            <Button variant="yellowLong" size="lg">Start Drive</Button>
+                        </Link>
+                    </Col> */}
+                </Row>
+            </Container>
+            
         }
         
         <Row style={{gap: "10px"}}>
@@ -311,7 +394,7 @@ function GeneralAdminRouteDetails(props) {
                     <Card.Header as="h5">Map View of School, Students, and Stops</Card.Header>
                     <Container className='d-flex flex-column justify-content-center' style={{marginTop: "20px"}}>
                         <IconLegend legendType='routeDetails'></IconLegend>
-                        <Card.Body>
+                        <Card.Body  style={{padding: "0px",marginTop: "20px",marginBottom: "20px"}}>
                             {props.route.school.id===-1?
                                 <></>:
                                 <MapComponent pinData={pinData} otherMapComponents={extraComponents} center={{lng: Number(props.route.school.longitude),lat: Number(props.route.school.latitude)}}></MapComponent>}
@@ -346,7 +429,9 @@ GeneralAdminRouteDetails.propTypes = {
     getRouteInfo: PropTypes.func.isRequired,
     getStopByRoute: PropTypes.func.isRequired,
     getStudents: PropTypes.func.isRequired,
-    deleteRoute: PropTypes.func.isRequired
+    deleteRoute: PropTypes.func.isRequired,
+    getRunByRoute: PropTypes.func.isRequired,
+    getBusLocation: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = (state) => ({
@@ -357,8 +442,10 @@ const mapStateToProps = (state) => ({
   students: state.students.students.results,
   stops:state.stop.stops.results,
   studentCount: state.students.students.count,
-  stopCount: state.stop.stops.count
+  stopCount: state.stop.stops.count,
+  activeRun: state.drive.currentRun,
+  busLocation: state.drive.busLocation
 });
 
-export default connect(mapStateToProps, {getRouteInfo, getStudents, deleteRoute,getStopByRoute})(GeneralAdminRouteDetails)
+export default connect(mapStateToProps, {getRouteInfo, getStudents, deleteRoute,getStopByRoute, getRunByRoute, getBusLocation})(GeneralAdminRouteDetails)
 

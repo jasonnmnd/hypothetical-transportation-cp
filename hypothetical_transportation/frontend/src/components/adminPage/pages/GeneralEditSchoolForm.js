@@ -266,7 +266,7 @@ function GeneralEditSchoolForm(props) {
 
                         <Form.Group className="mb-3">
                             <Form.Label as="h5">Location Assistance</Form.Label>
-                            <AssistedLocationMap draggable={false} address={address} coord={coord} setAddress={setAddress} setCoord={setCoord}></AssistedLocationMap>
+                            <AssistedLocationMap draggable={getType(props.user)=="staff" ? false:true} address={address} coord={coord} setAddress={setAddress} setCoord={setCoord}></AssistedLocationMap>
                         </Form.Group>
 
                         <Button variant="yellowsubmit" type="submit">

@@ -23,7 +23,11 @@ function GeneralAdminTableView( props ) {
     const handleViewClick = (d) => {
         //route to /props.title?somethingid=id => props.title determins routing to student, route, school, user
         //console.log(d)
-        if (props.tableType == 'user') {
+        if (props.tableType == 'user' && d.groups[0].id==5) {
+            nav(`/${getType(props.user)}/student/${d.linked_student}`);
+        } 
+
+        else if (props.tableType == 'user' && d.groups[0].id!==5) {
             nav(`/${getType(props.user)}/user/${d.id}`);
         } 
 
@@ -51,25 +55,32 @@ function GeneralAdminTableView( props ) {
 
     const studentLegend = [
         {
-            key: "No Route: ",
-            color: "🟥    "//❤️
+            key: " No Route ",
+            color: "red",
+            
         },
         {
-            key: "No Stops in Range: ",
-            color: "🟦    "//💙
+            key: " No Stops in Range ",
+            color: "blue",
         },
     ]
 
     const routeLegend = [
         {
-            key: "Incomplete Route: ",
-            color: "🟥    "//❤️
-        }
+            key: " Incomplete Route ",
+            color: "red",
+        },
+        {
+            key: " Route In Progress ",
+            color: "blue",
+        },
     ]
 
     if(props.totalCount == 0){
         return (
             <div className="d-flex justify-content-space-between flex-column" style={{gap: "10px"}}>
+                {props.search != null && props.search != "stop" && props.search != undefined ? <Button onClick={toggleSort} variant="yellowToggle">Search Options {showSort ? "▲" : "▼"}</Button> : <></>}
+                {showSort ? (props.search != null && props.search != "stop" && props.search != undefined ? <SearchBar buttons={getFilterOptions(props.tableType)} sortBy={getSortOptions(props.tableType)} search={props.search}></SearchBar> : null) : <></>}
                 <h1>NO RESULTS</h1>
             </div>
         )
@@ -97,7 +108,8 @@ GeneralAdminTableView.propTypes = {
     extraRow: PropTypes.object,
     search: PropTypes.string,
     pagination: PropTypes.string,
-    totalCount: PropTypes.number
+    totalCount: PropTypes.number,
+    action: PropTypes.func
 }
 
 GeneralAdminTableView.defaultProps = {

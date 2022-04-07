@@ -7,6 +7,15 @@ import PropTypes, { string } from 'prop-types';
 import { connect } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import getType from '../../../utils/user2';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import InfoIcon from '@mui/icons-material/Info';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
+
 
 function GeneralUploadFilePage(props) {
     const navigate = useNavigate();
@@ -66,6 +75,7 @@ function GeneralUploadFilePage(props) {
         }
         
     };
+    
 
     useEffect(()=>{
         // console.log(typeof(userRes))
@@ -97,6 +107,24 @@ function GeneralUploadFilePage(props) {
     },[userRes,studentRes])
 
 
+    const [userOpen, setUserOpen] = useState(false);
+    const [studentOpen, setStudentOpen] = useState(false);
+
+    const handleUserClickOpen = () => {
+        setUserOpen(true);
+    };
+
+    const handleUserClose = () => {
+        setUserOpen(false);
+    };
+
+    const handleStudentClickOpen = () => {
+        setStudentOpen(true);
+    };
+
+    const handleStudentClose = () => {
+        setStudentOpen(false);
+    };
 
 
     return (
@@ -105,14 +133,136 @@ function GeneralUploadFilePage(props) {
             {getType(props.user) == "staff" || getType(props.user) == "admin" ?
             <Container className="container-main" style={{width: "50%"}} >
                 {!loading?<Form className="shadow-lg p-3 mb-5 bg-white rounded"  noValidate onSubmit={handleOnSubmit}>
-                    <Form.Label as="h5">Select USER CSV file</Form.Label>
+                    <Form.Label as="h5">
+                        Select USER CSV file
+
+                            <Tooltip title="Click to view documentation">
+                                <IconButton onClick={handleUserClickOpen}>
+                                    <InfoIcon fontSize="medium" />
+                                </IconButton>
+                            </Tooltip>
+
+                            <Dialog
+                                open={userOpen}
+                                onClose={handleUserClose}
+                                aria-labelledby="alert-dialog-title"
+                                aria-describedby="alert-dialog-description"
+                            >
+                                <DialogTitle id="alert-dialog-title">
+                                {"Import Users Guide"}
+                                </DialogTitle>
+                                <DialogContent>
+                                <DialogContentText id="alert-dialog-description">
+                                    When importing data for users, please make sure to follow this format:
+                                    <div>
+                                        <ul>
+                                            <li><strong>email:</strong></li>
+                                                <ul>
+                                                    <li>must be {"<="} 254 characters</li>
+                                                    <li>must be a valid address as per the addr-spec of RFC 5322, Section 3.4.1</li>
+                                                    <li>field is not empty</li>
+                                                </ul>
+                                            <li><strong>name:</strong></li>
+                                                <ul>
+                                                    <li>must be {"<="} 150 characters</li>
+                                                    <li>field is not empty</li>
+                                                    <li>some text field containing both a first and last name with potential suffixes (eg Jr, Sr, III, etc)</li>
+                                                </ul>
+                                            <li><strong>address:</strong></li>
+                                                <ul>
+                                                    <li>must be {"<="} 150 characters</li>
+                                                    <li>some text that is a Complete Address as per USPS Standard 602.1.4</li>
+                                                    <li>field is not empty</li>
+                                                </ul>
+                                            <li><strong>phone_number:</strong></li>
+                                                <ul>
+                                                    <li>must be {"<="} 35 characters</li>
+                                                    <li>field is not empty</li>
+                                                </ul>
+                                        </ul>
+                                    </div>
+                                </DialogContentText>
+                                </DialogContent>
+                                    <DialogActions>
+                                        <Button variant='yellow' onClick={handleUserClose}>Close</Button>
+                                    </DialogActions>
+                            </Dialog>
+
+                    </Form.Label>
                     <Form.Control
                         type={"file"}
                         id={"csvFileInput"}
                         accept={".csv"}
                         onChange={handleChangeUser}
                     />
-                    <Form.Label as="h5">Select STUDENT CSV file</Form.Label>
+                    <Form.Label as="h5">
+                        Select STUDENT CSV file
+
+                            <Tooltip title="Click to view documentation">
+                                <IconButton onClick={handleStudentClickOpen}>
+                                    <InfoIcon fontSize="medium" />
+                                </IconButton>
+                            </Tooltip>
+
+                            <Dialog
+                                open={studentOpen}
+                                onClose={handleStudentClose}
+                                aria-labelledby="alert-dialog-title"
+                                aria-describedby="alert-dialog-description"
+                            >
+                                <DialogTitle id="alert-dialog-title">
+                                {"Import Students Guide"}
+                                </DialogTitle>
+                                <DialogContent>
+                                <DialogContentText id="alert-dialog-description">
+                                    When importing data for students, please make sure to follow this format:
+                                    <div>
+                                        <ul>
+                                            <li><strong>name:</strong></li>
+                                                <ul>
+                                                    <li>must be {"<="} 150 characters</li>
+                                                    <li>field is not empty</li>
+                                                    <li>some text field containing both a first and last name with potential suffixes (eg Jr, Sr, III, etc)</li>
+                                                </ul>
+                                            <li><strong>parent_email:</strong></li>
+                                                <ul>
+                                                    <li><li>must be {"<="} 254 characters as per RFC 5321, Section 4.5.3.1.3</li></li>
+                                                    <li>must be a valid address as per the addr-spec of RFC 5322, Section 3.4.1</li>
+                                                    <li>field is not empty</li>
+                                                </ul>
+                                            <li><strong>student_id:</strong></li>
+                                                <ul>
+                                                    <li>some non-zero, positive (but less than 2147483647) number. As this is an optional field, if there is no desired student id the field is left empty.</li>
+                                                </ul>
+                                            <li><strong>school_name:</strong></li>
+                                                <ul>
+                                                    <li>must be {"<="} 150 characters</li>
+                                                    <li>school name must case-insensitively and whitespace-insensitively match an existing school name, or else the record will be rejected with an appropriate error message</li>
+                                                    <li>field is not empty</li>
+                                                </ul>
+                                            <li><strong>student_email: (optional)</strong></li>
+                                                <ul>
+                                                    <li>adding an email will kick off account creation with the student email</li>
+                                                    <li>must be {"<="} 254 characters</li>
+                                                    <li>must be a valid address as per the addr-spec of RFC 5322, Section 3.4.1</li>
+                                                    <li>field is not empty</li>
+                                                </ul>
+                                            <li><strong>phone_number: (mandatory only if email is included)</strong></li>
+                                                <ul>
+                                                    <li>field must be empty if student_email is empty</li>
+                                                    <li>must be {"<="} 35 characters</li>
+                                                    <li>field is not empty</li>
+                                                </ul>
+                                        </ul>
+                                    </div>
+                                </DialogContentText>
+                                </DialogContent>
+                                    <DialogActions>
+                                        <Button variant='yellow' onClick={handleStudentClose}>Close</Button>
+                                    </DialogActions>
+                            </Dialog>
+
+                    </Form.Label>
                     <Form.Control
                         type={"file"}
                         id={"csvFileInput"}

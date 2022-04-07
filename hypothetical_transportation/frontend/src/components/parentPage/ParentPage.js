@@ -11,6 +11,7 @@ import GeneralParentTableView from "./views/GeneralParentTableView";
 import { Container, Row, Col } from 'react-bootstrap';
 import GeneralAdminTableView from "../adminPage/components/views/GeneralAdminTableView";
 import getType from "../../utils/user2";
+
 function ParentPage(props) {
 
   const title = "Students"
