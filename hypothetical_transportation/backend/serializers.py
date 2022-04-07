@@ -6,6 +6,7 @@ from django.db.models import Q
 from rest_framework import serializers
 from .models import Route, School, Student, Stop, ActiveBusRun, TransitLog, BusRun, EstimatedTimeToNextStop
 from geopy.geocoders import Nominatim, GoogleV3
+from .custom_geocoder import CachedGoogleV3
 from datetime import datetime
 from .permissions import is_admin, is_school_staff, is_guardian, is_student
 from .student_account_managers import sync_student_account, send_invite_email, sync_parent_changes_to_student_account, \
@@ -299,7 +300,7 @@ class LoadStudentSerializerStrict(LoadStudentSerializer):
 class LoadUserSerializer(serializers.ModelSerializer):
     def validate_address(self, value):
         # TODO: Uncomment to use paid geolocator API
-        geolocator = GoogleV3(api_key="AIzaSyDsyPs-pIVKGJiy7EVy8aKebN5zg515BCs")
+        geolocator = CachedGoogleV3(api_key="AIzaSyDsyPs-pIVKGJiy7EVy8aKebN5zg515BCs")
         # geolocator = Nominatim(user_agent="bulk import validator")
         location = geolocator.geocode(value)
         if not location or not location.latitude or not location.longitude:

@@ -39,7 +39,7 @@ function CurrentDriveSection(props) {
             <Card.Body>
                 <Container className="container-main d-flex flex-column" style={{gap: "20px"}}>
                     {nextStopExists() ? <Button variant="yellowsubmit" onClick={onArriveAtStop} >Arrived at {props.nextStop?.name}</Button> : null}
-                    <Button onClick={props.endRun}>End Bus Run</Button>
+                    <Button variant="redrun" onClick={props.endRun}>End Bus Run</Button>
                 </Container>
             </Card.Body>
         </Card>
