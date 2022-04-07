@@ -76,40 +76,57 @@ function GeneralAdminSchoolDetails(props) {
       <Container className="container-main d-flex flex-column" style={{gap: "20px"}}>
       {isAdmin(props.user) ? <>
         <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
-            <Row>
-              <Col>
-                <Link to={`/${getType(props.user)}/edit/school/${props.school.id}`}>
-                  <Button variant="yellowLong" size="lg">Edit School</Button>
-                </Link>
-              </Col>
-              {isSchoolStaff(props.user) ? 
-              <></>
-              :
-              <Col>
-                <Button variant="yellowLong" size="lg" onClick={() => {
-                  setOpenModal(true);
-                }}>Delete School</Button>
-              </Col>
-              }
+          <Row>
+            <Col>
+              <Link to={`/${getType(props.user)}/edit/school/${props.school.id}`}>
+                <Button variant="yellowLong" size="lg">Edit School</Button>
+              </Link>
+            </Col>
+            {isSchoolStaff(props.user) ? 
+            <></>
+            :
+            <Col>
+              <Button variant="yellowLong" size="lg" onClick={() => {
+                setOpenModal(true);
+              }}>Delete School</Button>
+            </Col>
+            }
 
-            </Row>
-            </Container>
-            <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
-            <Row>
-              <Col>
-                <Link to={`/${getType(props.user)}/route/plan/${props.school.id}?view=0&create=true`}>
-                  <Button variant="yellowLong" size="lg">New/Edit Route for this School</Button>
-                </Link>
+          </Row>
+        </Container>
+        <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
+          <Row>
+            <Col>
+              <Link to={`/${getType(props.user)}/route/plan/${props.school.id}?view=0&create=true`}>
+                <Button variant="yellowLong" size="lg">New/Edit Route for this School</Button>
+              </Link>
 
-              </Col>
+            </Col>
 
-              <Col>
-                <Link to={`/${getType(props.user)}/school_email/${props.school.id}`}>
-                  <Button variant="yellowLong" size="lg">Send School-wide Email</Button>
-                </Link>
-              </Col>
-                
-            </Row>
+            <Col>
+              <Link to={`/${getType(props.user)}/school_email/${props.school.id}`}>
+                <Button variant="yellowLong" size="lg">Send School-wide Email</Button>
+              </Link>
+            </Col>
+              
+          </Row>
+        </Container>
+        <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
+          <Row>
+            <Col>
+              <Link to={`/bus/map/?school=${props.school.id}`}>
+                <Button variant="yellowLong" size="lg">Active Bus Map</Button>
+              </Link>
+
+            </Col>
+
+            <Col>
+              <Link to={`/bus/log/school/${props.school.id}`}>
+                <Button variant="yellowLong" size="lg">Bus Log For This School</Button>
+              </Link>
+            </Col>
+              
+          </Row>
         </Container>
         </> : <></>}
         <Row  style={{gap: "10px"}}> 

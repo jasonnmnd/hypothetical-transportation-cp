@@ -17,6 +17,13 @@ function BusRunDetailPage(props) {
     props.getRunByRunId(param.run_id)
   }, []);
 
+  const getDurationText = () => {
+    if(props.currentRun.end_time == null){
+        return "Ongoing";
+    }  
+    return props.currentRun.duration
+  }
+
   if(props.currentRun == null || props.currentRun.bus_number == null){
       return <Header></Header>
   }
@@ -83,8 +90,9 @@ function BusRunDetailPage(props) {
                 <Card as={Col} style={{padding: "0px"}}>
                     <Card.Header as="h5">Timing Details </Card.Header>
                     <Card.Body>
-                        <Card.Text>{props.currentRun.start_time}</Card.Text>
-                        <Card.Text>{props.currentRun.duration}</Card.Text>
+                        <Card.Text><strong>Start Time:</strong> {props.currentRun.start_time}</Card.Text>
+                        <Card.Text><strong>Duration:</strong> {getDurationText()}</Card.Text>
+                        {props.currentRun.end_time ? <Card.Text><strong>End Time:</strong> {props.currentRun.end_time}</Card.Text> : null}
                     </Card.Body>
                 </Card>
                 
