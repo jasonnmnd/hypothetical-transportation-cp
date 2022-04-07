@@ -1,9 +1,12 @@
 
+from turtle import update
 from urllib import response
 import requests, json
 import os
 from datetime import time, datetime
-from .models import School, Route, Stop
+
+from .serializers import EstimatedTimeToNextStopSerializer
+from .models import EstimatedTimeToNextStop, School, Route, Stop
 
 MAX_STOPS_IN_ONE_CALL = 1
 
@@ -31,6 +34,35 @@ def sec_to_datetime_h_m(seconds: int) -> datetime:
     if seconds % 60 > 0:
         m = m + 1
     return time(h, m)
+
+
+def update_estimated_time_to_next_stop(stop: Stop, seconds_when_pickup: int, seconds_when_dropoff: int) -> EstimatedTimeToNextStop:
+    print("reached")
+    print(stop)
+    print(seconds_when_pickup)
+    print(seconds_when_dropoff)
+    try:
+        print("trying")
+        instance = EstimatedTimeToNextStop.objects.get(stop=stop)
+        instance.seconds_when_pickup = seconds_when_pickup
+        instance.seconds_when_dropoff = seconds_when_dropoff
+        instance.save(update_fields=['seconds_when_pickup', 'seconds_when_dropoff'])
+        print("bleh")
+
+    except:
+        print("caught")
+        data = {}
+        data['stop'] = stop.id
+        data['seconds_when_pickup'] = seconds_when_pickup
+        data['seconds_when_dropoff'] = seconds_when_dropoff
+        print(data)
+        serializer = EstimatedTimeToNextStopSerializer(data=data)
+        print("hi hello")
+        if serializer.is_valid():
+            print("blah")
+            serializer.save()
+        else:
+           print(serializer.errors)
 
 
 def distance_matrix_api(matrix: list) -> json:
@@ -150,10 +182,14 @@ def update_bus_times_for_stops_related_to_stop(stop: Stop):
         pickup_times.append(time_in_day)
         
     stop_num = 0
+    print(asc_times)
     for stop in stops:
         stop.pickup_time = pickup_times[stop_num]
         stop.dropoff_time = dropoff_times[stop_num]
         stop.save(update_fields=['pickup_time', 'dropoff_time'])
+        
+        update_estimated_time_to_next_stop(stop, desc_times[stop_num], asc_times[stop_num])
+        
         stop_num = stop_num + 1
 
     return response

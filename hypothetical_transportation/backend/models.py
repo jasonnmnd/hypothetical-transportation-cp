@@ -48,10 +48,18 @@ class Stop(models.Model):
     stop_number = models.PositiveIntegerField(null=False)
     pickup_time = models.TimeField(blank=True, default=datetime.time(9, 0, 0))
     dropoff_time = models.TimeField(blank=True, default=datetime.time(15, 0, 0))
+    # time_to_next_stop_when_pickup = models.TimeField(blank=True, default=datetime.time(9, 0, 0))
+    # time_to_next_stop_when_dropoff = models.TimeField(blank=True, default=datetime.time(9, 0, 0))
+    
 
     class Meta:
         ordering = ['route', 'stop_number']
 
+
+class EstimatedTimeToNextStop(models.Model):
+    stop = models.ForeignKey(Stop, related_name='estimated_time_to_next_stop', on_delete=models.CASCADE)
+    seconds_when_pickup = models.PositiveIntegerField(blank=True, null=True)
+    seconds_when_dropoff = models.PositiveIntegerField(blank=True, null=True)
 
 class ActiveBusRun(models.Model):
     bus_number = models.PositiveIntegerField(null=False)

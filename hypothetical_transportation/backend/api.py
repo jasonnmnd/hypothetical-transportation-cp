@@ -431,7 +431,7 @@ class BusRunViewSet(viewsets.ModelViewSet):
                     next_stop = Stop.objects.filter(route=run.route).order_by('-stop_number')[run.previous_stop_index]
                 else:
                     if run.previous_stop_index == len(Stop.objects.filter(route=run.route))-1:
-                        return Response("Current stop is the second to last stop on the route", status.HTTP_404_NOT_FOUND)
+                        return Response("Current stop is the second to last stop on the route", status.HTTP_200_OK)
                     next_stop = Stop.objects.filter(route=run.route).order_by('stop_number')[run.previous_stop_index]
                 return Response(StopSerializer(instance=next_stop).data, status.HTTP_200_OK)
             except:
