@@ -14,10 +14,22 @@ function GeneralTable( props ) {
     }, obj);
     return res;
   }
+
+  const getColor = (rowData)=>{
+    if(props.tableType=='route'){
+      if(!rowData.is_complete) return "rgb(255, 136, 136)"
+    }
+
+    if(props.tableType=='student'){
+      if(rowData["routes"] === null) return "rgb(255, 136, 136)"
+      if(!rowData.has_inrange_stop) return "rgb(87, 202, 255)"
+    }
+    return ""
+  }
   
   const addTableRow = (rowData, extra) => {
     return (
-        <tr className={"tr-clickable"} onClick={() => extra===true?props.extraAction(rowData):props.action(rowData)} style={{backgroundColor: !rowData.is_complete && props.tableType=='route' ? "rgb(255, 136, 136)" : (rowData["routes"] === null ? "rgb(255, 136, 136)" : (!rowData.has_inrange_stop && props.tableType=='student' ? "rgb(87, 202, 255)" : "" ))}}>
+        <tr className={"tr-clickable"} onClick={() => extra===true?props.extraAction(rowData):props.action(rowData)} style={{backgroundColor: getColor(rowData)}}>
             {
                 props.columnNames.map((columnInfo, index) => {
                     let cellData = getValueFromPath(columnInfo.dataPath, rowData)
