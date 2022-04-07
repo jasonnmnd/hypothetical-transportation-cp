@@ -28,14 +28,20 @@ function StartDriveSection(props) {
             return {value: props.routes[0].id, label: props.routes[0].name}
         }
         return props.routeId;
+        
     }
 
+    const isBusNumNotValid = () => {
+        return props.busNum == null || isNaN(parseInt(props.busNum))
+    }
 
     if(props.routes.length == 0) {
         return (
                 <Container className="container-main d-flex flex-column" style={{gap: "20px"}}>
                     Please ask your adminstrator to create some routes for this school system.
                 </Container>
+
+                
         )
     }
   
@@ -48,19 +54,19 @@ function StartDriveSection(props) {
                     <Form.Group as={Col} controlId="formGridID">
                         <Form.Label as="h5">Bus Number</Form.Label>
                         <Form.Control 
-                            type="text"
+                            required
+                            type="number"
                             placeholder="Enter A Bus Number Between 8000-8999 ..." 
                             value={props.busNum == null ? "" : props.busNum}
                             onChange={(e)=> props.setBusNum(e.target.value == "" ? null : e.target.value) }
                         />
-                        <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                        <Form.Control.Feedback type="invalid">Please provide a valid ID.</Form.Control.Feedback>
+                        <Form.Control.Feedback type="invalid">Please provide a valid integer.</Form.Control.Feedback>
                     </Form.Group>
                     <Form.Group as={Col} controlId="formGridAddress4">
                         <Form.Label as="h5">Direction</Form.Label>
                         <Select  options={getDirectionOptions()} value={props.isTowardSchool} onChange={props.setIsTowardSchool}/>
                     </Form.Group>
-                    <Button variant="yellowsubmit" onClick={props.startRun}>
+                    <Button variant="yellowsubmit" onClick={props.startRun} disabled={props.busNum == null}>
                                 Start Drive
                     </Button>
                 </Form>
