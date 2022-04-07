@@ -9,6 +9,8 @@ import { getStudentInfo, deleteStudent } from '../../../actions/students';
 import { Container, Card, Button, Row, Col, Alert, ButtonGroup } from 'react-bootstrap';
 import isAdmin from '../../../utils/user';
 import getType from '../../../utils/user2';
+import isSchoolStaff from '../../../utils/userSchoolStaff';
+import { updateStudent } from '../../../actions/students';
 
 function GeneralAdminStudentDetails(props) {
   const navigate = useNavigate();
@@ -16,22 +18,42 @@ function GeneralAdminStudentDetails(props) {
 
   const student = props.student
   const [openModal, setOpenModal] = useState(false);
+  const [openStudentRecordDeleteModal, setOpenStudentRecordDeleteModal] = useState(false);
 
-  const handleConfirmDelete = () => {
+  const emptyStudent = {
+    student_id: null,
+    full_name: "",
+    guardian: "",
+    routes: "",
+    school: "",
+    email: null,
+    phone_number: "",
+  }
+
+  const [obj, setObj] = useState(emptyStudent)
+
+  const handleConfirmDeleteRecord = () => {
     props.deleteStudent(param.id);
+    navigate(`/${getType(props.user)}/students/`)
+  }
+
+  const handleConfirmDeleteAccount = () => {
+    props.updateStudent({...obj, ["email"]:null, ["phone_number"]:""}, param.id);
     navigate(`/${getType(props.user)}/students/`)
   }
 
   useEffect(() => {
     props.getStudentInfo(param.id);
-  }, []);
+    setObj({...student, ["guardian"]:student.guardian.id,["school"]:student.school.id,["routes"]:student.routes?student.routes.id:null})
+  }, [props.student]);
 
   return (
     <div>  
-        <div>{openModal && <DeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDelete}/>}</div>
+        <div>{openModal && <DeleteModal closeModal={setOpenModal} handleConfirmDelete={handleConfirmDeleteRecord}/>}</div>
+        <div>{openStudentRecordDeleteModal && <DeleteModal closeModal={setOpenStudentRecordDeleteModal} handleConfirmDelete={handleConfirmDeleteAccount}/>}</div>
         <Header></Header>
         <Container className="container-main d-flex flex-column" style={{gap: "20px"}}>
-            {isAdmin(props.user)?
+            {isAdmin(props.user) || isSchoolStaff(props.user)?
             <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
                 <Row>
                     <Col>
@@ -43,11 +65,25 @@ function GeneralAdminStudentDetails(props) {
                     <Col>
                         <Button variant="yellowLong" size="lg" onClick={() => {
                         setOpenModal(true);
-                        }}>Delete Student</Button>
+                        }}>Delete Student Record</Button>
                     </Col>
                 </Row>
             </Container>
             :<></>}
+
+            {(isAdmin(props.user) || isSchoolStaff(props.user)) && student.email != null ?
+            <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
+                <Row>
+                    <Col>
+                        <Button variant="yellowLong" size="lg" onClick={() => {
+                        setOpenStudentRecordDeleteModal(true);
+                        }}>Delete Student Account</Button>
+                    </Col>
+                </Row>
+            </Container>
+            :
+            <></>
+            }
 
             <Row  style={{gap: "10px"}}>
                 <Card as={Col} style={{padding: "0px"}}>
@@ -181,4 +217,4 @@ const mapStateToProps = (state) => ({
   student: state.students.viewedStudent
 });
 
-export default connect(mapStateToProps, {getStudentInfo, deleteStudent})(GeneralAdminStudentDetails)
+export default connect(mapStateToProps, {getStudentInfo, deleteStudent, updateStudent})(GeneralAdminStudentDetails)
