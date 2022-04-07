@@ -449,7 +449,8 @@ class BusRunViewSet(viewsets.ModelViewSet):
                 run.save(update_fields=['previous_stop_index'])
                 return self.next_stop(self, pk=pk)
                 # return Response(FormatBusRunSerializer(instance=run).data, status.HTTP_204_NO_CONTENT)
-            return end_run_now(run)
+            # return end_run_now(run)
+            return Response("There are no more stops to reach on this route", status.HTTP_200_OK)
         except:
             return Response("This run is no longer active", status.HTTP_404_NOT_FOUND)
 
