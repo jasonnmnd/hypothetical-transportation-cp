@@ -97,8 +97,12 @@ class UserViewSet(viewsets.ModelViewSet):
     def perform_destroy(self, instance):
         if is_school_staff(self.request.user):
             user_to_delete = get_user_model().objects.get(email=instance)
-            if not is_guardian(user_to_delete):
+            if is_student(
+                    user_to_delete) and user_to_delete.linked_student.school not in self.request.user.managed_schools.all():
+                raise serializers.ValidationError("Target student login account is outside of your managed schools")
+            if not is_guardian(user_to_delete) and not is_student(user_to_delete):
                 raise serializers.ValidationError("Target account to delete is privileged!")
+            # Won't be checked anymore due to exclusion of privileged accounts and students
             for student in user_to_delete.students.all():
                 if student.school not in self.request.user.managed_schools.all():
                     raise serializers.ValidationError("User has a student outside of your managed schools")
@@ -496,7 +500,8 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
                                              dup != user]
             if len(student_email_duplication[user.email]) > 0:
                 current_user_email_duplicates.extend(
-                    [self.student_to_user(student).get_representation() for student in student_email_duplication[user.email]])
+                    [self.student_to_user(student).get_representation() for student in
+                     student_email_duplication[user.email]])
             is_valid &= len(current_user_email_duplicates) == 0
             user_email_errors = serializer_errors["users"][user_dex].get("email", [])
 
@@ -514,7 +519,8 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
             current_name_duplicates = [dup.get_representation() for dup in user_name_duplication[user.full_name] if
                                        dup != user]
             current_name_duplicates.extend(
-                [self.student_to_user(student).get_representation() for student in student_name_duplication[user.full_name]])
+                [self.student_to_user(student).get_representation() for student in
+                 student_name_duplication[user.full_name]])
 
             user_object_response["full_name"] = self.get_val_field_response_format(user.full_name,
                                                                                    serializer_errors["users"][
@@ -542,7 +548,8 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
             else:
                 # Do a database search due to missed hit
                 current_student_email_duplicates.extend(
-                    [self.user_to_student(user).get_representation() for user in self.get_repr_of_users_with_email(student.email)])
+                    [self.user_to_student(user).get_representation() for user in
+                     self.get_repr_of_users_with_email(student.email)])
 
             student_email_errors = serializer_errors["students"][student_dex].get("email", [])
 
