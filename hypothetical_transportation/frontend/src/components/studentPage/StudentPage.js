@@ -22,7 +22,7 @@ function StudentPage(props) {
   const [extraComponents, setExtraComponents] = useState(null);
 
   useEffect(() => {
-    props.getStudentInfo(param.student_id);
+    props.getStudentInfo(props.user.linked_student);
   }, []);
 
 
@@ -34,8 +34,8 @@ function StudentPage(props) {
     useEffect(() => {
         if(searchParams.get(`pageNum`) != null){
             let paramsToSend = Object.fromEntries([...searchParams]);
-            paramsToSend.student = param.student_id;
-            props.getInRangeStop(param.student_id, paramsToSend);
+            paramsToSend.student = props.user.linked_student;
+            props.getInRangeStop(props.user.linked_student, paramsToSend);
         }
         else{
             setSearchParams({
@@ -123,6 +123,9 @@ function StudentPage(props) {
         <ParentHeader></ParentHeader>
 
         <Container className="container-main d-flex flex-column" style={{gap: "20px"}}>
+            <div className=" p-3 bg-white rounded d-flex flex-row justify-content-center">
+                <h1>Your Information</h1>
+            </div>
             <Row  style={{gap: "10px"}}>
                 <Card as={Col} style={{padding: "0px"}}>
                     <Card.Header as="h5">Name</Card.Header>
@@ -172,30 +175,33 @@ function StudentPage(props) {
                 </Card>
             </Row>
 
-            <Card>
-                <Card.Header as="h5">Map View of Stops</Card.Header>
-                {(student.routes !==undefined && student.routes!==null) ?
-                <Container className='d-flex flex-column justify-content-center' style={{marginTop: "20px"}}>
-                    <IconLegend legendType='student'></IconLegend>
+            <Row style={{gap: "10px"}}>
+                <Card as={Col} style={{padding: "0px"}}>
+                    <Card.Header as="h5">Map View of Stops</Card.Header>
+                    {(student.routes !==undefined && student.routes!==null) ?
+                    <Container className='d-flex flex-column justify-content-center' style={{marginTop: "20px"}}>
+                        <IconLegend legendType='student'></IconLegend>
+                        <Card.Body style={{padding: "0px",marginTop: "20px",marginBottom: "20px"}}>
+                            <MapComponent pinData={pinData} otherMapComponents={extraComponents} center={{lng: Number(props.student.guardian.longitude),lat: Number(props.student.guardian.latitude)}}></MapComponent>
+                        </Card.Body>    
+                    </Container>
+                    :
                     <Card.Body>
-                        <MapComponent pinData={pinData} otherMapComponents={extraComponents} center={{lng: Number(props.student.guardian.longitude),lat: Number(props.student.guardian.latitude)}}></MapComponent>
-                    </Card.Body>    
-                </Container>
-                :
-                <Card.Body>
-                    No stops to show right now. Please wait for an administrator to add stops.
-                </Card.Body>
-                }
-            </Card>
+                        No stops to show right now. Please wait for an administrator to add stops.
+                    </Card.Body>
+                    }
+                </Card>
+            </Row>
 
-
-            <Card>
-                <Card.Header as="h5">In Range Stops</Card.Header>
-                <Card.Body>
-                    <GeneralAdminTableView title='In Range Stops' tableType='stop' search="stop" values={props.stops} action={doNothing} totalCount={props.stopCount}/>
-                </Card.Body>
-            </Card>
-
+            
+            <Row style={{gap: "10px"}}>
+                <Card as={Col} style={{padding: "0px"}}>
+                    <Card.Header as="h5">In Range Stops</Card.Header>
+                    <Card.Body>
+                        <GeneralAdminTableView title='In Range Stops' tableType='stop' search="stop" values={props.stops} action={doNothing} totalCount={props.stopCount}/>
+                    </Card.Body>
+                </Card>
+            </Row>
             <br></br>
             <br></br>
         </Container>

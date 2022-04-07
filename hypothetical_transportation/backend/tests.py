@@ -320,6 +320,122 @@ class TestBulkImport(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn('School name could not be matched', response.data['students'][0]['school_name']['error'])
 
+    def test_validation_checks_student_email(self):
+        loaded_data = {
+            "users": [
+                {
+                    "email": "user7@example.com",
+                    "full_name": "Sam Smith",
+                    "address": "510 West Main St.",
+                    "phone_number": "9999999999"
+                }
+            ],
+            "students": [
+                {
+                    "email": "user7@example.com",
+                    "phone_number": "999999999",
+                    "full_name": "Samwell Smith",
+                    "student_id": 2,
+                    "parent_email": "user1@example.com",
+                    "school_name": "duke university"
+                }
+            ]
+        }
+        response = self.client.post('/api/loaded-data/validate/', json.dumps(loaded_data),
+                                    content_type='application/json', HTTP_AUTHORIZATION=f'Token {self.admin_token}')
+        self.assertEqual(response.data['users'][0]['email']['error'][0],
+                         'This email conflicts with a student email that would be loaded as part of this transaction')
+        self.assertEqual(response.data['students'][0]['email']['error'][0],
+                         'This email conflicts with a user email that would be loaded as part of this transaction')
+
+    def test_student_email_duplication_checking(self):
+        loaded_data = {
+            "users": [],
+            "students": [
+                {
+                    "email": "user7@example.com",
+                    "phone_number": "999999999",
+                    "full_name": "Samwell Smith",
+                    "student_id": 2,
+                    "parent_email": "user1@example.com",
+                    "school_name": "duke university"
+                },
+                {
+                    "email": "user7@example.com",
+                    "phone_number": "999999999",
+                    "full_name": "Samwell Smith",
+                    "student_id": 2,
+                    "parent_email": "user1@example.com",
+                    "school_name": "duke university"
+                },
+                {
+                    "email": "user7@example.com",
+                    "phone_number": "999999999",
+                    "full_name": "Samwell Smith",
+                    "student_id": 2,
+                    "parent_email": "user1@example.com",
+                    "school_name": "duke university"
+                },
+            ]
+        }
+        response = self.client.post('/api/loaded-data/validate/', json.dumps(loaded_data),
+                                    content_type='application/json', HTTP_AUTHORIZATION=f'Token {self.admin_token}')
+        self.assertEqual(len(response.data['students'][0]['email']['duplicates']), 2)
+        self.assertEqual(len(response.data['students'][1]['email']['duplicates']), 2)
+        self.assertEqual(len(response.data['students'][2]['email']['duplicates']), 2)
+
+    def test_student_no_email_submission(self):
+        loaded_data = {
+            "users": [],
+            "students": [
+                {
+                    "email": None,
+                    "phone_number": "999999999",
+                    "full_name": "Samwell Smith",
+                    "student_id": 2,
+                    "parent_email": "user1@example.com",
+                    "school_name": "duke university"
+                },
+            ]}
+        response = self.client.post('/api/loaded-data/', json.dumps(loaded_data),
+                                    content_type='application/json', HTTP_AUTHORIZATION=f'Token {self.admin_token}')
+        self.assertEqual(get_user_model().objects.filter(email="user7@example.com").count(), 0)
+
+        loaded_data = {
+            "users": [],
+            "students": [
+                {
+                    "email": "",
+                    "phone_number": "999999999",
+                    "full_name": "Samwell Smith",
+                    "student_id": 2,
+                    "parent_email": "user1@example.com",
+                    "school_name": "duke university"
+                },
+            ]}
+        response = self.client.post('/api/loaded-data/', json.dumps(loaded_data),
+                                    content_type='application/json', HTTP_AUTHORIZATION=f'Token {self.admin_token}')
+        self.assertEqual(get_user_model().objects.filter(email="user7@example.com").count(), 0)
+
+    def test_student_with_email_submission(self):
+        loaded_data = {
+            "users": [],
+            "students": [
+                {
+                    "email": "user7@example.com",
+                    "phone_number": "999999999",
+                    "full_name": "Samwell Smith",
+                    "student_id": 2,
+                    "parent_email": "user1@example.com",
+                    "school_name": "duke university"
+                },
+            ]}
+        response = self.client.post('/api/loaded-data/', json.dumps(loaded_data),
+                                    content_type='application/json', HTTP_AUTHORIZATION=f'Token {self.admin_token}')
+        self.assertEqual(get_user_model().objects.filter(email="user7@example.com").count(), 1)
+        linked_student = get_user_model().objects.get(email="user7@example.com").linked_student
+        self.assertEqual(linked_student.email, "user7@example.com")
+
     def test_user_name_duplication(self):
         loaded_data = {
             "users": [
@@ -1691,12 +1807,14 @@ class PermissionViews(TransactionTestCase):
                                         {
                                             'email': 'bob@gmail.com',
                                             'full_name': 'bob smith',
+                                            'phone_number': 'abcdef',
                                             'password': 'wordpass',
-                                            'address': '',
+                                            'address': None,
                                             'latitude': 0,
                                             'longitude': 0,
                                             'groups': [],
+                                            'managed_schools': [],
                                         }),
                                     content_type='application/json',
                                     HTTP_AUTHORIZATION=f'Token {self.admin_token}')
-        self.assertEqual(response.data['address'][0].code, 'blank')
+        self.assertEqual(response.data['user']['address'], None)

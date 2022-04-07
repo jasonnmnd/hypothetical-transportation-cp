@@ -25,7 +25,6 @@ import Checkbox from '@mui/material/Checkbox';
 function GeneralManageStudentPage(props) {
     const param = useParams()
     const navigate = useNavigate();
-
     const [openModal, setOpenModal] = useState(false);
     const [validated, setValidated] = useState(false);
     const[coord,setCoord]=useState({lat:36.0016944, lng:-78.9480547});
@@ -33,20 +32,25 @@ function GeneralManageStudentPage(props) {
 
     const handleStudentChecked = () => {
         setStudentChecked(!studentChecked);
+        // setObj({...obj, ["phone_number"]: ""});
+        // setObj({...obj, ["email"]: null})
+
     }
 
-    const emptyStudent={
+    const emptyStudent = {
       student_id: null,
       full_name: "",
       guardian: "",
       routes: "",
       school: "",
+      email: null,
+      phone_number: "",
     }
   
 
-    const [studentEmail, setStudentEmail] = useState("");
     const [obj, setObj] = useState(emptyStudent)
     const [parent, setPar] = useState(emptyStudent)
+    const [oldEmail, setOldEmail] = useState("");
 
   const setParent = (e)=>{
     if(e.value!=="new"){
@@ -66,52 +70,77 @@ function GeneralManageStudentPage(props) {
       event.preventDefault();
       event.stopPropagation();
     } else {
-      if(props.action==="new"){
-        if(obj.guardian!=="new"){
-          props.addStudent(obj)
-          navigate(`/${getType(props.user)}/students/`)
+      if(!studentChecked || (obj.phone_number!=="" && obj.email!=="")){
+        if(props.action==="new"){
+          if(obj.guardian!=="new"){
+
+            if(studentChecked) {
+              props.addStudent(obj);
+            }
+            else {
+              props.addStudent({...obj, ["email"]:null,["phone_number"]:""});
+            }
+            // navigate(`/${getType(props.user)}/students/`)
+          }
+          else{
+            const finalSchoolList = staffSchool.map((item)=>{return item.value})
+            // console.log(finalSchoolList)
+            const createVals = fieldValues.groups==3 ? {
+                ...fieldValues,
+                groups:[fieldValues.groups],
+                address: address,
+                longitude: coord.lng.toFixed(6),
+                latitude: coord.lat.toFixed(6),
+                managed_schools: finalSchoolList,
+            }:{
+                ...fieldValues,
+                address: address,
+                groups:[fieldValues.groups],
+                longitude: coord.lng.toFixed(6),
+                latitude: coord.lat.toFixed(6),
+                managed_schools: []
+            }
+            setPar(createVals)
+            props.emailExpose(createVals.email)
+            //hit email expose endpoint
+            //if email expose endpoint gives yes, show popup
+            //if yes clicked on popup,  props.addStudentWithParent(createVals, obj)
+            //else do nothing? don't navigate? Tell user email exist?
+          }
         }
         else{
-          const finalSchoolList = staffSchool.map((item)=>{return item.value})
-          // console.log(finalSchoolList)
-          const createVals = fieldValues.groups==3 ? {
+          if(obj.guardian!=="new"){
+            if(studentChecked) {
+              
+              if (oldEmail == obj.email){
+                delete obj.email
+              } 
+
+              props.updateStudent(obj,param.id);
+            }
+            else {
+              if (oldEmail == obj.email){
+                delete obj.email
+              } 
+              props.updateStudent({...obj, ["email"]:null,["phone_number"]:""},param.id);
+            }
+            
+          }
+          else{
+            const createVals = {
               ...fieldValues,
-              groups:[fieldValues.groups],
+              groups: [fieldValues.groups],
               address: address,
               longitude: coord.lng.toFixed(6),
               latitude: coord.lat.toFixed(6),
-              managed_schools: finalSchoolList,
-          }:{
-              ...fieldValues,
-              address: address,
-              groups:[fieldValues.groups],
-              longitude: coord.lng.toFixed(6),
-              latitude: coord.lat.toFixed(6),
-              managed_schools: []
+            }
+            if (oldEmail == obj.email){
+              delete obj.email
+            } 
+            
+            props.updateStudentWithParent(createVals, obj)
           }
-          setPar(createVals)
-          props.emailExpose(createVals.email)
-          //hit email expose endpoint
-          //if email expose endpoint gives yes, show popup
-          //if yes clicked on popup,  props.addStudentWithParent(createVals, obj)
-          //else do nothing? don't navigate? Tell user email exist?
         }
-      }
-      else{
-        if(obj.guardian!=="new"){
-          props.updateStudent(obj,param.id);
-        }
-        else{
-          const createVals = {
-            ...fieldValues,
-            groups: [fieldValues.groups],
-            address: address,
-            longitude: coord.lng.toFixed(6),
-            latitude: coord.lat.toFixed(6),
-          }
-          props.updateStudentWithParent(createVals, obj)
-        }
-        navigate(`/${getType(props.user)}/students/`)
       }
     }
     setValidated(true);
@@ -165,6 +194,7 @@ function GeneralManageStudentPage(props) {
     props.getUsers({ordering:"email", groups:2});
     if(props.action==="edit"){
       props.getStudent(param.id);
+      setOldEmail(props.student.email);
       setObj({...props.student, ["guardian"]:props.student.guardian.id,["school"]:props.student.school.id,["routes"]:props.student.routes?props.student.routes.id:null})
       setSchoolSelected({value: props.student.school.id, label: props.student.school.name})
       setGuardianSelected({value: props.student.guardian.id, label: props.student.guardian.email})
@@ -182,12 +212,12 @@ function GeneralManageStudentPage(props) {
       // console.log("setting obj")
       setObj({ ...obj, ["guardian"]: props.selectedUser.id});
       setGuardianSelected({value: props.selectedUser.id, label: props.selectedUser.email})  
+      setSchoolSelected({value: null, label: "-----------------------"})
       props.resetPostedUser()
     }
     // else{
     //   props.getRoutesByID({school: obj.school})
     // }
-    
   }, []);
 
 
@@ -202,6 +232,8 @@ function GeneralManageStudentPage(props) {
     if(props.selectedUser!==null && props.selectedUser.id!==0 && props.selectedUser.id!==obj.guardian){
       // console.log("setting obj useeffecgt selecteds user")
       setObj({ ...obj, ["guardian"]: props.selectedUser.id});
+      setGuardianSelected({value: props.selectedUser.id, label: props.selectedUser.email})  
+      setSchoolSelected({value: null, label: "-----------------------"})
     }
   },[props.selectedUser])
 
@@ -267,6 +299,7 @@ const groupTypes = [
         // console.log("action if")
         setObj({ ...emptyStudent, ["guardian"]: props.selectedUser.id});
         setGuardianSelected({value: props.selectedUser.id, label: props.selectedUser.email})  
+        setSchoolSelected({value: null, label: "-----------------------"})
         props.resetPostedUser()
       }
       else{
@@ -278,12 +311,16 @@ const groupTypes = [
     }
     else{
       props.getStudent(param.id);
+      setOldEmail(props.student.email)
     }
   },[props.action])
 
 useEffect(()=>{
   if(props.action == "edit"){
     setObj({...props.student, ["guardian"]:props.student.guardian.id,["school"]:props.student.school.id,["routes"]:props.student.routes?props.student.routes.id:null})
+    if(props.student.email!==undefined && props.student.email!==null && props.student.phone_number!==undefined && props.student.phone_number!==""){
+      setStudentChecked(true)
+    }
   }
 
 },[props.student])
@@ -347,26 +384,42 @@ useEffect(()=>{
                     </FormGroup>
                 </Form.Group>
                 
+            </Row>
                 {studentChecked ?
-                <Form.Group as={Col} controlId="formGridEmail">
-                    <Form.Label as="h5">Student Email</Form.Label>
-                        <Form.Control 
-                        required 
-                        type="email" 
-                        placeholder="Enter email..." 
-                        value={studentEmail}
-                        onChange={
-                        (e)=>{
-                            setStudentEmail(e.target.value);
-                            }
-                        }/>
-                        <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                    <Form.Control.Feedback type="invalid">Please provide a valid email.</Form.Control.Feedback>
-                </Form.Group>
+                <Row className="mb-3">
+                  <Form.Group as={Col} controlId="formGridEmail">
+                      <Form.Label as="h5">Student Email</Form.Label>
+                          <Form.Control 
+                          required 
+                          type="email" 
+                          placeholder="Enter email..." 
+                          value={obj.email}
+                          onChange={
+                          (e)=>{
+                              setObj({...obj, ["email"]: e.target.value})
+                              }
+                          }/>
+                          <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                      <Form.Control.Feedback type="invalid">Please provide a valid email.</Form.Control.Feedback>
+                  </Form.Group>
+                  <Form.Group as={Col} controlId="formGridPhone">
+                      <Form.Label as="h5">Phone Number</Form.Label>
+                          <Form.Control 
+                          required 
+                          type="text" 
+                          placeholder="Enter phone number..." 
+                          value={obj.phone_number}
+                          onChange={
+                          (e)=>{
+                            setObj({...obj, ["phone_number"]: e.target.value})
+                              }
+                          }/>
+                          <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                  </Form.Group>
+                </Row>
                 :
                 <></>
                 }
-            </Row>
 
             { newParent===true ? 
               <>

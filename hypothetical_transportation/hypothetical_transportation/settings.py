@@ -50,12 +50,13 @@ LOGGING = {
 ALLOWED_HOSTS = [
         '0.0.0.0',
         'localhost',
-        'hypothetical-transportation-legoons.colab.duke.edu',
+        'hypothetical-transportation.colab.duke.edu',
         'ht.colab.duke.edu',
         'ht-dev.colab.duke.edu',
         'ht-test.colab.duke.edu',
         'ht-frontend.colab.duke.edu',
         'ht-backend.colab.duke.edu',
+        'legoons.colab.duke.edu',
 ]
 
 # Application definition
@@ -208,3 +209,4 @@ EMAIL_HOST_USER = os.environ.get('AUTHEMAIL_EMAIL_HOST_USER') or ''
 EMAIL_HOST_PASSWORD = os.environ.get('AUTHEMAIL_EMAIL_HOST_PASSWORD') or ''
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
+

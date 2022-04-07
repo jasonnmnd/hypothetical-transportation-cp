@@ -269,7 +269,7 @@ class LoadStudentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Student
-        fields = ("full_name", "student_id", "parent_email", "school_name")
+        fields = ("email", "full_name", "student_id", "parent_email", "school_name", "phone_number")
 
 
 class LoadStudentSerializerStrict(LoadStudentSerializer):

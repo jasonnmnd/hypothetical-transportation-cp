@@ -240,14 +240,16 @@ function GeneralUploadFilePage(props) {
                                                     <li>school name must case-insensitively and whitespace-insensitively match an existing school name, or else the record will be rejected with an appropriate error message</li>
                                                     <li>field is not empty</li>
                                                 </ul>
-                                            <li><strong>student_email:</strong></li>
+                                            <li><strong>student_email: (optional)</strong></li>
                                                 <ul>
+                                                    <li>adding an email will kick off account creation with the student email</li>
                                                     <li>must be {"<="} 254 characters</li>
                                                     <li>must be a valid address as per the addr-spec of RFC 5322, Section 3.4.1</li>
                                                     <li>field is not empty</li>
                                                 </ul>
-                                            <li><strong>phone_number</strong></li>
+                                            <li><strong>phone_number: (mandatory only if email is included)</strong></li>
                                                 <ul>
+                                                    <li>field must be empty if student_email is empty</li>
                                                     <li>must be {"<="} 35 characters</li>
                                                     <li>field is not empty</li>
                                                 </ul>

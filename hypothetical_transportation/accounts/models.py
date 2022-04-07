@@ -26,9 +26,9 @@ class User(EmailAbstractUser):
     last_name = None
     full_name = models.CharField(_('full name'), max_length=150, help_text=_('Required'), blank=False, unique=False,
                                  null=False)
-    address = models.CharField(_('address'), max_length=150, validators=[MinLengthValidator(1)])
-    latitude = models.FloatField(blank=False)
-    longitude = models.FloatField(blank=False)
+    address = models.CharField(_('address'), max_length=150, blank=True, null=True)
+    latitude = models.FloatField(blank=False, null=True)
+    longitude = models.FloatField(blank=False, null=True)
     phone_number = models.CharField(max_length=35, blank=False, null=False, validators=[MinLengthValidator(1)])
     managed_schools = models.ManyToManyField(School, related_name="managers", blank=True)
     linked_student = models.ForeignKey(Student, related_name="student_user_account", null=True, blank=True,

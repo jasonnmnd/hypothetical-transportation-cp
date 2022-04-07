@@ -23,7 +23,11 @@ function GeneralAdminTableView( props ) {
     const handleViewClick = (d) => {
         //route to /props.title?somethingid=id => props.title determins routing to student, route, school, user
         //console.log(d)
-        if (props.tableType == 'user') {
+        if (props.tableType == 'user' && d.groups[0].id==5) {
+            nav(`/${getType(props.user)}/student/${d.linked_student}`);
+        } 
+
+        else if (props.tableType == 'user' && d.groups[0].id!==5) {
             nav(`/${getType(props.user)}/user/${d.id}`);
         } 
 

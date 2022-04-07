@@ -9,7 +9,7 @@ import LegendBlue from '../assets/legendBlue.png';
 function GeneralLegend(props) {
     
   return (
-        <Container>
+        <Container style={{padding: "0px"}}>
             <Card>
                 {/*<Card.Header as="h5">Legend</Card.Header>*/}
                 <Card.Body>

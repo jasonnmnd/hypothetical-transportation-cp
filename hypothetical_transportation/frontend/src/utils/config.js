@@ -17,6 +17,7 @@ const studentDefaultCols = [
     "school_name",
     "route_name",
     "parent_name",
+    "parent_phone_number",
     "email",
     "phone_number"
 ]
@@ -170,9 +171,16 @@ const studentColumns = {
         sortable: false,
         filterable: false
     },
+    parent_phone_number: {
+        colTitle: "Parent Phone",
+        dataPath: "guardian.phone_number",
+        search_key: "",
+        sortable: false,
+        filterable: false
+    },
 
     email: {
-        colTitle: "Email",
+        colTitle: "Own Email",
         dataPath: "email",
         search_key: "email",
         sortable: true,
@@ -180,7 +188,7 @@ const studentColumns = {
     },
 
     phone_number: {
-        colTitle: "Phone",
+        colTitle: "Own Phone",
         dataPath: "phone_number",
         search_key: "",
         sortable: false,

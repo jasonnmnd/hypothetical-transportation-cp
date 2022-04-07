@@ -189,12 +189,14 @@ function MapComponent(props) {
             if(props.center.lat == null || props.center.lng == null){
                 Geocode.fromAddress(props.center.address)
                 .then((response) => {  
+                    console.log("then response")
+
                     setPos(response.results[0].geometry.location)
                 })
                 .catch(err => {}/*console.log(err)*/);
             }
             else{
-                setPos(props.center)
+                if(!set) setPos(props.center)
             }
         }
         else {
@@ -209,7 +211,7 @@ function MapComponent(props) {
     const handleCenter = ()=>{
         if(!mapRef.current) return;
         const newPost = mapRef.current.getCenter().toJSON();
-        if(pos.lat!==newPost.lat && pos.lng!==newPost.lng){
+        if(pos.lat!==newPost.lat && pos.lng!==newPost.lng && !set){
             setPos(newPost)
             setSet(true)
         }
