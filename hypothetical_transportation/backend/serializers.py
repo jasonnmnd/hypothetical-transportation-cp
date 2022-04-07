@@ -3,7 +3,7 @@ from pyexpat import model
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from rest_framework import serializers
-from .models import Route, School, Student, Stop, ActiveBusRun, TransitLog, BusRun
+from .models import Route, School, Student, Stop, ActiveBusRun, TransitLog, BusRun, EstimatedTimeToNextStop
 from geopy.geocoders import Nominatim, GoogleV3
 from .permissions import is_admin, is_school_staff
 from datetime import datetime
@@ -91,6 +91,15 @@ class StopSerializer(serializers.ModelSerializer):
         model = Stop
         fields = '__all__'
 
+
+class EstimatedTimeToNextStopSerializer(serializers.ModelSerializer):
+
+    def validate(self, attrs):
+        print("hihhihihihi")
+        return super().validate(attrs)
+    class Meta:
+        model = EstimatedTimeToNextStop
+        fields = '__all__'
 
 class ActiveBusRunSerializer(serializers.ModelSerializer):
     class Meta:
