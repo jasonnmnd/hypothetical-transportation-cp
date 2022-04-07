@@ -11,11 +11,11 @@ def send_invite_email(student: Student):
     :param student:
     :return: None
     """
-    user = get_user_model().objects.create_user(email=student.email, latitude=student.guardian.latitude,
-                                                longitude=student.guardian.longitude)
-    user.address = student.guardian.address
+    user = get_user_model().objects.create_user(email=student.email, latitude=None,
+                                                longitude=None)
+    user.address = None
     user.full_name = student.full_name
-    user.phone_number = student.guardian.phone_number
+    user.phone_number = student.phone_number
     if Group.objects.filter(name="Student").count() > 0:
         user.groups.add(Group.objects.get(name="Student"))
     user.linked_student = student
@@ -34,9 +34,9 @@ def sync_parent_changes_to_student_account(parent):
     for student in parent.students.all():
         if student.email is not None:
             student_account = get_user_model().objects.get(email=student.email)
-            student_account.address = parent.address
-            student_account.latitude = parent.latitude
-            student_account.longitude = parent.longitude
+            # student_account.address = parent.address
+            # student_account.latitude = parent.latitude
+            # student_account.longitude = parent.longitude
             student_account.save()
 
 

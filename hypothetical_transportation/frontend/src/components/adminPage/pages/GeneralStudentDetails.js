@@ -45,7 +45,7 @@ function GeneralAdminStudentDetails(props) {
   useEffect(() => {
     props.getStudentInfo(param.id);
   }, []);
-  
+
   useEffect(() => {
     setObj({...student, ["guardian"]:student.guardian.id,["school"]:student.school.id,["routes"]:student.routes?student.routes.id:null})
   }, [props.student]);
@@ -129,7 +129,7 @@ function GeneralAdminStudentDetails(props) {
                 </Card>
             </Row>
 
-            {student.email != null && student.phone_number != "" ?
+            {student.email != null ?
             <Row  style={{gap: "10px"}}>
                 <Card as={Col} style={{padding: "0px"}}>
                     <Card.Header as="h5">Student Email</Card.Header>
@@ -142,7 +142,7 @@ function GeneralAdminStudentDetails(props) {
                 <Card as={Col} style={{padding: "0px"}}>
                     <Card.Header as="h5">Student Phone Number </Card.Header>
                     <Card.Body>
-                        <Card.Text>{student.phone_number}</Card.Text>
+                        <Card.Text>{student.phone_number==""? "No Phone Record Found":student.phone_number}</Card.Text>
                     </Card.Body>
                 </Card>
             </Row>

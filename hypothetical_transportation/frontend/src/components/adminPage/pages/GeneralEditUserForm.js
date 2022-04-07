@@ -262,12 +262,17 @@ function GeneralEditUserForm(props) {
     const [newStudentList, setNewStudentList] = useState([])
     const saveStudent = ()=>{
         var list = newStudentList;
-        if(newStudent.full_name!=="" && newStudent.school!=="" && (!studentChecked ||(newStudent.email!==undefined && newStudent.phone_number!==undefined))){
+        if(newStudent.full_name!=="" && newStudent.school!=="" && (!studentChecked ||(newStudent.email!==undefined))){
             if(!studentChecked){
                 list = list.concat({...newStudent, ["email"]:undefined,["phone_number"]:undefined});
             }
             else{
-                list = list.concat(newStudent);
+                if(newStudent.phone_number===undefined){
+                    list = list.concat({...newStudent, ["phone_number"]:""});
+                }
+                else{
+                    list = list.concat(newStudent);
+                }
             }
             setNewStudentList(list);
             setNewStudent(emptyStudent);
@@ -543,8 +548,7 @@ function GeneralEditUserForm(props) {
                                     </Form.Group>
                                     <Form.Group as={Col} controlId="formGridPhone">
                                     <Form.Label as="h5">Phone Number</Form.Label>
-                                        <Form.Control 
-                                        required 
+                                        <Form.Control  
                                         type="text" 
                                         placeholder="Enter phone number..." 
                                         value={newStudent.phone_number!==undefined ? newStudent.phone_number : ""}

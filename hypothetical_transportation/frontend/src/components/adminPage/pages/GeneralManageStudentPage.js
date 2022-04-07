@@ -70,7 +70,7 @@ function GeneralManageStudentPage(props) {
       event.preventDefault();
       event.stopPropagation();
     } else {
-      if(!studentChecked || (obj.phone_number!=="" && obj.email!=="")){
+      if(!studentChecked || (obj.email!=="")){
         if(props.action==="new"){
           if(obj.guardian!=="new"){
 
@@ -318,7 +318,7 @@ const groupTypes = [
 useEffect(()=>{
   if(props.action == "edit"){
     setObj({...props.student, ["guardian"]:props.student.guardian.id,["school"]:props.student.school.id,["routes"]:props.student.routes?props.student.routes.id:null})
-    if(props.student.email!==undefined && props.student.email!==null && props.student.phone_number!==undefined && props.student.phone_number!==""){
+    if(props.student.email!==undefined && props.student.email!==null && props.student.phone_number!==undefined){
       setStudentChecked(true)
     }
   }
@@ -405,13 +405,12 @@ useEffect(()=>{
                   <Form.Group as={Col} controlId="formGridPhone">
                       <Form.Label as="h5">Phone Number</Form.Label>
                           <Form.Control 
-                          required 
                           type="text" 
                           placeholder="Enter phone number..." 
                           value={obj.phone_number}
                           onChange={
                           (e)=>{
-                            setObj({...obj, ["phone_number"]: e.target.value})
+                            setObj({...obj, ["phone_number"]: (e.target.value===null||e.target.value===undefined)?"":e.target.value})
                               }
                           }/>
                           <Form.Control.Feedback>Looks good!</Form.Control.Feedback>

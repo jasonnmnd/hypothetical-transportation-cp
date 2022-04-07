@@ -2,6 +2,7 @@ from dataclasses import fields
 from pyexpat import model
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
+from django.db.models import Q
 from rest_framework import serializers
 from .models import Route, School, Student, Stop, ActiveBusRun, TransitLog, BusRun, EstimatedTimeToNextStop
 from geopy.geocoders import Nominatim, GoogleV3
@@ -52,6 +53,21 @@ class EditUserSerializer(serializers.ModelSerializer):
         if is_student(updated_user):
             sync_student_account_changes_to_student(updated_user)
         return updated_user
+
+    def validate_groups(self, value):
+        if len(value) != 1:
+            raise serializers.ValidationError("Users may not have more than one role")
+        group_name = value[0].name
+        if self.instance.groups.filter(name=group_name).count() == 1:
+            # If the target group is the same as the current group, allow change as it is equivalent to doing nothing.
+            # This is done for frontend convenience and to bypass the overhead of removing fields in payload
+            return value
+        if group_name in ["Guardian", "Student"]:
+            raise serializers.ValidationError("Users cannot be changed to the Parent or Student role")
+        if self.instance.groups.filter(Q(name='Guardian') | Q(name='Student')).count() > 0:
+            # Additional guards
+            raise serializers.ValidationError("Users in the Parent or Student role cannot have their role changed")
+        return value
 
     class Meta:
         model = get_user_model()
