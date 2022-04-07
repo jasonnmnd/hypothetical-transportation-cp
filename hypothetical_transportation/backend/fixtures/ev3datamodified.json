@@ -2027,20 +2027,6 @@
     },
     {
       "model": "backend.stop",
-      "pk": 3,
-      "fields": {
-        "name": "Stop 4",
-        "location": "Hunter Army Airfield, 525 Leonard Neal Street #6010, Savannah, GA 31409, USA",
-        "latitude": 32.01674834106954,
-        "longitude": -81.13957886484374,
-        "route": 1,
-        "stop_number": 4,
-        "pickup_time": "06:54:00",
-        "dropoff_time": "16:22:00"
-      }
-    },
-    {
-      "model": "backend.stop",
       "pk": 4,
       "fields": {
         "name": "Stop 3",
@@ -23895,9 +23881,4 @@
         "ipaddr": "192.168.192.4"
       }
     }
-<<<<<<< HEAD
   ]
-  
-=======
-  ]
->>>>>>> 1d0d9906055c73da4a2eeac0f9d30b41dc9078e6
