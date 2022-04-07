@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ONE_RUN_SET, DRIVE_ERROR, MANY_RUN_SET, GET_LOG, ADD_BUS_LOCATION, RESET_BUS_LOCATIONS, SET_NEXT_STOP } from "./types"; 
+import { ONE_RUN_SET, DRIVE_ERROR, MANY_RUN_SET, GET_LOG, ADD_BUS_LOCATION, RESET_BUS_LOCATIONS, SET_NEXT_STOP, ADD_SINGLE_BUS_LOCATION } from "./types"; 
 import { tokenConfig, tokenConfigDrive } from './auth';
 import { getParameters } from "./utils";
 
@@ -205,10 +205,27 @@ export const getRunByDriver = (driverId, onSuccess = () => {}) => (dispatch, get
 
 // }
 
-export const getActiveRuns = () => (dispatch, getState) => {
+export const getActiveRuns = (params = {}) => (dispatch, getState) => {
     let config = tokenConfig(getState);
 
-    axios
+    if(params?.school != null){
+        axios
+        .get(`/api/active_bus/?school=${params.school}`, config)
+        .then((res) => {
+            dispatch({
+                type: MANY_RUN_SET,
+                payload: res.data,
+            });
+        })
+        .catch((err) => {/*console.log(err);*/
+            dispatch({
+                type: DRIVE_ERROR,
+                payload: err,
+            });
+        });
+        }
+    else {
+        axios
     .get(`/api/active_bus/`, config)
     .then((res) => {
         dispatch({
@@ -222,6 +239,9 @@ export const getActiveRuns = () => (dispatch, getState) => {
             payload: err,
         });
     });
+    }
+
+    
 
 }
 
@@ -271,10 +291,10 @@ export const getLog = (parameters) => (dispatch, getState) => {
     
     let config = tokenConfig(getState);
     axios
-      .get(`/api/tranzit_traq?bus=/${busNum}`, config)
+      .get(`/api/tranzit_traq/?bus=${busNum}`, config)
       .then((res) => {
         dispatch({
-            type: ADD_BUS_LOCATION,
+            type: ADD_SINGLE_BUS_LOCATION,
             payload: res.data,
         });
       })

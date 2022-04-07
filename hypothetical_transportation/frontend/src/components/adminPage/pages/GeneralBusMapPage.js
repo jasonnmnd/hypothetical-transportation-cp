@@ -16,11 +16,19 @@ import getType from '../../../utils/user2';
 
 function GeneralBusMapPage(props) {
 
+    let [searchParams, setSearchParams] = useSearchParams();
+
     const [extraComponents, setExtraComponents] = useState(null);
 
 
     useEffect(() => {
-        props.getActiveRuns();
+        let params = null;
+        if(searchParams.get('school') != null && searchParams.get('school') != undefined){
+            params = {
+                school: searchParams.get('school')
+            }
+        }
+        props.getActiveRuns(params);
     }, []);
 
     useEffect(() => {
@@ -48,9 +56,6 @@ function GeneralBusMapPage(props) {
                         {pinStuff.route.name}
                     </Link>
                 </h5>
-                {/* <Link to={`/${getType(props.user)}/route/${pinStuff.route.id}?pageNum=1`}>
-                    <h4>Route: {pinStuff.route.name}</h4>
-                </Link> */}
             </>
             
         )
