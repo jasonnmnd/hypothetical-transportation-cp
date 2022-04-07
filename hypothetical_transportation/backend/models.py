@@ -139,9 +139,9 @@ class BusRun(models.Model):
 
 class CachedLocation(models.Model):
     query = models.CharField(max_length=150, unique=True)
-    address = models.CharField(max_length=256)
-    latitude = models.FloatField()
-    longitude = models.FloatField()
+    address = models.CharField(max_length=256, null=True)
+    latitude = models.FloatField(null=True)
+    longitude = models.FloatField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
 

@@ -28,6 +28,7 @@ from .nav_utils import navigation_link_dropoff, navigation_link_pickup
 from collections import defaultdict
 from django.contrib.auth.models import Group
 from .student_account_managers import send_invite_email
+from .custom_geocoder import CachedGoogleV3
 
 BUS_RUN_TIMEOUT_THRESHOLD = 3*3600
 
@@ -872,7 +873,7 @@ class SubmitLoadedDataAPI(generics.GenericAPIView):
 
     def post(self, request, *args, **kwargs):
         # geolocator = Nominatim(user_agent="bulk data importer")
-        geolocator = GoogleV3(api_key="AIzaSyDsyPs-pIVKGJiy7EVy8aKebN5zg515BCs")
+        geolocator = CachedGoogleV3(api_key="AIzaSyDsyPs-pIVKGJiy7EVy8aKebN5zg515BCs")
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid()
         # print('SERIALIZER VALIDATED DATA:', serializer.validated_data)

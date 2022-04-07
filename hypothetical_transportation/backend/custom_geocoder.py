@@ -14,10 +14,14 @@ class CachedGoogleV3(GoogleV3):
                 components=None, place_id=None, language=None, sensor=False):
         if CachedLocation.objects.filter(query=query).count() > 0:
             location = CachedLocation.objects.get(query=query)
+            if location.address is None or location.latitude is None or location.longitude is None:
+                return None
             return Location(address=location.address,
                             point=Point(latitude=location.latitude, longitude=location.longitude), raw='')
         location = super().geocode(query, exactly_one=exactly_one, timeout=timeout, bounds=bounds, region=region,
                                    components=components, place_id=place_id, language=language, sensor=sensor)
-        CachedLocation.objects.create(query=query, address=location.address, latitude=location.latitude,
-                                      longitude=location.longitude)
+        address = location.address if location is not None else None
+        latitude = location.latitude if location is not None else None
+        longitude = location.longitude if location is not None else None
+        CachedLocation.objects.create(query=query, address=address, latitude=latitude, longitude=longitude)
         return location
