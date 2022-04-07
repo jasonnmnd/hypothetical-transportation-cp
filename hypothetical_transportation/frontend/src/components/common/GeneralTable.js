@@ -28,7 +28,8 @@ function GeneralTable( props ) {
                         cellData = "Going Away From School"
                       }
                     }
-                    if(columnInfo.dataPath == "duration" && cellData == null){
+                    
+                    if(columnInfo.dataPath == "duration" && getValueFromPath("end_time", rowData) == null){
                       cellData = "Ongoing"
                       
                     }
