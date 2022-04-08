@@ -79,7 +79,7 @@ function GeneralBusMapPage(props) {
         return [
             {
                 iconColor: "green",
-                iconType: "stop",
+                iconType: "bus",
                 markerProps: {
                     onClick: onBusClick,
                 },
