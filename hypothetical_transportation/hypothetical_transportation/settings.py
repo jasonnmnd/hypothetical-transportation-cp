@@ -69,6 +69,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.postgres',
     'django.contrib.staticfiles',
+    'django_crontab',
     'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
@@ -140,8 +141,8 @@ DATABASES = {
         'NAME': 'ht_db',
         'USER': 'admin',
         'PASSWORD': 'admin',
-        #'HOST': 'db',
-         'HOST': 'localhost',
+        'HOST': 'db',
+        #  'HOST': 'localhost',
         'PORT': '5432',
     }
 }
@@ -196,6 +197,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000'
+]
+
+CRONJOBS = [
+    ('*/10 * * * * *', 'backend.cron.tranzit_traq_on_active_buses')
 ]
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

@@ -73,25 +73,6 @@ class EstimatedTimeToNextStop(models.Model):
     seconds_when_dropoff = models.PositiveIntegerField(blank=True, null=True)
 
 
-class ActiveBusRun(models.Model):
-    bus_number = models.PositiveIntegerField(null=False)
-    driver = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        related_name='active_bus_run',
-        on_delete=models.CASCADE,
-        unique=True,
-        null=False
-    )
-    going_towards_school = models.BooleanField(default=True, null=False)
-    previous_stop_index = models.PositiveIntegerField(
-        null=False)  # note: this is not a foreign key because all we need is the stop number
-    route = models.ForeignKey(Route, related_name='active_bus_run', on_delete=models.CASCADE, unique=True)
-    start_time = models.TimeField(blank=False)
-
-    class Meta:
-        ordering = ['bus_number']
-
-
 class Bus(models.Model):
     bus_number = models.PositiveIntegerField(null=False)
     latitude = models.FloatField(blank=False)

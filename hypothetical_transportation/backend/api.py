@@ -99,10 +99,10 @@ def duration_check(run: BusRun):
                 # print(delta//3600)
             run.duration = time(3, 0, 0)
             run.timeout = True
-        else:
-            run.duration = time(delta//3600, (delta%3600)//60, delta%60)
-            run.timeout = False
-        run.save(update_fields=['end_time', 'duration', 'timeout'])
+        # else:
+            # run.duration = time(delta//3600, (delta%3600)//60, delta%60)
+            # run.timeout = False
+            run.save(update_fields=['end_time', 'duration', 'timeout'])
         # TODO delete bus from bus table
 
 
@@ -420,9 +420,9 @@ class BusRunViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend, DynamicSearchFilter, filters.OrderingFilter]
     
     # filterset_fields = get_filter_dict(BusRun)
-    filterset_fields = ['bus_number', 'driver', 'route', 'school__name', 'duration']
-    ordering_fields = ['bus_number', 'driver', 'start_time', 'route', 'going_towards_school']
-    ordering = 'start_time'
+    filterset_fields = ['bus_number', 'driver', 'route', 'school__name']
+    ordering_fields = ['bus_number', 'driver', 'start_time', 'route', 'going_towards_school', 'duration', 'school__name', 'driver__name', 'route__name']
+    ordering = ['start_time', 'duration']
 
     def get_serializer_class(self):
         if self.action == 'list' or self.action == 'retrieve':
@@ -433,7 +433,7 @@ class BusRunViewSet(viewsets.ModelViewSet):
     
     def get_queryset(self):
         if is_school_staff(self.request.user):
-            return BusRun.objects.filter(id__in=self.request.user.managed_schools.distinct().values('run_id')).distinct().order_by('start_time')
+            return BusRun.objects.filter(id__in=self.request.user.managed_schools.distinct().values('run_id')).distinct().order_by('-start_time')
         return BusRun.objects.all().distinct().order_by('bus_number')
 
     @action(detail=True, methods=['get'], permission_classes=[permissions.AllowAny])

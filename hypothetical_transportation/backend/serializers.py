@@ -2,10 +2,9 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.db.models import Q
 from rest_framework import serializers
-from .models import Bus, Route, School, Student, Stop, ActiveBusRun, TransitLog, BusRun, EstimatedTimeToNextStop
-from geopy.geocoders import Nominatim, GoogleV3
+from .models import Bus, Route, School, Student, Stop, TransitLog, BusRun, EstimatedTimeToNextStop
+from geopy.geocoders import GoogleV3
 from .custom_geocoder import CachedGoogleV3
-from datetime import datetime
 from .permissions import is_admin, is_school_staff, is_guardian, is_student
 from .student_account_managers import sync_student_account, send_invite_email, sync_parent_changes_to_student_account, \
     sync_student_account_changes_to_student
