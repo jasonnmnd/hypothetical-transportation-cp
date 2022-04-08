@@ -6,7 +6,6 @@ from django.contrib.postgres.fields import CICharField
 from django.conf import settings
 import datetime
 
-from numpy import False_
 from .geo_utils import get_straightline_distance, LEN_OF_MILE
 
 
@@ -23,7 +22,15 @@ class School(models.Model):
 
 class Route(models.Model):
     name = models.CharField(max_length=150, validators=[MinLengthValidator(1)])
-    has_active_run = models.BooleanField(default=False, null=False)
+    bus_number = models.PositiveIntegerField(null=True, default=None)
+    driver = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name='route',
+        on_delete=models.SET_NULL,
+        default=None,
+        null=True
+    )
+    # active_run = models.ForeignKey(Route, related_name='stops', on_delete=models.CASCADE)
     description = models.TextField(blank=True)
     school = models.ForeignKey(
         School, related_name='routes',

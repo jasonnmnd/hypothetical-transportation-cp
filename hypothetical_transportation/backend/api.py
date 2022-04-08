@@ -98,6 +98,7 @@ def duration_check(run: BusRun):
             run.duration = time(delta//3600, (delta%3600)//60, delta%60)
             run.timeout = False
         run.save(update_fields=['end_time', 'duration', 'timeout'])
+        # TODO delete bus from bus table
 
 
 def get_active_bus_for_bus_number(bus_number):
@@ -156,8 +157,9 @@ def end_run_now(run: BusRun):
     run.duration = time(delta//3600, (delta%3600)//60, delta%60)
     run.save(update_fields=['end_time', 'duration'])
     # route = Route.objects.get(id=route)
-    run.route.has_active_run = False
-    run.route.save(update_fields=['has_active_run'])
+    run.route.driver = None
+    run.route.bus_number = None
+    run.route.save(update_fields=['driver', 'bus_number'])
     return Response(FormatBusRunSerializer(instance=run).data, status.HTTP_200_OK)
 
 
@@ -241,8 +243,9 @@ class StartBusRunAPI(generics.GenericAPIView):
         # data['driver'] = UserSerializer(instance=get_user_model().objects.filter(id=request.data['driver']).distinct()[0]).data
         run = BusRun.objects.filter(id=serializer.data['id']).distinct()[0]
         
-        run.route.has_active_run = True
-        run.route.save(update_fields=['has_active_run'])
+        run.route.driver = run.driver
+        run.route.bus_number = run.bus_number
+        run.route.save(update_fields=['driver', 'bus_number'])
         return Response(FormatBusRunSerializer(instance=run).data, status.HTTP_200_OK)
 
 
@@ -497,9 +500,14 @@ class TranzitTraqApi(generics.GenericAPIView):
             params = {'bus': bus}
             req = requests.get(url=url, params=params)
             ret = json.loads(req.text)
-            return Response(ret, status.HTTP_200_OK)
+            # return Response(ret, status.HTTP_200_OK)
+            data = {}
+            data['bus_number'] = ret['bus']
+            data['latitude'] = ret['lat']
+            data['longitude'] = ret['lng']
         except:
-            return Response("Something went wrong", status.HTTP_404_NOT_FOUND)
+            pass
+            # return Response("Something went wrong", status.HTTP_404_NOT_FOUND)
 
     def get(self, request, *args, **kwargs):
         active_buses = BusRun.objects.filter(end_time=None)
@@ -508,9 +516,7 @@ class TranzitTraqApi(generics.GenericAPIView):
             duration_check(bus)
             if bus.end_time is None:
                 self.talk_to_tranzit_traq(bus)
-            else:
-                # delete bus from table
-                pass
+
 
 
 class SchoolViewSet(viewsets.ModelViewSet):
