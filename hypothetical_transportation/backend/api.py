@@ -8,12 +8,12 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from datetime import datetime, time
 from geopy.geocoders import GoogleV3
-from .models import School, Route, Student, Stop, ActiveBusRun, TransitLog, BusRun, Bus
+from .models import School, Route, Student, Stop, TransitLog, BusRun, Bus
 from .serializers import StartBusRunSerializer, UserSerializer, StudentSerializer, RouteSerializer, SchoolSerializer, FormatStudentSerializer, \
     FormatRouteSerializer, FormatUserSerializer, EditUserSerializer, StopSerializer, CheckInrangeSerializer, \
     LoadUserSerializer, LoadModelDataSerializer, find_school_match_candidates, school_names_match, \
     StaffEditUserSerializer, StaffEditSchoolSerializer, StaffStudentSerializer, LoadStudentSerializer, \
-    LoadStudentSerializerStrict, ExposeUserSerializer, ExposeUserInputEmailSerializer, ActiveBusRunSerializer, \
+    LoadStudentSerializerStrict, ExposeUserSerializer, ExposeUserInputEmailSerializer, BusSerializer, \
     TransitLogSerializer, BusRunSerializer, FormatBusRunSerializer, BusSerializer
 from .search import DynamicSearchFilter
 from .customfilters import StudentCountShortCircuitFilter
@@ -161,10 +161,13 @@ def end_run_now(run: BusRun):
     delta = end_time_in_sec-start_time_in_sec
     run.duration = time(delta//3600, (delta%3600)//60, delta%60)
     run.save(update_fields=['end_time', 'duration'])
-    # route = Route.objects.get(id=route)
+
     run.route.driver = None
     run.route.bus_number = None
     run.route.save(update_fields=['driver', 'bus_number'])
+
+    Bus.objects.filter(bus_number=run.bus_number).delete()
+
     return Response(FormatBusRunSerializer(instance=run).data, status.HTTP_200_OK)
 
 
@@ -417,7 +420,7 @@ class BusRunViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend, DynamicSearchFilter, filters.OrderingFilter]
     
     # filterset_fields = get_filter_dict(BusRun)
-    filterset_fields = ['bus_number', 'driver', 'route', 'school']
+    filterset_fields = ['bus_number', 'driver', 'route', 'school__name', 'duration']
     ordering_fields = ['bus_number', 'driver', 'start_time', 'route', 'going_towards_school']
     ordering = 'start_time'
 
@@ -456,7 +459,6 @@ class BusRunViewSet(viewsets.ModelViewSet):
         try:
             run = get_active_bus_on_route_from_pk(pk) 
             run.previous_stop_index = run.previous_stop_index+1
-            print(Stop.objects.filter(route=run.route))
             if len(Stop.objects.filter(route=run.route)) != run.previous_stop_index:
                 run.save(update_fields=['previous_stop_index'])
                 return self.next_stop(self, pk=pk)
@@ -509,28 +511,43 @@ class ActiveBusLocationsViewSet(viewsets.ModelViewSet):
 
 class TranzitTraqApi(generics.GenericAPIView):
 
-    def talk_to_tranzit_traq(self, bus):
+    def talk_to_tranzit_traq(self, bus) -> Response:
         try:
             url =  f"http://tranzit.colab.duke.edu:8000/get"
-            params = {'bus': bus}
+            params = {'bus': bus.bus_number}
             req = requests.get(url=url, params=params)
             ret = json.loads(req.text)
             # return Response(ret, status.HTTP_200_OK)
             data = {}
-            data['bus_number'] = ret['bus']
-            data['latitude'] = ret['lat']
-            data['longitude'] = ret['lng']
+            try:
+                bus_object = Bus.objects.get(bus_number=bus.bus_number)
+                bus_object.latitude = ret['lat']
+                bus_object.longitude = ret['lng']
+                bus_object.save(update_fields=['latitude', 'longitude'])
+                bus
+            except:
+                data['bus_number'] = ret['bus']
+                data['latitude'] = ret['lat']
+                data['longitude'] = ret['lng']
+                serializer = BusSerializer(data=data)
+                if serializer.is_valid():
+                    serializer.save()
+            bus.location = Bus.objects.get(bus_number=bus.bus_number)
+            bus.save(update_fields=['location'])
+            
         except:
-            pass
-            # return Response("Something went wrong", status.HTTP_404_NOT_FOUND)
+            return Response("Tranzit Traq gave a poor response", status.HTTP_404_NOT_FOUND)
 
     def get(self, request, *args, **kwargs):
         active_buses = BusRun.objects.filter(end_time=None)
+        counter = 0
         for bus in active_buses:
             # bus_id=request.GET['bus']
             duration_check(bus)
-            if bus.end_time is None:
+            if bus.end_time is None and counter < 100:
                 self.talk_to_tranzit_traq(bus)
+                counter += 1
+        return Response("done", status.HTTP_200_OK)
 
 
 
