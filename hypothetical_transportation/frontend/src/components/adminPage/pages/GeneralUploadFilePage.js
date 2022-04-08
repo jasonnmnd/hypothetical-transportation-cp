@@ -39,7 +39,7 @@ function GeneralUploadFilePage(props) {
         setStudentFile(e.target.files[0]);
     }
     const expectedUserHeader = ['email', 'full_name', 'address', 'phone_number']
-    const expectedStudentHeader = ['full_name', 'parent_email', 'student_id', 'school_name',  'student_email', 'phone_number']
+    const expectedStudentHeader = ['full_name', 'parent_email', 'student_id', 'school_name', 'email', 'phone_number']
     const [warning, setWarning] = useState(false)
     const handleOnSubmit = (e) => {
         e.preventDefault();
