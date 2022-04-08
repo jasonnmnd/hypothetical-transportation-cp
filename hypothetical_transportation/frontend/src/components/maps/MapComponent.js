@@ -41,7 +41,6 @@ function MapComponent(props) {
 
 
     useEffect(() => {
-        //console.log(props.pinData)
         initializePins(props.pinData)
       }, [props.pinData]);
 
@@ -113,6 +112,8 @@ function MapComponent(props) {
     }
     
     const initializePins = (inPinData) => {
+        pinInfo = []
+        setPins([])
         //console.log(inPinData)
         inPinData.forEach((pinGroup) => {
             pinGroup.pins.forEach((pin) => {
@@ -189,7 +190,6 @@ function MapComponent(props) {
             if(props.center.lat == null || props.center.lng == null){
                 Geocode.fromAddress(props.center.address)
                 .then((response) => {  
-                    console.log("then response")
 
                     setPos(response.results[0].geometry.location)
                 })
