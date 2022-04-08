@@ -36,7 +36,7 @@ function ParentStudentDetails(props){
 
     useEffect(()=>{
         setPinData(getPinData());
-    },[props.stops,student])
+    },[props.stops,student, props.activeRun])
 
 
     useEffect(()=>{
