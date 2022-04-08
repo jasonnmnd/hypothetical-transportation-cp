@@ -32,10 +32,6 @@ function GeneralBusMapPage(props) {
         props.getActiveRuns(params);
     }, []);
 
-    useEffect(() => {
-        
-        props.getBusLocations(props.activeRuns.map(run => run.bus_number))
-    }, [props.activeRuns]);
 
     
 
@@ -66,24 +62,24 @@ function GeneralBusMapPage(props) {
         createInfoWindow(position, getBusInfoForWindow(pinStuff))
     }
 
-    const getRunPin = (busNum) => {
+    const getRunPin = (run) => {
 
         return {
-            ...props.activeRuns.find(run => run.bus_number == busNum), 
-            latitude: props.busLocations[busNum].latitude, 
-            longitude: props.busLocations[busNum].longitude, 
+            ...run,
+            latitude: run.location.latitude, 
+            longitude: run.location.longitude, 
         }
     }
 
     const getPinData = () => {
         return [
             {
-                iconColor: "green",
+                iconColor: "black",
                 iconType: "bus",
                 markerProps: {
                     onClick: onBusClick,
                 },
-                pins: Object.keys(props.busLocations).map(busNum => {return getRunPin(busNum)})
+                pins: props.activeRuns.filter(run => run.location != null).map(run => getRunPin(run))
             },
         ]
     }
