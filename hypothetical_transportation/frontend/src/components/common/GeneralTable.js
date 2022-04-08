@@ -17,6 +17,7 @@ function GeneralTable( props ) {
 
   const getColor = (rowData)=>{
     if(props.tableType=='route'){
+      if(rowData.has_active_run) return "rgb(87, 202, 255)"
       if(!rowData.is_complete) return "rgb(255, 136, 136)"
     }
 

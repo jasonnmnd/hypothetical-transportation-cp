@@ -11,6 +11,7 @@ import isAdmin from '../../../utils/user';
 import getType from '../../../utils/user2';
 import isSchoolStaff from '../../../utils/userSchoolStaff';
 import { updateStudent } from '../../../actions/students';
+import {getRunByRoute} from '../../../actions/drive';
 
 function GeneralAdminStudentDetails(props) {
   const navigate = useNavigate();
@@ -47,8 +48,11 @@ function GeneralAdminStudentDetails(props) {
   }, []);
 
   useEffect(() => {
-      console.log(props.student)
+    console.log(props.student)
     setObj({...student, ["guardian"]:student.guardian.id,["school"]:student.school.id,["routes"]:student.routes?student.routes.id:null})
+    if(student.routes){
+        props.getRunByRoute(student.routes.id)
+    }
   }, [props.student]);
 
   return (
@@ -200,6 +204,17 @@ function GeneralAdminStudentDetails(props) {
                             </Alert>:<></>
                             )
                         }
+                        {(student.routes!==undefined && props.currentRun.id!==undefined) ?
+                            <Alert variant="success">
+                                <Alert.Heading>There is an active run for this route!</Alert.Heading>
+                                <p>
+                                    Bus Driver: {props.currentRun.driver.full_name}
+                                </p>
+                                <p>
+                                    Bus Number: {props.currentRun.bus_number}
+                                </p>
+                            </Alert>:<></>
+                        }
                         </Container>
                     </Card.Body>
                 </Card>
@@ -213,12 +228,14 @@ function GeneralAdminStudentDetails(props) {
 
 GeneralAdminStudentDetails.propTypes = {
     getStudentInfo: PropTypes.func.isRequired,
-    deleteStudent: PropTypes.func.isRequired
+    deleteStudent: PropTypes.func.isRequired,
+    getRunByRoute: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = (state) => ({
   user: state.auth.user,
-  student: state.students.viewedStudent
+  student: state.students.viewedStudent,
+  currentRun: state.drive.currentRun,
 });
 
-export default connect(mapStateToProps, {getStudentInfo, deleteStudent, updateStudent})(GeneralAdminStudentDetails)
+export default connect(mapStateToProps, {getStudentInfo, deleteStudent, updateStudent, getRunByRoute})(GeneralAdminStudentDetails)

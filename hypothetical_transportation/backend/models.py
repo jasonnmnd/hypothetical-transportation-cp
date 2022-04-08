@@ -23,6 +23,7 @@ class School(models.Model):
 
 class Route(models.Model):
     name = models.CharField(max_length=150, validators=[MinLengthValidator(1)])
+    has_active_run = models.BooleanField(default=False, null=False)
     description = models.TextField(blank=True)
     school = models.ForeignKey(
         School, related_name='routes',
@@ -83,6 +84,11 @@ class ActiveBusRun(models.Model):
         ordering = ['bus_number']
 
 
+class Bus(models.Model):
+    bus_number = models.PositiveIntegerField(null=False)
+    latitude = models.FloatField(blank=False)
+    longitude = models.FloatField(blank=False)
+
 class TransitLog(models.Model):
     bus_number = models.PositiveIntegerField(null=False)
     driver = models.ForeignKey(
@@ -114,12 +120,6 @@ class BusRun(models.Model):
     duration = models.TimeField(blank=True, null=True)
     end_time = models.DateTimeField(blank=True, null=True)
     going_towards_school = models.BooleanField(default=True, null=False)
-    # previous_stop = models.ForeignKey(
-    #     Stop,
-    #     related_name='bus_run',
-    #     on_delete=models.SET_NULL,
-    #     null=True
-    # )
     previous_stop_index = models.PositiveIntegerField(blank=True, null=True, default=0)
     route = models.ForeignKey(
         Route,
@@ -132,7 +132,7 @@ class BusRun(models.Model):
         on_delete=models.CASCADE
     )
     start_time = models.DateTimeField(null=False, blank=False)
-
+    timeout = models.BooleanField(blank=True, default=False)
     class Meta:
         ordering = ['start_time']
 
