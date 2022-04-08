@@ -33,6 +33,8 @@ const routeDefaultCols = [
     "name",
     "school_name",
     "num_students",
+    "driver",
+    "bus_number"
 ]
 
 const stopDefaultCOls = [
@@ -248,6 +250,20 @@ const routeColumns = {
         dataPath: "student_count",
         search_key: "students",
         sortable: true,
+        filterable: false
+    },
+    bus_number: {
+        colTitle: "Bus Number",
+        dataPath: "bus_number",
+        search_key: "",
+        sortable: false,
+        filterable: false
+    },
+    driver: {
+        colTitle: "Driver",
+        dataPath: "driver",
+        search_key: "",
+        sortable: false,
         filterable: false
     }
 }
