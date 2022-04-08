@@ -9,6 +9,7 @@ import { Container, Card, Button, Row, Col, Alert, ButtonGroup } from 'react-boo
 import isAdmin from '../../../utils/user';
 import getType from '../../../utils/user2';
 import { getRunByRunId } from '../../../actions/drive';
+import { DATE_TIME_TO_STRING } from '../../../utils/drive';
 
 function BusRunDetailPage(props) {
   const param = useParams();
@@ -90,9 +91,9 @@ function BusRunDetailPage(props) {
                 <Card as={Col} style={{padding: "0px"}}>
                     <Card.Header as="h5">Timing Details </Card.Header>
                     <Card.Body>
-                        <Card.Text><strong>Start Time:</strong> {props.currentRun.start_time}</Card.Text>
+                        <Card.Text><strong>Start Time:</strong> {DATE_TIME_TO_STRING(props.currentRun.start_time)}</Card.Text>
                         <Card.Text><strong>Duration:</strong> {getDurationText()}</Card.Text>
-                        {props.currentRun.end_time ? <Card.Text><strong>End Time:</strong> {props.currentRun.end_time}</Card.Text> : null}
+                        {props.currentRun.end_time ? <Card.Text><strong>End Time:</strong> {DATE_TIME_TO_STRING(props.currentRun.end_time)}</Card.Text> : null}
                     </Card.Body>
                 </Card>
                 

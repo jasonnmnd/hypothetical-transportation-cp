@@ -9,7 +9,10 @@ import { Row, Card, Container, Col, Alert } from 'react-bootstrap';
 import IconLegend from '../common/IconLegend';
 import MapComponent from '../maps/MapComponent';
 import GeneralAdminTableView from '../adminPage/components/views/GeneralAdminTableView';
-
+import { getRunByRoute } from '../../actions/drive';
+import getType from '../../utils/user2';
+import { InfoWindow } from '@react-google-maps/api';
+import StudentViewMap from '../maps/StudentViewMap';
 
 function StudentPage(props) {
 
@@ -18,12 +21,15 @@ function StudentPage(props) {
   const param = useParams();
   const student = props.student;
   let [searchParams, setSearchParams] = useSearchParams();
-  const [pinData, setPinData] = useState([]);
-  const [extraComponents, setExtraComponents] = useState(null);
 
   useEffect(() => {
     props.getStudentInfo(props.user.linked_student);
   }, []);
+
+  useEffect(()=>{
+    if(props.student.routes) props.getRunByRoute(props.student.routes.id)
+    
+  },[props.student])
 
 
 
@@ -44,79 +50,15 @@ function StudentPage(props) {
         }
         }, [searchParams]);
 
-    useEffect(()=>{
-        setPinData(getPinData());
-    },[props.stops, student])
-
-    const getPinData = () => {
-        let pinData = getStopPinData();
-        addStudentPin(pinData, onStudentClick)
-        // console.log(pinData);
-        return pinData;
-    }
-
-    const getStudentPin = (s) => {
-        return {
-            ...s, 
-            address: s.guardian.address, 
-            latitude: s.guardian.latitude, 
-            longitude: s.guardian.longitude
-        }
-    }
-    const getStopPin = (stop) => {
-        return {
-            ...stop, 
-        }
-    }
-
-    const addStudentPin = (pinData, onclick) => {
-        pinData.push({
-            iconColor: "green",
-            iconType: "studentCheck",
-            markerProps: {
-                onClick: onclick
-            },
-            pins: [
-                getStudentPin(student)
-            ]
-        })
-    }
-
-    const createInfoWindow = (position, windowComponents) => {
-        setExtraComponents(<InfoWindow position={position} onCloseClick={setExtraComponents(null)}>{windowComponents}</InfoWindow>)
-    }
 
 
-    const getStopPinData = () => {
-        return [
-            {
-                iconColor: "blue",
-                iconType: "stop",
-                markerProps: {
-                    onClick: onStopClick,
-                    draggable: false,
-                    onRightClick: ""
-                },
-                pins: props.stops.map(stop => getStopPin(stop))
-            },
-        ]
-    }
 
-    const onStopClick = (pinStuff, position) => {
-        createInfoWindow(position, 
-            <div>
-                <h5>Name:{pinStuff.name}</h5>
-                <h5>Pick Up: {pinStuff.pickup_time}</h5>
-                <h5>Drop Off: {pinStuff.dropoff_time}</h5>
-            </div>
-        )
-    }
 
-    const onStudentClick = (pinStuff, position) => {
-        createInfoWindow(position, 
-            <><h4>{pinStuff.full_name}</h4></>
-        )
-    }
+
+
+
+
+
 
   return (
     <div>
@@ -175,6 +117,16 @@ function StudentPage(props) {
                 </Card>
             </Row>
 
+        {props.activeRun!==undefined && props.activeRun!==null && props.activeRun.end_time !==undefined &&  props.activeRun.end_time ==null ?
+        <Row style={{gap: "10px"}}>
+        <Card border={"success"} as={Col} style={{padding: "0px", backgroundColor: "#d9ffe0"}}>
+            <Card.Header as="h5">Active Run Info </Card.Header>
+            <Card.Body>
+                <p><strong>Bus Driver:</strong> {props.activeRun.driver!==null && props.activeRun.driver !== undefined ? props.activeRun.driver.full_name : ""}</p>
+                <p><strong>Bus Number:</strong> {props.activeRun.bus_number!==null && props.activeRun.bus_number!==undefined ?props.activeRun.bus_number : ""}</p>
+            </Card.Body>
+        </Card></Row> : <></>}
+
             <Row style={{gap: "10px"}}>
                 <Card as={Col} style={{padding: "0px"}}>
                     <Card.Header as="h5">Map View of Stops</Card.Header>
@@ -182,7 +134,8 @@ function StudentPage(props) {
                     <Container className='d-flex flex-column justify-content-center' style={{marginTop: "20px"}}>
                         <IconLegend legendType='student'></IconLegend>
                         <Card.Body style={{padding: "0px",marginTop: "20px",marginBottom: "20px"}}>
-                            <MapComponent pinData={pinData} otherMapComponents={extraComponents} center={{lng: Number(props.student.guardian.longitude),lat: Number(props.student.guardian.latitude)}}></MapComponent>
+                            {/* <MapComponent pinData={pinData} otherMapComponents={extraComponents} center={{lng: Number(props.student.guardian.longitude),lat: Number(props.student.guardian.latitude)}}></MapComponent> */}
+                            <StudentViewMap student={props.student} activeRun={props.activeRun} stops={props.stops} />
                         </Card.Body>    
                     </Container>
                     :
@@ -210,6 +163,7 @@ function StudentPage(props) {
 }
 
 StudentPage.propTypes = {
+    getRunByRoute: PropTypes.func.isRequired,
 
 }
 
@@ -220,7 +174,8 @@ const mapStateToProps = (state) => ({
     student: state.students.viewedStudent,
     stops: state.students.inRangeStops.results,
     stopCount: state.students.inRangeStops.count,
+    activeRun: state.drive.currentRun,
 });
 
 
-export default connect(mapStateToProps, {logout, getStudentInfo, getInRangeStop} )(StudentPage)
+export default connect(mapStateToProps, {logout, getStudentInfo, getInRangeStop,getRunByRoute} )(StudentPage)

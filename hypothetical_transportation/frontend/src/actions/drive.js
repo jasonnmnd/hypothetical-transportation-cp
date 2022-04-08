@@ -291,7 +291,7 @@ export const getLog = (parameters) => (dispatch, getState) => {
     
     let config = tokenConfig(getState);
     axios
-      .get(`/api/tranzit_traq/?bus=${busNum}`, config)
+      .get(`/api/tranzit_traq/?bus_number=${busNum}`, config)
       .then((res) => {
         dispatch({
             type: ADD_SINGLE_BUS_LOCATION,
@@ -310,7 +310,7 @@ export const getLog = (parameters) => (dispatch, getState) => {
         
 
         axios
-        .get(`/api/tranzit_traq/?bus=${busNum}`, config)
+        .get(`/api/tranzit_traq/?bus_number=${busNum}`, config)
         .then((res) => {
             dispatch({
                 type: ADD_BUS_LOCATION,
@@ -333,4 +333,14 @@ export const getLog = (parameters) => (dispatch, getState) => {
         });
   
   }
+
+  export const resetBusLocations = () => (dispatch, getState) => {
+   
+    
+    dispatch({
+        type: RESET_BUS_LOCATIONS,
+        payload: {},
+    });
+
+}
 

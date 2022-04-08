@@ -212,6 +212,14 @@ export const STUDENT_COLUMNS = [
         header: 'Student ID',
         accessor: 'student_id',
     },
+    {
+        header: 'Email',
+        accessor: 'email',
+    },
+    {
+        header: 'Phone Number',
+        accessor: 'phone_number',
+    },
 ]
 
 export const errOrDupExists = (transaction, value, key) => {

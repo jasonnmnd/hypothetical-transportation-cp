@@ -79,3 +79,30 @@ export const EXAMPLE_BUS_LOCATION_3 = {
 
 export const EXAMPLE_BUS_LOCATION_INVALID = "unknown bus"
 
+const getFormattedDate = (date) => {
+    const dateParts = date.split("-")
+    return `${dateParts[1]}/${dateParts[2]}/${dateParts[0]}`
+}
+
+const getFormattedTime = (time) => {
+    const timeParts = time.split(":")
+    return `${timeParts[0]}:${timeParts[1]}`
+}
+
+export const DATE_TIME_TO_STRING = (dateTime) => {
+    try {
+        const dateTimeParts = dateTime.split("T");
+    
+        const dateFormatted = getFormattedDate(dateTimeParts[0]);
+
+        const timeFormatted = getFormattedTime(dateTimeParts[1]);
+
+        return `${dateFormatted}  ${timeFormatted}`
+        
+    } catch (error) {
+        console.log(error);
+        return dateTime
+    }
+
+}
+

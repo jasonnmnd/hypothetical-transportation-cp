@@ -1,4 +1,4 @@
-import { ADD_BUS_LOCATION, ADD_SINGLE_BUS_LOCATION, DRIVE_ERROR, GET_LOG, MANY_RUN_SET, ONE_RUN_SET, SET_NEXT_STOP } from "../actions/types";
+import { ADD_BUS_LOCATION, ADD_SINGLE_BUS_LOCATION, DRIVE_ERROR, GET_LOG, MANY_RUN_SET, ONE_RUN_SET, RESET_BUS_LOCATIONS, SET_NEXT_STOP } from "../actions/types";
 
 const initialState = {
     currentRun: {},
@@ -60,10 +60,10 @@ export default function(state = initialState, action) {
                 ...state,
                 busLocation: action.payload
             }
-        case ADD_BUS_LOCATION: 
+        case RESET_BUS_LOCATIONS: 
             return {
                 ...state,
-                busLocations: {}
+                busLocations: action.payload
             }
         case SET_NEXT_STOP: 
             return {

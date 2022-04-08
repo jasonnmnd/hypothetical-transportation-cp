@@ -75,9 +75,6 @@ function GeneralAdminRouteDetails(props) {
     props.getRunByRoute(props.route.id)
   }, [props.route]);
 
-  useEffect(() => {
-    props.getBusLocation(props.activeRun.bus_number)
-  }, [props.activeRun]);
 
 
 
@@ -86,7 +83,7 @@ function GeneralAdminRouteDetails(props) {
   useEffect(()=>{
     setExtra({id: props.route.school.id,name: props.route.school.name, dropoff_time: props.route.school.bus_departure_time, pickup_time: props.route.school.bus_arrival_time, stop_number: 0})
     setPinData(getPinData());
-  },[props.students,props.route,props.stops, props.busLocation]);
+  },[props.students,props.route,props.stops, props.activeRun]);
 
     const getPinData = () => {
         let pinData = getStudentsPinData();
@@ -117,21 +114,19 @@ function GeneralAdminRouteDetails(props) {
 
         return {
             ...props.activeRun, 
-            latitude: props.busLocation.lat, 
-            longitude: props.busLocation.lng, 
+            latitude: props.activeRun.location.latitude, 
+            longitude: props.activeRun.location.longitude, 
         }
     }
 
     const getBusPinData = () => {
-        console.log(props)
-        if(props.activeRun.route?.id != props.route.id || props.busLocation?.lat == null || props.busLocation?.lng == null){
+        if(props.activeRun.route?.id != props.route.id || props.activeRun?.location == null){
             return []
         }
-        console.log(getRunPin());
         return [
             {
-                iconColor: "green",
-                iconType: "stop",
+                iconColor: "black",
+                iconType: "bus",
                 markerProps: {
                     onClick: onBusClick,
                 },
@@ -387,6 +382,15 @@ function GeneralAdminRouteDetails(props) {
                     </Form.Group>
                     </Card.Body>
                 </Card>
+
+                {props.activeRun!==undefined && props.activeRun!==null && props.activeRun.end_time !==undefined &&  props.activeRun.end_time ==null ?
+                <Card border={"success"} as={Col} style={{padding: "0px", backgroundColor: "#d9ffe0"}}>
+                    <Card.Header as="h5">Active Run Info </Card.Header>
+                    <Card.Body>
+                        <p><strong>Bus Driver:</strong> {props.activeRun.driver!==null && props.activeRun.driver !== undefined ? props.activeRun.driver.full_name : ""}</p>
+                        <p><strong>Bus Number:</strong> {props.activeRun.bus_number!==null && props.activeRun.bus_number!==undefined ?props.activeRun.bus_number : ""}</p>
+                    </Card.Body>
+                </Card> : <></>}
             </Row>
             
             <Row  style={{gap: "10px"}}>
