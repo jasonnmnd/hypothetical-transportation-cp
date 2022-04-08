@@ -85,7 +85,7 @@ function StudentPage(props) {
     }
 
     const addBusPin = (pinData) => {
-        if(props.activeRun.end_time == null){
+        if(props.activeRun.driver == null){
             return
         }
         pinData.push({
