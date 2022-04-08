@@ -13,7 +13,9 @@ const TYPE_TITLES = {
     parent_email: "Parent Email",
     full_name: "Name",
     school_name: "School Name",
-    student_id: "Student ID"
+    student_id: "Student ID",
+    email: "Email",
+    phone_number: "Phone Number"
 }
 
 
@@ -25,6 +27,8 @@ function StudentDetailsModal(props){
             full_name: {value: props.student?.full_name.value},
             school_name: {value: props.student?.school_name.value},
             student_id: {value: props.student?.student_id.value},
+            email: {value: props.student?.email?.value},
+            phone_number: {value: props.student?.phone_number?.value},
             index: props.student?.index
         }
     }
@@ -62,6 +66,8 @@ function StudentDetailsModal(props){
                             {getTextFieldStudent("student_id")}
                             {getTextFieldStudent("school_name")}
                             {getTextFieldStudent("parent_email")}
+                            {getTextFieldStudent("email")}
+                            {getTextFieldStudent("phone_number")}
                             <ErrorSection transaction={props.student} type='student'/>
                     </Container>
                 </Modal.Body>
