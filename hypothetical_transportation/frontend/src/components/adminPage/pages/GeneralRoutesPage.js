@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import Header from '../../header/AdminHeader';
 import { Link, useSearchParams } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -7,12 +7,14 @@ import { getRoutes } from '../../../actions/routes';
 import GeneralAdminTableView from '../components/views/GeneralAdminTableView';
 import "../NEWadminPage.css";
 import { Container } from 'react-bootstrap'
+import { getUsers } from '../../../actions/users';
 
 
 function AdminRoutesPage(props) {
 
   const title = "Routes"
   const tableType = "route"
+  const [routes, setRoutes] = useState([])
 
 
   let [searchParams, setSearchParams] = useSearchParams();
@@ -28,7 +30,22 @@ function AdminRoutesPage(props) {
         [`ordering`]: "name",
       })
     }
+    props.getUsers();
   }, [searchParams]);
+
+
+  useEffect(() => {
+    var lis = props.routes
+    if(props.routes!==null && props.routes!==undefined && props.routes!==0 && props.users!==null && props.users!==undefined && props.users!==0 ){
+        lis = []
+        const x = props.routes.map((item)=> {
+            return ({...item, ['driver']: item.driver!==null ? (props.users.filter((i)=>i.id==item.driver)[0]!==undefined? props.users.filter((i)=>i.id===item.driver)[0].full_name:item.driver): null})
+        })    
+        lis = [...lis, ...x]
+    }
+    // console.log(opt)
+    setRoutes(lis)
+  }, [props.routes, props.users]);
 
 
 
@@ -40,7 +57,7 @@ function AdminRoutesPage(props) {
             <h1>All Routes</h1>
           </div>
           <div className="shadow-lg p-3 mb-5 bg-white rounded">
-            <GeneralAdminTableView values={props.routes} tableType={tableType} search="" title={title} totalCount={props.routeCount} />
+            <GeneralAdminTableView values={routes} tableType={tableType} search="" title={title} totalCount={props.routeCount} />
           </div>
         </Container>
     </div>
@@ -48,12 +65,14 @@ function AdminRoutesPage(props) {
 }
 AdminRoutesPage.propTypes = {
     getRoutes: PropTypes.func.isRequired,
+    getUsers: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = (state) => ({
   user: state.auth.user,
   routes: state.routes.routes.results,
+  users: state.users.users.results,
   routeCount: state.routes.routes.count
 });
 
-export default connect(mapStateToProps, {getRoutes})(AdminRoutesPage)
+export default connect(mapStateToProps, {getRoutes, getUsers})(AdminRoutesPage)
