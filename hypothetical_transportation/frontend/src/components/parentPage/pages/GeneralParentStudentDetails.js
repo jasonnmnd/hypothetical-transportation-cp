@@ -15,12 +15,12 @@ import { InfoWindow } from "@react-google-maps/api";
 import IconLegend from "../../common/IconLegend";
 import isBusDriver from "../../../utils/userBusDriver";
 import isSchoolStaff from "../../../utils/userSchoolStaff";
+import { getRunByRoute } from "../../../actions/drive";
+import { runCallEveryPeriod } from "../../../utils/live_updating";
 
 function ParentStudentDetails(props){
     const param = useParams();
     const student = props.student;
-    const [pinData, setPinData] = useState([]);
-    const [extraComponents, setExtraComponents] = useState(null);
     let [searchParams, setSearchParams] = useSearchParams();
 
 
@@ -33,10 +33,13 @@ function ParentStudentDetails(props){
 
     }
 
-    useEffect(()=>{
-        setPinData(getPinData());
-    },[props.stops,student])
 
+
+    useEffect(()=>{
+        if(props.student.routes) {
+            return runCallEveryPeriod(() => props.getRunByRoute(props.student.routes.id));
+        } 
+    },[props.student])
 
   useEffect(() => {
     if(searchParams.get(`pageNum`) != null){
@@ -53,75 +56,9 @@ function ParentStudentDetails(props){
 
 
 
-    const getPinData = () => {
-        let pinData = getStopPinData();
-        addStudentPin(pinData, onStudentClick)
-        // console.log(pinData);
-        return pinData;
-    }
-    const getStudentPin = (s) => {
-        return {
-            ...s, 
-            address: s.guardian.address, 
-            latitude: s.guardian.latitude, 
-            longitude: s.guardian.longitude
-        }
-    }
-    const getStopPin = (stop) => {
-        return {
-            ...stop, 
-        }
-    }
-
-    const addStudentPin = (pinData, onclick) => {
-        pinData.push({
-            iconColor: "green",
-            iconType: "studentCheck",
-            markerProps: {
-                onClick: onclick
-            },
-            pins: [
-                getStudentPin(student)
-            ]
-        })
-    }
-    
-
-    const createInfoWindow = (position, windowComponents) => {
-        setExtraComponents(<InfoWindow position={position} onCloseClick={setExtraComponents(null)}>{windowComponents}</InfoWindow>)
-    }
 
 
-    const getStopPinData = () => {
-        return [
-            {
-                iconColor: "blue",
-                iconType: "stop",
-                markerProps: {
-                    onClick: onStopClick,
-                    draggable: false,
-                    onRightClick: ""
-                },
-                pins: props.stops.map(stop => getStopPin(stop))
-            },
-        ]
-    }
 
-    const onStopClick = (pinStuff, position) => {
-        createInfoWindow(position, 
-            <div>
-                <h5>Name:{pinStuff.name}</h5>
-                <h5>Pick Up: {pinStuff.pickup_time}</h5>
-                <h5>Drop Off: {pinStuff.dropoff_time}</h5>
-            </div>
-        )
-    }
-
-    const onStudentClick = (pinStuff, position) => {
-        createInfoWindow(position, 
-            <><h4>{pinStuff.full_name}</h4></>
-        )
-    }
 
 
     return(
@@ -161,28 +98,33 @@ function ParentStudentDetails(props){
         }        
         <Container className="container-main d-flex flex-column" style={{gap: "20px"}}>
         
-        <Card>
-            <Card.Header as="h5">Name</Card.Header>
-            <Card.Body>
-                <Card.Text>{student.full_name}</Card.Text>
-            </Card.Body>
-        </Card>
 
-        <Card>
-            <Card.Header as="h5">StudentID </Card.Header>
-            <Card.Body>
-                <Card.Text>{student.student_id}</Card.Text>
-            </Card.Body>
-        </Card>
+        <Row  style={{gap: "10px"}}>
+            <Card as={Col} style={{padding: "0px"}}>
+                <Card.Header as="h5">Name</Card.Header>
+                <Card.Body>
+                    <Card.Text>{student.full_name}</Card.Text>
+                </Card.Body>
+            </Card>
 
-        <Card>
+            <br></br>
+            <Card as={Col} style={{padding: "0px"}}>
+                <Card.Header as="h5">StudentID </Card.Header>
+                <Card.Body>
+                    <Card.Text>{student.student_id}</Card.Text>
+                </Card.Body>
+            </Card>
+        </Row>
+
+        <Row style={{gap: "10px"}}>
+                <Card as={Col} style={{padding: "0px"}}>
             <Card.Header as="h5">School </Card.Header>
             <Card.Body>
                 <Card.Text>{student.school.name}</Card.Text>
             </Card.Body>
         </Card>
 
-        <Card>
+        <Card as={Col} style={{padding: "0px"}}>
             <Card.Header as="h5">Route</Card.Header>
             <Card.Body>
                 <Card.Text>{(student.routes !==undefined && student.routes!==null) ? student.routes.name : "Your child has no route"}</Card.Text>
@@ -197,14 +139,50 @@ function ParentStudentDetails(props){
               </Form.Group>
             </Card.Body>
         </Card>
+        </Row>
 
-        <Card>
+        {student.email != null ?
+            <Row  style={{gap: "10px"}}>
+                <Card as={Col} style={{padding: "0px"}}>
+                    <Card.Header as="h5">Student Email</Card.Header>
+                    <Card.Body>
+                        <Card.Text>{student.email}</Card.Text>
+                    </Card.Body>
+                </Card>
+
+                <br></br>
+                <Card as={Col} style={{padding: "0px"}}>
+                    <Card.Header as="h5">Student Phone Number </Card.Header>
+                    <Card.Body>
+                        <Card.Text>{student.phone_number=="" || student.phone_number==null? "No Phone Record Found":student.phone_number}</Card.Text>
+                    </Card.Body>
+                </Card>
+            </Row>
+            :
+            <></>
+            }
+
+
+        {props.activeRun!==undefined && props.activeRun!==null && props.activeRun.end_time !==undefined &&  props.activeRun.end_time ==null ?
+        <Row style={{gap: "10px"}}>
+        <Card border={"success"} as={Col} style={{padding: "0px", backgroundColor: "#d9ffe0"}}>
+            <Card.Header as="h5">Active Run Info </Card.Header>
+            <Card.Body>
+                <p><strong>Bus Driver:</strong> {props.activeRun.driver!==null && props.activeRun.driver !== undefined ? props.activeRun.driver.full_name : ""}</p>
+                <p><strong>Bus Number:</strong> {props.activeRun.bus_number!==null && props.activeRun.bus_number!==undefined ?props.activeRun.bus_number : ""}</p>
+            </Card.Body>
+        </Card></Row> : <></>}
+
+
+        <Row style={{gap: "10px"}}>
+            <Card as={Col} style={{padding: "0px"}}>
             <Card.Header as="h5">Map View of Stops</Card.Header>
             {(student.routes !==undefined && student.routes!==null) ?
             <Container className='d-flex flex-column justify-content-center' style={{marginTop: "20px"}}>
                 <IconLegend legendType='parentStudent'></IconLegend>
-                <Card.Body>
-                    <MapComponent pinData={pinData} otherMapComponents={extraComponents} center={{lng: Number(props.student.guardian.longitude),lat: Number(props.student.guardian.latitude)}}></MapComponent>
+                <Card.Body style={{padding: "0px",marginTop: "20px",marginBottom: "20px"}}>
+                    {/* <MapComponent pinData={pinData} otherMapComponents={extraComponents} center={{lng: Number(props.student.guardian.longitude),lat: Number(props.student.guardian.latitude)}}></MapComponent> */}
+                    <StudentViewMap student={props.student} activeRun={props.activeRun} stops={props.stops} />
                 </Card.Body>    
             </Container>
             :
@@ -213,14 +191,16 @@ function ParentStudentDetails(props){
             </Card.Body>
             }
         </Card>
+        </Row>
 
-
-        <Card>
-            <Card.Header as="h5">In Range Stops</Card.Header>
-            <Card.Body>
-                <GeneralAdminTableView title='In Range Stops' tableType='stop' search="stop" values={props.stops} action={doNothing} totalCount={props.stopCount}/>
-            </Card.Body>
-        </Card>
+        <Row style={{gap: "10px"}}>
+        <Card as={Col} style={{padding: "0px"}}>
+                <Card.Header as="h5">In Range Stops</Card.Header>
+                <Card.Body>
+                    <GeneralAdminTableView title='In Range Stops' tableType='stop' search="stop" values={props.stops} action={doNothing} totalCount={props.stopCount}/>
+                </Card.Body>
+            </Card>
+        </Row>
 
         </Container>
     </div>
@@ -230,7 +210,8 @@ function ParentStudentDetails(props){
 
 ParentStudentDetails.propTypes = {
     getStudentInfo: PropTypes.func.isRequired,
-    getInRangeStop: PropTypes.func.isRequired
+    getInRangeStop: PropTypes.func.isRequired,
+    getRunByRoute: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = (state) => ({
@@ -240,6 +221,7 @@ const mapStateToProps = (state) => ({
     student: state.students.viewedStudent,
     stops: state.students.inRangeStops.results,
     stopCount: state.students.inRangeStops.count,
+    activeRun: state.drive.currentRun,
 });
 
-export default connect(mapStateToProps, {getStudentInfo,getInRangeStop})(ParentStudentDetails)
+export default connect(mapStateToProps, {getStudentInfo,getInRangeStop, getRunByRoute})(ParentStudentDetails)

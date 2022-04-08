@@ -8,12 +8,12 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from datetime import datetime, time
 from geopy.geocoders import GoogleV3
-from .models import School, Route, Student, Stop, ActiveBusRun, TransitLog, BusRun, Bus
+from .models import School, Route, Student, Stop, TransitLog, BusRun, Bus
 from .serializers import StartBusRunSerializer, UserSerializer, StudentSerializer, RouteSerializer, SchoolSerializer, FormatStudentSerializer, \
     FormatRouteSerializer, FormatUserSerializer, EditUserSerializer, StopSerializer, CheckInrangeSerializer, \
     LoadUserSerializer, LoadModelDataSerializer, find_school_match_candidates, school_names_match, \
     StaffEditUserSerializer, StaffEditSchoolSerializer, StaffStudentSerializer, LoadStudentSerializer, \
-    LoadStudentSerializerStrict, ExposeUserSerializer, ExposeUserInputEmailSerializer, ActiveBusRunSerializer, \
+    LoadStudentSerializerStrict, ExposeUserSerializer, ExposeUserInputEmailSerializer, BusSerializer, \
     TransitLogSerializer, BusRunSerializer, FormatBusRunSerializer, BusSerializer
 from .search import DynamicSearchFilter
 from .customfilters import StudentCountShortCircuitFilter
@@ -99,10 +99,10 @@ def duration_check(run: BusRun):
                 # print(delta//3600)
             run.duration = time(3, 0, 0)
             run.timeout = True
-        else:
-            run.duration = time(delta//3600, (delta%3600)//60, delta%60)
-            run.timeout = False
-        run.save(update_fields=['end_time', 'duration', 'timeout'])
+        # else:
+            # run.duration = time(delta//3600, (delta%3600)//60, delta%60)
+            # run.timeout = False
+            run.save(update_fields=['end_time', 'duration', 'timeout'])
         # TODO delete bus from bus table
 
 
@@ -161,10 +161,13 @@ def end_run_now(run: BusRun):
     delta = end_time_in_sec-start_time_in_sec
     run.duration = time(delta//3600, (delta%3600)//60, delta%60)
     run.save(update_fields=['end_time', 'duration'])
-    # route = Route.objects.get(id=route)
+
     run.route.driver = None
     run.route.bus_number = None
     run.route.save(update_fields=['driver', 'bus_number'])
+
+    Bus.objects.filter(bus_number=run.bus_number).delete()
+
     return Response(FormatBusRunSerializer(instance=run).data, status.HTTP_200_OK)
 
 
@@ -417,9 +420,9 @@ class BusRunViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend, DynamicSearchFilter, filters.OrderingFilter]
     
     # filterset_fields = get_filter_dict(BusRun)
-    filterset_fields = ['bus_number', 'driver', 'route', 'school']
-    ordering_fields = ['bus_number', 'driver', 'start_time', 'route', 'going_towards_school']
-    ordering = 'start_time'
+    filterset_fields = ['bus_number', 'driver', 'route', 'school__name']
+    ordering_fields = ['bus_number', 'driver', 'start_time', 'route', 'going_towards_school', 'duration', 'school__name', 'driver__name', 'route__name']
+    ordering = ['start_time', 'duration']
 
     def get_serializer_class(self):
         if self.action == 'list' or self.action == 'retrieve':
@@ -430,7 +433,7 @@ class BusRunViewSet(viewsets.ModelViewSet):
     
     def get_queryset(self):
         if is_school_staff(self.request.user):
-            return BusRun.objects.filter(id__in=self.request.user.managed_schools.distinct().values('run_id')).distinct().order_by('start_time')
+            return BusRun.objects.filter(id__in=self.request.user.managed_schools.distinct().values('run_id')).distinct().order_by('-start_time')
         return BusRun.objects.all().distinct().order_by('bus_number')
 
     @action(detail=True, methods=['get'], permission_classes=[permissions.AllowAny])
@@ -456,7 +459,6 @@ class BusRunViewSet(viewsets.ModelViewSet):
         try:
             run = get_active_bus_on_route_from_pk(pk) 
             run.previous_stop_index = run.previous_stop_index+1
-            print(Stop.objects.filter(route=run.route))
             if len(Stop.objects.filter(route=run.route)) != run.previous_stop_index:
                 run.save(update_fields=['previous_stop_index'])
                 return self.next_stop(self, pk=pk)
@@ -509,28 +511,43 @@ class ActiveBusLocationsViewSet(viewsets.ModelViewSet):
 
 class TranzitTraqApi(generics.GenericAPIView):
 
-    def talk_to_tranzit_traq(self, bus):
+    def talk_to_tranzit_traq(self, bus) -> Response:
         try:
             url =  f"http://tranzit.colab.duke.edu:8000/get"
-            params = {'bus': bus}
+            params = {'bus': bus.bus_number}
             req = requests.get(url=url, params=params)
             ret = json.loads(req.text)
             # return Response(ret, status.HTTP_200_OK)
             data = {}
-            data['bus_number'] = ret['bus']
-            data['latitude'] = ret['lat']
-            data['longitude'] = ret['lng']
+            try:
+                bus_object = Bus.objects.get(bus_number=bus.bus_number)
+                bus_object.latitude = ret['lat']
+                bus_object.longitude = ret['lng']
+                bus_object.save(update_fields=['latitude', 'longitude'])
+                bus
+            except:
+                data['bus_number'] = ret['bus']
+                data['latitude'] = ret['lat']
+                data['longitude'] = ret['lng']
+                serializer = BusSerializer(data=data)
+                if serializer.is_valid():
+                    serializer.save()
+            bus.location = Bus.objects.get(bus_number=bus.bus_number)
+            bus.save(update_fields=['location'])
+            
         except:
-            pass
-            # return Response("Something went wrong", status.HTTP_404_NOT_FOUND)
+            return Response("Tranzit Traq gave a poor response", status.HTTP_404_NOT_FOUND)
 
     def get(self, request, *args, **kwargs):
         active_buses = BusRun.objects.filter(end_time=None)
+        counter = 0
         for bus in active_buses:
             # bus_id=request.GET['bus']
             duration_check(bus)
-            if bus.end_time is None:
+            if bus.end_time is None and counter < 100:
                 self.talk_to_tranzit_traq(bus)
+                counter += 1
+        return Response("done", status.HTTP_200_OK)
 
 
 
@@ -822,7 +839,7 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
             if not is_admin(request.user) and user.email not in user_emails_in_student:
                 # Due to variance request, school staff must create parents paired with students or result in disappearing guardians
                 user_email_errors.append("This parent would be created without corresponding students")
-            if user.email in student_email_duplication:
+            if user.email in student_email_duplication and len(student_email_duplication[user.email]) > 0:
                 user_email_errors.append(
                     "This email conflicts with a student email that would be loaded as part of this transaction")
 
@@ -868,7 +885,7 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
             if len(current_student_email_duplicates) != 0:
                 student_email_errors.append("Duplicate email addresses must be corrected before continuing")
 
-            if student.email in user_email_duplication:
+            if student.email in user_email_duplication and len(user_email_duplication[student.email]) > 0:
                 student_email_errors.append(
                     "This email conflicts with a user email that would be loaded as part of this transaction")
 
@@ -904,6 +921,7 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
                                                                                             student_dex].get(
                                                                                             "school_name", []), [])
             students_response.append(student_object_response)
+        # print(student_email_duplication)
         return Response({"users": users_response, "students": students_response}, status.HTTP_200_OK)
 
 

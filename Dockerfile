@@ -18,6 +18,7 @@ COPY entrypoint/ .
 # install requirements
 RUN pip install -r requirements.txt
 RUN pip freeze
+RUN apt-get update
 RUN apt-get install -y cron
 
 # move entire current directory into new dir

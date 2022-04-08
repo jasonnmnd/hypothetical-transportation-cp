@@ -10,6 +10,7 @@ export default function csvJson(text, headers, quoteChar = '"', delimiter = ',')
     const lines = text.split('\n');
     const heads = headers ?? match(lines.splice(0, 1)[0]);
     heads[heads.indexOf('name')] = 'full_name'
+    heads[heads.indexOf('student_email')] = 'email'
 
 
     return lines.map(line => {

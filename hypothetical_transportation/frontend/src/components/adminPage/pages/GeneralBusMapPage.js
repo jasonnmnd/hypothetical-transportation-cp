@@ -7,11 +7,12 @@ import AdminHeader from '../../header/AdminHeader';
 import { Container, Form, Col, Button, Card } from 'react-bootstrap';
 import Select from 'react-select';
 import BusRunsMap from '../components/driver_bus_run/BusRunsMap';
-import { getActiveRuns, getBusLocations } from '../../../actions/drive';
+import { getActiveRuns, getBusLocations, resetBusLocations } from '../../../actions/drive';
 import { EXAMPLE_ACTIVE_RUNS } from '../../../utils/drive';
 import MapComponent from '../../maps/MapComponent';
 import { InfoWindow } from '@react-google-maps/api';
 import getType from '../../../utils/user2';
+import { runCallEveryPeriod } from '../../../utils/live_updating';
 
 
 function GeneralBusMapPage(props) {
@@ -22,19 +23,23 @@ function GeneralBusMapPage(props) {
 
 
     useEffect(() => {
+        props.resetBusLocations();
         let params = null;
         if(searchParams.get('school') != null && searchParams.get('school') != undefined){
             params = {
                 school: searchParams.get('school')
             }
         }
-        props.getActiveRuns(params);
+        // const interval = setInterval(() => {
+        //     console.log('This will run every 5 seconds!');
+        //     props.getActiveRuns(params);
+        //   }, 10000);
+        // return () => clearInterval(interval);
+        return runCallEveryPeriod(() => props.getActiveRuns(params))
+        
     }, []);
 
-    useEffect(() => {
-        
-        props.getBusLocations(props.activeRuns.map(run => run.bus_number))
-    }, [props.activeRuns]);
+
 
     
 
@@ -65,24 +70,24 @@ function GeneralBusMapPage(props) {
         createInfoWindow(position, getBusInfoForWindow(pinStuff))
     }
 
-    const getRunPin = (busNum) => {
+    const getRunPin = (run) => {
 
         return {
-            ...props.activeRuns.find(run => run.bus_number == busNum), 
-            latitude: props.busLocations[busNum].latitude, 
-            longitude: props.busLocations[busNum].longitude, 
+            ...run,
+            latitude: run.location.latitude, 
+            longitude: run.location.longitude, 
         }
     }
 
     const getPinData = () => {
         return [
             {
-                iconColor: "green",
-                iconType: "stop",
+                iconColor: "black",
+                iconType: "bus",
                 markerProps: {
                     onClick: onBusClick,
                 },
-                pins: Object.keys(props.busLocations).map(busNum => {return getRunPin(busNum)})
+                pins: props.activeRuns.filter(run => run.location != null).map(run => getRunPin(run))
             },
         ]
     }
@@ -104,7 +109,8 @@ GeneralBusMapPage.propTypes = {
     activeRuns: PropTypes.array,
     getBusLocations: PropTypes.func.isRequired,
     getActiveRuns: PropTypes.func.isRequired,
-    busLocations: PropTypes.object
+    busLocations: PropTypes.object,
+    resetBusLocations: PropTypes.func.isRequired
 }
 
 // GeneralBusMapPage.defaultProps = {
@@ -119,5 +125,5 @@ const mapStateToProps = (state) => ({
     user: state.auth.user
 });
 
-export default connect(mapStateToProps, {getBusLocations, getActiveRuns})(GeneralBusMapPage)
+export default connect(mapStateToProps, {getBusLocations, getActiveRuns, resetBusLocations})(GeneralBusMapPage)
 
