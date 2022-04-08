@@ -10,6 +10,7 @@ import IconLegend from '../common/IconLegend';
 import MapComponent from '../maps/MapComponent';
 import GeneralAdminTableView from '../adminPage/components/views/GeneralAdminTableView';
 import { getRunByRoute } from '../../actions/drive';
+import getType from '../../utils/user2';
 
 function StudentPage(props) {
 
