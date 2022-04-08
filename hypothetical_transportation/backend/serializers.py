@@ -1,13 +1,9 @@
-from dataclasses import fields
-from pyexpat import model
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from rest_framework import serializers
-from .models import Bus, Route, School, Student, Stop, ActiveBusRun, TransitLog, BusRun, EstimatedTimeToNextStop
-from geopy.geocoders import Nominatim, GoogleV3
+from .models import Bus, Route, School, Student, Stop, TransitLog, BusRun, EstimatedTimeToNextStop
+from geopy.geocoders import GoogleV3
 from .permissions import is_admin, is_school_staff
-from datetime import datetime
-
 
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:
@@ -99,11 +95,6 @@ class EstimatedTimeToNextStopSerializer(serializers.ModelSerializer):
         return super().validate(attrs)
     class Meta:
         model = EstimatedTimeToNextStop
-        fields = '__all__'
-
-class ActiveBusRunSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ActiveBusRun
         fields = '__all__'
 
 
