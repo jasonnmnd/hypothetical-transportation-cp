@@ -106,16 +106,8 @@ function StudentPage(props) {
         return (
             <>
                 <h4>Bus {pinStuff.bus_number}</h4>
-                <h5>Driver: 
-                    <Link to={`/${getType(props.user)}/user/${pinStuff.driver.id}?pageNum=1`}>
-                        {pinStuff.driver.full_name}
-                    </Link>
-                </h5>
-                <h5>Route: 
-                    <Link to={`/${getType(props.user)}/route/${pinStuff.route.id}?pageNum=1`}>
-                        {pinStuff.route.name}
-                    </Link>
-                </h5>
+                <h5>Driver: {pinStuff.driver.full_name}</h5>
+                <h5>Route: {pinStuff.route.name}</h5>
             </>
             
         )

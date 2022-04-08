@@ -16,6 +16,7 @@ import IconLegend from "../../common/IconLegend";
 import isBusDriver from "../../../utils/userBusDriver";
 import isSchoolStaff from "../../../utils/userSchoolStaff";
 import { getRunByRoute } from "../../../actions/drive";
+import { InfoWindow } from '@react-google-maps/api';
 
 function ParentStudentDetails(props){
     const param = useParams();
@@ -61,6 +62,7 @@ function ParentStudentDetails(props){
     const getPinData = () => {
         let pinData = getStopPinData();
         addStudentPin(pinData, onStudentClick)
+        addBusPin(pinData)
         // console.log(pinData);
         return pinData;
     }
@@ -89,6 +91,46 @@ function ParentStudentDetails(props){
                 getStudentPin(student)
             ]
         })
+    }
+
+    const getRunPin = () => {
+        console.log(props)
+        return {
+            ...props.activeRun, 
+            latitude: props.activeRun.location.latitude, 
+            longitude: props.activeRun.location.longitude, 
+        }
+    }
+
+    const addBusPin = (pinData) => {
+        if(props.activeRun.driver == null){
+            return
+        }
+        pinData.push({
+            iconColor: "black",
+            iconType: "bus",
+            markerProps: {
+                onClick: onBusClick,
+            },
+            pins: [
+                getRunPin()
+            ]
+        })
+    }
+
+    const getBusInfoForWindow = (pinStuff) => {
+        return (
+            <>
+                <h4>Bus {pinStuff.bus_number}</h4>
+                <h5>Driver: {pinStuff.driver.full_name}</h5>
+                <h5>Route: {pinStuff.route.name}</h5>
+            </>
+            
+        )
+    }
+
+    const onBusClick = (pinStuff, position) => {
+        createInfoWindow(position, getBusInfoForWindow(pinStuff))
     }
     
 
