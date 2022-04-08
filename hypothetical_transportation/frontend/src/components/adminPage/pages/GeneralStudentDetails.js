@@ -204,7 +204,7 @@ function GeneralAdminStudentDetails(props) {
                             </Alert>:<></>
                             )
                         }
-                        {(student.routes!==undefined && props.currentRun.id!==undefined) ?
+                        {(student.routes!==undefined  && student.routes!==null && props.currentRun!==undefined && props.currentRun.id!==undefined && props.currentRun.route.id===student.routes.id) ?
                             <Alert variant="success">
                                 <Alert.Heading>There is an active run for this route!</Alert.Heading>
                                 <p>
