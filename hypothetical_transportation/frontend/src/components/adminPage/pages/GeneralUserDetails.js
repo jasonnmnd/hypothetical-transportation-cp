@@ -9,10 +9,10 @@ import { getUser, deleteUser } from '../../../actions/users';
 import { getStudents } from '../../../actions/students';
 import GeneralAdminTableView from '../components/views/GeneralAdminTableView';
 import isAdmin from '../../../utils/user';
-import { Container, Card, Button, Row, Col } from 'react-bootstrap'
+import { Container, Card, Button, Row, Col, Alert } from 'react-bootstrap'
 import getType from '../../../utils/user2'
 import { getSchools } from '../../../actions/schools';
-
+import {getRunByDriver} from '../../../actions/drive';
 
 function AdminUserDetails(props) {
   const navigate = useNavigate();
@@ -62,6 +62,10 @@ function AdminUserDetails(props) {
     }
   }, [props.user,props.schools]);
 
+  useEffect(() => {
+    props.getRunByDriver(props.user.id)
+  }, [props.user]);
+
 
   return (
     <div>        
@@ -84,6 +88,22 @@ function AdminUserDetails(props) {
                 </Col>
             </Row>
         </Container>:<></>}
+
+
+        {(props.currentRun!==undefined && props.currentRun!==null  && props.currentRun.id!==undefined && props.currentRun.id!==null ) ?
+          <Alert variant="success">
+              <Alert.Heading>Driver is currently in transit!</Alert.Heading>
+              <p>
+                  Bus Number: {props.currentRun.bus_number}
+              </p>
+                  
+              <Link to={`/${getType(props.curUser)}/route/${props.currentRun.route.id}/`}>
+                  Route: {props.currentRun.route.name}
+              </Link>
+          </Alert>:<></>
+      }
+
+
         <Row  style={{gap: "10px"}}> 
           <Card  as={Col} style={{padding: "0px"}}>
               <Card.Header as="h5">Name</Card.Header>
@@ -150,6 +170,7 @@ AdminUserDetails.propTypes = {
     getUser: PropTypes.func.isRequired,
     getStudents: PropTypes.func.isRequired,
     getSchools: PropTypes.func.isRequired,
+    getRunByDriver: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = (state) => ({
@@ -159,6 +180,7 @@ const mapStateToProps = (state) => ({
   students: state.students.students.results,
   studentCount: state.students.students.count,
   schools: state.schools.schools.results,
+  currentRun: state.drive.currentRun,
 });
 
-export default connect(mapStateToProps, {getSchools,getUser, getStudents, deleteUser})(AdminUserDetails)
+export default connect(mapStateToProps, {getSchools,getUser, getStudents, deleteUser, getRunByDriver})(AdminUserDetails)

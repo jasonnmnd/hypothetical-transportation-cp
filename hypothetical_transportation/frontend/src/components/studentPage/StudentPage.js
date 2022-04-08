@@ -9,7 +9,7 @@ import { Row, Card, Container, Col, Alert } from 'react-bootstrap';
 import IconLegend from '../common/IconLegend';
 import MapComponent from '../maps/MapComponent';
 import GeneralAdminTableView from '../adminPage/components/views/GeneralAdminTableView';
-
+import { getRunByRoute } from '../../actions/drive';
 
 function StudentPage(props) {
 
@@ -24,6 +24,10 @@ function StudentPage(props) {
   useEffect(() => {
     props.getStudentInfo(props.user.linked_student);
   }, []);
+
+  useEffect(()=>{
+    if(props.student.routes) props.getRunByRoute(props.student.routes.id)
+  },[props.student])
 
 
 
@@ -175,6 +179,16 @@ function StudentPage(props) {
                 </Card>
             </Row>
 
+        {props.activeRun!==undefined && props.activeRun!==null && props.activeRun.end_time !==undefined &&  props.activeRun.end_time ==null ?
+        <Row style={{gap: "10px"}}>
+        <Card border={"success"} as={Col} style={{padding: "0px", backgroundColor: "#d9ffe0"}}>
+            <Card.Header as="h5">Active Run Info </Card.Header>
+            <Card.Body>
+                <p><strong>Bus Driver:</strong> {props.activeRun.driver!==null && props.activeRun.driver !== undefined ? props.activeRun.driver.full_name : ""}</p>
+                <p><strong>Bus Number:</strong> {props.activeRun.bus_number!==null && props.activeRun.bus_number!==undefined ?props.activeRun.bus_number : ""}</p>
+            </Card.Body>
+        </Card></Row> : <></>}
+
             <Row style={{gap: "10px"}}>
                 <Card as={Col} style={{padding: "0px"}}>
                     <Card.Header as="h5">Map View of Stops</Card.Header>
@@ -210,6 +224,7 @@ function StudentPage(props) {
 }
 
 StudentPage.propTypes = {
+    getRunByRoute: PropTypes.func.isRequired,
 
 }
 
@@ -220,7 +235,8 @@ const mapStateToProps = (state) => ({
     student: state.students.viewedStudent,
     stops: state.students.inRangeStops.results,
     stopCount: state.students.inRangeStops.count,
+    activeRun: state.drive.currentRun,
 });
 
 
-export default connect(mapStateToProps, {logout, getStudentInfo, getInRangeStop} )(StudentPage)
+export default connect(mapStateToProps, {logout, getStudentInfo, getInRangeStop,getRunByRoute} )(StudentPage)

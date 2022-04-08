@@ -382,6 +382,15 @@ function GeneralAdminRouteDetails(props) {
                     </Form.Group>
                     </Card.Body>
                 </Card>
+
+                {props.activeRun!==undefined && props.activeRun!==null && props.activeRun.end_time !==undefined &&  props.activeRun.end_time ==null ?
+                <Card border={"success"} as={Col} style={{padding: "0px", backgroundColor: "#d9ffe0"}}>
+                    <Card.Header as="h5">Active Run Info </Card.Header>
+                    <Card.Body>
+                        <p><strong>Bus Driver:</strong> {props.activeRun.driver!==null && props.activeRun.driver !== undefined ? props.activeRun.driver.full_name : ""}</p>
+                        <p><strong>Bus Number:</strong> {props.activeRun.bus_number!==null && props.activeRun.bus_number!==undefined ?props.activeRun.bus_number : ""}</p>
+                    </Card.Body>
+                </Card> : <></>}
             </Row>
             
             <Row  style={{gap: "10px"}}>
