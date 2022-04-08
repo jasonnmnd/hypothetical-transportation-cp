@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import "./generalTable.css";
 import { Button, Table } from 'react-bootstrap';
 import { useSearchParams } from "react-router-dom";
+import { DATE_TIME_TO_STRING } from "../../utils/drive";
 
 function GeneralTable( props ) {
   let [searchParams, setSearchParams] = useSearchParams();
@@ -44,7 +45,10 @@ function GeneralTable( props ) {
                     
                     if(columnInfo.dataPath == "duration" && getValueFromPath("end_time", rowData) == null){
                       cellData = "Ongoing"
-                      
+                    }
+
+                    if(columnInfo.dataPath == "start_time"){
+                      cellData = DATE_TIME_TO_STRING(cellData);
                     }
                     return (
                         <td key={`${cellData}--${index}`}>
