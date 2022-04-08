@@ -85,6 +85,9 @@ function StudentPage(props) {
     }
 
     const addBusPin = (pinData) => {
+        if(props.activeRun.end_time == null){
+            return
+        }
         pinData.push({
             iconColor: "black",
             iconType: "bus",
