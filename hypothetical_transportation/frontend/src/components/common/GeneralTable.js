@@ -25,6 +25,12 @@ function GeneralTable( props ) {
       if(rowData["routes"] === null) return "rgb(255, 136, 136)"
       if(!rowData.has_inrange_stop) return "rgb(87, 202, 255)"
     }
+
+    if(props.tableType=="activeDrive") {
+      if (rowData.timeout == true) return "rgb(255, 136, 136)"
+      if (rowData.end_time == null) return "rgb(175, 225, 175)"
+      if (rowData.end_time != null) return "rgb(87, 202, 255)"
+    }
     return ""
   }
   

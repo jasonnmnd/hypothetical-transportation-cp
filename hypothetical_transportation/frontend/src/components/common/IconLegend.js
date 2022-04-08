@@ -2,7 +2,7 @@ import React, {Fragment} from 'react'
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Container, Card } from 'react-bootstrap';
-import { getIcon, SCHOOL_LEGEND, SCHOOL_MARKER, STOP_LEGEND, STOP_MARKER, STUDENT_CHECK_LEGEND, STUDENT_CHECK_MARKER, STUDENT_MARKER, STUDENT_MULTIPLE_LEGEND, STUDENT_OTHER_ROUTE_LEGEND, STUDENT_X_LEGEND } from '../maps/static/markers'
+import { getIcon, SCHOOL_LEGEND, SCHOOL_MARKER, STOP_LEGEND, STOP_MARKER, STUDENT_CHECK_LEGEND, STUDENT_CHECK_MARKER, STUDENT_MARKER, STUDENT_MULTIPLE_LEGEND, STUDENT_OTHER_ROUTE_LEGEND, STUDENT_X_LEGEND, BUS_LEGEND } from '../maps/static/markers'
 import { GoogleMap, LoadScript, Marker, InfoWindow, useJsApiLoader } from '@react-google-maps/api';
 
 
@@ -58,7 +58,7 @@ function IconLegend(props) {
         },
         {
             key: " Active Bus ",
-            icon: STOP_LEGEND("black")
+            icon: BUS_LEGEND("black")
         }
     ]
 
@@ -98,7 +98,7 @@ function IconLegend(props) {
         },
         {
             key: " Active Bus ",
-            icon: STOP_LEGEND("black")
+            icon: BUS_LEGEND("black")
         }
     ]
 
@@ -113,7 +113,7 @@ function IconLegend(props) {
         },
         {
             key: " Active Bus ",
-            icon: STOP_LEGEND("black")
+            icon: BUS_LEGEND("black")
         }
     ]
 

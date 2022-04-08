@@ -70,7 +70,7 @@ function GeneralBusLogPage(props) {
     <div>          
         <AdminHeader/>
         <Container className="container-main d-flex flex-column" style={{gap: "20px"}}>
-            <div className="shadow-sm p-3 mb-5 bg-white rounded d-flex flex-row justify-content-center">
+            <div className="shadow-sm p-3 mb-5 bg-white rounded d-flex flex-row justify-content-center" onMouseEnter={console.log(props.activeBusesData)}>
                 <h1>{getTitlePrefix()} Bus Log</h1>
             </div>
             <ActiveRunsTable data={props.activeBusesData} count={props.activeBusesCount} handleViewClick={handleViewClick}/> 
