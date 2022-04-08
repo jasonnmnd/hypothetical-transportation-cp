@@ -127,6 +127,8 @@ class BusRun(models.Model):
     )
     duration = models.TimeField(blank=True, null=True)
     end_time = models.DateTimeField(blank=True, null=True)
+    location = models.ForeignKey(Bus, related_name='transit_log', null=True, default=None, on_delete=models.SET_NULL)
+
     going_towards_school = models.BooleanField(default=True, null=False)
     previous_stop_index = models.PositiveIntegerField(blank=True, null=True, default=0)
     route = models.ForeignKey(
