@@ -55,6 +55,10 @@ function IconLegend(props) {
         {
             key: " Stops ",
             icon: STOP_LEGEND("blue")
+        },
+        {
+            key: " Active Bus ",
+            icon: STOP_LEGEND("black")
         }
     ]
 
@@ -74,11 +78,11 @@ function IconLegend(props) {
             icon: STUDENT_X_LEGEND("red")
         },
         {
-            key: " Multiple Students: ",
+            key: " Multiple Students ",
             icon: STUDENT_MULTIPLE_LEGEND("purple")
         },
         {
-            key: " Stops: ",
+            key: " Stops ",
             icon: STOP_LEGEND("blue")
         }
     ]
@@ -91,6 +95,10 @@ function IconLegend(props) {
         {
             key: " Stops That Are in Range ",
             icon: STOP_LEGEND("blue")
+        },
+        {
+            key: " Active Bus ",
+            icon: STOP_LEGEND("black")
         }
     ]
 
@@ -102,6 +110,10 @@ function IconLegend(props) {
         {
             key: " Stops That Are in Range ",
             icon: STOP_LEGEND("blue")
+        },
+        {
+            key: " Active Bus ",
+            icon: STOP_LEGEND("black")
         }
     ]
 
