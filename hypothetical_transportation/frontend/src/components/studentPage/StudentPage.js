@@ -51,7 +51,7 @@ function StudentPage(props) {
 
     useEffect(()=>{
         setPinData(getPinData());
-    },[props.stops, student])
+    },[props.stops, student, props.activeRun])
 
     const getPinData = () => {
         let pinData = getStopPinData();
