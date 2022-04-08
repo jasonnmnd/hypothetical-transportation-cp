@@ -27,6 +27,7 @@ function StudentPage(props) {
 
   useEffect(()=>{
     if(props.student.routes) props.getRunByRoute(props.student.routes.id)
+    
   },[props.student])
 
 
@@ -54,7 +55,8 @@ function StudentPage(props) {
 
     const getPinData = () => {
         let pinData = getStopPinData();
-        addStudentPin(pinData, onStudentClick)
+        addStudentPin(pinData, onStudentClick);
+        addBusPin(pinData)
         // console.log(pinData);
         return pinData;
     }
@@ -71,6 +73,50 @@ function StudentPage(props) {
         return {
             ...stop, 
         }
+    }
+
+    const getRunPin = () => {
+        return {
+            ...props.activeRun, 
+            latitude: props.activeRun.location.latitude, 
+            longitude: props.activeRun.location.longitude, 
+        }
+    }
+
+    const addBusPin = (pinData) => {
+        pinData.push({
+            iconColor: "black",
+            iconType: "bus",
+            markerProps: {
+                onClick: onBusClick,
+            },
+            pins: [
+                getRunPin()
+            ]
+        })
+    }
+
+    const getBusInfoForWindow = (pinStuff) => {
+        return (
+            <>
+                <h4>Bus {pinStuff.bus_number}</h4>
+                <h5>Driver: 
+                    <Link to={`/${getType(props.user)}/user/${pinStuff.driver.id}?pageNum=1`}>
+                        {pinStuff.driver.full_name}
+                    </Link>
+                </h5>
+                <h5>Route: 
+                    <Link to={`/${getType(props.user)}/route/${pinStuff.route.id}?pageNum=1`}>
+                        {pinStuff.route.name}
+                    </Link>
+                </h5>
+            </>
+            
+        )
+    }
+
+    const onBusClick = (pinStuff, position) => {
+        createInfoWindow(position, getBusInfoForWindow(pinStuff))
     }
 
     const addStudentPin = (pinData, onclick) => {
