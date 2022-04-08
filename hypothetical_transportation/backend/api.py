@@ -161,10 +161,13 @@ def end_run_now(run: BusRun):
     delta = end_time_in_sec-start_time_in_sec
     run.duration = time(delta//3600, (delta%3600)//60, delta%60)
     run.save(update_fields=['end_time', 'duration'])
-    # route = Route.objects.get(id=route)
+
     run.route.driver = None
     run.route.bus_number = None
     run.route.save(update_fields=['driver', 'bus_number'])
+
+    Bus.objects.filter(bus_number=run.bus_number).delete()
+
     return Response(FormatBusRunSerializer(instance=run).data, status.HTTP_200_OK)
 
 
