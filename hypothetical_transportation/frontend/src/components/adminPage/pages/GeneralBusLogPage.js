@@ -15,6 +15,7 @@ import { getLog } from '../../../actions/drive';
 import { getRouteInfo } from '../../../actions/routes';
 import { getSchool } from '../../../actions/schools';
 import getType from '../../../utils/user2';
+import GeneralLegend from '../../common/GeneralLegend';
 
 
 
@@ -66,13 +67,29 @@ function GeneralBusLogPage(props) {
     }
 
   
+    const busLogLegend = [
+        {
+            key: " Timed Out ",
+            color: "red",
+        },
+        {
+            key: " Bus In Progress ",
+            color: "green",
+        },
+        {
+            key: " Bus Complete ",
+            color: "blue",
+        },
+    ]
+
   return (
     <div>          
         <AdminHeader/>
         <Container className="container-main d-flex flex-column" style={{gap: "20px"}}>
-            <div className="shadow-sm p-3 mb-5 bg-white rounded d-flex flex-row justify-content-center" onMouseEnter={console.log(props.activeBusesData)}>
+            <div className="shadow-sm p-3 mb-5 bg-white rounded d-flex flex-row justify-content-center">
                 <h1>{getTitlePrefix()} Bus Log</h1>
             </div>
+            <GeneralLegend legend={busLogLegend}/>
             <ActiveRunsTable data={props.activeBusesData} count={props.activeBusesCount} handleViewClick={handleViewClick}/> 
         </Container>
     </div>
