@@ -12,6 +12,7 @@ import { EXAMPLE_ACTIVE_RUNS } from '../../../utils/drive';
 import MapComponent from '../../maps/MapComponent';
 import { InfoWindow } from '@react-google-maps/api';
 import getType from '../../../utils/user2';
+import { runCallEveryPeriod } from '../../../utils/live_updating';
 
 
 function GeneralBusMapPage(props) {
@@ -29,8 +30,15 @@ function GeneralBusMapPage(props) {
                 school: searchParams.get('school')
             }
         }
-        props.getActiveRuns(params);
+        // const interval = setInterval(() => {
+        //     console.log('This will run every 5 seconds!');
+        //     props.getActiveRuns(params);
+        //   }, 10000);
+        // return () => clearInterval(interval);
+        return runCallEveryPeriod(() => props.getActiveRuns(params))
+        
     }, []);
+
 
 
     

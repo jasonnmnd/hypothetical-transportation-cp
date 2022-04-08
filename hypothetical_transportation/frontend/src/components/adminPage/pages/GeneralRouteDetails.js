@@ -22,6 +22,7 @@ import axios from 'axios';
 import config from '../../../utils/config';
 import { getRunByRoute } from '../../../actions/drive';
 import { getBusLocation } from '../../../actions/drive';
+import { runCallEveryPeriod } from '../../../utils/live_updating';
 
 function GeneralAdminRouteDetails(props) {
 
@@ -72,7 +73,7 @@ function GeneralAdminRouteDetails(props) {
   }, [searchParams]);
 
   useEffect(() => {
-    props.getRunByRoute(props.route.id)
+      return runCallEveryPeriod(() => props.getRunByRoute(props.route.id))
   }, [props.route]);
 
 

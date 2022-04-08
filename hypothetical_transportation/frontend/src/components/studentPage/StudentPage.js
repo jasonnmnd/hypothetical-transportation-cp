@@ -13,6 +13,7 @@ import { getRunByRoute } from '../../actions/drive';
 import getType from '../../utils/user2';
 import { InfoWindow } from '@react-google-maps/api';
 import StudentViewMap from '../maps/StudentViewMap';
+import { runCallEveryPeriod } from '../../utils/live_updating';
 
 function StudentPage(props) {
 
@@ -27,7 +28,9 @@ function StudentPage(props) {
   }, []);
 
   useEffect(()=>{
-    if(props.student.routes) props.getRunByRoute(props.student.routes.id)
+    if(props.student.routes) {
+        return runCallEveryPeriod(() => props.getRunByRoute(props.student.routes.id))
+    } 
     
   },[props.student])
 
