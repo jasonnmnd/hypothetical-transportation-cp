@@ -76,6 +76,7 @@ function StudentPage(props) {
     }
 
     const getRunPin = () => {
+        console.log(props)
         return {
             ...props.activeRun, 
             latitude: props.activeRun.location.latitude, 
