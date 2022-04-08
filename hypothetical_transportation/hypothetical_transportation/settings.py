@@ -141,8 +141,8 @@ DATABASES = {
         'NAME': 'ht_db',
         'USER': 'admin',
         'PASSWORD': 'admin',
-        'HOST': 'db',
-        #  'HOST': 'localhost',
+        #'HOST': 'db',
+        'HOST': 'localhost',
         'PORT': '5432',
     }
 }
