@@ -420,8 +420,8 @@ class BusRunViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend, DynamicSearchFilter, filters.OrderingFilter]
     
     # filterset_fields = get_filter_dict(BusRun)
-    filterset_fields = ['bus_number', 'driver', 'route', 'school__name', 'duration']
-    ordering_fields = ['bus_number', 'driver', 'start_time', 'route', 'going_towards_school']
+    filterset_fields = ['bus_number', 'driver', 'route', 'school__name']
+    ordering_fields = ['bus_number', 'driver', 'start_time', 'route', 'going_towards_school', 'duration']
     ordering = 'start_time'
 
     def get_serializer_class(self):
