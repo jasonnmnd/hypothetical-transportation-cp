@@ -16,7 +16,6 @@ import IconLegend from "../../common/IconLegend";
 import isBusDriver from "../../../utils/userBusDriver";
 import isSchoolStaff from "../../../utils/userSchoolStaff";
 import { getRunByRoute } from "../../../actions/drive";
-import { InfoWindow } from '@react-google-maps/api';
 
 function ParentStudentDetails(props){
     const param = useParams();
