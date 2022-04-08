@@ -12,6 +12,10 @@ import getType from '../../../utils/user2';
 import isSchoolStaff from '../../../utils/userSchoolStaff';
 import { updateStudent } from '../../../actions/students';
 import {getRunByRoute} from '../../../actions/drive';
+import IconLegend from '../../common/IconLegend';
+import MapComponent from '../../maps/MapComponent';
+import StudentViewMap from '../../maps/StudentViewMap';
+import { getInRangeStop } from '../../../actions/students';
 
 function GeneralAdminStudentDetails(props) {
   const navigate = useNavigate();
@@ -48,12 +52,16 @@ function GeneralAdminStudentDetails(props) {
   }, []);
 
   useEffect(() => {
-    console.log(props.student)
     setObj({...student, ["guardian"]:student.guardian.id,["school"]:student.school.id,["routes"]:student.routes?student.routes.id:null})
     if(student.routes){
         props.getRunByRoute(student.routes.id)
     }
   }, [props.student]);
+
+  useEffect(() => {
+    props.getInRangeStop(param.id);
+  }, []);
+
 
   return (
     <div>  
@@ -219,6 +227,24 @@ function GeneralAdminStudentDetails(props) {
                     </Card.Body>
                 </Card>
             </Row>
+
+            <Row style={{gap: "10px"}}>
+                <Card as={Col} style={{padding: "0px"}}>
+                    <Card.Header as="h5">Map View</Card.Header>
+                    {(student.routes !==undefined && student.routes!==null) ?
+                    <Container className='d-flex flex-column justify-content-center' style={{marginTop: "20px"}}>
+                        <IconLegend legendType='student'></IconLegend>
+                        <Card.Body style={{padding: "0px",marginTop: "20px",marginBottom: "20px"}}>
+                            <StudentViewMap student={props.student} activeRun={props.currentRun} stops={props.stops} />
+                        </Card.Body>    
+                    </Container>
+                    :
+                    <Card.Body>
+                        No stops to show right now. Please wait for an administrator to add stops.
+                    </Card.Body>
+                    }
+                </Card>
+            </Row>
         </Container>
 
         <br></br>
@@ -230,12 +256,14 @@ GeneralAdminStudentDetails.propTypes = {
     getStudentInfo: PropTypes.func.isRequired,
     deleteStudent: PropTypes.func.isRequired,
     getRunByRoute: PropTypes.func.isRequired,
+    getInRangeStop: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => ({
   user: state.auth.user,
   student: state.students.viewedStudent,
   currentRun: state.drive.currentRun,
+  stops: state.students.inRangeStops.results,
 });
 
-export default connect(mapStateToProps, {getStudentInfo, deleteStudent, updateStudent, getRunByRoute})(GeneralAdminStudentDetails)
+export default connect(mapStateToProps, {getStudentInfo, deleteStudent, updateStudent, getRunByRoute, getInRangeStop})(GeneralAdminStudentDetails)
