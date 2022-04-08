@@ -496,7 +496,7 @@ class ActiveBusLocationsViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend, DynamicSearchFilter, filters.OrderingFilter]
     
     filterset_fields = get_filter_dict(Bus)
-    ordering = 'bus'
+    ordering = 'bus_number'
 
     def get_serializer_class(self):
         return BusSerializer
