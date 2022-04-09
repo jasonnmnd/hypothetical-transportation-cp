@@ -32,6 +32,7 @@ from .custom_geocoder import CachedGoogleV3
 
 BUS_RUN_TIMEOUT_THRESHOLD = 3 * 3600
 
+
 def get_filter_dict(model):
     """
     Constructs a dictionary of fields to search properties desired.
@@ -423,7 +424,8 @@ class BusRunViewSet(viewsets.ModelViewSet):
 
     # filterset_fields = get_filter_dict(BusRun)
     filterset_fields = ['bus_number', 'driver', 'route', 'school__name']
-    ordering_fields = ['bus_number', 'driver', 'start_time', 'route', 'going_towards_school', 'duration', 'school__name', 'driver__full_name', 'route__name']
+    ordering_fields = ['bus_number', 'driver', 'start_time', 'route', 'going_towards_school', 'duration',
+                       'school__name', 'driver__full_name', 'route__name']
     ordering = ['-start_time', 'duration']
 
     def get_serializer_class(self):
@@ -648,7 +650,7 @@ class StudentViewSet(viewsets.ModelViewSet):
             # there is no run on the route
             print("no run")
             mark_all_passed(student_inrange_stops)
-        
+
         student_inrange_stops = [Stop.objects.get(id=stop.id) for stop in student_inrange_stops]
 
         page = self.paginator.paginate_queryset(student_inrange_stops, request)
@@ -847,6 +849,10 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
                 current_user_email_duplicates.extend(
                     [self.student_to_user(student).get_representation() for student in
                      student_email_duplication[user.email]])
+            else:
+                current_user_email_duplicates.extend([self.student_to_user(student).get_representation() for student in
+                                                      self.get_repr_of_students_with_email(user.email)])
+
             is_valid &= len(current_user_email_duplicates) == 0
             user_email_errors = serializer_errors["users"][user_dex].get("email", [])
 
@@ -889,7 +895,7 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
                                                 student_email_duplication[student.email] if
                                                 dup != student]
 
-            if len(user_email_duplication[student.email]) > 0:
+            if student.email in user_email_duplication and len(user_email_duplication[student.email]) > 0:
                 current_student_email_duplicates.extend(
                     [self.user_to_student(user).get_representation() for user in user_email_duplication[student.email]])
             else:
