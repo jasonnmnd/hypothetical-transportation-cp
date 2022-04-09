@@ -364,7 +364,7 @@ class ActiveBusRunViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         duration_check_multiple(BusRun.objects.filter(end_time=None).distinct().order_by('start_time'))
         if is_school_staff(self.request.user):
-            return BusRun.objects.filter(id__in=self.request.user.managed_schools.distinct().values('run_id'), end_time=None).distinct().order_by('start_time')
+            return BusRun.objects.filter(id__in=self.request.user.managed_schools.distinct().values('bus_run'), end_time=None).distinct().order_by('start_time')
         return BusRun.objects.filter(end_time=None).distinct().order_by('start_time')
 
 
@@ -422,7 +422,7 @@ class BusRunViewSet(viewsets.ModelViewSet):
     # filterset_fields = get_filter_dict(BusRun)
     filterset_fields = ['bus_number', 'driver', 'route', 'school__name']
     ordering_fields = ['bus_number', 'driver', 'start_time', 'route', 'going_towards_school', 'duration', 'school__name', 'driver__name', 'route__name']
-    ordering = ['start_time', 'duration']
+    ordering = ['-start_time', 'duration']
 
     def get_serializer_class(self):
         if self.action == 'list' or self.action == 'retrieve':
@@ -433,7 +433,7 @@ class BusRunViewSet(viewsets.ModelViewSet):
     
     def get_queryset(self):
         if is_school_staff(self.request.user):
-            return BusRun.objects.filter(id__in=self.request.user.managed_schools.distinct().values('run_id')).distinct().order_by('-start_time')
+            return BusRun.objects.filter(id__in=self.request.user.managed_schools.distinct().values('bus_run')).distinct().order_by('-start_time')
         return BusRun.objects.all().distinct().order_by('bus_number')
 
     @action(detail=True, methods=['get'], permission_classes=[permissions.AllowAny])

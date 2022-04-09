@@ -18,13 +18,19 @@ function GeneralTable( props ) {
 
   const getColor = (rowData)=>{
     if(props.tableType=='route'){
-      if(rowData.has_active_run) return "rgb(87, 202, 255)"
+      if(rowData.driver!==null && rowData.bus_number!==null ) return "rgb(87, 202, 255)"
       if(!rowData.is_complete) return "rgb(255, 136, 136)"
     }
 
     if(props.tableType=='student'){
       if(rowData["routes"] === null) return "rgb(255, 136, 136)"
       if(!rowData.has_inrange_stop) return "rgb(87, 202, 255)"
+    }
+
+    if(props.tableType=="activeDrive") {
+      if (rowData.timeout == true) return "rgb(255, 136, 136)"
+      if (rowData.end_time == null) return "rgb(175, 225, 175)"
+      if (rowData.end_time != null) return "rgb(87, 202, 255)"
     }
     return ""
   }

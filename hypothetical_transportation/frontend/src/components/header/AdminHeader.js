@@ -12,6 +12,7 @@ import { logout } from '../../actions/auth';
 import { connect } from 'react-redux';
 import isAdmin from '../../utils/user';
 import getType from '../../utils/user2';
+import isBusDriver from '../../utils/userBusDriver';
 
 function AdminHeader( props ) {
   return (
@@ -53,9 +54,9 @@ function AdminHeader( props ) {
                             <NavDropdown.Item as={Link} to={`/bus/log`}><IoIcons5.IoCreate />Bus Log</NavDropdown.Item>
                         </NavDropdown> : null} */}
                         <NavDropdown title="Buses">
-                            <NavDropdown.Item as={Link} to={`/bus/map`}><GiIcons.GiPathDistance />Active Buses Map</NavDropdown.Item>
+                            <NavDropdown.Item as={Link} to={`/bus/map`}><GiIcons.GiPathDistance /> Active Buses Map</NavDropdown.Item>
                             <NavDropdown.Divider/>
-                            <NavDropdown.Item as={Link} to={`/bus/log`}><IoIcons5.IoCreate />Bus Log</NavDropdown.Item>
+                            <NavDropdown.Item as={Link} to={`/bus/log`}><IoIcons5.IoCreate /> Bus Log</NavDropdown.Item>
                         </NavDropdown>
                         {/* <NavDropdown title="Stops">
                             <NavDropdown.Item as={Link} to={`/`}><GiIcons.GiBusStop /> View Stops</NavDropdown.Item>
@@ -64,7 +65,7 @@ function AdminHeader( props ) {
                         </NavDropdown> */}
 
                         {/* {getType(props.user) == 'driver' ? <Nav.Link as={Link} to={`/drive`}>Drive Actions</Nav.Link> : <></>} */}
-                       <Nav.Link as={Link} to={`/drive`}>Drive Actions</Nav.Link>
+                        {isBusDriver(props.user) ? <Nav.Link as={Link} to={`/drive`}>Drive Actions</Nav.Link> : <></>}
 
                         {isAdmin(props.user) ? <Nav.Link as={Link} to={`/admin/email`}> Send Email</Nav.Link> : <></>}
                         {isAdmin(props.user) ? <Nav.Link as={Link} to={`/upload_file`}> Upload Data</Nav.Link>: <></>}
