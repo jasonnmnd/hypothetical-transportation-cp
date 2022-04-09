@@ -12,6 +12,8 @@ class CachedGoogleV3(GoogleV3):
 
     def geocode(self, query=None, *, exactly_one=True, timeout=DEFAULT_SENTINEL, bounds=None, region=None,
                 components=None, place_id=None, language=None, sensor=False):
+        if query is None or query == "":
+            return None
         if CachedLocation.objects.filter(query=query).count() > 0:
             location = CachedLocation.objects.get(query=query)
             if location.address is None or location.latitude is None or location.longitude is None:
