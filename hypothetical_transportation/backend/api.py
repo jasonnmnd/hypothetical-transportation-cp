@@ -8,6 +8,8 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from datetime import datetime, time
 from geopy.geocoders import GoogleV3
+
+from .time_utils import find_time_to_stops, mark_all_passed
 from .models import School, Route, Student, Stop, TransitLog, BusRun, Bus
 from .serializers import StartBusRunSerializer, UserSerializer, StudentSerializer, RouteSerializer, SchoolSerializer, FormatStudentSerializer, \
     FormatRouteSerializer, FormatUserSerializer, EditUserSerializer, StopSerializer, CheckInrangeSerializer, \
@@ -29,7 +31,6 @@ from .custom_geocoder import CachedGoogleV3
 
 
 BUS_RUN_TIMEOUT_THRESHOLD = 3*3600
-
 
 
 def get_filter_dict(model):
@@ -519,12 +520,12 @@ class TranzitTraqApi(generics.GenericAPIView):
             ret = json.loads(req.text)
             # return Response(ret, status.HTTP_200_OK)
             data = {}
+            print(ret)
             try:
                 bus_object = Bus.objects.get(bus_number=bus.bus_number)
                 bus_object.latitude = ret['lat']
                 bus_object.longitude = ret['lng']
                 bus_object.save(update_fields=['latitude', 'longitude'])
-                bus
             except:
                 data['bus_number'] = ret['bus']
                 data['latitude'] = ret['lat']
@@ -548,7 +549,6 @@ class TranzitTraqApi(generics.GenericAPIView):
                 self.talk_to_tranzit_traq(bus)
                 counter += 1
         return Response("done", status.HTTP_200_OK)
-
 
 
 class SchoolViewSet(viewsets.ModelViewSet):
@@ -636,6 +636,16 @@ class StudentViewSet(viewsets.ModelViewSet):
                                  get_straightline_distance(student.guardian.latitude, student.guardian.longitude,
                                                            stop.latitude,
                                                            stop.longitude) < 0.3 * LEN_OF_MILE]
+        try:
+            find_time_to_stops(student_inrange_stops, get_active_bus_for_route(student_inrange_stops[0].route))
+            # pass
+        except:
+            # there is no run on the route
+            print("no run")
+            mark_all_passed(student_inrange_stops)
+        
+        student_inrange_stops = [Stop.objects.get(id=stop.id) for stop in student_inrange_stops]
+
         page = self.paginator.paginate_queryset(student_inrange_stops, request)
         return self.paginator.get_paginated_response(StopSerializer(page, many=True).data)
 

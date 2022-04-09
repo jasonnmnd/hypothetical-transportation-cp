@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.db.models import Q
 from rest_framework import serializers
-from .models import Bus, Route, School, Student, Stop, TransitLog, BusRun, EstimatedTimeToNextStop
+from .models import Bus, Route, School, Student, Stop, TransitLog, BusRun
 from geopy.geocoders import GoogleV3
 from .custom_geocoder import CachedGoogleV3
 from .permissions import is_admin, is_school_staff, is_guardian, is_student
@@ -111,16 +111,6 @@ class RouteSerializer(serializers.ModelSerializer):
 class StopSerializer(serializers.ModelSerializer):
     class Meta:
         model = Stop
-        fields = '__all__'
-
-
-class EstimatedTimeToNextStopSerializer(serializers.ModelSerializer):
-
-    def validate(self, attrs):
-        print("hihhihihihi")
-        return super().validate(attrs)
-    class Meta:
-        model = EstimatedTimeToNextStop
         fields = '__all__'
 
 
