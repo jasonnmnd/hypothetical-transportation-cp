@@ -79,6 +79,10 @@ function GeneralBusMapPage(props) {
         }
     }
 
+    const getRunsWithLocation = (runs) => {
+        return runs.filter(run => run.location != null)
+    }
+
     const getPinData = () => {
         return [
             {
@@ -87,9 +91,17 @@ function GeneralBusMapPage(props) {
                 markerProps: {
                     onClick: onBusClick,
                 },
-                pins: props.activeRuns.filter(run => run.location != null).map(run => getRunPin(run))
+                pins: getRunsWithLocation(props.activeRuns).map(run => getRunPin(run))
             },
         ]
+    }
+
+    const average = (array) => array.reduce((a, b) => a + b) / array.length;
+
+    const getCenter = () => {
+        const latAverage = average(getRunsWithLocation(props.activeRuns).map(run => run.location.latitude));
+        const lngAverage = average(getRunsWithLocation(props.activeRuns).map(run => run.location.longitude));
+        return {lat: latAverage, lng: lngAverage}
     }
   
   return (
@@ -99,7 +111,7 @@ function GeneralBusMapPage(props) {
             <div className="shadow-sm p-3 mb-5 bg-white rounded d-flex flex-row justify-content-center">
                 <h1>Bus Map</h1>
             </div>
-            <MapComponent pinData={getPinData()} otherMapComponents={extraComponents}/>
+            {getRunsWithLocation(props.activeRuns).length == 0 ? <h4>There are no active runs with valid locations to display.</h4> : <MapComponent pinData={getPinData()} otherMapComponents={extraComponents} center={getCenter()}/>}
         </Container>
     </div>
     );
