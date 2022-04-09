@@ -839,9 +839,6 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
             if not is_admin(request.user) and user.email not in user_emails_in_student:
                 # Due to variance request, school staff must create parents paired with students or result in disappearing guardians
                 user_email_errors.append("This parent would be created without corresponding students")
-            if user.email in student_email_duplication and len(student_email_duplication[user.email]) > 0:
-                user_email_errors.append(
-                    "This email conflicts with a student email that would be loaded as part of this transaction")
 
             user_object_response["email"] = self.get_val_field_response_format(user.email, user_email_errors,
                                                                                current_user_email_duplicates)
@@ -884,10 +881,6 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
 
             if len(current_student_email_duplicates) != 0:
                 student_email_errors.append("Duplicate email addresses must be corrected before continuing")
-
-            if student.email in user_email_duplication and len(user_email_duplication[student.email]) > 0:
-                student_email_errors.append(
-                    "This email conflicts with a user email that would be loaded as part of this transaction")
 
             current_name_duplicates = [dup.get_representation() for dup in student_name_duplication[student.full_name]
                                        if dup != student]
