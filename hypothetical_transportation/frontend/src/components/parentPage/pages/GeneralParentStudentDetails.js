@@ -38,7 +38,10 @@ function ParentStudentDetails(props){
 
     useEffect(()=>{
         if(props.student.routes) {
-            return runCallEveryPeriod(() => props.getRunByRoute(props.student.routes.id));
+            return runCallEveryPeriod(() => {
+                props.getInRangeStop(student.id);
+                props.getRunByRoute(student.routes.id);
+            })
         } 
     },[props.student])
 

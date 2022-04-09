@@ -29,7 +29,10 @@ function StudentPage(props) {
 
   useEffect(()=>{
     if(props.student.routes) {
-        return runCallEveryPeriod(() => props.getRunByRoute(props.student.routes.id))
+        return runCallEveryPeriod(() => {
+            props.getInRangeStop(student.id);
+            props.getRunByRoute(student.routes.id);
+        })
     } 
     
   },[props.student])
@@ -87,7 +90,7 @@ function StudentPage(props) {
                     </Card.Body>
                 </Card>
             </Row>
-            
+
             {student.email != null ?
             <Row  style={{gap: "10px"}}>
                 <Card as={Col} style={{padding: "0px"}}>
