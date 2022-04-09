@@ -53,9 +53,9 @@ function AdminHeader( props ) {
                             <NavDropdown.Item as={Link} to={`/bus/log`}><IoIcons5.IoCreate />Bus Log</NavDropdown.Item>
                         </NavDropdown> : null} */}
                         <NavDropdown title="Buses">
-                            <NavDropdown.Item as={Link} to={`/bus/map`}><GiIcons.GiPathDistance />Active Buses Map</NavDropdown.Item>
+                            <NavDropdown.Item as={Link} to={`/bus/map`}><GiIcons.GiPathDistance /> Active Buses Map</NavDropdown.Item>
                             <NavDropdown.Divider/>
-                            <NavDropdown.Item as={Link} to={`/bus/log`}><IoIcons5.IoCreate />Bus Log</NavDropdown.Item>
+                            <NavDropdown.Item as={Link} to={`/bus/log`}><IoIcons5.IoCreate /> Bus Log</NavDropdown.Item>
                         </NavDropdown>
                         {/* <NavDropdown title="Stops">
                             <NavDropdown.Item as={Link} to={`/`}><GiIcons.GiBusStop /> View Stops</NavDropdown.Item>

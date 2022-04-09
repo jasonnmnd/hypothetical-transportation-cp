@@ -2,7 +2,7 @@ import React, {Fragment} from 'react'
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Container, Card } from 'react-bootstrap';
-import { getIcon, SCHOOL_LEGEND, SCHOOL_MARKER, STOP_LEGEND, STOP_MARKER, STUDENT_CHECK_LEGEND, STUDENT_CHECK_MARKER, STUDENT_MARKER, STUDENT_MULTIPLE_LEGEND, STUDENT_OTHER_ROUTE_LEGEND, STUDENT_X_LEGEND } from '../maps/static/markers'
+import { getIcon, SCHOOL_LEGEND, SCHOOL_MARKER, STOP_LEGEND, STOP_MARKER, STUDENT_CHECK_LEGEND, STUDENT_CHECK_MARKER, STUDENT_MARKER, STUDENT_MULTIPLE_LEGEND, STUDENT_OTHER_ROUTE_LEGEND, STUDENT_X_LEGEND, BUS_LEGEND } from '../maps/static/markers'
 import { GoogleMap, LoadScript, Marker, InfoWindow, useJsApiLoader } from '@react-google-maps/api';
 
 
@@ -55,6 +55,10 @@ function IconLegend(props) {
         {
             key: " Stops ",
             icon: STOP_LEGEND("blue")
+        },
+        {
+            key: " Active Bus ",
+            icon: BUS_LEGEND("black")
         }
     ]
 
@@ -74,11 +78,11 @@ function IconLegend(props) {
             icon: STUDENT_X_LEGEND("red")
         },
         {
-            key: " Multiple Students: ",
+            key: " Multiple Students ",
             icon: STUDENT_MULTIPLE_LEGEND("purple")
         },
         {
-            key: " Stops: ",
+            key: " Stops ",
             icon: STOP_LEGEND("blue")
         }
     ]
@@ -91,6 +95,10 @@ function IconLegend(props) {
         {
             key: " Stops That Are in Range ",
             icon: STOP_LEGEND("blue")
+        },
+        {
+            key: " Active Bus ",
+            icon: BUS_LEGEND("black")
         }
     ]
 
@@ -102,6 +110,10 @@ function IconLegend(props) {
         {
             key: " Stops That Are in Range ",
             icon: STOP_LEGEND("blue")
+        },
+        {
+            key: " Active Bus ",
+            icon: BUS_LEGEND("black")
         }
     ]
 

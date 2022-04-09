@@ -279,7 +279,9 @@ MapComponent.defaultProps = {
     pinData: [],
     otherMapComponents: null,
     center: {
-        address: "52 Walters brook drive, bridgewater, nj"
+        //address: "52 Walters brook drive, bridgewater, nj"
+        lat: 40.50590935646907,
+        lng: -99.75547352324219
     },
 }
 
