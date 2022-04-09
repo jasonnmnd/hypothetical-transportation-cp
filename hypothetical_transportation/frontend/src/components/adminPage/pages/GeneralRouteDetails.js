@@ -80,6 +80,7 @@ function GeneralAdminRouteDetails(props) {
   useEffect(() => {
     if(extraComponentBus != null){
         if(props.activeRun.location == null){
+            setExtraComponentBus(null)
             setExtraComponents(null);
         } else {
             const newPosition = {
