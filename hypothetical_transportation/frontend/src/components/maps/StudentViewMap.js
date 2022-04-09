@@ -8,11 +8,27 @@ import { InfoWindow } from '@react-google-maps/api';
 function StudentViewMap(props) {
   const [pinData, setPinData] = useState([]);
   const [extraComponents, setExtraComponents] = useState(null);
+  const [extraComponentBus, setExtraComponentBus] = useState(null);
 
 
     useEffect(()=>{
         setPinData(getPinData());
     },[props.stops, props.student, props.activeRun])
+
+    useEffect(() => {
+        if(extraComponentBus != null){
+            if(props.activeRun.location == null){
+                setExtraComponents(null);
+            } else {
+                const newPosition = {
+                    lat: props.activeRun.location.latitude,
+                    lng: props.activeRun.location.longitude
+                }
+                createInfoWindow(newPosition, getBusInfoForWindow(props.activeRun))
+            }
+        }
+        
+    }, [props.activeRun]);
 
     const getPinData = () => {
         let pinData = getStopPinData();
@@ -71,6 +87,7 @@ function StudentViewMap(props) {
     }
 
     const onBusClick = (pinStuff, position) => {
+        setExtraComponentBus(pinStuff);
         createInfoWindow(position, getBusInfoForWindow(pinStuff))
     }
 
@@ -88,7 +105,7 @@ function StudentViewMap(props) {
     }
 
     const createInfoWindow = (position, windowComponents) => {
-        setExtraComponents(<InfoWindow position={position} onCloseClick={setExtraComponents(null)}>{windowComponents}</InfoWindow>)
+        setExtraComponents(<InfoWindow position={position} onCloseClick={() => {setExtraComponents(null); setExtraComponentBus(null);}}>{windowComponents}</InfoWindow>)
     }
 
 
