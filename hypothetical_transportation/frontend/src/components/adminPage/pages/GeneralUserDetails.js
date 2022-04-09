@@ -133,13 +133,19 @@ function AdminUserDetails(props) {
               </Card.Body>
           </Card>
         </Row>
+
         <Row  style={{gap: "10px"}}> 
+        {getType(props.user) == "parent" ?
           <Card as={Col} style={{padding: "0px"}}>
               <Card.Header as="h5">Address </Card.Header>
               <Card.Body>
                   <Card.Text>{props.user.address}</Card.Text>
               </Card.Body>
           </Card>
+          :
+          <></>
+        }
+
           {props.user.groups[0].id==3 ? 
             <Card  as={Col} style={{padding: "0px"}}>
                 <Card.Header as="h5">Managed Schools </Card.Header>
@@ -151,14 +157,17 @@ function AdminUserDetails(props) {
             </Card> 
             : <></>}
         </Row>
+        {getType(props.user) == "parent" ?
         <Row  style={{gap: "10px"}}> 
           <Card  as={Col} style={{padding: "0px"}}>
               <Card.Header as="h5">List of Students</Card.Header>
               <Card.Body>
                   <GeneralAdminTableView values={props.students} tableType='student' title='Students' search={null} totalCount={props.studentCount} />
               </Card.Body>
-          </Card>
-        </Row>
+          </Card> 
+        </Row> 
+        :<></>
+        } 
       </Container>
 
       <br></br>
