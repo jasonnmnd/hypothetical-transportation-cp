@@ -13,6 +13,7 @@ import StartDriveSection from '../components/driver_bus_run/StartDriveSection';
 import CurrentDriveSection from '../components/driver_bus_run/CurrentDriveSection';
 import { EXAMPLE_ACTIVE_RUNS, EXAMPLE_ACTIVE_RUN_1 } from '../../../utils/drive';
 import BusRunStartConfirmModal from '../components/driver_bus_run/BusRunStartConfirmModal';
+import getType from '../../../utils/user2';
 
 
 const NULL_OPTION = {value: null, label: "-----------------------"}
@@ -136,6 +137,7 @@ GeneralDriveStartPage.propTypes = {
 // }
 
 const mapStateToProps = (state) => ({
+    user: state.auth.user,
     routes: state.routes.routes.results,
     currentRun: state.drive.currentRun,
     driverId: state.auth.user.id,
