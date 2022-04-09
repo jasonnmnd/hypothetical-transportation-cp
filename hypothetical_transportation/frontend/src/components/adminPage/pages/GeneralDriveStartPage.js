@@ -88,6 +88,7 @@ function GeneralDriveStartPage(props) {
     <div>          
         <AdminHeader/>
         <BusRunStartConfirmModal show={showConfirmModal} saveModal={() => startRun(true)} errorMessage={props.errorMessage} closeModal={() => setShowConfirmModal(false)}/>
+        {getType(props.user)=="driver"  ?
         <Container className="container-main d-flex flex-column" style={{gap: "20px"}}>
             {driverInRun() ? 
                <CurrentDriveSection busRun={props.currentRun} endRun={endRun} arriveAtStop={arrivedAtStop} nextStop={props.nextStop} /> : 
@@ -103,7 +104,15 @@ function GeneralDriveStartPage(props) {
                 getStartDriveSection()
             }
             
-        </Container>
+        </Container>:
+        <Container className="container-main">
+            <Alert variant="danger">
+                <Alert.Heading>Access Denied</Alert.Heading>
+                <p>
+                    You do not have access to this page. If you believe this is an error, contact an administrator.          
+                </p>
+            </Alert>
+        </Container>}
     </div>
     );
 }

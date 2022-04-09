@@ -39,7 +39,7 @@ function AdminRoutesPage(props) {
     if(props.routes!==null && props.routes!==undefined && props.routes!==0 && props.users!==null && props.users!==undefined && props.users!==0 ){
         lis = []
         const x = props.routes.map((item)=> {
-            return ({...item, ['driver']: item.driver!==null ? (props.users.filter((i)=>i.id==item.driver)[0]!==undefined? props.users.filter((i)=>i.id===item.driver)[0].full_name:item.driver): null})
+            return ({...item, ['driver']: item.driver!==null ? (props.users.filter((i)=>i.id==item.driver)[0]!==undefined? props.users.filter((i)=>i.id===item.driver)[0].full_name:item.driver): null, ['bus_number']: item.driver!==null ? item.bus_number : null})
         })    
         lis = [...lis, ...x]
     }

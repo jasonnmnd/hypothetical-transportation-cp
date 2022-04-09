@@ -17,6 +17,7 @@ import isBusDriver from "../../../utils/userBusDriver";
 import isSchoolStaff from "../../../utils/userSchoolStaff";
 import { getRunByRoute } from "../../../actions/drive";
 import { runCallEveryPeriod } from "../../../utils/live_updating";
+import StudentViewMap from "../../maps/StudentViewMap";
 
 function ParentStudentDetails(props){
     const param = useParams();

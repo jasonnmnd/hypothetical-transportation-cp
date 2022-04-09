@@ -83,15 +83,23 @@ function GeneralBusLogPage(props) {
     ]
 
   return (
-    <div>          
+    <div>
         <AdminHeader/>
-        <Container className="container-main d-flex flex-column" style={{gap: "20px"}}>
+        {getType(props.user)=="staff" || getType(props.user)=="driver" || getType(props.user)=="admin" ?<Container className="container-main d-flex flex-column" style={{gap: "20px"}}>
             <div className="shadow-sm p-3 mb-5 bg-white rounded d-flex flex-row justify-content-center">
                 <h1>{getTitlePrefix()} Bus Log</h1>
             </div>
             <GeneralLegend legend={busLogLegend}/>
             <ActiveRunsTable data={props.activeBusesData} count={props.activeBusesCount} handleViewClick={handleViewClick}/> 
-        </Container>
+        </Container> : 
+        <Container className="container-main">
+            <Alert variant="danger">
+                <Alert.Heading>Access Denied</Alert.Heading>
+                <p>
+                    You do not have access to this page. If you believe this is an error, contact an administrator.          
+                </p>
+            </Alert>
+        </Container>}
     </div>
     );
 }

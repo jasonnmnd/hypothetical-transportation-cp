@@ -135,14 +135,23 @@ function GeneralBusMapPage(props) {
     
   
   return (
-    <div>          
+    <div>
         <AdminHeader/>
+        {getType(props.user)=="staff" || getType(props.user)=="driver" || getType(props.user)=="admin" ?
         <Container className="container-main d-flex flex-column" style={{gap: "20px"}}>
             <div className="shadow-sm p-3 mb-5 bg-white rounded d-flex flex-row justify-content-center">
                 <h1>Bus Map</h1>
             </div>
             {getRunsWithLocation(props.activeRuns).length == 0 ? <h4>There are no active runs with valid locations to display.</h4> : <MapComponent pinData={getPinData()} otherMapComponents={getExtraComponents()} center={getCenter()}/>}
-        </Container>
+        </Container>: 
+        <Container className="container-main">
+            <Alert variant="danger">
+                <Alert.Heading>Access Denied</Alert.Heading>
+                <p>
+                    You do not have access to this page. If you believe this is an error, contact an administrator.          
+                </p>
+            </Alert>
+        </Container>}
     </div>
     );
 }
