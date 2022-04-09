@@ -21,6 +21,11 @@ function GeneralBusMapPage(props) {
 
     const [extraComponents, setExtraComponents] = useState(null);
 
+    const [extraComponentsPosition, setExtraComponentsPosition] = useState(null);
+    const [extraComponentsBus, setExtraComponentsBus] = useState(null);
+    
+    
+
 
     useEffect(() => {
         props.resetBusLocations();
@@ -39,13 +44,22 @@ function GeneralBusMapPage(props) {
         
     }, []);
 
-
-
-    
-
-    const createInfoWindow = (position, windowComponents) => {
-        setExtraComponents(<InfoWindow position={position} onCloseClick={setExtraComponents(null)}>{windowComponents}</InfoWindow>)
-    }
+    useEffect(() => {
+        if(extraComponentsBus != null){
+            let busChanged = getRunsWithLocation(props.activeRuns).find(run => run.route.id == extraComponentsBus.route.id);
+            if(busChanged == undefined){
+                removeExtraComponents();
+            } else {
+                console.log(busChanged);
+                console.log(extraComponentsPosition);
+                setExtraComponentsPosition({
+                    lat: busChanged.location.latitude,
+                    lng: busChanged.location.longitude
+                })
+            }
+        }
+        
+    }, [props.activeRuns]);
 
     const getBusInfoForWindow = (pinStuff) => {
         return (
@@ -66,9 +80,23 @@ function GeneralBusMapPage(props) {
         )
     }
 
-    const onBusClick = (pinStuff, position) => {
-        createInfoWindow(position, getBusInfoForWindow(pinStuff))
+    const removeExtraComponents = () => {
+        setExtraComponentsBus(null); 
+        setExtraComponentsPosition(null);
     }
+
+    const getExtraComponents = () => {
+        if(extraComponentsBus == null){
+            return null;
+        }
+        return <InfoWindow position={extraComponentsPosition} onCloseClick={removeExtraComponents} >{getBusInfoForWindow(extraComponentsBus)}</InfoWindow>
+    }
+
+    const onBusClick = (pinStuff, position) => {
+        setExtraComponentsPosition(position);
+        setExtraComponentsBus(pinStuff);
+    }
+
 
     const getRunPin = (run) => {
 
@@ -103,6 +131,8 @@ function GeneralBusMapPage(props) {
         const lngAverage = average(getRunsWithLocation(props.activeRuns).map(run => run.location.longitude));
         return {lat: latAverage, lng: lngAverage}
     }
+
+    
   
   return (
     <div>          
@@ -111,7 +141,7 @@ function GeneralBusMapPage(props) {
             <div className="shadow-sm p-3 mb-5 bg-white rounded d-flex flex-row justify-content-center">
                 <h1>Bus Map</h1>
             </div>
-            {getRunsWithLocation(props.activeRuns).length == 0 ? <h4>There are no active runs with valid locations to display.</h4> : <MapComponent pinData={getPinData()} otherMapComponents={extraComponents} center={getCenter()}/>}
+            {getRunsWithLocation(props.activeRuns).length == 0 ? <h4>There are no active runs with valid locations to display.</h4> : <MapComponent pinData={getPinData()} otherMapComponents={getExtraComponents()} center={getCenter()}/>}
         </Container>
     </div>
     );
