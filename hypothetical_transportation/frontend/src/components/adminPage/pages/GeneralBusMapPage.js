@@ -46,7 +46,7 @@ function GeneralBusMapPage(props) {
 
     useEffect(() => {
         if(extraComponentsBus != null){
-            let busChanged = props.activeRuns.find(run => run.route.id == extraComponentsBus.route.id);
+            let busChanged = getRunsWithLocation(props.activeRuns).find(run => run.route.id == extraComponentsBus.route.id);
             if(busChanged == undefined){
                 removeExtraComponents();
             } else {
