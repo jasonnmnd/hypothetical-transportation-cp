@@ -423,8 +423,7 @@ class BusRunViewSet(viewsets.ModelViewSet):
 
     # filterset_fields = get_filter_dict(BusRun)
     filterset_fields = ['bus_number', 'driver', 'route', 'school__name']
-    ordering_fields = ['bus_number', 'driver', 'start_time', 'route', 'going_towards_school', 'duration',
-                       'school__name', 'driver__name', 'route__name']
+    ordering_fields = ['bus_number', 'driver', 'start_time', 'route', 'going_towards_school', 'duration', 'school__name', 'driver__full_name', 'route__name']
     ordering = ['-start_time', 'duration']
 
     def get_serializer_class(self):
