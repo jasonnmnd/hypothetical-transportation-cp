@@ -137,12 +137,12 @@ WSGI_APPLICATION = 'hypothetical_transportation.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        #'NAME': 'admin',
-        'NAME': 'ht_db',
+        'NAME': 'admin',
+        #'NAME': 'ht_db',
         'USER': 'admin',
         'PASSWORD': 'admin',
-        #'HOST': 'db',
-        'HOST': 'localhost',
+        'HOST': 'db',
+        #  'HOST': 'localhost',
         'PORT': '5432',
     }
 }
@@ -214,4 +214,3 @@ EMAIL_HOST_USER = os.environ.get('AUTHEMAIL_EMAIL_HOST_USER') or ''
 EMAIL_HOST_PASSWORD = os.environ.get('AUTHEMAIL_EMAIL_HOST_PASSWORD') or ''
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
-

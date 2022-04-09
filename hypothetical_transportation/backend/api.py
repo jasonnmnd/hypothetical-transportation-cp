@@ -833,7 +833,7 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
             # Duplicates should contain both other users in the database and any students that could conflict
             current_user_email_duplicates = [dup.get_representation() for dup in user_email_duplication[user.email] if
                                              dup != user]
-            if len(student_email_duplication[user.email]) > 0:
+            if user.email in student_email_duplication and len(student_email_duplication[user.email]) > 0:
                 current_user_email_duplicates.extend(
                     [self.student_to_user(student).get_representation() for student in
                      student_email_duplication[user.email]])
@@ -850,14 +850,14 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
                                                                                current_user_email_duplicates)
             current_name_duplicates = [dup.get_representation() for dup in user_name_duplication[user.full_name] if
                                        dup != user]
-            if user.full_name in student_name_duplication:
+            if user.full_name in student_name_duplication and len(student_name_duplication[user.full_name]) > 0:
                 current_name_duplicates.extend(
                     [self.student_to_user(student).get_representation() for student in
                      student_name_duplication[user.full_name]])
             else:
                 current_name_duplicates.extend(
                     [self.student_to_user(student).get_representation() for student in
-                     self.get_repr_of_students_with_email(user.full_name)])
+                     self.get_repr_of_students_with_name(user.full_name)])
 
             user_object_response["full_name"] = self.get_val_field_response_format(user.full_name,
                                                                                    serializer_errors["users"][
