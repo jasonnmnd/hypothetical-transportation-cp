@@ -93,7 +93,7 @@ const applyTimezoneOffset = (date, time, offset) => {
     let offsetYear = parseInt(date.split("/")[2])
     let offsetMonth = parseInt(date.split("/")[0])
     let offsetDay = parseInt(date.split("/")[1]);
-    const minute = parseInt(time.split(":")[1])
+    const minute = time.split(":")[1]
     const preHour = parseInt(time.split(":")[0])
     let offsetHour = preHour - offset;
     if(offsetHour < 0){
