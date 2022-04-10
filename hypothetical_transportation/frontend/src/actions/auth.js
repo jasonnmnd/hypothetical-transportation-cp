@@ -11,7 +11,8 @@ import {
     REGISTER_SUCCESS,
     RESET_PASSWORD_SUCCESS,
     RESET_PASSWORD_FAIL,
-    ADD_USER
+    ADD_USER,
+    ADD_STUDENT
 } from './types';
 
 //CHECK TOKEN & LOAD USER
@@ -61,7 +62,7 @@ export const login = (email, password) => (dispatch) => {
 }
 
 // REGISTER USER
-export const register = (user) => (dispatch, getState) => {
+export const register = (user, students) => (dispatch, getState) => {
     axios
       .post('/api/auth/invite', user, tokenConfig(getState))
       .then((res) => {
@@ -74,6 +75,21 @@ export const register = (user) => (dispatch, getState) => {
         //   type: ADD_USER,
         //   payload: res.data,
         // });
+        if(students.length>0){
+          students.map((stu)=>{
+            var toSend = {...stu, ["guardian"]:res.data.id};
+            console.log(toSend)
+            axios
+            .post('/api/student/', toSend, tokenConfig(getState))
+            .then((res) => {
+              dispatch(createMessage({ student: 'Student Created' }));
+              dispatch({
+                type: ADD_STUDENT,
+                payload: res.data,
+              });
+            })
+          })
+        }
       })
       .catch((err) => {
         dispatch(returnErrors(err.response.data, err.response.status));
@@ -178,6 +194,22 @@ export const tokenConfig = (getState) => {
   if (token) {
     config.headers['Authorization'] = `Token ${token}`;
   }
+
+  return config;
+};
+
+export const tokenConfigDrive = (getState) => {
+  // Get token from state
+  //const token = getState().auth.token;
+
+  // Headers
+  const config = {
+    headers: {
+      // 'Content-Type': 'application/json',
+      //'Access-Control-Allow-Origin': '*',
+    },
+  };
+
 
   return config;
 };

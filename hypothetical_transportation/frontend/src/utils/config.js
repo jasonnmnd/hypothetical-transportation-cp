@@ -16,7 +16,10 @@ const studentDefaultCols = [
     "full_name",
     "school_name",
     "route_name",
-    "parent_name"
+    "parent_name",
+    "parent_phone_number",
+    "email",
+    "phone_number"
 ]
 
 const schoolDefaultCols = [
@@ -30,6 +33,8 @@ const routeDefaultCols = [
     "name",
     "school_name",
     "num_students",
+    "driver",
+    "bus_number"
 ]
 
 const stopDefaultCOls = [
@@ -37,6 +42,16 @@ const stopDefaultCOls = [
     "drop_off",
     "pick_up",
     "stop_number"
+]
+
+const activeDriveDefaultCols = [
+    "driver",
+    "bus_number",
+    "route",
+    "school",
+    "direction",
+    "start_time",
+    "duration"
 ]
 
 const stopColumns = {
@@ -157,6 +172,29 @@ const studentColumns = {
         search_key: "",
         sortable: false,
         filterable: false
+    },
+    parent_phone_number: {
+        colTitle: "Parent Phone",
+        dataPath: "guardian.phone_number",
+        search_key: "",
+        sortable: false,
+        filterable: false
+    },
+
+    email: {
+        colTitle: "Own Email",
+        dataPath: "email",
+        search_key: "email",
+        sortable: true,
+        filterable: true,
+    },
+
+    phone_number: {
+        colTitle: "Own Phone",
+        dataPath: "phone_number",
+        search_key: "",
+        sortable: false,
+        filterable: false,
     }
 }
 
@@ -213,6 +251,72 @@ const routeColumns = {
         search_key: "students",
         sortable: true,
         filterable: false
+    },
+    bus_number: {
+        colTitle: "Bus Number",
+        dataPath: "bus_number",
+        search_key: "",
+        sortable: false,
+        filterable: false
+    },
+    driver: {
+        colTitle: "Driver",
+        dataPath: "driver",
+        search_key: "",
+        sortable: false,
+        filterable: false
+    }
+}
+
+const activeDriveColumns = {
+    driver: {
+        colTitle: "Driver Name",
+        dataPath: "driver.full_name",
+        search_key: "driver__full_name",
+        sortable: true,
+        filterable: true
+    },
+    bus_number: {
+        colTitle: "Bus Number",
+        dataPath: "bus_number",
+        search_key: "bus_number",
+        sortable: true,
+        filterable: true
+    },
+    school: {
+        colTitle: "School",
+        dataPath: "school.name",
+        search_key: "school__name",
+        sortable: true,
+        filterable: true
+    },
+    route: {
+        colTitle: "Route",
+        dataPath: "route.name",
+        search_key: "route__name",
+        sortable: true,
+        filterable: true
+    },
+    direction: {
+        colTitle: "Direction",
+        dataPath: "going_towards_school",
+        search_key: "going_towards_school",
+        sortable: true,
+        filterable: false
+    },
+    start_time: {
+        colTitle: "Start Time",
+        dataPath: "start_time",
+        search_key: "start_time",
+        sortable: true,
+        filterable: false
+    },
+    duration: {
+        colTitle: "Duration",
+        dataPath: "duration",
+        search_key: "duration",
+        sortable: true,
+        filterable: false
     }
 }
 
@@ -222,6 +326,7 @@ const allColumns = {
     school: schoolColumns,
     route: routeColumns,
     stop: stopColumns,
+    activeDrive: activeDriveColumns
 }
 
 const defaultColumns = {
@@ -230,6 +335,7 @@ const defaultColumns = {
     school: schoolDefaultCols,
     route: routeDefaultCols,
     stop: stopDefaultCOls,
+    activeDrive: activeDriveDefaultCols
 }
 
 const getColsFromArr = (colObj, colTitles) => {

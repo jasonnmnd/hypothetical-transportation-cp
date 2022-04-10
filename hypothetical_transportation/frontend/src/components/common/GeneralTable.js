@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import "./generalTable.css";
 import { Button, Table } from 'react-bootstrap';
 import { useSearchParams } from "react-router-dom";
+import { DATE_TIME_TO_STRING } from "../../utils/drive";
 
 function GeneralTable( props ) {
   let [searchParams, setSearchParams] = useSearchParams();
@@ -14,13 +15,47 @@ function GeneralTable( props ) {
     }, obj);
     return res;
   }
+
+  const getColor = (rowData)=>{
+    if(props.tableType=='route'){
+      if(rowData.driver!==null && rowData.bus_number!==null ) return "rgb(87, 202, 255)"
+      if(!rowData.is_complete) return "rgb(255, 136, 136)"
+    }
+
+    if(props.tableType=='student'){
+      if(rowData["routes"] === null) return "rgb(255, 136, 136)"
+      if(!rowData.has_inrange_stop) return "rgb(87, 202, 255)"
+    }
+
+    if(props.tableType=="activeDrive") {
+      if (rowData.timeout == true) return "rgb(255, 136, 136)"
+      if (rowData.end_time == null) return "rgb(175, 225, 175)"
+      if (rowData.end_time != null) return "rgb(87, 202, 255)"
+    }
+    return ""
+  }
   
   const addTableRow = (rowData, extra) => {
     return (
-        <tr className={"tr-clickable"} onClick={() => extra===true?props.extraAction(rowData):props.action(rowData)} style={{backgroundColor: !rowData.is_complete && props.tableType=='route' ? "rgb(255, 136, 136)" : (rowData["routes"] === null ? "rgb(255, 136, 136)" : (!rowData.has_inrange_stop && props.tableType=='student' ? "rgb(87, 202, 255)" : "" ))}}>
+        <tr className={"tr-clickable"} onClick={() => extra===true?props.extraAction(rowData):props.action(rowData)} style={{backgroundColor: getColor(rowData)}}>
             {
                 props.columnNames.map((columnInfo, index) => {
-                    const cellData = getValueFromPath(columnInfo.dataPath, rowData)
+                    let cellData = getValueFromPath(columnInfo.dataPath, rowData)
+                    if(columnInfo.dataPath == "going_towards_school"){
+                      if(cellData) {
+                        cellData = "Going Towards School"
+                      } else {
+                        cellData = "Going Away From School"
+                      }
+                    }
+                    
+                    if(columnInfo.dataPath == "duration" && getValueFromPath("end_time", rowData) == null){
+                      cellData = "Ongoing"
+                    }
+
+                    if(columnInfo.dataPath == "start_time"){
+                      cellData = DATE_TIME_TO_STRING(cellData);
+                    }
                     return (
                         <td key={`${cellData}--${index}`}>
                             {cellData}

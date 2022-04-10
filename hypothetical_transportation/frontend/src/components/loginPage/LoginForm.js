@@ -19,6 +19,11 @@ function LoginForm( props ) {
     };
   
     if (props.isAuthenticated) {
+      console.log(props.user);
+      if (getType(props.user) == "student") { //We need the id of the student for the url
+        const link = "/"+getType(props.user)+"/"+props.user.id
+        return <Navigate to={link} />;
+      }
       const link = "/"+getType(props.user)
       return <Navigate to={link} />;
     }

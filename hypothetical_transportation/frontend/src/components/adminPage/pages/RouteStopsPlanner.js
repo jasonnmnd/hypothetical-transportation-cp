@@ -17,7 +17,10 @@ import Geocode from "react-geocode";
 import IconLegend from '../../common/IconLegend';
 import { isStudentWithinRange } from '../../../utils/geocode';
 import { createMessageDispatch } from '../../../actions/messages';
-
+import InfoIcon from '@mui/icons-material/Info';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
+import { getRunByRoute } from '../../../actions/drive';
 
 function RouteStopsPlanner(props) {
 
@@ -31,6 +34,7 @@ function RouteStopsPlanner(props) {
 
 
   useEffect(() => {
+    props.getRunByRoute(props.route_id)
     props.getStopByRoute(props.route_id);
     props.getStudents({routes: props.route_id})
   }, [props.route_id]);
@@ -114,6 +118,18 @@ function RouteStopsPlanner(props) {
     props.setDeletedStops([])
   }
 
+  if(props.currentRun.route?.id == props.currentRoute?.id){
+    return (
+      <Container className="container-main d-flex flex-column" style={{gap: "10px"}}>
+
+        You Cannot Edit Stops On This Route While A Bus Run On This Route Is In Progress. 
+
+      </Container>
+
+    );
+}
+
+
 
 
   return (
@@ -173,7 +189,15 @@ function RouteStopsPlanner(props) {
           </Card>
 
           <Card>
-            <Card.Header as="h5">Reorganize Stops - Drag Row to Reorder</Card.Header>
+            <Card.Header as="h5">
+              Reorganize Stops - Drag Row to Reorder
+              <Tooltip title="Note: Stops order runs starting from school">
+                <IconButton>
+                  <InfoIcon fontSize="large" />
+                </IconButton>
+              </Tooltip>              
+            </Card.Header>
+              
             <Card.Body>
               <ModifyStopTable 
                 stops={props.stops} 
@@ -216,13 +240,15 @@ RouteStopsPlanner.propTypes = {
     route_id: PropTypes.string,
     school: PropTypes.object,
     setStops: PropTypes.func,
-    resetStopChanges: PropTypes.func
+    resetStopChanges: PropTypes.func,
+    getRunByRoute: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => ({
   students: state.students.students.results,
   studentsInSchool: state.students.students.results,
-  currentRoute: state.routes.viewedRoute
+  currentRoute: state.routes.viewedRoute,
+  currentRun: state.drive.currentRun
 });
 
 RouteStopsPlanner.defaultProps = {
@@ -231,4 +257,4 @@ RouteStopsPlanner.defaultProps = {
     ],
 }
 
-export default connect(mapStateToProps, {createMessageDispatch, updateStop, getStopByRoute, getRouteInfo, getSchool, getStudents, deleteStop, createStop})(RouteStopsPlanner)
+export default connect(mapStateToProps, {createMessageDispatch, updateStop, getStopByRoute, getRouteInfo, getSchool, getStudents, deleteStop, createStop, getRunByRoute})(RouteStopsPlanner)

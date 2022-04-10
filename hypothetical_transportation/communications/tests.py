@@ -28,6 +28,7 @@ class AnnouncementTests(TransactionTestCase):
         :return:
         """
         admin_group = Group.objects.create(name='Administrator')
+        parent_group = Group.objects.create(name='Guardian')
         admin_user = get_user_model().objects.create_verified_user(email='admin@example.com', password='wordpass',
                                                                    full_name='admin user', address='loc0', latitude=0,
                                                                    longitude=0)
@@ -43,18 +44,22 @@ class AnnouncementTests(TransactionTestCase):
                                                                      password='password',
                                                                      full_name='user', address='example address',
                                                                      latitude=3.0, longitude=-0.8)
+        self.parent1.groups.add(parent_group)
         self.parent2 = get_user_model().objects.create_verified_user(email='hypotheticaltransportations+2@gmail.com',
                                                                      password='password',
                                                                      full_name='user', address='example address',
                                                                      latitude=4.0, longitude=-2.0)
+        self.parent2.groups.add(parent_group)
         self.parent3 = get_user_model().objects.create_verified_user(email='hypotheticaltransportations+3@gmail.com',
                                                                      password='password',
                                                                      full_name='user', address='example address',
                                                                      latitude=4.0, longitude=-2.0)
+        self.parent3.groups.add(parent_group)
         self.parent4 = get_user_model().objects.create_verified_user(email='hypotheticaltransportations+4@gmail.com',
                                                                      password='password',
                                                                      full_name='user', address='example address',
                                                                      latitude=4.0, longitude=-2.0)
+        self.parent4.groups.add(parent_group)
         school1 = School.objects.create(address='origin', longitude=0, latitude=0, name='example school 1')
         school2 = School.objects.create(address='origin', longitude=0, latitude=0, name='example school 2')
         route1 = Route.objects.create(name='route 1', description='', school=school1)

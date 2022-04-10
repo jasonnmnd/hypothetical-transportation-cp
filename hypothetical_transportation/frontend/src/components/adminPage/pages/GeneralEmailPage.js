@@ -142,8 +142,8 @@ function GeneralAdminEmailPage(props) {
 
     const emailTypes = [
         {name: "All Parents", value: 1},
-        {name: "School", value: 2},
-        {name: "Route", value: 3},
+        {name: "Schoolwide", value: 2},
+        {name: "Routewide", value: 3},
     ]
 
     useEffect(() => {

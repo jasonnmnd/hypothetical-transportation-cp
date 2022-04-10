@@ -118,7 +118,7 @@ function SchoolRoutesPlannerPage(props) {
     stopsToUpdate.forEach(stop => {
       props.updateStop(stop, stop.id)
     })
-    props.createMessageDispatch({ student: "Route Stops Updated"})
+    props.createMessageDispatch({ route: "Route Stops Updated"})
     setDeletedStops([])
     props.getRouteInfo(searchParams.get("route"))
   }
@@ -168,7 +168,7 @@ function SchoolRoutesPlannerPage(props) {
   }
 
   const handleRouteDetailClick = () => {
-    navigate(`/${getType(props.user)}/route/${searchParams.get(ROUTE_PARAM)}`);
+    navigate(`/${getType(props.user)}/route/${searchParams.get(ROUTE_PARAM)}?pageNum=1`);
   }
   
   const onInfoSubmit = (e, isCreateRoute) => {

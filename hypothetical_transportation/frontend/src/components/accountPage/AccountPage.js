@@ -36,7 +36,7 @@ function AccountPage(props){
 
         <div>  
         {
-            getType(props.user)!=="parent" ? <Header></Header> : <ParentHeader></ParentHeader>
+            getType(props.user)!=="parent" && getType(props.user)!=="student" ? <Header></Header> : <ParentHeader></ParentHeader>
           }
         <Container className="container-main d-flex flex-column" style={{gap: "20px"}}>
         <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
@@ -78,12 +78,13 @@ function AccountPage(props){
             </Card.Body>
         </Card>
 
+        {props.user.groups[0] == 2 ?
         <Card>
             <Card.Header as="h5">Address </Card.Header>
             <Card.Body>
-                <Card.Text>{props.user.address}</Card.Text>
+                <Card.Text>{ props.user.address}</Card.Text>
             </Card.Body>
-        </Card>
+        </Card> : <></>}
         </Container>
     </div>
 

@@ -11,6 +11,7 @@ import GeneralParentTableView from "./views/GeneralParentTableView";
 import { Container, Row, Col } from 'react-bootstrap';
 import GeneralAdminTableView from "../adminPage/components/views/GeneralAdminTableView";
 import getType from "../../utils/user2";
+
 function ParentPage(props) {
 
   const title = "Students"
@@ -37,7 +38,7 @@ function ParentPage(props) {
   const handleViewClick = (student) => {
     //route to /props.title?somethingid=id => props.title determins routing to student, route, school, user
     //console.log(d)
-      nav(`/parent/student/${student.school.id}/${student.id}`);
+      nav(`/parent/student/${student.school.id}/${student.id}?pageNum=1`);
   }
 
 

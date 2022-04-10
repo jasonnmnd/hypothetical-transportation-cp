@@ -156,6 +156,7 @@ export const resetExposedUser = ()=>(dispatch, getState) =>{
 }
 
 export const updateStudent = (student, id) => (dispatch, getState) => {
+  console.log(student)
   axios
           .put(`/api/student/${id}/`,student, tokenConfig(getState))
           .then(res =>{
