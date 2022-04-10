@@ -360,7 +360,7 @@ function GeneralAdminRouteDetails(props) {
                 <Card as={Col} style={{padding: "0px"}}>
                     <Card.Header as="h5">School </Card.Header>
                     <Card.Body>
-                        <Link to={`/${getType(props.user)}/school/${props.route.school.id}`}>
+                        <Link to={`/${getType(props.user)}/school/${props.route.school.id}?stupageNum=1&roupageNum=1`}>
                             <h5>{props.route.school.name}</h5>
                         </Link>
                     </Card.Body>

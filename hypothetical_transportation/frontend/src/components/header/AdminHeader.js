@@ -28,22 +28,22 @@ function AdminHeader( props ) {
             <Navbar.Collapse>
                 <Nav >
                         <NavDropdown title="Users">
-                            <NavDropdown.Item as={Link} to={`/${getType(props.user)}/users?pageNum=1`}><IoIcons.IoIosWoman /> View Users</NavDropdown.Item>
+                            <NavDropdown.Item as={Link} to={`/${getType(props.user)}/users?pageNum=1&ordering=full_name`}><IoIcons.IoIosWoman /> View Users</NavDropdown.Item>
                             {isAdmin(props.user) ? <NavDropdown.Divider/>: <></>}
                             {isAdmin(props.user) ? <NavDropdown.Item as={Link} to={`/${getType(props.user)}/new/user/`}><IoIcons5.IoCreate /> Create Users</NavDropdown.Item> : <></>}
                         </NavDropdown>
                         <NavDropdown title="Students">
-                            <NavDropdown.Item as={Link} to={`/${getType(props.user)}/students?pageNum=1`}><IoIcons.IoIosBody /> View Students</NavDropdown.Item>
+                            <NavDropdown.Item as={Link} to={`/${getType(props.user)}/students?pageNum=1&ordering=full_name`}><IoIcons.IoIosBody /> View Students</NavDropdown.Item>
                             {isAdmin(props.user) ? <NavDropdown.Divider/>: <></>}
                             {isAdmin(props.user) ? <NavDropdown.Item as={Link} to={`/${getType(props.user)}/new_student/`}><IoIcons5.IoCreate /> Create Students</NavDropdown.Item> : <></>}
                         </NavDropdown>
                         <NavDropdown title="Schools">
-                            <NavDropdown.Item as={Link} to={`/${getType(props.user)}/schools?pageNum=1`}><FaIcons.FaSchool /> View Schools</NavDropdown.Item>
+                            <NavDropdown.Item as={Link} to={`/${getType(props.user)}/schools?pageNum=1&ordering=name`}><FaIcons.FaSchool /> View Schools</NavDropdown.Item>
                             {isAdmin(props.user) ? <NavDropdown.Divider/>: <></>}
                             {isAdmin(props.user) ? <NavDropdown.Item as={Link} to={`/${getType(props.user)}/new/school/`}><IoIcons5.IoCreate /> Create Schools</NavDropdown.Item> :<></>}
                         </NavDropdown>
                         <NavDropdown title="Routes">
-                            <NavDropdown.Item as={Link} to={`/${getType(props.user)}/routes?pageNum=1`}><GiIcons.GiPathDistance /> View Routes</NavDropdown.Item>
+                            <NavDropdown.Item as={Link} to={`/${getType(props.user)}/routes?pageNum=1&ordering=name`}><GiIcons.GiPathDistance /> View Routes</NavDropdown.Item>
                             {isAdmin(props.user) ? <NavDropdown.Divider/>: <></>}
                             {isAdmin(props.user) ? <NavDropdown.Item as={Link} to={`/${getType(props.user)}/new/route/`}><IoIcons5.IoCreate /> Create Routes</NavDropdown.Item> : <></>}
                         </NavDropdown>

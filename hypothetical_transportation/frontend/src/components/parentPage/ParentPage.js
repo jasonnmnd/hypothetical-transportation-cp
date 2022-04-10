@@ -38,7 +38,7 @@ function ParentPage(props) {
   const handleViewClick = (student) => {
     //route to /props.title?somethingid=id => props.title determins routing to student, route, school, user
     //console.log(d)
-      nav(`/parent/student/${student.school.id}/${student.id}`);
+      nav(`/parent/student/${student.school.id}/${student.id}?pageNum=1`);
   }
 
 

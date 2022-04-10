@@ -33,7 +33,7 @@ function AdminPage( props ) {
 
               <Row>
                 <Col>
-                  <Card className="text-center" style={{height:'450px', cursor: "pointer"}} onClick={() => navigate(`/${getType(props.user)}/users?pageNum=1`)} >
+                  <Card className="text-center" style={{height:'450px', cursor: "pointer"}} onClick={() => navigate(`/${getType(props.user)}/users?pageNum=1&ordering=full_name`)} >
                     <Card.Img variant="top" src={AdminPic} style={{height: '300px'}}/>
                     <Card.Body>
                       <Card.Title><strong>Users</strong></Card.Title>
@@ -44,7 +44,7 @@ function AdminPage( props ) {
                   </Card>
                 </Col>
                 <Col>
-                  <Card className="text-center" style={{height:'450px', cursor: "pointer"}} onClick={() => navigate(`/${getType(props.user)}/students?pageNum=1`)}>
+                  <Card className="text-center" style={{height:'450px', cursor: "pointer"}} onClick={() => navigate(`/${getType(props.user)}/students?pageNum=1&ordering=full_name`)}>
                     <Card.Img variant="top" src={StudentsPic} style={{height: '300px'}}/>
                     <Card.Body>
                       <Card.Title><strong>Students</strong></Card.Title>
@@ -55,7 +55,7 @@ function AdminPage( props ) {
                   </Card>
                 </Col>
                 <Col>
-                  <Card className="text-center" style={{height:'450px', cursor: "pointer"}} onClick={() => navigate(`/${getType(props.user)}/schools?pageNum=1`)}>
+                  <Card className="text-center" style={{height:'450px', cursor: "pointer"}} onClick={() => navigate(`/${getType(props.user)}/schools?pageNum=1&ordering=name`)}>
                     <Card.Img variant="top" src={SchoolPic} style={{height: '300px'}}/>
                     <Card.Body>
                       <Card.Title><strong>Schools</strong></Card.Title>
@@ -69,7 +69,7 @@ function AdminPage( props ) {
 
               <Row>
                 <Col>
-                  <Card className="text-center" style={{height:'450px', cursor: "pointer"}} onClick={() => navigate(`/${getType(props.user)}/routes?pageNum=1`)}>
+                  <Card className="text-center" style={{height:'450px', cursor: "pointer"}} onClick={() => navigate(`/${getType(props.user)}/routes?pageNum=1&ordering=name`)}>
                     <Card.Img variant="top" src={RoutesPic} style={{height: '300px'}}/>
                     <Card.Body>
                       <Card.Title><strong>Routes</strong></Card.Title>

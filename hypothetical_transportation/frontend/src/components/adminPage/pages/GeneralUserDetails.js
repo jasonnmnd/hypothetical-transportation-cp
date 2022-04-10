@@ -97,7 +97,7 @@ function AdminUserDetails(props) {
                   Bus Number: {props.currentRun.bus_number}
               </p>
                   
-              <Link to={`/${getType(props.curUser)}/route/${props.currentRun.route.id}/`}>
+              <Link to={`/${getType(props.curUser)}/route/${props.currentRun.route.id}?pageNum=1`}>
                   Route: {props.currentRun.route.name}
               </Link>
           </Alert>:<></>

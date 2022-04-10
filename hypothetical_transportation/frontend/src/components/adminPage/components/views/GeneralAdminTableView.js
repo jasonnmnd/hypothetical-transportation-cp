@@ -17,34 +17,34 @@ function GeneralAdminTableView( props ) {
     const nav = useNavigate();
 
     const handleExtraColumnClick = (d)=>{
-        nav(`/${getType(props.user)}/school/${d.id}`);
+        nav(`/${getType(props.user)}/school/${d.id}?stupageNum=1&roupageNum=1`);
     }
 
     const handleViewClick = (d) => {
         //route to /props.title?somethingid=id => props.title determins routing to student, route, school, user
         //console.log(d)
         if (props.tableType == 'user' && d.groups[0].id==5) {
-            nav(`/${getType(props.user)}/student/${d.linked_student}`);
+            nav(`/${getType(props.user)}/student/${d.linked_student}?pageNum=1`);
         } 
 
         else if (props.tableType == 'user' && d.groups[0].id!==5) {
-            nav(`/${getType(props.user)}/user/${d.id}`);
+            nav(`/${getType(props.user)}/user/${d.id}?pageNum=1`);
         } 
 
         else if (props.tableType ==  'student'){
-            nav(`/${getType(props.user)}/student/${d.id}`);
+            nav(`/${getType(props.user)}/student/${d.id}?pageNum=1`);
         }
 
         else if (props.tableType ==  'school') {
-            nav(`/${getType(props.user)}/school/${d.id}`);
+            nav(`/${getType(props.user)}/school/${d.id}?stupageNum=1&roupageNum=1`);
         }
 
         else if (props.tableType == 'route') {
-            nav(`/${getType(props.user)}/route/${d.id}`);
+            nav(`/${getType(props.user)}/route/${d.id}?pageNum=1`);
         }
 
         else if (props.tableType == 'stop') {
-            nav(`/${getType(props.user)}/stop/${d.id}`);
+            nav(`/${getType(props.user)}/stop/${d.id}?pageNum=1`);
         }
     };
 
