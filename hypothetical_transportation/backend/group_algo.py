@@ -1,6 +1,12 @@
 from sklearn.cluster import KMeans
 
 def groupStudents(students, routes):
+    if (len(students) < len(routes)):
+        retDict = {};
+        for index, student in enumerate(students):
+            retDict[student["id"]] = routes[index]
+        return retDict
+
     kmeans = KMeans(len(routes))
     preppedListWIds = []
     preppedListWithoutIds = []

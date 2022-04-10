@@ -1,7 +1,7 @@
 import axios from "axios";
 import { tokenConfig } from "./auth";
 import { returnErrors, createMessage } from "./messages";
-import { GET_STUDENTS_IN_ROUTE, GET_STUDENTS_WITHOUT_ROUTE, ADD_ROUTE, DELETE_ROUTE, RESET_POSTED } from './types';
+import { GET_STUDENTS_IN_ROUTE, GET_STUDENTS_WITHOUT_ROUTE, ADD_ROUTE, DELETE_ROUTE, RESET_POSTED, AUTO_GROUP_LOADING, AUTO_GROUP } from './types';
 import { getParameters } from "./utils";
 
 //GET STUDENTS CURRENTLY IN THE ROUTE
@@ -147,3 +147,6 @@ export const getStudentsWithoutRoute = (parameters) => (dispatch, getState) => {
       })
     }).catch(err => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});
   }
+
+
+  

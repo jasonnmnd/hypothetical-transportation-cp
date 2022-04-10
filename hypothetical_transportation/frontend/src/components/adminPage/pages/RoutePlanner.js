@@ -46,6 +46,7 @@ function RoutePlanner(props) {
     })
   }
 
+
   
 
 
@@ -72,6 +73,7 @@ function RoutePlanner(props) {
                 <Container className="d-flex flex-row justify-content-center" style={{gap: "20px"}}>
                     <Button variant='yellowsubmit' onClick={props.saveRoutePlannerMapChanges}>Save Map Changes</Button>
                     <Button variant='yellowsubmit' onClick={props.resetStudentChanges}>Reset Map Changes</Button>
+                    <Button variant='yellowsubmit' onClick={props.autoGroupStudents}>Auto-Group Students</Button>
                 </Container>
 
             </Container>
@@ -104,7 +106,8 @@ RoutePlanner.propTypes = {
     studentChanges: PropTypes.object,
     setStudentChanges: PropTypes.func,
     resetStudentChanges: PropTypes.func,
-    saveRoutePlannerMapChanges: PropTypes.func
+    saveRoutePlannerMapChanges: PropTypes.func,
+    autoGroupStudents: PropTypes.func
 
 }
 

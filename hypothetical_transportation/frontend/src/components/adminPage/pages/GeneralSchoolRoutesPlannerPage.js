@@ -12,7 +12,7 @@ import { getSchool } from '../../../actions/schools';
 import { getStudents, patchStudent } from '../../../actions/students';
 import RoutePlannerMap from '../../maps/RoutePlannerMap';
 import { NO_ROUTE } from '../../../utils/utils';
-import { Container, ButtonGroup, ToggleButton, Card, Button, Form, Collapse, Modal } from 'react-bootstrap';
+import { Container, ButtonGroup, ToggleButton, Card, Button, Form, Collapse, Modal, Spinner } from 'react-bootstrap';
 import PageNavigateModal from '../components/modals/PageNavigateModal';
 import IconLegend from '../../common/IconLegend';
 import { compareStopLists, getCurRouteFromStudent } from '../../../utils/planner_maps';
@@ -24,6 +24,7 @@ import CreateRouteModal from '../components/route_stop_planner/CreateRouteModal'
 import RoutePlanner from './RoutePlanner';
 import { getStopByRoute, deleteStop, createStop, updateStop } from '../../../actions/stops';
 import getType from '../../../utils/user2';
+import axios from 'axios';
 
 const IS_CREATE_PARAM = 'create';
 const VIEW_PARAM = 'view';
@@ -43,6 +44,7 @@ function SchoolRoutesPlannerPage(props) {
   const [stops, setStopsWithProperInds] = useState(props.stops);
   const [deletedStops, setDeletedStops] = useState([]);
   const [studentChanges, setStudentChanges] = useState({});
+  const [routesLoading, setRoutesLoading] = useState(false);
 
 
 
@@ -242,6 +244,27 @@ function SchoolRoutesPlannerPage(props) {
     setSearchParams({...Object.fromEntries([...searchParams]), [IS_CREATE_PARAM]: val});
   }
 
+  const autoGroupStudents = () => {
+    console.log(studentChanges)
+    setRoutesLoading(true);
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Token ${props.token}`
+      },
+    };
+  
+    axios
+        .get(`/api/school/${props.school.id}/group_students/`, config)
+        .then((res) => {
+          
+          setStudentChanges(res.data)
+
+          setRoutesLoading(false);
+        })
+        .catch((err) => {console.log(err); setRoutesLoading(false);});
+  }
+
   if(props.routes.length == 0 || props.routes.find(route => route.id == parseInt(searchParams.get(ROUTE_PARAM))) == null){
     return (
       <>
@@ -257,6 +280,26 @@ function SchoolRoutesPlannerPage(props) {
           <Container className='d-flex flex-row justify-content-center'>
             <CreateRouteModal handleRouteDetailClick={handleRouteDetailClick} showRouteDetailsButton={false} setCreateSearchParam={setCreateSearchParam} show={searchParams.get(IS_CREATE_PARAM) == "true"} onInfoSubmit={onInfoSubmit} />
           </Container>
+        
+        </Container>
+      </>
+    )
+  }
+
+  if(routesLoading){
+    return (
+      <>
+        <Header shouldShowOptions={true}></Header>
+        <Container className="container-main d-flex flex-column" style={{gap: "10px"}}>
+          <div className="shadow-sm p-3 mb-5 bg-white rounded d-flex flex-row justify-content-center">
+            <h1>{`${props.school.name} Route Planner`}</h1>
+          </div>
+
+          <Spinner animation="border" role="status" size="lg">
+              <span className="visually-hidden">Loading...</span>
+          </Spinner>
+
+
         
         </Container>
       </>
@@ -330,6 +373,7 @@ function SchoolRoutesPlannerPage(props) {
               resetStudentChanges={resetStudentChanges}
               saveRoutePlannerMapChanges={saveRoutePlannerMapChanges}
               school_id={param.school_id}
+              autoGroupStudents={autoGroupStudents}
             /> 
             : null
             }
@@ -378,6 +422,7 @@ SchoolRoutesPlannerPage.propTypes = {
 
 const mapStateToProps = (state) => ({
   user: state.auth.user,
+  token: state.auth.token,
   students: state.students.students.results,
   routes: state.routes.routes.results, 
   currentRoute: state.routes.viewedRoute,
