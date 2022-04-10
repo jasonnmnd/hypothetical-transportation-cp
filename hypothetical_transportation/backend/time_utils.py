@@ -1,12 +1,10 @@
 
-from turtle import update
 from urllib import response
 import requests, json
 import os
 from datetime import time, datetime
 
-from .serializers import EstimatedTimeToNextStopSerializer
-from .models import EstimatedTimeToNextStop, School, Route, Stop
+from .models import Bus, School, Route, Stop
 
 MAX_STOPS_IN_ONE_CALL = 1
 
@@ -29,41 +27,68 @@ def sec_to_datetime_h_m(seconds: int) -> datetime:
     :param seconds: seconds
     :return: datetime object
     """
-    h = seconds // 3600
+    h = (seconds // 3600) % 24
     m = (seconds % 3600) // 60
     if seconds % 60 > 0:
         m = m + 1
     return time(h, m)
 
 
-def update_estimated_time_to_next_stop(stop: Stop, seconds_when_pickup: int, seconds_when_dropoff: int) -> EstimatedTimeToNextStop:
-    print("reached")
-    print(stop)
-    print(seconds_when_pickup)
-    print(seconds_when_dropoff)
-    try:
-        print("trying")
-        instance = EstimatedTimeToNextStop.objects.get(stop=stop)
-        instance.seconds_when_pickup = seconds_when_pickup
-        instance.seconds_when_dropoff = seconds_when_dropoff
-        instance.save(update_fields=['seconds_when_pickup', 'seconds_when_dropoff'])
-        print("bleh")
+def seconds_to_stop_from_bus(bus_location, stop_location) -> int:
+    """
+    Given some list of addresses, fetch a distance matrix api from google
+    :param matrix: list of addresses to find the time between
+    :return: json response from google distance matrix api
+    """
+    url = os.environ.get('DISTANCE_MATRIX_API_URL')
+    key = os.environ.get('DISTANCE_MATRIX_API_KEY')
+    params = {'key': key, 'origins': bus_location, 'destinations': stop_location}
+    req = requests.get(url=url, params=params)
+    return json.loads(req.content)['rows'][0]['elements'][0]['duration']['value']
 
-    except:
-        print("caught")
-        data = {}
-        data['stop'] = stop.id
-        data['seconds_when_pickup'] = seconds_when_pickup
-        data['seconds_when_dropoff'] = seconds_when_dropoff
-        print(data)
-        serializer = EstimatedTimeToNextStopSerializer(data=data)
-        print("hi hello")
-        if serializer.is_valid():
-            print("blah")
-            serializer.save()
+
+def mark_passed(stops):
+    for stop in stops:
+        stop.eta = None
+        stop.save(update_fields=['eta'])
+
+
+def mark_all_passed(relating_stops):
+    mark_passed(Stop.objects.filter(route=relating_stops[0].route.id).distinct())
+
+
+def update_eta(seconds_to_stop: int, stop: Stop):
+    stop.eta = sec_to_datetime_h_m(datetime_h_m_to_sec(datetime.now()) + seconds_to_stop)
+    stop.save(update_fields=['eta'])
+    return seconds_to_stop
+
+
+def find_time_to_stops(stops, run):
+    bus = Bus.objects.get(bus_number=run.bus_number)
+    if run.going_towards_school:
+        stops = Stop.objects.filter(route=stops[0].route).distinct().order_by('-stop_number')
+        next_stop = stops[run.previous_stop_index]
+        hold = next_stop.pickup_time
+    else:
+        stops = Stop.objects.filter(route=stops[0].route).distinct().order_by('stop_number')
+        next_stop = stops[run.previous_stop_index]
+        hold = next_stop.dropoff_time
+    mark_passed(stops[0:run.previous_stop_index])
+    
+    stop_location = f'{next_stop.latitude}, {next_stop.longitude}'
+    bus_location = f'{bus.latitude}, {bus.longitude}'
+    time_from_bus = seconds_to_stop_from_bus(bus_location=bus_location, stop_location=stop_location)
+    last_time = update_eta(time_from_bus, next_stop)
+
+    for stop in stops[run.previous_stop_index+1:len(stops)]:
+        if run.going_towards_school:
+            arrival_time = stop.pickup_time
         else:
-           print(serializer.errors)
-
+            arrival_time = stop.dropoff_time
+        
+        time_from_prev_stop = datetime_h_m_to_sec(arrival_time)-datetime_h_m_to_sec(hold)
+        hold = arrival_time
+        last_time = update_eta(time_from_prev_stop+last_time, stop)
 
 def distance_matrix_api(matrix: list) -> json:
     """
@@ -182,14 +207,11 @@ def update_bus_times_for_stops_related_to_stop(stop: Stop):
         pickup_times.append(time_in_day)
         
     stop_num = 0
-    print(asc_times)
     for stop in stops:
         stop.pickup_time = pickup_times[stop_num]
         stop.dropoff_time = dropoff_times[stop_num]
         stop.save(update_fields=['pickup_time', 'dropoff_time'])
-        
-        update_estimated_time_to_next_stop(stop, desc_times[stop_num], asc_times[stop_num])
-        
+                
         stop_num = stop_num + 1
 
     return response

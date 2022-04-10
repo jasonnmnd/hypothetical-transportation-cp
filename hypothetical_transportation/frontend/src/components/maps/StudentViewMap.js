@@ -131,6 +131,7 @@ function StudentViewMap(props) {
                 <h5>Name:{pinStuff.name}</h5>
                 <h5>Pick Up: {pinStuff.pickup_time}</h5>
                 <h5>Drop Off: {pinStuff.dropoff_time}</h5>
+                <h5>ETA: {pinStuff.eta==null ? "The bus is not in route to this stop" : pinStuff.eta}</h5>
             </div>
         )
     }

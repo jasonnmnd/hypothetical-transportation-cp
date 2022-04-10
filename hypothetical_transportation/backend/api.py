@@ -8,6 +8,8 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from datetime import datetime, time
 from geopy.geocoders import GoogleV3
+from accounts.models import InvitationCode
+from .time_utils import find_time_to_stops, mark_all_passed
 from .models import School, Route, Student, Stop, TransitLog, BusRun, Bus
 from .serializers import StartBusRunSerializer, UserSerializer, StudentSerializer, RouteSerializer, SchoolSerializer, \
     FormatStudentSerializer, \
@@ -423,7 +425,7 @@ class BusRunViewSet(viewsets.ModelViewSet):
     # filterset_fields = get_filter_dict(BusRun)
     filterset_fields = ['bus_number', 'driver', 'route', 'school__name']
     ordering_fields = ['bus_number', 'driver', 'start_time', 'route', 'going_towards_school', 'duration',
-                       'school__name', 'driver__name', 'route__name']
+                       'school__name', 'driver__full_name', 'route__name']
     ordering = ['-start_time', 'duration']
 
     def get_serializer_class(self):
@@ -525,12 +527,12 @@ class TranzitTraqApi(generics.GenericAPIView):
             ret = json.loads(req.text)
             # return Response(ret, status.HTTP_200_OK)
             data = {}
+            print(ret)
             try:
                 bus_object = Bus.objects.get(bus_number=bus.bus_number)
                 bus_object.latitude = ret['lat']
                 bus_object.longitude = ret['lng']
                 bus_object.save(update_fields=['latitude', 'longitude'])
-                bus
             except:
                 data['bus_number'] = ret['bus']
                 data['latitude'] = ret['lat']
@@ -641,6 +643,16 @@ class StudentViewSet(viewsets.ModelViewSet):
                                  get_straightline_distance(student.guardian.latitude, student.guardian.longitude,
                                                            stop.latitude,
                                                            stop.longitude) < 0.3 * LEN_OF_MILE]
+        try:
+            find_time_to_stops(student_inrange_stops, get_active_bus_for_route(student_inrange_stops[0].route))
+            # pass
+        except:
+            # there is no run on the route
+            print("no run")
+            mark_all_passed(student_inrange_stops)
+
+        student_inrange_stops = [Stop.objects.get(id=stop.id) for stop in student_inrange_stops]
+
         page = self.paginator.paginate_queryset(student_inrange_stops, request)
         return self.paginator.get_paginated_response(StopSerializer(page, many=True).data)
 
@@ -833,10 +845,15 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
             # Duplicates should contain both other users in the database and any students that could conflict
             current_user_email_duplicates = [dup.get_representation() for dup in user_email_duplication[user.email] if
                                              dup != user]
-            if len(student_email_duplication[user.email]) > 0:
-                current_user_email_duplicates.extend(
-                    [self.student_to_user(student).get_representation() for student in
-                     student_email_duplication[user.email]])
+            if user.email is not None and user.email != "":
+                if user.email in student_email_duplication and len(student_email_duplication[user.email]) > 0:
+                    current_user_email_duplicates.extend(
+                        [self.student_to_user(student).get_representation() for student in
+                         student_email_duplication[user.email]])
+                else:
+                    current_user_email_duplicates.extend([self.student_to_user(student).get_representation() for student in
+                                                          self.get_repr_of_students_with_email(user.email)])
+
             is_valid &= len(current_user_email_duplicates) == 0
             user_email_errors = serializer_errors["users"][user_dex].get("email", [])
 
@@ -850,14 +867,15 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
                                                                                current_user_email_duplicates)
             current_name_duplicates = [dup.get_representation() for dup in user_name_duplication[user.full_name] if
                                        dup != user]
-            if user.full_name in student_name_duplication:
-                current_name_duplicates.extend(
-                    [self.student_to_user(student).get_representation() for student in
-                     student_name_duplication[user.full_name]])
-            else:
-                current_name_duplicates.extend(
-                    [self.student_to_user(student).get_representation() for student in
-                     self.get_repr_of_students_with_email(user.full_name)])
+            if user.full_name is not None and user.full_name != "":
+                if user.full_name in student_name_duplication and len(student_name_duplication[user.full_name]) > 0:
+                    current_name_duplicates.extend(
+                        [self.student_to_user(student).get_representation() for student in
+                         student_name_duplication[user.full_name]])
+                else:
+                    current_name_duplicates.extend(
+                        [self.student_to_user(student).get_representation() for student in
+                         self.get_repr_of_students_with_name(user.full_name)])
 
             user_object_response["full_name"] = self.get_val_field_response_format(user.full_name,
                                                                                    serializer_errors["users"][
@@ -878,15 +896,15 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
             current_student_email_duplicates = [dup.get_representation() for dup in
                                                 student_email_duplication[student.email] if
                                                 dup != student]
-
-            if len(user_email_duplication[student.email]) > 0:
-                current_student_email_duplicates.extend(
-                    [self.user_to_student(user).get_representation() for user in user_email_duplication[student.email]])
-            else:
-                # Do a database search due to missed hit
-                current_student_email_duplicates.extend(
-                    [self.user_to_student(user).get_representation() for user in
-                     self.get_repr_of_users_with_email(student.email)])
+            if student.email is not None and student.email != "":
+                if student.email in user_email_duplication and len(user_email_duplication[student.email]) > 0:
+                    current_student_email_duplicates.extend(
+                        [self.user_to_student(user).get_representation() for user in user_email_duplication[student.email]])
+                else:
+                    # Do a database search due to missed hit
+                    current_student_email_duplicates.extend(
+                        [self.user_to_student(user).get_representation() for user in
+                         self.get_repr_of_users_with_email(student.email)])
 
             student_email_errors = serializer_errors["students"][student_dex].get("email", [])
 
@@ -895,14 +913,15 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
 
             current_name_duplicates = [dup.get_representation() for dup in student_name_duplication[student.full_name]
                                        if dup != student]
-            if student.full_name in user_name_duplication:
-                current_name_duplicates.extend(
-                    [self.user_to_student(user).get_representation() for user in
-                     user_name_duplication[student.full_name]])
-            else:
-                current_name_duplicates.extend(
-                    [self.user_to_student(user).get_representation() for user in
-                     self.get_repr_of_users_with_name(student.full_name)])
+            if student.full_name is not None and student.full_name != "":
+                if student.full_name in user_name_duplication:
+                    current_name_duplicates.extend(
+                        [self.user_to_student(user).get_representation() for user in
+                         user_name_duplication[student.full_name]])
+                else:
+                    current_name_duplicates.extend(
+                        [self.user_to_student(user).get_representation() for user in
+                         self.get_repr_of_users_with_name(student.full_name)])
 
             student_object_response["email"] = self.get_val_field_response_format(student.email,
                                                                                   student_email_errors,
@@ -951,6 +970,8 @@ class SubmitLoadedDataAPI(generics.GenericAPIView):
         user_errors = list()
         student_errors = list()
         rollback_at_end = False
+        success_users = list()
+        success_students = list()
         try:
             with transaction.atomic():
                 for user_dex, user_data in enumerate(serializer.data["users"]):
@@ -962,6 +983,9 @@ class SubmitLoadedDataAPI(generics.GenericAPIView):
                                                                              password="DUMMY_PASSWORD")
                         user.set_unusable_password()
                         user.groups.add(Group.objects.get(name="Guardian"))
+                        user.save()
+                        success_users.append(user)
+
                     else:
                         rollback_at_end = True
                     user_errors.append(user_serializer.errors)
@@ -981,8 +1005,8 @@ class SubmitLoadedDataAPI(generics.GenericAPIView):
                                                          school=school,
                                                          guardian=guardian, routes=None,
                                                          student_id=student_data["student_id"])
-                        if student.email is not None and student.email != "" and not rollback_at_end:
-                            send_invite_email(student)
+                        if student.email is not None and student.email != "":
+                            success_students.append(student)
                     else:
                         rollback_at_end = True
                     student_errors.append(student_serializer.errors)
@@ -994,6 +1018,14 @@ class SubmitLoadedDataAPI(generics.GenericAPIView):
                 "students": student_errors
             }
             return Response(context, status=status.HTTP_400_BAD_REQUEST)
+
+        # Send emails only if the entire transaction passes
+        for user in success_users:
+            if not user.email.endswith("@example.com"):
+                invite_code = InvitationCode.objects.create_signup_code(user=user, ipaddr='0.0.0.0')
+                invite_code.send_invitation_email()
+        for student in success_students:
+            send_invite_email(student)
 
         content = {"num_users": len(serializer.data["users"]),
                    "num_students": len(serializer.data["students"])}

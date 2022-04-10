@@ -55,7 +55,11 @@ function GeneralAdminStudentDetails(props) {
   useEffect(() => {
     setObj({...student, ["guardian"]:student.guardian.id,["school"]:student.school.id,["routes"]:student.routes?student.routes.id:null})
     if(student.routes){
-        return runCallEveryPeriod(() => props.getRunByRoute(student.routes.id))
+        return runCallEveryPeriod(() => {
+            console.log(student.id)
+            props.getInRangeStop(student.id);
+            props.getRunByRoute(student.routes.id);
+        })
     }
   }, [props.student]);
 

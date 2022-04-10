@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.db.models import Q
 from rest_framework import serializers
-from .models import Bus, Route, School, Student, Stop, TransitLog, BusRun, EstimatedTimeToNextStop
+from .models import Bus, Route, School, Student, Stop, TransitLog, BusRun
 from geopy.geocoders import GoogleV3
 from .custom_geocoder import CachedGoogleV3
 from .permissions import is_admin, is_school_staff, is_guardian, is_student
@@ -111,16 +111,6 @@ class RouteSerializer(serializers.ModelSerializer):
 class StopSerializer(serializers.ModelSerializer):
     class Meta:
         model = Stop
-        fields = '__all__'
-
-
-class EstimatedTimeToNextStopSerializer(serializers.ModelSerializer):
-
-    def validate(self, attrs):
-        print("hihhihihihi")
-        return super().validate(attrs)
-    class Meta:
-        model = EstimatedTimeToNextStop
         fields = '__all__'
 
 
@@ -270,6 +260,14 @@ def school_names_match(school_name1: str, school_name2: str):
 class LoadStudentSerializer(serializers.ModelSerializer):
     school_name = serializers.CharField(required=True)
     parent_email = serializers.CharField(required=True)
+
+    def validate_parent_email(self, value):
+        # If user is in database, we need to check that it is in the parent role
+        if get_user_model().objects.filter(email=value).count() > 0:
+            user = get_user_model().objects.get(email=value)
+            if not user.groups.filter(name='Guardian').exists():
+                raise serializers.ValidationError("Email does not belong to a user in the parent role")
+        return value
 
     def validate_school_name(self, value):
         user_email = self.context['request'].user
