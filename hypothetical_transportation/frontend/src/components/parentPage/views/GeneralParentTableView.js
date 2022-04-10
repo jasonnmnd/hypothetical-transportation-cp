@@ -70,7 +70,7 @@ function GeneralParentTableView(props) {
 
     const nav = useNavigate();
     const handleViewClick = (student) => {
-        nav(`/parent/student/${student.school.id}/${student.id}`);
+        nav(`/parent/student/${student.school.id}/${student.id}?pageNum=1`);
     }
 
     const getColumns = () => {

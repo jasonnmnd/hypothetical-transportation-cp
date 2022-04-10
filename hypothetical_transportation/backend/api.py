@@ -29,6 +29,7 @@ from collections import defaultdict
 from django.contrib.auth.models import Group
 from .student_account_managers import send_invite_email
 from .custom_geocoder import CachedGoogleV3
+from .group_algo import groupStudents
 
 BUS_RUN_TIMEOUT_THRESHOLD = 3 * 3600
 
@@ -215,14 +216,14 @@ class StartBusRunAPI(generics.GenericAPIView):
         else:
             data['force'] = False
 
-        if count_active_run_for_bus_number(request.data['bus_number']) is not 0:
+        if count_active_run_for_bus_number(request.data['bus_number']) != 0:
             if not data['force']:
                 return Response("Bus is already active on another route", status.HTTP_409_CONFLICT)
             run = get_active_bus_for_bus_number(request.data['bus_number'])
             end_run_now(run)
 
         data['route'] = request.data['route']
-        if count_active_run_for_route(request.data['route']) is not 0:
+        if count_active_run_for_route(request.data['route']) != 0:
             if not data['force']:
                 return Response("Route already has an active run", status.HTTP_409_CONFLICT)
             run = get_active_bus_for_route(request.data['route'])
@@ -232,8 +233,8 @@ class StartBusRunAPI(generics.GenericAPIView):
 
         data['driver'] = request.data['driver']
         # data['driver'] = UserSerializer(instance=get_user_model().objects.filter(id=request.data['driver']).distinct()[0]).data
-
-        if count_active_run_for_driver(request.data['driver']) is not 0:
+        
+        if count_active_run_for_driver(request.data['driver']) != 0:
             if not data['force']:
                 return Response("Driver is already active on a run", status.HTTP_409_CONFLICT)
             run = get_active_bus_for_driver(request.data['driver'])
@@ -589,6 +590,14 @@ class SchoolViewSet(viewsets.ModelViewSet):
             students_queryset = self.request.user.students
             return School.objects.filter(id__in=students_queryset.values('school_id')).distinct().order_by('name')
 
+    @action(detail=True, methods=['get'], permission_classes=[IsAdminOrReadOnly | IsSchoolStaff])
+    def group_students(self, request, pk=None):
+        routes = [route.id for route in Route.objects.filter(school=pk)]
+        students = [{'lng': student.guardian.longitude, 'lat': student.guardian.latitude, 'id': student.id} for student
+                    in Student.objects.filter(routes__isnull=True, school=pk)]
+        content = groupStudents(students, routes)
+        return Response(content, status.HTTP_200_OK)
+
 
 class StudentViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly | IsSchoolStaff]
@@ -648,7 +657,7 @@ class StudentViewSet(viewsets.ModelViewSet):
             # pass
         except:
             # there is no run on the route
-            print("no run")
+            # print("no run")
             mark_all_passed(student_inrange_stops)
 
         student_inrange_stops = [Stop.objects.get(id=stop.id) for stop in student_inrange_stops]
@@ -733,47 +742,57 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
                     "student_id": self.student_id, "parent_email": self.parent_email, "school_name": self.school_name}
 
     def student_to_user(self, student: StudentRepresentation):
-        address_msg = "Student role does not have address"
+        address_msg = "Student account: field not required"
         return self.UserRepresentation(uuid=f"from_student_{student.usid}", full_name=student.full_name,
                                        email=student.email,
                                        phone_number=student.phone_number, address=address_msg, in_db=student.in_db)
 
     def user_to_student(self, user: UserRepresentation):
         # student_id_msg = "Not required for system users"
-        school_name_msg = "Not required for system users"
+        school_name_msg = "User account: field not required"
         return self.StudentRepresentation(usid=f"from_user_{user.uuid}", email=user.email,
                                           phone_number=user.phone_number, full_name=user.full_name,
-                                          student_id=-1,
+                                          student_id="",
                                           parent_email="", school_name=school_name_msg)
 
     def get_repr_of_users_with_email(self, email: str):
         matching_users = get_user_model().objects.filter(email=email)
-        return [self.UserRepresentation(uuid=str(user.id), full_name=user.full_name, email=user.email,
-                                        phone_number=user.phone_number, address=user.address, in_db=True) for user in
-                matching_users]
+        user_reprs = list()
+        for user in matching_users:
+            address_msg = "User Account belongs to a student" if is_student(user) else user.address
+            user_reprs.append(self.UserRepresentation(uuid=str(user.id), full_name=user.full_name, email=user.email,
+                                                      phone_number=user.phone_number, address=address_msg, in_db=True))
+        return user_reprs
 
     def get_repr_of_users_with_name(self, full_name: str):
         matching_users = get_user_model().objects.filter(full_name=full_name)
-        return [self.UserRepresentation(uuid=str(user.id), full_name=user.full_name, email=user.email,
-                                        phone_number=user.phone_number, address=user.address, in_db=True) for user in
-                matching_users]
+        user_reprs = list()
+        for user in matching_users:
+            address_msg = "User Account belongs to a student" if is_student(user) else user.address
+            user_reprs.append(self.UserRepresentation(uuid=str(user.id), full_name=user.full_name, email=user.email,
+                                                      phone_number=user.phone_number, address=address_msg, in_db=True))
+        return user_reprs
 
     def get_repr_of_students_with_email(self, email: str):
+        # Only add students that do not have a linked account
         matching_students = Student.objects.filter(email=email)
         return [
             self.StudentRepresentation(usid=str(student.id), email=student.email, phone_number=student.phone_number,
                                        full_name=student.full_name, student_id=student.school_id,
                                        parent_email=student.guardian.email, school_name=student.school.name,
-                                       in_db=True) for student in matching_students]
+                                       in_db=True) for student in matching_students if
+            student.student_user_account.all().count() == 0]
 
     def get_repr_of_students_with_name(self, full_name: str):
+        # Only add students that do not have a linked account
         matching_students = Student.objects.filter(full_name=full_name)
         return [
             self.StudentRepresentation(usid=str(student.id), email=student.email, phone_number=student.phone_number,
                                        full_name=student.full_name, student_id=student.school_id,
                                        parent_email=student.guardian.email,
                                        school_name=student.school.name,
-                                       in_db=True) for student in matching_students]
+                                       in_db=True) for student in matching_students if
+            student.student_user_account.all().count() == 0]
 
     def get_val_field_response_format(self, value, error: list, duplicates: list):
         return {"value": value, "error": error, "duplicates": duplicates}
@@ -851,8 +870,9 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
                         [self.student_to_user(student).get_representation() for student in
                          student_email_duplication[user.email]])
                 else:
-                    current_user_email_duplicates.extend([self.student_to_user(student).get_representation() for student in
-                                                          self.get_repr_of_students_with_email(user.email)])
+                    current_user_email_duplicates.extend(
+                        [self.student_to_user(student).get_representation() for student in
+                         self.get_repr_of_students_with_email(user.email)])
 
             is_valid &= len(current_user_email_duplicates) == 0
             user_email_errors = serializer_errors["users"][user_dex].get("email", [])
@@ -867,15 +887,6 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
                                                                                current_user_email_duplicates)
             current_name_duplicates = [dup.get_representation() for dup in user_name_duplication[user.full_name] if
                                        dup != user]
-            if user.full_name is not None and user.full_name != "":
-                if user.full_name in student_name_duplication and len(student_name_duplication[user.full_name]) > 0:
-                    current_name_duplicates.extend(
-                        [self.student_to_user(student).get_representation() for student in
-                         student_name_duplication[user.full_name]])
-                else:
-                    current_name_duplicates.extend(
-                        [self.student_to_user(student).get_representation() for student in
-                         self.get_repr_of_students_with_name(user.full_name)])
 
             user_object_response["full_name"] = self.get_val_field_response_format(user.full_name,
                                                                                    serializer_errors["users"][
@@ -899,7 +910,8 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
             if student.email is not None and student.email != "":
                 if student.email in user_email_duplication and len(user_email_duplication[student.email]) > 0:
                     current_student_email_duplicates.extend(
-                        [self.user_to_student(user).get_representation() for user in user_email_duplication[student.email]])
+                        [self.user_to_student(user).get_representation() for user in
+                         user_email_duplication[student.email]])
                 else:
                     # Do a database search due to missed hit
                     current_student_email_duplicates.extend(
@@ -913,15 +925,6 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
 
             current_name_duplicates = [dup.get_representation() for dup in student_name_duplication[student.full_name]
                                        if dup != student]
-            if student.full_name is not None and student.full_name != "":
-                if student.full_name in user_name_duplication:
-                    current_name_duplicates.extend(
-                        [self.user_to_student(user).get_representation() for user in
-                         user_name_duplication[student.full_name]])
-                else:
-                    current_name_duplicates.extend(
-                        [self.user_to_student(user).get_representation() for user in
-                         self.get_repr_of_users_with_name(student.full_name)])
 
             student_object_response["email"] = self.get_val_field_response_format(student.email,
                                                                                   student_email_errors,

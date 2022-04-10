@@ -63,11 +63,11 @@ function GeneralBulkImportSuccessPage(props) {
         </ToastContainer>
 
         <Container className='d-flex flex-row justify-content-center' style={{gap: "10px"}}>
-          <Link to={`/${getType(props.user)}/users?pageNum=1`}>
+          <Link to={`/${getType(props.user)}/users?pageNum=1&ordering=full_name`}>
             <Button variant="yellow" size="lg">View Users</Button>
           </Link>
 
-          <Link to={`/${getType(props.user)}/students?pageNum=1`}>
+          <Link to={`/${getType(props.user)}/students?pageNum=1&ordering=full_name`}>
             <Button variant="yellow" size="lg">View Students</Button>
           </Link>
         </Container>

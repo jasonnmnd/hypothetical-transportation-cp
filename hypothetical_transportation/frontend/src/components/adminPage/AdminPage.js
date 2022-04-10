@@ -13,6 +13,8 @@ import RoutesPic from '../assets/route.jpg';
 import StopsPic from '../assets/stopsPic.jpg';
 import EmailPic from '../assets/email.jpg';
 import DataPic from '../assets/bulk_import.jpg';
+import BusLogPic from '../assets/busLogPic.png'
+import AccountPic from '../assets/accountPic.png'
 import isAdmin from "../../utils/user";
 import getType from "../../utils/user2";
 
@@ -33,7 +35,7 @@ function AdminPage( props ) {
 
               <Row>
                 <Col>
-                  <Card className="text-center" style={{height:'450px', cursor: "pointer"}} onClick={() => navigate(`/${getType(props.user)}/users?pageNum=1`)} >
+                  <Card className="text-center" style={{height:'450px', cursor: "pointer"}} onClick={() => navigate(`/${getType(props.user)}/users?pageNum=1&ordering=full_name`)} >
                     <Card.Img variant="top" src={AdminPic} style={{height: '300px'}}/>
                     <Card.Body>
                       <Card.Title><strong>Users</strong></Card.Title>
@@ -44,7 +46,7 @@ function AdminPage( props ) {
                   </Card>
                 </Col>
                 <Col>
-                  <Card className="text-center" style={{height:'450px', cursor: "pointer"}} onClick={() => navigate(`/${getType(props.user)}/students?pageNum=1`)}>
+                  <Card className="text-center" style={{height:'450px', cursor: "pointer"}} onClick={() => navigate(`/${getType(props.user)}/students?pageNum=1&ordering=full_name`)}>
                     <Card.Img variant="top" src={StudentsPic} style={{height: '300px'}}/>
                     <Card.Body>
                       <Card.Title><strong>Students</strong></Card.Title>
@@ -55,7 +57,7 @@ function AdminPage( props ) {
                   </Card>
                 </Col>
                 <Col>
-                  <Card className="text-center" style={{height:'450px', cursor: "pointer"}} onClick={() => navigate(`/${getType(props.user)}/schools?pageNum=1`)}>
+                  <Card className="text-center" style={{height:'450px', cursor: "pointer"}} onClick={() => navigate(`/${getType(props.user)}/schools?pageNum=1&ordering=name`)}>
                     <Card.Img variant="top" src={SchoolPic} style={{height: '300px'}}/>
                     <Card.Body>
                       <Card.Title><strong>Schools</strong></Card.Title>
@@ -65,11 +67,9 @@ function AdminPage( props ) {
                     </Card.Body>
                   </Card>
                 </Col>
-              </Row>
 
-              <Row>
                 <Col>
-                  <Card className="text-center" style={{height:'450px', cursor: "pointer"}} onClick={() => navigate(`/${getType(props.user)}/routes?pageNum=1`)}>
+                  <Card className="text-center" style={{height:'450px', cursor: "pointer"}} onClick={() => navigate(`/${getType(props.user)}/routes?pageNum=1&ordering=name`)}>
                     <Card.Img variant="top" src={RoutesPic} style={{height: '300px'}}/>
                     <Card.Body>
                       <Card.Title><strong>Routes</strong></Card.Title>
@@ -79,6 +79,9 @@ function AdminPage( props ) {
                     </Card.Body>
                   </Card>
                 </Col>
+              </Row>
+
+              <Row>
                 {isAdmin(props.user)?
                   <Col>
                     <Card className="text-center" style={{height:'450px', cursor: "pointer"}} onClick={() => navigate(`/${getType(props.user)}/email`)}>
@@ -110,6 +113,30 @@ function AdminPage( props ) {
                   :
                   <></>
                 }
+
+                  <Col>
+                    <Card className="text-center" style={{height:'450px', cursor: "pointer"}} onClick={() => navigate(`/bus/log`)}>
+                      <Card.Img variant="top" src={BusLogPic} style={{height: '300px'}}/>
+                      <Card.Body>
+                        <Card.Title><strong>Bus Log</strong></Card.Title>
+                        <Card.Text>
+                          View bus logs information.
+                        </Card.Text>
+                      </Card.Body>
+                    </Card>
+                  </Col>
+
+                  <Col>
+                    <Card className="text-center" style={{height:'450px', cursor: "pointer"}} onClick={() => navigate(`/account`)}>
+                      <Card.Img variant="top" src={AccountPic} style={{height: '300px'}}/>
+                      <Card.Body>
+                        <Card.Title><strong>Account</strong></Card.Title>
+                        <Card.Text>
+                          Manage your account.
+                        </Card.Text>
+                      </Card.Body>
+                    </Card>
+                  </Col>
               </Row>
             </Container>
 

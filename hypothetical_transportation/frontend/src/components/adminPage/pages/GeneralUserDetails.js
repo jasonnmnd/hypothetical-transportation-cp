@@ -97,7 +97,7 @@ function AdminUserDetails(props) {
                   Bus Number: {props.currentRun.bus_number}
               </p>
                   
-              <Link to={`/${getType(props.curUser)}/route/${props.currentRun.route.id}/`}>
+              <Link to={`/${getType(props.curUser)}/route/${props.currentRun.route.id}?pageNum=1`}>
                   Route: {props.currentRun.route.name}
               </Link>
           </Alert>:<></>
@@ -135,7 +135,7 @@ function AdminUserDetails(props) {
         </Row>
 
         <Row  style={{gap: "10px"}}> 
-        {getType(props.user) == "parent" ?
+        {props.user.groups[0].id==2 ?
           <Card as={Col} style={{padding: "0px"}}>
               <Card.Header as="h5">Address </Card.Header>
               <Card.Body>
@@ -157,7 +157,7 @@ function AdminUserDetails(props) {
             </Card> 
             : <></>}
         </Row>
-        {getType(props.user) == "parent" ?
+        {props.user.groups[0].id==2 ?
         <Row  style={{gap: "10px"}}> 
           <Card  as={Col} style={{padding: "0px"}}>
               <Card.Header as="h5">List of Students</Card.Header>
