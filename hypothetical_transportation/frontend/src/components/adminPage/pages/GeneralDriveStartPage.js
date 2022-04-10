@@ -5,7 +5,7 @@ import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom"
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import AdminHeader from '../../header/AdminHeader';
-import { Container, Form, Col, Button, Card } from 'react-bootstrap';
+import { Container, Form, Col, Button, Card, Alert } from 'react-bootstrap';
 import { getRoutes } from '../../../actions/routes';
 import { getRunByDriver, startRun, endRun, reachStop, resetError, getNextStop } from '../../../actions/drive';
 import Select from 'react-select';
@@ -89,7 +89,7 @@ function GeneralDriveStartPage(props) {
     <div>          
         <AdminHeader/>
         <BusRunStartConfirmModal show={showConfirmModal} saveModal={() => startRun(true)} errorMessage={props.errorMessage} closeModal={() => setShowConfirmModal(false)}/>
-        {getType(props.user)=="driver"  ?
+        {getType(props.user)!="driver"  ?
         <Container className="container-main d-flex flex-column" style={{gap: "20px"}}>
             {driverInRun() ? 
                <CurrentDriveSection busRun={props.currentRun} endRun={endRun} arriveAtStop={arrivedAtStop} nextStop={props.nextStop} /> : 
