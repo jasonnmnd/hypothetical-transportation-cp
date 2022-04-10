@@ -7,6 +7,7 @@ import * as FaIcons from "react-icons/fa";
 import * as AiIcons from "react-icons/ai";
 import * as IoIcons from "react-icons/io";
 import * as IoIcons5 from "react-icons/io5";
+import * as GrIcons from "react-icons/gr";
 import * as GiIcons from "react-icons/gi";
 import { logout } from '../../actions/auth';
 import { connect } from 'react-redux';
@@ -56,7 +57,7 @@ function AdminHeader( props ) {
                         <NavDropdown title="Buses">
                             <NavDropdown.Item as={Link} to={`/bus/map`}><GiIcons.GiPathDistance /> Active Buses Map</NavDropdown.Item>
                             <NavDropdown.Divider/>
-                            <NavDropdown.Item as={Link} to={`/bus/log`}><IoIcons5.IoCreate /> Bus Log</NavDropdown.Item>
+                            <NavDropdown.Item as={Link} to={`/bus/log`}><GrIcons.GrDocumentText /> Bus Log</NavDropdown.Item>
                         </NavDropdown>
                         {/* <NavDropdown title="Stops">
                             <NavDropdown.Item as={Link} to={`/`}><GiIcons.GiBusStop /> View Stops</NavDropdown.Item>

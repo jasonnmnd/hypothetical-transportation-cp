@@ -54,7 +54,9 @@ function GeneralTable( props ) {
                     }
 
                     if(columnInfo.dataPath == "start_time"){
+                      console.log("HIIII")
                       cellData = DATE_TIME_TO_STRING(cellData);
+                      console.log("HIII")
                     }
                     return (
                         <td key={`${cellData}--${index}`}>

@@ -65,9 +65,7 @@ function AdminPage( props ) {
                     </Card.Body>
                   </Card>
                 </Col>
-              </Row>
 
-              <Row>
                 <Col>
                   <Card className="text-center" style={{height:'450px', cursor: "pointer"}} onClick={() => navigate(`/${getType(props.user)}/routes?pageNum=1`)}>
                     <Card.Img variant="top" src={RoutesPic} style={{height: '300px'}}/>
@@ -79,6 +77,9 @@ function AdminPage( props ) {
                     </Card.Body>
                   </Card>
                 </Col>
+              </Row>
+
+              <Row>
                 {isAdmin(props.user)?
                   <Col>
                     <Card className="text-center" style={{height:'450px', cursor: "pointer"}} onClick={() => navigate(`/${getType(props.user)}/email`)}>
