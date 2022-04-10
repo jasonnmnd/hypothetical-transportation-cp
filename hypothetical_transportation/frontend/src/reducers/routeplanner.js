@@ -1,4 +1,4 @@
-import { GET_STUDENTS_IN_ROUTE, GET_STUDENTS_WITHOUT_ROUTE, ADD_ROUTE,RESET_POSTED } from '../actions/types.js';
+import { GET_STUDENTS_IN_ROUTE, GET_STUDENTS_WITHOUT_ROUTE, ADD_ROUTE,RESET_POSTED, AUTO_GROUP_LOADING } from '../actions/types.js';
 
 
 const initialState = {
@@ -16,7 +16,7 @@ const initialState = {
         description: "",
         school: "",
         schoolName: ""
-    }
+    },
 }
 
 export default function (state = initialState, action) {
