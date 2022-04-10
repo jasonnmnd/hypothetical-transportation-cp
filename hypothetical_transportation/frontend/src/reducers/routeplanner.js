@@ -1,4 +1,4 @@
-import { GET_STUDENTS_IN_ROUTE, GET_STUDENTS_WITHOUT_ROUTE, ADD_ROUTE,RESET_POSTED } from '../actions/types.js';
+import { GET_STUDENTS_IN_ROUTE, GET_STUDENTS_WITHOUT_ROUTE, ADD_ROUTE,RESET_POSTED, AUTO_GROUP_LOADING } from '../actions/types.js';
 
 
 const initialState = {
@@ -16,6 +16,10 @@ const initialState = {
         description: "",
         school: "",
         schoolName: ""
+    },
+    loading: false,
+    autogrouping: {
+
     }
 }
 
@@ -46,6 +50,17 @@ export default function (state = initialState, action) {
                     school: "",
                     schoolName: ""
                 }
+            }
+        case AUTO_GROUP_LOADING: 
+            return {
+                ...state,
+                loading: true
+            }
+        case AUTO_GROUP: 
+            return {
+                ...state,
+                loading: false,
+                autogrouping: action.payload
             }
         default: 
             return state;

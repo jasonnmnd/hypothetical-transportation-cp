@@ -43,6 +43,7 @@ function SchoolRoutesPlannerPage(props) {
   const [stops, setStopsWithProperInds] = useState(props.stops);
   const [deletedStops, setDeletedStops] = useState([]);
   const [studentChanges, setStudentChanges] = useState({});
+  const [routesLoading, setRoutesLoading] = useState(false);
 
 
 
@@ -242,6 +243,19 @@ function SchoolRoutesPlannerPage(props) {
     setSearchParams({...Object.fromEntries([...searchParams]), [IS_CREATE_PARAM]: val});
   }
 
+  const autoGroupStudents = () => {
+    setRoutesLoading(true);
+    axios
+        .get(`/api/school/${schoolId}/group_students`, config)
+        .then((res) => {
+          
+          console.log(res.data)
+
+          setRoutesLoading(false);
+        })
+        .catch((err) => {console.log(err); setRoutesLoading(false);});
+  }
+
   if(props.routes.length == 0 || props.routes.find(route => route.id == parseInt(searchParams.get(ROUTE_PARAM))) == null){
     return (
       <>
@@ -257,6 +271,24 @@ function SchoolRoutesPlannerPage(props) {
           <Container className='d-flex flex-row justify-content-center'>
             <CreateRouteModal handleRouteDetailClick={handleRouteDetailClick} showRouteDetailsButton={false} setCreateSearchParam={setCreateSearchParam} show={searchParams.get(IS_CREATE_PARAM) == "true"} onInfoSubmit={onInfoSubmit} />
           </Container>
+        
+        </Container>
+      </>
+    )
+  }
+
+  if(routesLoading){
+    return (
+      <>
+        <Header shouldShowOptions={true}></Header>
+        <Container className="container-main d-flex flex-column" style={{gap: "10px"}}>
+          <div className="shadow-sm p-3 mb-5 bg-white rounded d-flex flex-row justify-content-center">
+            <h1>{`${props.school.name} Route Planner`}</h1>
+          </div>
+
+          <h2>Loading...</h2>
+
+
         
         </Container>
       </>
@@ -330,6 +362,7 @@ function SchoolRoutesPlannerPage(props) {
               resetStudentChanges={resetStudentChanges}
               saveRoutePlannerMapChanges={saveRoutePlannerMapChanges}
               school_id={param.school_id}
+              autoGroupStudents={autoGroupStudents}
             /> 
             : null
             }
