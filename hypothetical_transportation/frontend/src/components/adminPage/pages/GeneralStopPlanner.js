@@ -50,7 +50,7 @@ function GeneralAdminStopPlanner(props) {
         <Card>
             <Card.Header as="h5">Route</Card.Header>
             <Card.Body>
-              <Link to={`/${getType(props.user)}/school/${param.route_id}`}>
+              <Link to={`/${getType(props.user)}/school/${param.route_id}?stupageNum=1&roupageNum=1`}>
                   <Button variant='yellow'><h3>{props.route.name}</h3></Button>
               </Link>
             </Card.Body>

@@ -127,7 +127,7 @@ function GeneralAdminStudentDetails(props) {
                 <Card as={Col} style={{padding: "0px"}}>
                     <Card.Header as="h5">Parent </Card.Header>
                     <Card.Body>
-                        <Link to={`/${getType(props.user)}/user/${student.guardian.id}`}>
+                        <Link to={`/${getType(props.user)}/user/${student.guardian.id}?pageNum=1`}>
                             <h5>{student.guardian.full_name}</h5>
                         </Link>
                         
@@ -172,7 +172,7 @@ function GeneralAdminStudentDetails(props) {
                 <Card as={Col} style={{padding: "0px"}}>
                     <Card.Header as="h5">School </Card.Header>
                     <Card.Body>
-                        <Link to={`/${getType(props.user)}/school/${student.school.id}`}>
+                        <Link to={`/${getType(props.user)}/school/${student.school.id}?stupageNum=1&roupageNum=1`}>
                             <h5>{student.school.name}</h5>
                         </Link>
                     </Card.Body>
@@ -185,7 +185,7 @@ function GeneralAdminStudentDetails(props) {
                     <Card.Body>
                         <Container className='d-flex flex-column' style={{gap: "20px"}}>
                         {(student.routes!==undefined && student.routes!==null) ?
-                            <Link to={`/${getType(props.user)}/route/${student.routes.id}`}>
+                            <Link to={`/${getType(props.user)}/route/${student.routes.id}?pageNum=1`}>
                                 <h5>{student.routes.name}</h5>
                             </Link>:
                             <Alert variant="danger">
@@ -195,7 +195,7 @@ function GeneralAdminStudentDetails(props) {
                                 </p>
                                 <hr />
                                 {isAdmin(props.user)?
-                                <Link to={`/${getType(props.user)}/school/${student.school.id}`}>
+                                <Link to={`/${getType(props.user)}/school/${student.school.id}?stupageNum=1&roupageNum=1`}>
                                     View School Details Page for Route Planner
                                 </Link>:<></>}
                             </Alert>

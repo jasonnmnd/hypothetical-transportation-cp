@@ -23,7 +23,7 @@ function GeneralAdminStopDetails(props) {
 
   const handleConfirmDelete = () => {
     props.deleteStop(parseInt(param.stop_id));
-    navigate(`/${getType(props.user)}/route/${props.stop.route}`);
+    navigate(`/${getType(props.user)}/route/${props.stop.route}/?pageNum=1`);
   }
   
   //things that need to be on the map: this stop, students in the route (and complete or not)
@@ -96,7 +96,7 @@ function GeneralAdminStopDetails(props) {
         <Card>
             <Card.Header as="h5">Associated Route </Card.Header>
             <Card.Body>
-                <Link to={`/${getType(props.user)}/route/${props.stop.route}`}>
+                <Link to={`/${getType(props.user)}/route/${props.stop.route}?pageNum=1`}>
                   <Button variant='yellow'><h5>{props.viewedRoute!==null && props.viewedRoute!==undefined && props.viewedRoute.name!==null && props.viewedRoute.name!==undefined&& props.viewedRoute.name!=="" ? props.viewedRoute.name: "The Hogwarts Express"}</h5></Button>
                 </Link>
             </Card.Body>

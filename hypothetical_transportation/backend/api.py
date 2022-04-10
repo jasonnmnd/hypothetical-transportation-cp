@@ -216,14 +216,14 @@ class StartBusRunAPI(generics.GenericAPIView):
         else:
             data['force'] = False
 
-        if count_active_run_for_bus_number(request.data['bus_number']) is not 0:
+        if count_active_run_for_bus_number(request.data['bus_number']) != 0:
             if not data['force']:
                 return Response("Bus is already active on another route", status.HTTP_409_CONFLICT)
             run = get_active_bus_for_bus_number(request.data['bus_number'])
             end_run_now(run)
 
         data['route'] = request.data['route']
-        if count_active_run_for_route(request.data['route']) is not 0:
+        if count_active_run_for_route(request.data['route']) != 0:
             if not data['force']:
                 return Response("Route already has an active run", status.HTTP_409_CONFLICT)
             run = get_active_bus_for_route(request.data['route'])
@@ -233,8 +233,8 @@ class StartBusRunAPI(generics.GenericAPIView):
 
         data['driver'] = request.data['driver']
         # data['driver'] = UserSerializer(instance=get_user_model().objects.filter(id=request.data['driver']).distinct()[0]).data
-
-        if count_active_run_for_driver(request.data['driver']) is not 0:
+        
+        if count_active_run_for_driver(request.data['driver']) != 0:
             if not data['force']:
                 return Response("Driver is already active on a run", status.HTTP_409_CONFLICT)
             run = get_active_bus_for_driver(request.data['driver'])
@@ -594,8 +594,9 @@ class SchoolViewSet(viewsets.ModelViewSet):
     def group_students(self, request, pk=None):
         routes = [route.id for route in Route.objects.filter(school=pk)]
         students = [{'lng': student.guardian.longitude, 'lat': student.guardian.latitude, 'id': student.id} for student
-                    in Student.objects.filter(routes__isnull=True, school=pk)]
-        content = groupStudents(students, routes)
+                    in Student.objects.filter(school=pk)]
+        content_int = groupStudents(students, routes)
+        content = {str(student_id): str(content_int[student_id]) for student_id in content_int.keys()}
         return Response(content, status.HTTP_200_OK)
 
 
@@ -657,7 +658,7 @@ class StudentViewSet(viewsets.ModelViewSet):
             # pass
         except:
             # there is no run on the route
-            print("no run")
+            # print("no run")
             mark_all_passed(student_inrange_stops)
 
         student_inrange_stops = [Stop.objects.get(id=stop.id) for stop in student_inrange_stops]

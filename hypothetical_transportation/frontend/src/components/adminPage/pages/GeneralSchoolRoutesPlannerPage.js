@@ -170,7 +170,7 @@ function SchoolRoutesPlannerPage(props) {
   }
 
   const handleRouteDetailClick = () => {
-    navigate(`/${getType(props.user)}/route/${searchParams.get(ROUTE_PARAM)}`);
+    navigate(`/${getType(props.user)}/route/${searchParams.get(ROUTE_PARAM)}?pageNum=1`);
   }
   
   const onInfoSubmit = (e, isCreateRoute) => {
