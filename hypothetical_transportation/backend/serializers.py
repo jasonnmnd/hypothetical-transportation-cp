@@ -261,6 +261,14 @@ class LoadStudentSerializer(serializers.ModelSerializer):
     school_name = serializers.CharField(required=True)
     parent_email = serializers.CharField(required=True)
 
+    def validate_parent_email(self, value):
+        # If user is in database, we need to check that it is in the parent role
+        if get_user_model().objects.filter(email=value).count() > 0:
+            user = get_user_model().objects.get(email=value)
+            if not user.groups.filter(name='Guardian').exists():
+                raise serializers.ValidationError("Email does not belong to a user in the parent role")
+        return value
+
     def validate_school_name(self, value):
         user_email = self.context['request'].user
         user_object = get_user_model().objects.get(email=user_email)
