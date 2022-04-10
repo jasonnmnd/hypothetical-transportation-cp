@@ -135,7 +135,7 @@ function AdminUserDetails(props) {
         </Row>
 
         <Row  style={{gap: "10px"}}> 
-        {getType(props.user) == "parent" ?
+        {props.user.groups[0].id==2 ?
           <Card as={Col} style={{padding: "0px"}}>
               <Card.Header as="h5">Address </Card.Header>
               <Card.Body>
@@ -157,7 +157,7 @@ function AdminUserDetails(props) {
             </Card> 
             : <></>}
         </Row>
-        {getType(props.user) == "parent" ?
+        {props.user.groups[0].id==2 ?
         <Row  style={{gap: "10px"}}> 
           <Card  as={Col} style={{padding: "0px"}}>
               <Card.Header as="h5">List of Students</Card.Header>
