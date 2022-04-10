@@ -149,22 +149,4 @@ export const getStudentsWithoutRoute = (parameters) => (dispatch, getState) => {
   }
 
 
-  export const getStudentAutoGroups = (schoolId) => (dispatch, getState) => {
-  
-    let config = tokenConfig(getState);
-    
-    dispatch({
-      type: AUTO_GROUP_LOADING,
-    });
-
-    axios
-        .get(`/api/school/${schoolId}/group_students`, config)
-        .then((res) => {
-          dispatch({
-            type: AUTO_GROUP,
-            payload: res.data,
-          });
-        })
-        .catch((err) => {/*console.log(err);*/returnErrors(err.response.data, err.response.status)});
-    };
   

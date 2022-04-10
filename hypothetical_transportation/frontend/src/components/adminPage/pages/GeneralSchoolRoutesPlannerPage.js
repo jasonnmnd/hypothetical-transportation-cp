@@ -24,6 +24,7 @@ import CreateRouteModal from '../components/route_stop_planner/CreateRouteModal'
 import RoutePlanner from './RoutePlanner';
 import { getStopByRoute, deleteStop, createStop, updateStop } from '../../../actions/stops';
 import getType from '../../../utils/user2';
+import axios from 'axios';
 
 const IS_CREATE_PARAM = 'create';
 const VIEW_PARAM = 'view';
@@ -244,12 +245,20 @@ function SchoolRoutesPlannerPage(props) {
   }
 
   const autoGroupStudents = () => {
+    console.log(studentChanges)
     setRoutesLoading(true);
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Token ${props.token}`
+      },
+    };
+  
     axios
-        .get(`/api/school/${schoolId}/group_students`, config)
+        .get(`/api/school/${props.school.id}/group_students/`, config)
         .then((res) => {
           
-          console.log(res.data)
+          setStudentChanges(res.data)
 
           setRoutesLoading(false);
         })
@@ -411,6 +420,7 @@ SchoolRoutesPlannerPage.propTypes = {
 
 const mapStateToProps = (state) => ({
   user: state.auth.user,
+  token: state.auth.token,
   students: state.students.students.results,
   routes: state.routes.routes.results, 
   currentRoute: state.routes.viewedRoute,

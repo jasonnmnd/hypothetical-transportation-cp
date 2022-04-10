@@ -17,10 +17,6 @@ const initialState = {
         school: "",
         schoolName: ""
     },
-    loading: false,
-    autogrouping: {
-
-    }
 }
 
 export default function (state = initialState, action) {
@@ -50,17 +46,6 @@ export default function (state = initialState, action) {
                     school: "",
                     schoolName: ""
                 }
-            }
-        case AUTO_GROUP_LOADING: 
-            return {
-                ...state,
-                loading: true
-            }
-        case AUTO_GROUP: 
-            return {
-                ...state,
-                loading: false,
-                autogrouping: action.payload
             }
         default: 
             return state;
