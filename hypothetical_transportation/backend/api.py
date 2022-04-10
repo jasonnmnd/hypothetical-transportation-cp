@@ -29,6 +29,7 @@ from collections import defaultdict
 from django.contrib.auth.models import Group
 from .student_account_managers import send_invite_email
 from .custom_geocoder import CachedGoogleV3
+from .group_algo import groupStudents
 
 BUS_RUN_TIMEOUT_THRESHOLD = 3 * 3600
 
@@ -588,6 +589,14 @@ class SchoolViewSet(viewsets.ModelViewSet):
             # Only return schools associated with children of current user
             students_queryset = self.request.user.students
             return School.objects.filter(id__in=students_queryset.values('school_id')).distinct().order_by('name')
+
+    @action(detail=True, methods=['get'], permission_classes=[IsAdminOrReadOnly | IsSchoolStaff])
+    def group_students(self, request, pk=None):
+        routes = [route.id for route in Route.objects.all()]
+        students = [{'lng': student.guardian.longitude, 'lat': student.guardian.latitude, 'id': student.id} for student
+                    in Student.objects.filter(routes__isnull=True)]
+        content = groupStudents(students, routes)
+        return Response(content, status.HTTP_200_OK)
 
 
 class StudentViewSet(viewsets.ModelViewSet):
