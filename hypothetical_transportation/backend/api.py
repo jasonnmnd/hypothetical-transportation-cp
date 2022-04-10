@@ -596,7 +596,7 @@ class SchoolViewSet(viewsets.ModelViewSet):
         students = [{'lng': student.guardian.longitude, 'lat': student.guardian.latitude, 'id': student.id} for student
                     in Student.objects.filter(school=pk)]
         content_int = groupStudents(students, routes)
-        content = {str(student_id): str(route_id) for (student_id, route_id) in content_int}
+        content = {str(student_id): str(content_int[student_id]) for student_id in content_int.keys()}
         return Response(content, status.HTTP_200_OK)
 
 
