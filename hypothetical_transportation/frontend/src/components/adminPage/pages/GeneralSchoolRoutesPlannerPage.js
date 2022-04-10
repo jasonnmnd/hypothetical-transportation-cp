@@ -12,7 +12,7 @@ import { getSchool } from '../../../actions/schools';
 import { getStudents, patchStudent } from '../../../actions/students';
 import RoutePlannerMap from '../../maps/RoutePlannerMap';
 import { NO_ROUTE } from '../../../utils/utils';
-import { Container, ButtonGroup, ToggleButton, Card, Button, Form, Collapse, Modal } from 'react-bootstrap';
+import { Container, ButtonGroup, ToggleButton, Card, Button, Form, Collapse, Modal, Spinner } from 'react-bootstrap';
 import PageNavigateModal from '../components/modals/PageNavigateModal';
 import IconLegend from '../../common/IconLegend';
 import { compareStopLists, getCurRouteFromStudent } from '../../../utils/planner_maps';
@@ -295,7 +295,9 @@ function SchoolRoutesPlannerPage(props) {
             <h1>{`${props.school.name} Route Planner`}</h1>
           </div>
 
-          <h2>Loading...</h2>
+          <Spinner animation="border" role="status" size="lg">
+              <span className="visually-hidden">Loading...</span>
+          </Spinner>
 
 
         
