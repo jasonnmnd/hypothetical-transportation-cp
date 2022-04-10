@@ -13,6 +13,8 @@ import RoutesPic from '../assets/route.jpg';
 import StopsPic from '../assets/stopsPic.jpg';
 import EmailPic from '../assets/email.jpg';
 import DataPic from '../assets/bulk_import.jpg';
+import BusLogPic from '../assets/busLogPic.png'
+import AccountPic from '../assets/accountPic.png'
 import isAdmin from "../../utils/user";
 import getType from "../../utils/user2";
 
@@ -114,7 +116,7 @@ function AdminPage( props ) {
 
                   <Col>
                     <Card className="text-center" style={{height:'450px', cursor: "pointer"}} onClick={() => navigate(`/bus/log`)}>
-                      <Card.Img variant="top" src={DataPic} style={{height: '300px'}}/>
+                      <Card.Img variant="top" src={BusLogPic} style={{height: '300px'}}/>
                       <Card.Body>
                         <Card.Title><strong>Bus Log</strong></Card.Title>
                         <Card.Text>
@@ -126,7 +128,7 @@ function AdminPage( props ) {
 
                   <Col>
                     <Card className="text-center" style={{height:'450px', cursor: "pointer"}} onClick={() => navigate(`/account`)}>
-                      <Card.Img variant="top" src={DataPic} style={{height: '300px'}}/>
+                      <Card.Img variant="top" src={AccountPic} style={{height: '300px'}}/>
                       <Card.Body>
                         <Card.Title><strong>Account</strong></Card.Title>
                         <Card.Text>
