@@ -117,8 +117,6 @@ const applyTimezoneOffset = (date, time, offset) => {
 export const DATE_TIME_TO_STRING = (dateTime) => {
     const timezoneOffset = (new Date()).getTimezoneOffset();
     const hourOffset = timezoneOffset / 60;
-    console.log(hourOffset)
-    console.log(dateTime);
     try {
         const dateTimeParts = dateTime.split("T");
     
