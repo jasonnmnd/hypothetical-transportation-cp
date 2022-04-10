@@ -41,6 +41,8 @@ export const UPDATE_ROUTE = "UPDATE_ROUTE"
 export const GET_ROUTE = "GET_ROUTE"
 export const RESET_VIEWED_ROUTE = "RESET_VIEWED_ROUTE"
 export const RESET_POSTED = "RESET_POSTED"
+export const AUTO_GROUP = "AUTO_GROUP"
+export const AUTO_GROUP_LOADING = "AUTO_GROUP_LOADING"
 
 export const GET_STOPS = "GET_STOPS"
 export const GET_STOP = "GET_STOP"
