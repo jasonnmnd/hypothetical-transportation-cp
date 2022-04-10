@@ -138,13 +138,12 @@ function IconLegend(props) {
         {
             getLegend().map((result, index) => {
             return (
-                <Fragment key={index} style={{padding: "10px"}}>
+                <div key={index} style={{padding: "10px"}}>
                     {result.icon}
                     {result.key}
                     {result.break ? <br></br> : <></>}
                     {/* {props.legendType == "stopPlanner" ? <br></br> : <span  style={{padding: "15px"}}>  </span>} */}
-                    <br></br>
-                </Fragment>
+                </div>
             )})
         }
         </Card.Body>
