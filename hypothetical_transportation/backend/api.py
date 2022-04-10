@@ -743,20 +743,26 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
         school_name_msg = "Not required for all system users"
         return self.StudentRepresentation(usid=f"from_user_{user.uuid}", email=user.email,
                                           phone_number=user.phone_number, full_name=user.full_name,
-                                          student_id=-1,
+                                          student_id="",
                                           parent_email="", school_name=school_name_msg)
 
     def get_repr_of_users_with_email(self, email: str):
         matching_users = get_user_model().objects.filter(email=email)
-        return [self.UserRepresentation(uuid=str(user.id), full_name=user.full_name, email=user.email,
-                                        phone_number=user.phone_number, address=user.address, in_db=True) for user in
-                matching_users]
+        user_reprs = list()
+        for user in matching_users:
+            address_msg = "Account belongs to a student" if is_student(user) else user.address
+            user_reprs.append(self.UserRepresentation(uuid=str(user.id), full_name=user.full_name, email=user.email,
+                                                      phone_number=user.phone_number, address=address_msg, in_db=True))
+        return user_reprs
 
     def get_repr_of_users_with_name(self, full_name: str):
         matching_users = get_user_model().objects.filter(full_name=full_name)
-        return [self.UserRepresentation(uuid=str(user.id), full_name=user.full_name, email=user.email,
-                                        phone_number=user.phone_number, address=user.address, in_db=True) for user in
-                matching_users]
+        user_reprs = list()
+        for user in matching_users:
+            address_msg = "Account belongs to a student" if is_student(user) else user.address
+            user_reprs.append(self.UserRepresentation(uuid=str(user.id), full_name=user.full_name, email=user.email,
+                                                      phone_number=user.phone_number, address=address_msg, in_db=True))
+        return user_reprs
 
     def get_repr_of_students_with_email(self, email: str):
         # Only add students that do not have a linked account
@@ -872,15 +878,6 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
                                                                                current_user_email_duplicates)
             current_name_duplicates = [dup.get_representation() for dup in user_name_duplication[user.full_name] if
                                        dup != user]
-            if user.full_name is not None and user.full_name != "":
-                if user.full_name in student_name_duplication and len(student_name_duplication[user.full_name]) > 0:
-                    current_name_duplicates.extend(
-                        [self.student_to_user(student).get_representation() for student in
-                         student_name_duplication[user.full_name]])
-                else:
-                    current_name_duplicates.extend(
-                        [self.student_to_user(student).get_representation() for student in
-                         self.get_repr_of_students_with_name(user.full_name)])
 
             user_object_response["full_name"] = self.get_val_field_response_format(user.full_name,
                                                                                    serializer_errors["users"][
@@ -919,15 +916,6 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
 
             current_name_duplicates = [dup.get_representation() for dup in student_name_duplication[student.full_name]
                                        if dup != student]
-            if student.full_name is not None and student.full_name != "":
-                if student.full_name in user_name_duplication:
-                    current_name_duplicates.extend(
-                        [self.user_to_student(user).get_representation() for user in
-                         user_name_duplication[student.full_name]])
-                else:
-                    current_name_duplicates.extend(
-                        [self.user_to_student(user).get_representation() for user in
-                         self.get_repr_of_users_with_name(student.full_name)])
 
             student_object_response["email"] = self.get_val_field_response_format(student.email,
                                                                                   student_email_errors,
