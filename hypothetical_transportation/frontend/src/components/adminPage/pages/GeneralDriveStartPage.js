@@ -89,7 +89,7 @@ function GeneralDriveStartPage(props) {
     <div>          
         <AdminHeader/>
         <BusRunStartConfirmModal show={showConfirmModal} saveModal={() => startRun(true)} errorMessage={props.errorMessage} closeModal={() => setShowConfirmModal(false)}/>
-        {getType(props.user)!="driver"  ?
+        {getType(props.user)=="driver"  ?
         <Container className="container-main d-flex flex-column" style={{gap: "20px"}}>
             {driverInRun() ? 
                <CurrentDriveSection busRun={props.currentRun} endRun={endRun} arriveAtStop={arrivedAtStop} nextStop={props.nextStop} /> : 
