@@ -1,4 +1,5 @@
 import requests, json
+import threading
 from django.contrib.auth import get_user_model
 from django.db import transaction
 from django_filters.rest_framework import DjangoFilterBackend
@@ -554,8 +555,9 @@ class TranzitTraqApi(generics.GenericAPIView):
             # bus_id=request.GET['bus']
             duration_check(bus)
             if bus.end_time is None and counter < 100:
-                self.talk_to_tranzit_traq(bus)
+                # self.talk_to_tranzit_traq(bus)
                 counter += 1
+                threading.Thread(target=self.talk_to_tranzit_traq, name='tranzit_traq_thread', args=(bus)).start()
         return Response("done", status.HTTP_200_OK)
 
 
