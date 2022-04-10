@@ -592,9 +592,9 @@ class SchoolViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['get'], permission_classes=[IsAdminOrReadOnly | IsSchoolStaff])
     def group_students(self, request, pk=None):
-        routes = [route.id for route in Route.objects.all()]
+        routes = [route.id for route in Route.objects.filter(school=pk)]
         students = [{'lng': student.guardian.longitude, 'lat': student.guardian.latitude, 'id': student.id} for student
-                    in Student.objects.filter(routes__isnull=True)]
+                    in Student.objects.filter(routes__isnull=True, school=pk)]
         content = groupStudents(students, routes)
         return Response(content, status.HTTP_200_OK)
 
