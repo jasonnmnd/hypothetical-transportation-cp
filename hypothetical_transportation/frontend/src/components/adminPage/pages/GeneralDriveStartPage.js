@@ -34,6 +34,8 @@ function GeneralDriveStartPage(props) {
     useEffect(() => {
         if(props.errorMessage != ""){
             setShowConfirmModal(true);
+        } else {
+            setShowConfirmModal(false);
         }
     }, [props.errorMessage]);
 
