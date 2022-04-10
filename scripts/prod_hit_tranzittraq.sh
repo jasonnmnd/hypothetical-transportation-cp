@@ -1,0 +1,11 @@
+curl 'http://hypothetical-transportation-legoons.colab.duke.edu/api/tranzit_tracker/'
+sleep 9.5
+curl 'http://hypothetical-transportation-legoons.colab.duke.edu/api/tranzit_tracker/'
+sleep 9.5
+curl 'http://hypothetical-transportation-legoons.colab.duke.edu/api/tranzit_tracker/'
+sleep 9.5
+curl 'http://hypothetical-transportation-legoons.colab.duke.edu/api/tranzit_tracker/'
+sleep 9.5
+curl 'http://hypothetical-transportation-legoons.colab.duke.edu/api/tranzit_tracker/'
+sleep 9.5
+curl 'http://hypothetical-transportation-legoons.colab.duke.edu/api/tranzit_tracker/'
