@@ -132,7 +132,7 @@ function AdminPage( props ) {
 
                 {isBusDriver(props.user)?
                   <Col>
-                    <Card className="text-center" style={{height:'450px', cursor: "pointer"}} onClick={() => navigate(`/upload_file`)}>
+                    <Card className="text-center" style={{height:'450px', cursor: "pointer"}} onClick={() => navigate(`/drive`)}>
                       <Card.Img variant="top" src={DrivePic} style={{height: '300px'}}/>
                       <Card.Body>
                         <Card.Title><strong>Drive</strong></Card.Title>
