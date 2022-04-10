@@ -89,7 +89,36 @@ const getFormattedTime = (time) => {
     return `${timeParts[0]}:${timeParts[1]}`
 }
 
+const applyTimezoneOffset = (date, time, offset) => {
+    let offsetYear = parseInt(date.split("/")[2])
+    let offsetMonth = parseInt(date.split("/")[0])
+    let offsetDay = parseInt(date.split("/")[1]);
+    const minute = parseInt(time.split(":")[1])
+    const preHour = parseInt(time.split(":")[0])
+    let offsetHour = preHour - offset;
+    if(offsetHour < 0){
+        offsetHour = 24 + offsetHour;
+        let offsetDay = offsetDay - 1;
+        if(offsetDay < 0){
+            offsetDay = 30;
+            let offsetMonth = offsetMonth - 1;
+            if(offsetMonth < 0){
+                offsetMonth = 12
+                let offsetYear = offsetYear - 1;
+            }
+    
+            
+        }
+        
+    }
+    return `${offsetMonth}/${offsetDay}/${offsetYear}  ${offsetHour}:${minute}`
+}   
+
 export const DATE_TIME_TO_STRING = (dateTime) => {
+    const timezoneOffset = (new Date()).getTimezoneOffset();
+    const hourOffset = timezoneOffset / 60;
+    console.log(hourOffset)
+    console.log(dateTime);
     try {
         const dateTimeParts = dateTime.split("T");
     
@@ -97,7 +126,8 @@ export const DATE_TIME_TO_STRING = (dateTime) => {
 
         const timeFormatted = getFormattedTime(dateTimeParts[1]);
 
-        return `${dateFormatted}  ${timeFormatted}`
+
+        return applyTimezoneOffset(dateFormatted, timeFormatted, hourOffset)
         
     } catch (error) {
         console.log(error);
