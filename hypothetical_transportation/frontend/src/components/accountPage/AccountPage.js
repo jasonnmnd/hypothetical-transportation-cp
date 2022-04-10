@@ -78,7 +78,7 @@ function AccountPage(props){
             </Card.Body>
         </Card>
 
-        {props.user.groups[0].id!=5 ?
+        {props.user.groups[0] == 2 ?
         <Card>
             <Card.Header as="h5">Address </Card.Header>
             <Card.Body>

@@ -111,6 +111,30 @@ function AdminPage( props ) {
                   :
                   <></>
                 }
+
+                  <Col>
+                    <Card className="text-center" style={{height:'450px', cursor: "pointer"}} onClick={() => navigate(`/bus/log`)}>
+                      <Card.Img variant="top" src={DataPic} style={{height: '300px'}}/>
+                      <Card.Body>
+                        <Card.Title><strong>Bus Log</strong></Card.Title>
+                        <Card.Text>
+                          View bus logs information.
+                        </Card.Text>
+                      </Card.Body>
+                    </Card>
+                  </Col>
+
+                  <Col>
+                    <Card className="text-center" style={{height:'450px', cursor: "pointer"}} onClick={() => navigate(`/account`)}>
+                      <Card.Img variant="top" src={DataPic} style={{height: '300px'}}/>
+                      <Card.Body>
+                        <Card.Title><strong>Account</strong></Card.Title>
+                        <Card.Text>
+                          Manage your account.
+                        </Card.Text>
+                      </Card.Body>
+                    </Card>
+                  </Col>
               </Row>
             </Container>
 
