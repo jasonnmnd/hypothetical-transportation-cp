@@ -58,7 +58,7 @@ def mark_all_passed(relating_stops):
 
 
 def update_eta(seconds_to_stop: int, stop: Stop):
-    stop.eta = sec_to_datetime_h_m(datetime_h_m_to_sec(datetime.now())-4*3600 + seconds_to_stop)
+    stop.eta = sec_to_datetime_h_m(datetime_h_m_to_sec(datetime.now()) + seconds_to_stop)
     stop.save(update_fields=['eta'])
     return seconds_to_stop
 
