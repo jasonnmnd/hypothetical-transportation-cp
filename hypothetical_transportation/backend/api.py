@@ -845,13 +845,14 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
             # Duplicates should contain both other users in the database and any students that could conflict
             current_user_email_duplicates = [dup.get_representation() for dup in user_email_duplication[user.email] if
                                              dup != user]
-            if user.email in student_email_duplication and len(student_email_duplication[user.email]) > 0:
-                current_user_email_duplicates.extend(
-                    [self.student_to_user(student).get_representation() for student in
-                     student_email_duplication[user.email]])
-            else:
-                current_user_email_duplicates.extend([self.student_to_user(student).get_representation() for student in
-                                                      self.get_repr_of_students_with_email(user.email)])
+            if user.email is not None and user.email != "":
+                if user.email in student_email_duplication and len(student_email_duplication[user.email]) > 0:
+                    current_user_email_duplicates.extend(
+                        [self.student_to_user(student).get_representation() for student in
+                         student_email_duplication[user.email]])
+                else:
+                    current_user_email_duplicates.extend([self.student_to_user(student).get_representation() for student in
+                                                          self.get_repr_of_students_with_email(user.email)])
 
             is_valid &= len(current_user_email_duplicates) == 0
             user_email_errors = serializer_errors["users"][user_dex].get("email", [])
@@ -866,14 +867,15 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
                                                                                current_user_email_duplicates)
             current_name_duplicates = [dup.get_representation() for dup in user_name_duplication[user.full_name] if
                                        dup != user]
-            if user.full_name in student_name_duplication and len(student_name_duplication[user.full_name]) > 0:
-                current_name_duplicates.extend(
-                    [self.student_to_user(student).get_representation() for student in
-                     student_name_duplication[user.full_name]])
-            else:
-                current_name_duplicates.extend(
-                    [self.student_to_user(student).get_representation() for student in
-                     self.get_repr_of_students_with_name(user.full_name)])
+            if user.full_name is not None and user.full_name != "":
+                if user.full_name in student_name_duplication and len(student_name_duplication[user.full_name]) > 0:
+                    current_name_duplicates.extend(
+                        [self.student_to_user(student).get_representation() for student in
+                         student_name_duplication[user.full_name]])
+                else:
+                    current_name_duplicates.extend(
+                        [self.student_to_user(student).get_representation() for student in
+                         self.get_repr_of_students_with_name(user.full_name)])
 
             user_object_response["full_name"] = self.get_val_field_response_format(user.full_name,
                                                                                    serializer_errors["users"][
@@ -894,15 +896,15 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
             current_student_email_duplicates = [dup.get_representation() for dup in
                                                 student_email_duplication[student.email] if
                                                 dup != student]
-
-            if student.email in user_email_duplication and len(user_email_duplication[student.email]) > 0:
-                current_student_email_duplicates.extend(
-                    [self.user_to_student(user).get_representation() for user in user_email_duplication[student.email]])
-            else:
-                # Do a database search due to missed hit
-                current_student_email_duplicates.extend(
-                    [self.user_to_student(user).get_representation() for user in
-                     self.get_repr_of_users_with_email(student.email)])
+            if student.email is not None and student.email != "":
+                if student.email in user_email_duplication and len(user_email_duplication[student.email]) > 0:
+                    current_student_email_duplicates.extend(
+                        [self.user_to_student(user).get_representation() for user in user_email_duplication[student.email]])
+                else:
+                    # Do a database search due to missed hit
+                    current_student_email_duplicates.extend(
+                        [self.user_to_student(user).get_representation() for user in
+                         self.get_repr_of_users_with_email(student.email)])
 
             student_email_errors = serializer_errors["students"][student_dex].get("email", [])
 
@@ -911,14 +913,15 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
 
             current_name_duplicates = [dup.get_representation() for dup in student_name_duplication[student.full_name]
                                        if dup != student]
-            if student.full_name in user_name_duplication:
-                current_name_duplicates.extend(
-                    [self.user_to_student(user).get_representation() for user in
-                     user_name_duplication[student.full_name]])
-            else:
-                current_name_duplicates.extend(
-                    [self.user_to_student(user).get_representation() for user in
-                     self.get_repr_of_users_with_name(student.full_name)])
+            if student.full_name is not None and student.full_name != "":
+                if student.full_name in user_name_duplication:
+                    current_name_duplicates.extend(
+                        [self.user_to_student(user).get_representation() for user in
+                         user_name_duplication[student.full_name]])
+                else:
+                    current_name_duplicates.extend(
+                        [self.user_to_student(user).get_representation() for user in
+                         self.get_repr_of_users_with_name(student.full_name)])
 
             student_object_response["email"] = self.get_val_field_response_format(student.email,
                                                                                   student_email_errors,
