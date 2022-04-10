@@ -8,7 +8,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from datetime import datetime, time
 from geopy.geocoders import GoogleV3
-
+from accounts.models import InvitationCode
 from .time_utils import find_time_to_stops, mark_all_passed
 from .models import School, Route, Student, Stop, TransitLog, BusRun, Bus
 from .serializers import StartBusRunSerializer, UserSerializer, StudentSerializer, RouteSerializer, SchoolSerializer, \
@@ -970,6 +970,8 @@ class SubmitLoadedDataAPI(generics.GenericAPIView):
         user_errors = list()
         student_errors = list()
         rollback_at_end = False
+        success_users = list()
+        success_students = list()
         try:
             with transaction.atomic():
                 for user_dex, user_data in enumerate(serializer.data["users"]):
@@ -981,6 +983,9 @@ class SubmitLoadedDataAPI(generics.GenericAPIView):
                                                                              password="DUMMY_PASSWORD")
                         user.set_unusable_password()
                         user.groups.add(Group.objects.get(name="Guardian"))
+                        user.save()
+                        success_users.append(user)
+
                     else:
                         rollback_at_end = True
                     user_errors.append(user_serializer.errors)
@@ -1000,8 +1005,8 @@ class SubmitLoadedDataAPI(generics.GenericAPIView):
                                                          school=school,
                                                          guardian=guardian, routes=None,
                                                          student_id=student_data["student_id"])
-                        if student.email is not None and student.email != "" and not rollback_at_end:
-                            send_invite_email(student)
+                        if student.email is not None and student.email != "":
+                            success_students.append(student)
                     else:
                         rollback_at_end = True
                     student_errors.append(student_serializer.errors)
@@ -1013,6 +1018,14 @@ class SubmitLoadedDataAPI(generics.GenericAPIView):
                 "students": student_errors
             }
             return Response(context, status=status.HTTP_400_BAD_REQUEST)
+
+        # Send emails only if the entire transaction passes
+        for user in success_users:
+            if not user.email.endswith("@example.com"):
+                invite_code = InvitationCode.objects.create_signup_code(user=user, ipaddr='0.0.0.0')
+                invite_code.send_invitation_email()
+        for student in success_students:
+            send_invite_email(student)
 
         content = {"num_users": len(serializer.data["users"]),
                    "num_students": len(serializer.data["students"])}
