@@ -175,7 +175,7 @@ function GeneralEditSchoolForm(props) {
     return (
         <div> 
             <Header></Header>
-            {props.action == "edit" || getType(props.user) == "admin" ?
+            {(props.action == "edit" && getType(props.user) == "staff" ) || getType(props.user) == "admin" ?
                 <Container className="container-main">
                     <div className="shadow-sm p-3 mb-5 bg-white rounded d-flex flex-row justify-content-center">
                         {props.action == "edit" ? <h1>Edit School</h1> : <h1>Create School</h1>}

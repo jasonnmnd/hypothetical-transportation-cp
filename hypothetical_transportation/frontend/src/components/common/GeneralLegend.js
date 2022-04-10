@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import '../adminPage/NEWadminPage.css'
 import LegendRed from '../assets/legendRed.png';
 import LegendBlue from '../assets/legendBlue.png';
+import LegendGreen from '../assets/legendGreen.png'
 
 function GeneralLegend(props) {
     
@@ -21,7 +22,7 @@ function GeneralLegend(props) {
                             //         <div className={result.color == "red" ? 'legendDivRed' : 'legendDivBlue'}>{" "}</div> {result.key}
                             // </div>
                             <div key={index}>
-                                <img src={result.color == "red" ? LegendRed : LegendBlue} style={{height:"18px", width:"18px"}}></img>
+                                <img src={result.color == "green" ? LegendGreen : (result.color == "red" ? LegendRed : LegendBlue)} style={{height:"18px", width:"18px"}}></img>
                                 {result.key}
                             </div>
                         )})

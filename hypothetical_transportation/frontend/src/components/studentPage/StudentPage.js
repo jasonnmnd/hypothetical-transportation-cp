@@ -13,6 +13,7 @@ import { getRunByRoute } from '../../actions/drive';
 import getType from '../../utils/user2';
 import { InfoWindow } from '@react-google-maps/api';
 import StudentViewMap from '../maps/StudentViewMap';
+import { runCallEveryPeriod } from '../../utils/live_updating';
 
 function StudentPage(props) {
 
@@ -27,7 +28,12 @@ function StudentPage(props) {
   }, []);
 
   useEffect(()=>{
-    if(props.student.routes) props.getRunByRoute(props.student.routes.id)
+    if(props.student.routes) {
+        return runCallEveryPeriod(() => {
+            props.getInRangeStop(student.id);
+            props.getRunByRoute(student.routes.id);
+        })
+    } 
     
   },[props.student])
 
@@ -84,6 +90,27 @@ function StudentPage(props) {
                     </Card.Body>
                 </Card>
             </Row>
+
+            {student.email != null ?
+            <Row  style={{gap: "10px"}}>
+                <Card as={Col} style={{padding: "0px"}}>
+                    <Card.Header as="h5">Student Email</Card.Header>
+                    <Card.Body>
+                        <Card.Text>{student.email}</Card.Text>
+                    </Card.Body>
+                </Card>
+
+                <br></br>
+                <Card as={Col} style={{padding: "0px"}}>
+                    <Card.Header as="h5">Student Phone Number </Card.Header>
+                    <Card.Body>
+                        <Card.Text>{student.phone_number=="" || student.phone_number==null? "No Phone Record Found":student.phone_number}</Card.Text>
+                    </Card.Body>
+                </Card>
+            </Row>
+            :
+            <></>
+            }
 
             <Row style={{gap: "10px"}}>
                 <Card as={Col} style={{padding: "0px"}}>

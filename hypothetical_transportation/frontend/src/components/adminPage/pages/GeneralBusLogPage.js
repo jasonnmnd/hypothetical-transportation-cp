@@ -5,7 +5,7 @@ import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom"
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import AdminHeader from '../../header/AdminHeader';
-import { Container, Form, Col, Button, Card, ButtonGroup, ToggleButton } from 'react-bootstrap';
+import { Container, Form, Col, Button, Card, ButtonGroup, ToggleButton, Alert } from 'react-bootstrap';
 import { getRoutes } from '../../../actions/routes';
 import Select from 'react-select';
 import ActiveRunsTable from '../components/driver_bus_run/ActiveRunsTable';
@@ -15,6 +15,7 @@ import { getLog } from '../../../actions/drive';
 import { getRouteInfo } from '../../../actions/routes';
 import { getSchool } from '../../../actions/schools';
 import getType from '../../../utils/user2';
+import GeneralLegend from '../../common/GeneralLegend';
 
 
 
@@ -66,15 +67,39 @@ function GeneralBusLogPage(props) {
     }
 
   
+    const busLogLegend = [
+        {
+            key: " Timed Out ",
+            color: "red",
+        },
+        {
+            key: " Bus In Progress ",
+            color: "green",
+        },
+        {
+            key: " Bus Complete ",
+            color: "blue",
+        },
+    ]
+
   return (
-    <div>          
+    <div>
         <AdminHeader/>
-        <Container className="container-main d-flex flex-column" style={{gap: "20px"}}>
+        {getType(props.user)=="staff" || getType(props.user)=="driver" || getType(props.user)=="admin" ?<Container className="container-main d-flex flex-column" style={{gap: "20px"}}>
             <div className="shadow-sm p-3 mb-5 bg-white rounded d-flex flex-row justify-content-center">
                 <h1>{getTitlePrefix()} Bus Log</h1>
             </div>
+            <GeneralLegend legend={busLogLegend}/>
             <ActiveRunsTable data={props.activeBusesData} count={props.activeBusesCount} handleViewClick={handleViewClick}/> 
-        </Container>
+        </Container> : 
+        <Container className="container-main">
+            <Alert variant="danger">
+                <Alert.Heading>Access Denied</Alert.Heading>
+                <p>
+                    You do not have access to this page. If you believe this is an error, contact an administrator.          
+                </p>
+            </Alert>
+        </Container>}
     </div>
     );
 }

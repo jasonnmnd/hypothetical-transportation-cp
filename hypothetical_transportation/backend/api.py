@@ -8,10 +8,11 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from datetime import datetime, time
 from geopy.geocoders import GoogleV3
-
+from accounts.models import InvitationCode
 from .time_utils import find_time_to_stops, mark_all_passed
 from .models import School, Route, Student, Stop, TransitLog, BusRun, Bus
-from .serializers import StartBusRunSerializer, UserSerializer, StudentSerializer, RouteSerializer, SchoolSerializer, FormatStudentSerializer, \
+from .serializers import StartBusRunSerializer, UserSerializer, StudentSerializer, RouteSerializer, SchoolSerializer, \
+    FormatStudentSerializer, \
     FormatRouteSerializer, FormatUserSerializer, EditUserSerializer, StopSerializer, CheckInrangeSerializer, \
     LoadUserSerializer, LoadModelDataSerializer, find_school_match_candidates, school_names_match, \
     StaffEditUserSerializer, StaffEditSchoolSerializer, StaffStudentSerializer, LoadStudentSerializer, \
@@ -28,9 +29,9 @@ from collections import defaultdict
 from django.contrib.auth.models import Group
 from .student_account_managers import send_invite_email
 from .custom_geocoder import CachedGoogleV3
+from .group_algo import groupStudents
 
-
-BUS_RUN_TIMEOUT_THRESHOLD = 3*3600
+BUS_RUN_TIMEOUT_THRESHOLD = 3 * 3600
 
 
 def get_filter_dict(model):
@@ -74,18 +75,19 @@ def duration_check_multiple(active_runs):
     for run in active_runs:
         duration_check(run)
 
+
 def duration_check(run: BusRun):
     if run.duration is None or run.duration.hour < 3:
         t = time_now()
-        time_in_sec = t.hour*3600 + t.minute*60 + t.second
-        start_time_in_sec = run.start_time.hour*3600 + run.start_time.minute*60 + run.start_time.second
-        delta = time_in_sec-start_time_in_sec
-            # print(delta)
-        if delta > BUS_RUN_TIMEOUT_THRESHOLD or delta<0:
+        time_in_sec = t.hour * 3600 + t.minute * 60 + t.second
+        start_time_in_sec = run.start_time.hour * 3600 + run.start_time.minute * 60 + run.start_time.second
+        delta = time_in_sec - start_time_in_sec
+        # print(delta)
+        if delta > BUS_RUN_TIMEOUT_THRESHOLD or delta < 0:
             # HASTAG HACKINNGGGGGGGG
-            new_hour = (run.start_time.hour+3)%24
-            if run.start_time.hour >=21:
-                new_day=run.start_time.day+1
+            new_hour = (run.start_time.hour + 3) % 24
+            if run.start_time.hour >= 21:
+                new_day = run.start_time.day + 1
             else:
                 new_day = run.start_time.day
                 # print(new_hour)
@@ -93,14 +95,14 @@ def duration_check(run: BusRun):
                 run.start_time.year,
                 run.start_time.month,
                 new_day,
-                new_hour, 
+                new_hour,
                 run.start_time.minute,
                 run.start_time.second
             )
-                # print(delta//3600)
+            # print(delta//3600)
             run.duration = time(3, 0, 0)
             run.timeout = True
-        # else:
+            # else:
             # run.duration = time(delta//3600, (delta%3600)//60, delta%60)
             # run.timeout = False
             run.save(update_fields=['end_time', 'duration', 'timeout'])
@@ -157,10 +159,10 @@ def time_now():
 def end_run_now(run: BusRun):
     t = time_now()
     run.end_time = t
-    end_time_in_sec = run.end_time.hour*3600 + run.end_time.minute*60 + run.end_time.second
-    start_time_in_sec = run.start_time.hour*3600 + run.start_time.minute*60 + run.start_time.second
-    delta = end_time_in_sec-start_time_in_sec
-    run.duration = time(delta//3600, (delta%3600)//60, delta%60)
+    end_time_in_sec = run.end_time.hour * 3600 + run.end_time.minute * 60 + run.end_time.second
+    start_time_in_sec = run.start_time.hour * 3600 + run.start_time.minute * 60 + run.start_time.second
+    delta = end_time_in_sec - start_time_in_sec
+    run.duration = time(delta // 3600, (delta % 3600) // 60, delta % 60)
     run.save(update_fields=['end_time', 'duration'])
 
     run.route.driver = None
@@ -219,7 +221,7 @@ class StartBusRunAPI(generics.GenericAPIView):
                 return Response("Bus is already active on another route", status.HTTP_409_CONFLICT)
             run = get_active_bus_for_bus_number(request.data['bus_number'])
             end_run_now(run)
-        
+
         data['route'] = request.data['route']
         if count_active_run_for_route(request.data['route']) != 0:
             if not data['force']:
@@ -237,7 +239,7 @@ class StartBusRunAPI(generics.GenericAPIView):
                 return Response("Driver is already active on a run", status.HTTP_409_CONFLICT)
             run = get_active_bus_for_driver(request.data['driver'])
             end_run_now(run)
-        
+
         if request.data.get('going_towards_school'):
             data['going_towards_school'] = request.data['going_towards_school']
         else:
@@ -251,7 +253,7 @@ class StartBusRunAPI(generics.GenericAPIView):
 
         # data['driver'] = UserSerializer(instance=get_user_model().objects.filter(id=request.data['driver']).distinct()[0]).data
         run = BusRun.objects.filter(id=serializer.data['id']).distinct()[0]
-        
+
         run.route.driver = run.driver
         run.route.bus_number = run.bus_number
         run.route.save(update_fields=['driver', 'bus_number'])
@@ -349,7 +351,7 @@ class StopViewSet(viewsets.ModelViewSet):
 class ActiveBusRunViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly | IsSchoolStaff]
     filter_backends = [DjangoFilterBackend, DynamicSearchFilter, filters.OrderingFilter]
-    
+
     # filterset_fields = get_filter_dict(BusRun)
     filterset_fields = ['bus_number', 'driver', 'route', 'school']
     ordering_fields = ['bus_number', 'driver', 'start_time', 'route', 'going_towards_school']
@@ -361,11 +363,12 @@ class ActiveBusRunViewSet(viewsets.ModelViewSet):
         if is_school_staff(self.request.user):
             return FormatBusRunSerializer
         return BusRunSerializer
-    
+
     def get_queryset(self):
         duration_check_multiple(BusRun.objects.filter(end_time=None).distinct().order_by('start_time'))
         if is_school_staff(self.request.user):
-            return BusRun.objects.filter(id__in=self.request.user.managed_schools.distinct().values('run_id'), end_time=None).distinct().order_by('start_time')
+            return BusRun.objects.filter(id__in=self.request.user.managed_schools.distinct().values('bus_run'),
+                                         end_time=None).distinct().order_by('start_time')
         return BusRun.objects.filter(end_time=None).distinct().order_by('start_time')
 
 
@@ -419,11 +422,12 @@ class RouteViewSet(viewsets.ModelViewSet):
 class BusRunViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly | IsSchoolStaff]
     filter_backends = [DjangoFilterBackend, DynamicSearchFilter, filters.OrderingFilter]
-    
+
     # filterset_fields = get_filter_dict(BusRun)
     filterset_fields = ['bus_number', 'driver', 'route', 'school__name']
-    ordering_fields = ['bus_number', 'driver', 'start_time', 'route', 'going_towards_school', 'duration', 'school__name', 'driver__name', 'route__name']
-    ordering = ['start_time', 'duration']
+    ordering_fields = ['bus_number', 'driver', 'start_time', 'route', 'going_towards_school', 'duration',
+                       'school__name', 'driver__full_name', 'route__name']
+    ordering = ['-start_time', 'duration']
 
     def get_serializer_class(self):
         if self.action == 'list' or self.action == 'retrieve':
@@ -431,10 +435,12 @@ class BusRunViewSet(viewsets.ModelViewSet):
         if is_school_staff(self.request.user):
             return FormatBusRunSerializer
         return BusRunSerializer
-    
+
     def get_queryset(self):
         if is_school_staff(self.request.user):
-            return BusRun.objects.filter(id__in=self.request.user.managed_schools.distinct().values('run_id')).distinct().order_by('-start_time')
+            return BusRun.objects.filter(
+                id__in=self.request.user.managed_schools.distinct().values('bus_run')).distinct().order_by(
+                '-start_time')
         return BusRun.objects.all().distinct().order_by('bus_number')
 
     @action(detail=True, methods=['get'], permission_classes=[permissions.AllowAny])
@@ -446,7 +452,7 @@ class BusRunViewSet(viewsets.ModelViewSet):
                 if run.going_towards_school:
                     next_stop = Stop.objects.filter(route=run.route).order_by('-stop_number')[run.previous_stop_index]
                 else:
-                    if run.previous_stop_index == len(Stop.objects.filter(route=run.route))-1:
+                    if run.previous_stop_index == len(Stop.objects.filter(route=run.route)) - 1:
                         return Response("Current stop is the second to last stop on the route", status.HTTP_200_OK)
                     next_stop = Stop.objects.filter(route=run.route).order_by('stop_number')[run.previous_stop_index]
                 return Response(StopSerializer(instance=next_stop).data, status.HTTP_200_OK)
@@ -455,11 +461,12 @@ class BusRunViewSet(viewsets.ModelViewSet):
         except:
             return Response("This run no longer exists", status.HTTP_404_NOT_FOUND)
 
-    @action(detail=True, methods=['post', 'get'], permission_classes=[permissions.AllowAny]) # this is sus. a get that updates...
+    @action(detail=True, methods=['post', 'get'],
+            permission_classes=[permissions.AllowAny])  # this is sus. a get that updates...
     def reached_next_stop(self, request, pk):
         try:
-            run = get_active_bus_on_route_from_pk(pk) 
-            run.previous_stop_index = run.previous_stop_index+1
+            run = get_active_bus_on_route_from_pk(pk)
+            run.previous_stop_index = run.previous_stop_index + 1
             if len(Stop.objects.filter(route=run.route)) != run.previous_stop_index:
                 run.save(update_fields=['previous_stop_index'])
                 return self.next_stop(self, pk=pk)
@@ -469,7 +476,8 @@ class BusRunViewSet(viewsets.ModelViewSet):
         except:
             return Response("This run is no longer active", status.HTTP_404_NOT_FOUND)
 
-    @action(detail=True, methods=['post', 'get'], permission_classes=[permissions.AllowAny]) # this is sus. a get that updates...
+    @action(detail=True, methods=['post', 'get'],
+            permission_classes=[permissions.AllowAny])  # this is sus. a get that updates...
     def end_run(self, request, pk):
         try:
             run = get_active_bus_on_route_from_pk(pk)
@@ -497,16 +505,16 @@ class BusRunViewSet(viewsets.ModelViewSet):
 class ActiveBusLocationsViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
     filter_backends = [DjangoFilterBackend, DynamicSearchFilter, filters.OrderingFilter]
-    
+
     filterset_fields = get_filter_dict(Bus)
     ordering = 'bus_number'
 
     def get_serializer_class(self):
         return BusSerializer
-    
+
     def get_queryset(self):
         # if is_school_staff(self.request.user):
-            # return Bus.objects.filter(id__in=self.request.user.managed_schools.distinct().values('run_id')).distinct().order_by('start_time')
+        # return Bus.objects.filter(id__in=self.request.user.managed_schools.distinct().values('run_id')).distinct().order_by('start_time')
         return Bus.objects.all().distinct().order_by('bus_number')
 
 
@@ -514,7 +522,7 @@ class TranzitTraqApi(generics.GenericAPIView):
 
     def talk_to_tranzit_traq(self, bus) -> Response:
         try:
-            url =  f"http://tranzit.colab.duke.edu:8000/get"
+            url = f"http://tranzit.colab.duke.edu:8000/get"
             params = {'bus': bus.bus_number}
             req = requests.get(url=url, params=params)
             ret = json.loads(req.text)
@@ -535,7 +543,7 @@ class TranzitTraqApi(generics.GenericAPIView):
                     serializer.save()
             bus.location = Bus.objects.get(bus_number=bus.bus_number)
             bus.save(update_fields=['location'])
-            
+
         except:
             return Response("Tranzit Traq gave a poor response", status.HTTP_404_NOT_FOUND)
 
@@ -581,6 +589,14 @@ class SchoolViewSet(viewsets.ModelViewSet):
             # Only return schools associated with children of current user
             students_queryset = self.request.user.students
             return School.objects.filter(id__in=students_queryset.values('school_id')).distinct().order_by('name')
+
+    @action(detail=True, methods=['get'], permission_classes=[IsAdminOrReadOnly | IsSchoolStaff])
+    def group_students(self, request, pk=None):
+        routes = [route.id for route in Route.objects.filter(school=pk)]
+        students = [{'lng': student.guardian.longitude, 'lat': student.guardian.latitude, 'id': student.id} for student
+                    in Student.objects.filter(routes__isnull=True, school=pk)]
+        content = groupStudents(students, routes)
+        return Response(content, status.HTTP_200_OK)
 
 
 class StudentViewSet(viewsets.ModelViewSet):
@@ -643,7 +659,7 @@ class StudentViewSet(viewsets.ModelViewSet):
             # there is no run on the route
             # print("no run")
             mark_all_passed(student_inrange_stops)
-        
+
         student_inrange_stops = [Stop.objects.get(id=stop.id) for stop in student_inrange_stops]
 
         page = self.paginator.paginate_queryset(student_inrange_stops, request)
@@ -726,47 +742,57 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
                     "student_id": self.student_id, "parent_email": self.parent_email, "school_name": self.school_name}
 
     def student_to_user(self, student: StudentRepresentation):
-        address_msg = "Student role does not have address"
+        address_msg = "Student account: field not required"
         return self.UserRepresentation(uuid=f"from_student_{student.usid}", full_name=student.full_name,
                                        email=student.email,
                                        phone_number=student.phone_number, address=address_msg, in_db=student.in_db)
 
     def user_to_student(self, user: UserRepresentation):
         # student_id_msg = "Not required for system users"
-        school_name_msg = "Not required for system users"
+        school_name_msg = "User account: field not required"
         return self.StudentRepresentation(usid=f"from_user_{user.uuid}", email=user.email,
                                           phone_number=user.phone_number, full_name=user.full_name,
-                                          student_id=-1,
+                                          student_id="",
                                           parent_email="", school_name=school_name_msg)
 
     def get_repr_of_users_with_email(self, email: str):
         matching_users = get_user_model().objects.filter(email=email)
-        return [self.UserRepresentation(uuid=str(user.id), full_name=user.full_name, email=user.email,
-                                        phone_number=user.phone_number, address=user.address, in_db=True) for user in
-                matching_users]
+        user_reprs = list()
+        for user in matching_users:
+            address_msg = "User Account belongs to a student" if is_student(user) else user.address
+            user_reprs.append(self.UserRepresentation(uuid=str(user.id), full_name=user.full_name, email=user.email,
+                                                      phone_number=user.phone_number, address=address_msg, in_db=True))
+        return user_reprs
 
     def get_repr_of_users_with_name(self, full_name: str):
         matching_users = get_user_model().objects.filter(full_name=full_name)
-        return [self.UserRepresentation(uuid=str(user.id), full_name=user.full_name, email=user.email,
-                                        phone_number=user.phone_number, address=user.address, in_db=True) for user in
-                matching_users]
+        user_reprs = list()
+        for user in matching_users:
+            address_msg = "User Account belongs to a student" if is_student(user) else user.address
+            user_reprs.append(self.UserRepresentation(uuid=str(user.id), full_name=user.full_name, email=user.email,
+                                                      phone_number=user.phone_number, address=address_msg, in_db=True))
+        return user_reprs
 
     def get_repr_of_students_with_email(self, email: str):
+        # Only add students that do not have a linked account
         matching_students = Student.objects.filter(email=email)
         return [
             self.StudentRepresentation(usid=str(student.id), email=student.email, phone_number=student.phone_number,
                                        full_name=student.full_name, student_id=student.school_id,
                                        parent_email=student.guardian.email, school_name=student.school.name,
-                                       in_db=True) for student in matching_students]
+                                       in_db=True) for student in matching_students if
+            student.student_user_account.all().count() == 0]
 
     def get_repr_of_students_with_name(self, full_name: str):
+        # Only add students that do not have a linked account
         matching_students = Student.objects.filter(full_name=full_name)
         return [
             self.StudentRepresentation(usid=str(student.id), email=student.email, phone_number=student.phone_number,
                                        full_name=student.full_name, student_id=student.school_id,
                                        parent_email=student.guardian.email,
                                        school_name=student.school.name,
-                                       in_db=True) for student in matching_students]
+                                       in_db=True) for student in matching_students if
+            student.student_user_account.all().count() == 0]
 
     def get_val_field_response_format(self, value, error: list, duplicates: list):
         return {"value": value, "error": error, "duplicates": duplicates}
@@ -778,6 +804,7 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
         serializer_errors = serializer.errors
         populate_serializer_errors(serializer_errors, request.data)
 
+        # Kludge set is for checking student staff to ensure parents do not disappear after load
         user_emails_in_student = set()
         for student in serializer.data["students"]:
             user_emails_in_student.add(student.get("parent_email", ""))
@@ -837,10 +864,16 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
             # Duplicates should contain both other users in the database and any students that could conflict
             current_user_email_duplicates = [dup.get_representation() for dup in user_email_duplication[user.email] if
                                              dup != user]
-            if len(student_email_duplication[user.email]) > 0:
-                current_user_email_duplicates.extend(
-                    [self.student_to_user(student).get_representation() for student in
-                     student_email_duplication[user.email]])
+            if user.email is not None and user.email != "":
+                if user.email in student_email_duplication and len(student_email_duplication[user.email]) > 0:
+                    current_user_email_duplicates.extend(
+                        [self.student_to_user(student).get_representation() for student in
+                         student_email_duplication[user.email]])
+                else:
+                    current_user_email_duplicates.extend(
+                        [self.student_to_user(student).get_representation() for student in
+                         self.get_repr_of_students_with_email(user.email)])
+
             is_valid &= len(current_user_email_duplicates) == 0
             user_email_errors = serializer_errors["users"][user_dex].get("email", [])
 
@@ -849,17 +882,11 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
             if not is_admin(request.user) and user.email not in user_emails_in_student:
                 # Due to variance request, school staff must create parents paired with students or result in disappearing guardians
                 user_email_errors.append("This parent would be created without corresponding students")
-            if user.email in student_email_duplication and len(student_email_duplication[user.email]) > 0:
-                user_email_errors.append(
-                    "This email conflicts with a student email that would be loaded as part of this transaction")
 
             user_object_response["email"] = self.get_val_field_response_format(user.email, user_email_errors,
                                                                                current_user_email_duplicates)
             current_name_duplicates = [dup.get_representation() for dup in user_name_duplication[user.full_name] if
                                        dup != user]
-            current_name_duplicates.extend(
-                [self.student_to_user(student).get_representation() for student in
-                 student_name_duplication[user.full_name]])
 
             user_object_response["full_name"] = self.get_val_field_response_format(user.full_name,
                                                                                    serializer_errors["users"][
@@ -880,29 +907,24 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
             current_student_email_duplicates = [dup.get_representation() for dup in
                                                 student_email_duplication[student.email] if
                                                 dup != student]
-
-            if len(user_email_duplication[student.email]) > 0:
-                current_student_email_duplicates.extend(
-                    [self.user_to_student(user).get_representation() for user in user_email_duplication[student.email]])
-            else:
-                # Do a database search due to missed hit
-                current_student_email_duplicates.extend(
-                    [self.user_to_student(user).get_representation() for user in
-                     self.get_repr_of_users_with_email(student.email)])
+            if student.email is not None and student.email != "":
+                if student.email in user_email_duplication and len(user_email_duplication[student.email]) > 0:
+                    current_student_email_duplicates.extend(
+                        [self.user_to_student(user).get_representation() for user in
+                         user_email_duplication[student.email]])
+                else:
+                    # Do a database search due to missed hit
+                    current_student_email_duplicates.extend(
+                        [self.user_to_student(user).get_representation() for user in
+                         self.get_repr_of_users_with_email(student.email)])
 
             student_email_errors = serializer_errors["students"][student_dex].get("email", [])
 
             if len(current_student_email_duplicates) != 0:
                 student_email_errors.append("Duplicate email addresses must be corrected before continuing")
 
-            if student.email in user_email_duplication and len(user_email_duplication[student.email]) > 0:
-                student_email_errors.append(
-                    "This email conflicts with a user email that would be loaded as part of this transaction")
-
             current_name_duplicates = [dup.get_representation() for dup in student_name_duplication[student.full_name]
                                        if dup != student]
-            current_name_duplicates.extend(
-                [self.user_to_student(user).get_representation() for user in user_name_duplication[student.full_name]])
 
             student_object_response["email"] = self.get_val_field_response_format(student.email,
                                                                                   student_email_errors,
@@ -951,6 +973,8 @@ class SubmitLoadedDataAPI(generics.GenericAPIView):
         user_errors = list()
         student_errors = list()
         rollback_at_end = False
+        success_users = list()
+        success_students = list()
         try:
             with transaction.atomic():
                 for user_dex, user_data in enumerate(serializer.data["users"]):
@@ -962,6 +986,9 @@ class SubmitLoadedDataAPI(generics.GenericAPIView):
                                                                              password="DUMMY_PASSWORD")
                         user.set_unusable_password()
                         user.groups.add(Group.objects.get(name="Guardian"))
+                        user.save()
+                        success_users.append(user)
+
                     else:
                         rollback_at_end = True
                     user_errors.append(user_serializer.errors)
@@ -982,7 +1009,7 @@ class SubmitLoadedDataAPI(generics.GenericAPIView):
                                                          guardian=guardian, routes=None,
                                                          student_id=student_data["student_id"])
                         if student.email is not None and student.email != "":
-                            send_invite_email(student)
+                            success_students.append(student)
                     else:
                         rollback_at_end = True
                     student_errors.append(student_serializer.errors)
@@ -994,6 +1021,14 @@ class SubmitLoadedDataAPI(generics.GenericAPIView):
                 "students": student_errors
             }
             return Response(context, status=status.HTTP_400_BAD_REQUEST)
+
+        # Send emails only if the entire transaction passes
+        for user in success_users:
+            if not user.email.endswith("@example.com"):
+                invite_code = InvitationCode.objects.create_signup_code(user=user, ipaddr='0.0.0.0')
+                invite_code.send_invitation_email()
+        for student in success_students:
+            send_invite_email(student)
 
         content = {"num_users": len(serializer.data["users"]),
                    "num_students": len(serializer.data["students"])}

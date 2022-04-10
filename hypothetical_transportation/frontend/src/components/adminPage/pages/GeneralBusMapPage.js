@@ -4,7 +4,7 @@ import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom"
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import AdminHeader from '../../header/AdminHeader';
-import { Container, Form, Col, Button, Card } from 'react-bootstrap';
+import { Container, Form, Col, Button, Card, Alert } from 'react-bootstrap';
 import Select from 'react-select';
 import BusRunsMap from '../components/driver_bus_run/BusRunsMap';
 import { getActiveRuns, getBusLocations, resetBusLocations } from '../../../actions/drive';
@@ -12,6 +12,7 @@ import { EXAMPLE_ACTIVE_RUNS } from '../../../utils/drive';
 import MapComponent from '../../maps/MapComponent';
 import { InfoWindow } from '@react-google-maps/api';
 import getType from '../../../utils/user2';
+import { runCallEveryPeriod } from '../../../utils/live_updating';
 
 
 function GeneralBusMapPage(props) {
@@ -19,6 +20,11 @@ function GeneralBusMapPage(props) {
     let [searchParams, setSearchParams] = useSearchParams();
 
     const [extraComponents, setExtraComponents] = useState(null);
+
+    const [extraComponentsPosition, setExtraComponentsPosition] = useState(null);
+    const [extraComponentsBus, setExtraComponentsBus] = useState(null);
+    
+    
 
 
     useEffect(() => {
@@ -29,15 +35,31 @@ function GeneralBusMapPage(props) {
                 school: searchParams.get('school')
             }
         }
-        props.getActiveRuns(params);
+        // const interval = setInterval(() => {
+        //     console.log('This will run every 5 seconds!');
+        //     props.getActiveRuns(params);
+        //   }, 10000);
+        // return () => clearInterval(interval);
+        return runCallEveryPeriod(() => props.getActiveRuns(params))
+        
     }, []);
 
-
-    
-
-    const createInfoWindow = (position, windowComponents) => {
-        setExtraComponents(<InfoWindow position={position} onCloseClick={setExtraComponents(null)}>{windowComponents}</InfoWindow>)
-    }
+    useEffect(() => {
+        if(extraComponentsBus != null){
+            let busChanged = getRunsWithLocation(props.activeRuns).find(run => run.route.id == extraComponentsBus.route.id);
+            if(busChanged == undefined){
+                removeExtraComponents();
+            } else {
+                console.log(busChanged);
+                console.log(extraComponentsPosition);
+                setExtraComponentsPosition({
+                    lat: busChanged.location.latitude,
+                    lng: busChanged.location.longitude
+                })
+            }
+        }
+        
+    }, [props.activeRuns]);
 
     const getBusInfoForWindow = (pinStuff) => {
         return (
@@ -58,9 +80,23 @@ function GeneralBusMapPage(props) {
         )
     }
 
-    const onBusClick = (pinStuff, position) => {
-        createInfoWindow(position, getBusInfoForWindow(pinStuff))
+    const removeExtraComponents = () => {
+        setExtraComponentsBus(null); 
+        setExtraComponentsPosition(null);
     }
+
+    const getExtraComponents = () => {
+        if(extraComponentsBus == null){
+            return null;
+        }
+        return <InfoWindow position={extraComponentsPosition} onCloseClick={removeExtraComponents} >{getBusInfoForWindow(extraComponentsBus)}</InfoWindow>
+    }
+
+    const onBusClick = (pinStuff, position) => {
+        setExtraComponentsPosition(position);
+        setExtraComponentsBus(pinStuff);
+    }
+
 
     const getRunPin = (run) => {
 
@@ -71,6 +107,10 @@ function GeneralBusMapPage(props) {
         }
     }
 
+    const getRunsWithLocation = (runs) => {
+        return runs.filter(run => run.location != null)
+    }
+
     const getPinData = () => {
         return [
             {
@@ -79,20 +119,39 @@ function GeneralBusMapPage(props) {
                 markerProps: {
                     onClick: onBusClick,
                 },
-                pins: props.activeRuns.filter(run => run.location != null).map(run => getRunPin(run))
+                pins: getRunsWithLocation(props.activeRuns).map(run => getRunPin(run))
             },
         ]
     }
+
+    const average = (array) => array.reduce((a, b) => a + b) / array.length;
+
+    const getCenter = () => {
+        const latAverage = average(getRunsWithLocation(props.activeRuns).map(run => run.location.latitude));
+        const lngAverage = average(getRunsWithLocation(props.activeRuns).map(run => run.location.longitude));
+        return {lat: latAverage, lng: lngAverage}
+    }
+
+    
   
   return (
-    <div>          
+    <div>
         <AdminHeader/>
+        {getType(props.user)=="staff" || getType(props.user)=="driver" || getType(props.user)=="admin" ?
         <Container className="container-main d-flex flex-column" style={{gap: "20px"}}>
             <div className="shadow-sm p-3 mb-5 bg-white rounded d-flex flex-row justify-content-center">
                 <h1>Bus Map</h1>
             </div>
-            <MapComponent pinData={getPinData()} otherMapComponents={extraComponents}/>
-        </Container>
+            {getRunsWithLocation(props.activeRuns).length == 0 ? <h4>There are no active runs with valid locations to display.</h4> : <MapComponent pinData={getPinData()} otherMapComponents={getExtraComponents()} center={getCenter()}/>}
+        </Container>: 
+        <Container className="container-main">
+            <Alert variant="danger">
+                <Alert.Heading>Access Denied</Alert.Heading>
+                <p>
+                    You do not have access to this page. If you believe this is an error, contact an administrator.          
+                </p>
+            </Alert>
+        </Container>}
     </div>
     );
 }

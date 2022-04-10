@@ -41,7 +41,6 @@ function MapComponent(props) {
 
 
     useEffect(() => {
-        //console.log(props.pinData)
         initializePins(props.pinData)
       }, [props.pinData]);
 
@@ -113,6 +112,8 @@ function MapComponent(props) {
     }
     
     const initializePins = (inPinData) => {
+        pinInfo = []
+        setPins([])
         //console.log(inPinData)
         inPinData.forEach((pinGroup) => {
             pinGroup.pins.forEach((pin) => {
@@ -189,7 +190,6 @@ function MapComponent(props) {
             if(props.center.lat == null || props.center.lng == null){
                 Geocode.fromAddress(props.center.address)
                 .then((response) => {  
-                    console.log("then response")
 
                     setPos(response.results[0].geometry.location)
                 })
@@ -279,7 +279,9 @@ MapComponent.defaultProps = {
     pinData: [],
     otherMapComponents: null,
     center: {
-        address: "52 Walters brook drive, bridgewater, nj"
+        //address: "52 Walters brook drive, bridgewater, nj"
+        lat: 40.50590935646907,
+        lng: -99.75547352324219
     },
 }
 

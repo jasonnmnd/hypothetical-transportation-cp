@@ -16,6 +16,8 @@ import IconLegend from "../../common/IconLegend";
 import isBusDriver from "../../../utils/userBusDriver";
 import isSchoolStaff from "../../../utils/userSchoolStaff";
 import { getRunByRoute } from "../../../actions/drive";
+import { runCallEveryPeriod } from "../../../utils/live_updating";
+import StudentViewMap from "../../maps/StudentViewMap";
 
 function ParentStudentDetails(props){
     const param = useParams();
@@ -35,7 +37,12 @@ function ParentStudentDetails(props){
 
 
     useEffect(()=>{
-        if(props.student.routes) props.getRunByRoute(props.student.routes.id)
+        if(props.student.routes) {
+            return runCallEveryPeriod(() => {
+                props.getInRangeStop(student.id);
+                props.getRunByRoute(student.routes.id);
+            })
+        } 
     },[props.student])
 
   useEffect(() => {

@@ -346,10 +346,10 @@ class TestBulkImport(TestCase):
         }
         response = self.client.post('/api/loaded-data/validate/', json.dumps(loaded_data),
                                     content_type='application/json', HTTP_AUTHORIZATION=f'Token {self.admin_token}')
-        self.assertEqual(response.data['users'][0]['email']['error'][1],
-                         'This email conflicts with a student email that would be loaded as part of this transaction')
-        self.assertEqual(response.data['students'][0]['email']['error'][1],
-                         'This email conflicts with a user email that would be loaded as part of this transaction')
+        self.assertEqual(response.data['users'][0]['email']['error'][0],
+                         'Duplicate email addresses must be corrected before continuing')
+        self.assertEqual(response.data['students'][0]['email']['error'][0],
+                         'Duplicate email addresses must be corrected before continuing')
 
     def test_student_email_duplication_checking(self):
         loaded_data = {

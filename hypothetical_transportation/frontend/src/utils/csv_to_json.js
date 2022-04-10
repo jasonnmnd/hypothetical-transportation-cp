@@ -2,12 +2,18 @@ export default function csvJson(text, headers, quoteChar = '"', delimiter = ',')
     const regex = new RegExp(`\\s*(${quoteChar})?(.*?)\\1\\s*(?:${delimiter}|$)`, 'gs');
 
     const match = line => {
-        const matches = [...line.matchAll(regex)].map(m => m[2]);
+        const matches = [...line.matchAll(regex)].map(m => {
+            // console.log(m)
+            return m[2]
+        });
+        // console.log(matches)
         matches.pop(); // cut off blank match at the end
+        // console.log(matches)
+
         return matches;
     }
 
-    const lines = text.split('\n');
+    const lines = (text+'\r').split('\n');
     const heads = headers ?? match(lines.splice(0, 1)[0]);
     heads[heads.indexOf('name')] = 'full_name'
     heads[heads.indexOf('student_email')] = 'email'

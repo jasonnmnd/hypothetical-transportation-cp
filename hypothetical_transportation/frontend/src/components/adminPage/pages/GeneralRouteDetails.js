@@ -22,6 +22,7 @@ import axios from 'axios';
 import config from '../../../utils/config';
 import { getRunByRoute } from '../../../actions/drive';
 import { getBusLocation } from '../../../actions/drive';
+import { runCallEveryPeriod } from '../../../utils/live_updating';
 
 function GeneralAdminRouteDetails(props) {
 
@@ -32,6 +33,7 @@ function GeneralAdminRouteDetails(props) {
   const [extra, setExtra] = useState({});
   const [pinData, setPinData] = useState([]);
   const [extraComponents, setExtraComponents] = useState(null);
+  const [extraComponentBus, setExtraComponentBus] = useState(null);
   const [pickupNavLinks, setPickupNavLinks] = useState([]);
   const [dropoffNavLinks, setDropoffNavLinks] = useState([]);
 
@@ -72,8 +74,24 @@ function GeneralAdminRouteDetails(props) {
   }, [searchParams]);
 
   useEffect(() => {
-    props.getRunByRoute(props.route.id)
+      return runCallEveryPeriod(() => props.getRunByRoute(props.route.id))
   }, [props.route]);
+
+  useEffect(() => {
+    if(extraComponentBus != null){
+        if(props.activeRun.location == null){
+            setExtraComponentBus(null)
+            setExtraComponents(null);
+        } else {
+            const newPosition = {
+                lat: props.activeRun.location.latitude,
+                lng: props.activeRun.location.longitude
+            }
+            createInfoWindow(newPosition, getBusInfoForWindow(props.activeRun))
+        }
+    }
+    
+  }, [props.activeRun]);
 
 
 
@@ -155,6 +173,7 @@ function GeneralAdminRouteDetails(props) {
     }
 
     const onBusClick = (pinStuff, position) => {
+        setExtraComponentBus(pinStuff);
         createInfoWindow(position, getBusInfoForWindow(pinStuff))
     }
 
@@ -187,7 +206,7 @@ function GeneralAdminRouteDetails(props) {
     }
 
     const createInfoWindow = (position, windowComponents) => {
-        setExtraComponents(<InfoWindow position={position} onCloseClick={setExtraComponents(null)}>{windowComponents}</InfoWindow>)
+        setExtraComponents(<InfoWindow position={position} onCloseClick={() => {setExtraComponents(null); setExtraComponentBus(null);}}>{windowComponents}</InfoWindow>)
     }
 
     const getPickupNavLinks = () => {
