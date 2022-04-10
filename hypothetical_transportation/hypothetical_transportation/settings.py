@@ -28,7 +28,7 @@ SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 SECRET_KEY = 'django-insecure-dz)xt+ggvmpya26p(yn$y-0gcq1&$tnrj+i_n5*1u0_ek+j3lg'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 LOGGING = {
     'version': 1,
@@ -50,7 +50,7 @@ LOGGING = {
 ALLOWED_HOSTS = [
         '0.0.0.0',
         'localhost',
-        'hypothetical-transportation.colab.duke.edu',
+        'hypothetical-transportation-legoons.colab.duke.edu',
         'ht.colab.duke.edu',
         'ht-dev.colab.duke.edu',
         'ht-test.colab.duke.edu',
@@ -69,7 +69,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.postgres',
     'django.contrib.staticfiles',
-    'django_crontab',
     'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
@@ -138,11 +137,11 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'admin',
-        'NAME': 'ht_db',
-        #'USER': 'admin',
+        #'NAME': 'ht_db',
+        'USER': 'admin',
         'PASSWORD': 'admin',
-        #'HOST': 'db',
-        'HOST': 'localhost',
+        'HOST': 'db',
+        #'HOST': 'localhost',
         'PORT': '5432',
     }
 }
