@@ -557,7 +557,7 @@ class TranzitTraqApi(generics.GenericAPIView):
             if bus.end_time is None and counter < 100:
                 # self.talk_to_tranzit_traq(bus)
                 counter += 1
-                threading.Thread(target=self.talk_to_tranzit_traq, name='tranzit_traq_thread', args=(bus)).start()
+                threading.Thread(target=self.talk_to_tranzit_traq, name='tranzit_traq_thread', args=(bus,)).start()
         return Response("done", status.HTTP_200_OK)
 
 
