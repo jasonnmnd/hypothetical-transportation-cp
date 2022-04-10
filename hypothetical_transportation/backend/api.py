@@ -733,14 +733,14 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
                     "student_id": self.student_id, "parent_email": self.parent_email, "school_name": self.school_name}
 
     def student_to_user(self, student: StudentRepresentation):
-        address_msg = "Student role does not have address"
+        address_msg = "Student account: field not required"
         return self.UserRepresentation(uuid=f"from_student_{student.usid}", full_name=student.full_name,
                                        email=student.email,
                                        phone_number=student.phone_number, address=address_msg, in_db=student.in_db)
 
     def user_to_student(self, user: UserRepresentation):
         # student_id_msg = "Not required for system users"
-        school_name_msg = "Not required for all system users"
+        school_name_msg = "User account: field not required"
         return self.StudentRepresentation(usid=f"from_user_{user.uuid}", email=user.email,
                                           phone_number=user.phone_number, full_name=user.full_name,
                                           student_id="",
@@ -750,7 +750,7 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
         matching_users = get_user_model().objects.filter(email=email)
         user_reprs = list()
         for user in matching_users:
-            address_msg = "Account belongs to a student" if is_student(user) else user.address
+            address_msg = "User Account belongs to a student" if is_student(user) else user.address
             user_reprs.append(self.UserRepresentation(uuid=str(user.id), full_name=user.full_name, email=user.email,
                                                       phone_number=user.phone_number, address=address_msg, in_db=True))
         return user_reprs
@@ -759,7 +759,7 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
         matching_users = get_user_model().objects.filter(full_name=full_name)
         user_reprs = list()
         for user in matching_users:
-            address_msg = "Account belongs to a student" if is_student(user) else user.address
+            address_msg = "User Account belongs to a student" if is_student(user) else user.address
             user_reprs.append(self.UserRepresentation(uuid=str(user.id), full_name=user.full_name, email=user.email,
                                                       phone_number=user.phone_number, address=address_msg, in_db=True))
         return user_reprs
