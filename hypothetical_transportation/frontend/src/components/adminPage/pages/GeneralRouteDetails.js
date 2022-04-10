@@ -20,6 +20,9 @@ import getType from '../../../utils/user2';
 import isBusDriver from '../../../utils/userBusDriver';
 import axios from 'axios';
 import config from '../../../utils/config';
+import { getRunByRoute } from '../../../actions/drive';
+import { getBusLocation } from '../../../actions/drive';
+import { runCallEveryPeriod } from '../../../utils/live_updating';
 
 function GeneralAdminRouteDetails(props) {
 
@@ -30,6 +33,7 @@ function GeneralAdminRouteDetails(props) {
   const [extra, setExtra] = useState({});
   const [pinData, setPinData] = useState([]);
   const [extraComponents, setExtraComponents] = useState(null);
+  const [extraComponentBus, setExtraComponentBus] = useState(null);
   const [pickupNavLinks, setPickupNavLinks] = useState([]);
   const [dropoffNavLinks, setDropoffNavLinks] = useState([]);
 
@@ -69,15 +73,42 @@ function GeneralAdminRouteDetails(props) {
     }
   }, [searchParams]);
 
+  useEffect(() => {
+      return runCallEveryPeriod(() => props.getRunByRoute(props.route.id))
+  }, [props.route]);
+
+  useEffect(() => {
+    if(extraComponentBus != null){
+        if(props.activeRun.location == null){
+            setExtraComponentBus(null)
+            setExtraComponents(null);
+        } else {
+            const newPosition = {
+                lat: props.activeRun.location.latitude,
+                lng: props.activeRun.location.longitude
+            }
+            createInfoWindow(newPosition, getBusInfoForWindow(props.activeRun))
+        }
+    }
+    
+  }, [props.activeRun]);
+
+
+
+
+
+
   useEffect(()=>{
     setExtra({id: props.route.school.id,name: props.route.school.name, dropoff_time: props.route.school.bus_departure_time, pickup_time: props.route.school.bus_arrival_time, stop_number: 0})
     setPinData(getPinData());
-  },[props.students,props.route,props.stops]);
+  },[props.students,props.route,props.stops, props.activeRun]);
 
     const getPinData = () => {
         let pinData = getStudentsPinData();
         addSchoolPin(pinData, props.route.school, onSchoolClick)
         pinData = pinData.concat(getStopPinData());
+        pinData = pinData.concat(getBusPinData());
+        console.log(pinData)
         // console.log(pinData);
         return pinData;
     }
@@ -95,6 +126,55 @@ function GeneralAdminRouteDetails(props) {
                 pins: props.stops.map(stop => getStopPin(stop))
             },
         ]
+    }
+
+    const getRunPin = () => {
+
+        return {
+            ...props.activeRun, 
+            latitude: props.activeRun.location.latitude, 
+            longitude: props.activeRun.location.longitude, 
+        }
+    }
+
+    const getBusPinData = () => {
+        if(props.activeRun.route?.id != props.route.id || props.activeRun?.location == null){
+            return []
+        }
+        return [
+            {
+                iconColor: "black",
+                iconType: "bus",
+                markerProps: {
+                    onClick: onBusClick,
+                },
+                pins: [getRunPin()]
+            },
+        ]
+    }
+
+    const getBusInfoForWindow = (pinStuff) => {
+        return (
+            <>
+                <h4>Bus {pinStuff.bus_number}</h4>
+                <h5>Driver: 
+                    <Link to={`/${getType(props.user)}/user/${pinStuff.driver.id}?pageNum=1`}>
+                        {pinStuff.driver.full_name}
+                    </Link>
+                </h5>
+                <h5>Route: 
+                    <Link to={`/${getType(props.user)}/route/${pinStuff.route.id}?pageNum=1`}>
+                        {pinStuff.route.name}
+                    </Link>
+                </h5>
+            </>
+            
+        )
+    }
+
+    const onBusClick = (pinStuff, position) => {
+        setExtraComponentBus(pinStuff);
+        createInfoWindow(position, getBusInfoForWindow(pinStuff))
     }
 
     const onStopClick = (pinStuff, position) => {
@@ -126,7 +206,7 @@ function GeneralAdminRouteDetails(props) {
     }
 
     const createInfoWindow = (position, windowComponents) => {
-        setExtraComponents(<InfoWindow position={position} onCloseClick={setExtraComponents(null)}>{windowComponents}</InfoWindow>)
+        setExtraComponents(<InfoWindow position={position} onCloseClick={() => {setExtraComponents(null); setExtraComponentBus(null);}}>{windowComponents}</InfoWindow>)
     }
 
     const getPickupNavLinks = () => {
@@ -233,7 +313,17 @@ function GeneralAdminRouteDetails(props) {
                         </Link>
                     </Col>
                 </Row>
-            </Container></>: 
+            </Container>
+            <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
+                <Row>
+                    <Col>
+                        <Link to={`/bus/log/route/${props.route.id}`}>
+                            <Button variant="yellowLong" size="lg">Bus Log For This Route</Button>
+                        </Link>
+                    </Col>
+                </Row>
+            </Container>
+            </>: 
             <Container className="d-flex flex-row justify-content-center align-items-center" style={{gap: "20px"}}>
                 <Row>
                     <Col>
@@ -241,7 +331,14 @@ function GeneralAdminRouteDetails(props) {
                             <Button variant="yellowLong" size="lg">Print Route Roster</Button>
                         </Link>
                     </Col>
-                    </Row></Container>
+                    {/* <Col>
+                        <Link to={`/print/${props.route.id}`} target="_blank">
+                            <Button variant="yellowLong" size="lg">Start Drive</Button>
+                        </Link>
+                    </Col> */}
+                </Row>
+            </Container>
+            
         }
         
         <Row style={{gap: "10px"}}>
@@ -282,7 +379,7 @@ function GeneralAdminRouteDetails(props) {
                 <Card as={Col} style={{padding: "0px"}}>
                     <Card.Header as="h5">School </Card.Header>
                     <Card.Body>
-                        <Link to={`/${getType(props.user)}/school/${props.route.school.id}`}>
+                        <Link to={`/${getType(props.user)}/school/${props.route.school.id}?stupageNum=1&roupageNum=1`}>
                             <h5>{props.route.school.name}</h5>
                         </Link>
                     </Card.Body>
@@ -304,6 +401,15 @@ function GeneralAdminRouteDetails(props) {
                     </Form.Group>
                     </Card.Body>
                 </Card>
+
+                {props.activeRun!==undefined && props.activeRun!==null && props.activeRun.end_time !==undefined &&  props.activeRun.end_time ==null ?
+                <Card border={"success"} as={Col} style={{padding: "0px", backgroundColor: "#d9ffe0"}}>
+                    <Card.Header as="h5">Active Run Info </Card.Header>
+                    <Card.Body>
+                        <p><strong>Bus Driver:</strong> {props.activeRun.driver!==null && props.activeRun.driver !== undefined ? props.activeRun.driver.full_name : ""}</p>
+                        <p><strong>Bus Number:</strong> {props.activeRun.bus_number!==null && props.activeRun.bus_number!==undefined ?props.activeRun.bus_number : ""}</p>
+                    </Card.Body>
+                </Card> : <></>}
             </Row>
             
             <Row  style={{gap: "10px"}}>
@@ -311,7 +417,7 @@ function GeneralAdminRouteDetails(props) {
                     <Card.Header as="h5">Map View of School, Students, and Stops</Card.Header>
                     <Container className='d-flex flex-column justify-content-center' style={{marginTop: "20px"}}>
                         <IconLegend legendType='routeDetails'></IconLegend>
-                        <Card.Body>
+                        <Card.Body  style={{padding: "0px",marginTop: "20px",marginBottom: "20px"}}>
                             {props.route.school.id===-1?
                                 <></>:
                                 <MapComponent pinData={pinData} otherMapComponents={extraComponents} center={{lng: Number(props.route.school.longitude),lat: Number(props.route.school.latitude)}}></MapComponent>}
@@ -346,7 +452,9 @@ GeneralAdminRouteDetails.propTypes = {
     getRouteInfo: PropTypes.func.isRequired,
     getStopByRoute: PropTypes.func.isRequired,
     getStudents: PropTypes.func.isRequired,
-    deleteRoute: PropTypes.func.isRequired
+    deleteRoute: PropTypes.func.isRequired,
+    getRunByRoute: PropTypes.func.isRequired,
+    getBusLocation: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = (state) => ({
@@ -357,8 +465,10 @@ const mapStateToProps = (state) => ({
   students: state.students.students.results,
   stops:state.stop.stops.results,
   studentCount: state.students.students.count,
-  stopCount: state.stop.stops.count
+  stopCount: state.stop.stops.count,
+  activeRun: state.drive.currentRun,
+  busLocation: state.drive.busLocation
 });
 
-export default connect(mapStateToProps, {getRouteInfo, getStudents, deleteRoute,getStopByRoute})(GeneralAdminRouteDetails)
+export default connect(mapStateToProps, {getRouteInfo, getStudents, deleteRoute,getStopByRoute, getRunByRoute, getBusLocation})(GeneralAdminRouteDetails)
 

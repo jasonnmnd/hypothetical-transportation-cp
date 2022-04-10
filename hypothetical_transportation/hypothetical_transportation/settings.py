@@ -12,8 +12,6 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
-import sys
-import logging
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -56,6 +54,7 @@ ALLOWED_HOSTS = [
         'ht-test.colab.duke.edu',
         'ht-frontend.colab.duke.edu',
         'ht-backend.colab.duke.edu',
+        'legoons.colab.duke.edu',
 ]
 
 # Application definition
@@ -136,11 +135,11 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'admin',
-        # 'NAME': 'ht_db',
+        #'NAME': 'ht_db',
         'USER': 'admin',
         'PASSWORD': 'admin',
         'HOST': 'db',
-        # 'HOST': 'localhost',
+        #'HOST': 'localhost',
         'PORT': '5432',
     }
 }
@@ -208,3 +207,15 @@ EMAIL_HOST_USER = os.environ.get('AUTHEMAIL_EMAIL_HOST_USER') or ''
 EMAIL_HOST_PASSWORD = os.environ.get('AUTHEMAIL_EMAIL_HOST_PASSWORD') or ''
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
+
+# CELERY_BROKER_URL = 'amqp://guest@broker:5672'
+# CELERY_ACCEPT_CONTENT = ['application/json']
+# CELERY_RESULT_SERIALIZER = 'json'
+# CELERY_TASK_SERIALIZER = 'json'
+# # CELERY_IMPORTS = [
+# #     'backend.tasks2'
+# # ]
+
+# CELERY_RESULT_BACKEND = 'django-db'
+# CELERY_CACHE_BACKEND = 'django-cache'
+# # CELERY_TIMEZONE = 'Europe/Amsterdam'

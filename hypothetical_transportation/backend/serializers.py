@@ -1,9 +1,13 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
+from django.db.models import Q
 from rest_framework import serializers
-from .models import Route, School, Student, Stop
-from geopy.geocoders import Nominatim, GoogleV3
-from .permissions import is_admin, is_school_staff
+from .models import Bus, Route, School, Student, Stop, TransitLog, BusRun
+from geopy.geocoders import GoogleV3
+from .custom_geocoder import CachedGoogleV3
+from .permissions import is_admin, is_school_staff, is_guardian, is_student
+from .student_account_managers import sync_student_account, send_invite_email, sync_parent_changes_to_student_account, \
+    sync_student_account_changes_to_student
 
 
 class GroupSerializer(serializers.ModelSerializer):
@@ -26,7 +30,8 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
         fields = (
-            'id', 'email', 'full_name', 'phone_number', 'address', 'latitude', 'longitude', 'groups', 'managed_schools')
+            'id', 'email', 'full_name', 'phone_number', 'address', 'latitude', 'longitude', 'groups', 'managed_schools',
+            'linked_student')
         # fields = ('email', 'password')
 
     def validate(self, data):
@@ -40,7 +45,27 @@ class EditUserSerializer(serializers.ModelSerializer):
         if is_admin(user) and user_email == instance and 'groups' in validated_data and Group.objects.get(
                 name='Administrator') not in validated_data['groups']:
             raise serializers.ValidationError("You may not revoke your own administrator privileges")
-        return super().update(instance, validated_data)
+        updated_user = super().update(instance, validated_data)
+        if is_guardian(updated_user):
+            sync_parent_changes_to_student_account(updated_user)
+        if is_student(updated_user):
+            sync_student_account_changes_to_student(updated_user)
+        return updated_user
+
+    def validate_groups(self, value):
+        if len(value) != 1:
+            raise serializers.ValidationError("Users may not have more than one role")
+        group_name = value[0].name
+        if self.instance.groups.filter(name=group_name).count() == 1:
+            # If the target group is the same as the current group, allow change as it is equivalent to doing nothing.
+            # This is done for frontend convenience and to bypass the overhead of removing fields in payload
+            return value
+        if group_name in ["Guardian", "Student"]:
+            raise serializers.ValidationError("Users cannot be changed to the Parent or Student role")
+        if self.instance.groups.filter(Q(name='Guardian') | Q(name='Student')).count() > 0:
+            # Additional guards
+            raise serializers.ValidationError("Users in the Parent or Student role cannot have their role changed")
+        return value
 
     class Meta:
         model = get_user_model()
@@ -48,7 +73,7 @@ class EditUserSerializer(serializers.ModelSerializer):
             'id', 'email', 'full_name', 'phone_number', 'address', 'latitude', 'longitude', 'groups', 'managed_schools')
 
 
-class StaffEditUserSerializer(serializers.ModelSerializer):
+class StaffEditUserSerializer(EditUserSerializer):
     def validate(self, attrs):
         # print(self.context['request'].user)
         return attrs
@@ -89,6 +114,42 @@ class StopSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class TransitLogSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TransitLog
+        fields = '__all__'
+
+class BusRunSerializer(serializers.ModelSerializer):
+
+    def validate(self, attrs):
+        return super().validate(attrs)
+
+    class Meta:
+        model = BusRun
+        fields = '__all__'
+
+class StartBusRunSerializer(serializers.ModelSerializer):
+    force = serializers.BooleanField()
+
+    class Meta:
+        model = BusRun
+        fields = ['bus_number', 'driver', 'going_towards_school', 'route', 'force']
+
+
+class BusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Bus
+        fields = '__all__'
+
+
+class FormatBusRunSerializer(BusRunSerializer):
+    route = RouteSerializer()
+    school = SchoolSerializer()
+    driver = FormatUserSerializer()
+    location = BusSerializer()
+    # previous_stop = StopSerializer()
+
+
 class FormatRouteSerializer(RouteSerializer):
     school = SchoolSerializer()
     # stops = StopSerializer(many=True)
@@ -126,6 +187,20 @@ class StudentSerializer(serializers.ModelSerializer):
             if data['guardian'] and len(data['guardian'].address) == 0:
                 raise serializers.ValidationError("User does not have an address configured")
         return data
+
+    def create(self, validated_data):
+        # Student accounts created with an email will initiate the process
+        created_student = super().create(validated_data)
+        if created_student.email is not None:
+            send_invite_email(created_student)
+        return created_student
+
+    def update(self, instance, validated_data):
+        # Previous email has to be cached so setting up a new user account can be initiated
+        prev_email = instance.email
+        updated_student = super().update(instance, validated_data)
+        sync_student_account(updated_student, prev_email)
+        return updated_student
 
 
 class StaffStudentSerializer(StudentSerializer):
@@ -186,6 +261,14 @@ class LoadStudentSerializer(serializers.ModelSerializer):
     school_name = serializers.CharField(required=True)
     parent_email = serializers.CharField(required=True)
 
+    def validate_parent_email(self, value):
+        # If user is in database, we need to check that it is in the parent role
+        if get_user_model().objects.filter(email=value).count() > 0:
+            user = get_user_model().objects.get(email=value)
+            if not user.groups.filter(name='Guardian').exists():
+                raise serializers.ValidationError("Email does not belong to a user in the parent role")
+        return value
+
     def validate_school_name(self, value):
         user_email = self.context['request'].user
         user_object = get_user_model().objects.get(email=user_email)
@@ -201,7 +284,7 @@ class LoadStudentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Student
-        fields = ("full_name", "student_id", "parent_email", "school_name")
+        fields = ("email", "full_name", "student_id", "parent_email", "school_name", "phone_number")
 
 
 class LoadStudentSerializerStrict(LoadStudentSerializer):
@@ -215,7 +298,7 @@ class LoadStudentSerializerStrict(LoadStudentSerializer):
 class LoadUserSerializer(serializers.ModelSerializer):
     def validate_address(self, value):
         # TODO: Uncomment to use paid geolocator API
-        geolocator = GoogleV3(api_key="AIzaSyDsyPs-pIVKGJiy7EVy8aKebN5zg515BCs")
+        geolocator = CachedGoogleV3(api_key="AIzaSyDsyPs-pIVKGJiy7EVy8aKebN5zg515BCs")
         # geolocator = Nominatim(user_agent="bulk import validator")
         location = geolocator.geocode(value)
         if not location or not location.latitude or not location.longitude:

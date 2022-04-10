@@ -13,6 +13,7 @@ from django.utils.html import strip_tags
 
 from backend.geo_utils import get_straightline_distance, LEN_OF_MILE
 from backend.permissions import IsAdmin, IsSchoolStaff, is_school_staff
+from django.db.models import Q
 
 
 def send_rich_format_email(template: str, template_context: dict, subject: str, to: list, bcc: list):
@@ -36,17 +37,19 @@ def send_rich_format_email(template: str, template_context: dict, subject: str, 
 def get_users_where_student_route_id(route_id: int):
     route = get_object_or_404(Route, pk=route_id)
     students_queryset = route.students
-    return get_user_model().objects.filter(id__in=students_queryset.values('guardian_id')).distinct()
+    return get_user_model().objects.filter(Q(id__in=students_queryset.values('guardian_id')) | Q(
+        id__in=students_queryset.values('student_user_account'))).distinct()
 
 
 def get_users_where_student_school_id(school_id: int):
     school = get_object_or_404(School, pk=school_id)
     students_queryset = school.students
-    return get_user_model().objects.filter(id__in=students_queryset.values('guardian_id')).distinct()
+    return get_user_model().objects.filter(Q(id__in=students_queryset.values('guardian_id')) | Q(
+        id__in=students_queryset.values('student_user_account'))).distinct()
 
 
 def get_users_all():
-    return get_user_model().objects.values_list('email', flat=True)
+    return get_user_model().objects.filter(groups__name='Guardian').distinct()
 
 
 def get_recipients_from_email_query(serializer: SendAnnouncementSerializer):

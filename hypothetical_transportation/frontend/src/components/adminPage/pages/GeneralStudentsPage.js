@@ -17,14 +17,18 @@ function GeneralAdminStudentsPage(props) {
   let [searchParams, setSearchParams] = useSearchParams();
   
   useEffect(() => {
-    if(searchParams.get(`pageNum`) != null){
+    if(searchParams.get(`pageNum`) != null && !(searchParams.get(`ordering`) ==null || searchParams.get(`ordering`) =="")){
+      // console.log("?>")
       let paramsToSend = Object.fromEntries([...searchParams]);
       props.getStudents(paramsToSend);
     }
     else{
-      setSearchParams({
-        [`pageNum`]: 1,
-      })
+      // console.log("set?")
+        setSearchParams({
+          ...searchParams,
+          [`pageNum`]: 1,
+          [`ordering`]:"full_name",
+        })
     }
   }, [searchParams]);
 
