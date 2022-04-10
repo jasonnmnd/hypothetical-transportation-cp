@@ -740,7 +740,7 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
 
     def user_to_student(self, user: UserRepresentation):
         # student_id_msg = "Not required for system users"
-        school_name_msg = "Not required for system users"
+        school_name_msg = "Not required for all system users"
         return self.StudentRepresentation(usid=f"from_user_{user.uuid}", email=user.email,
                                           phone_number=user.phone_number, full_name=user.full_name,
                                           student_id=-1,
@@ -759,21 +759,25 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
                 matching_users]
 
     def get_repr_of_students_with_email(self, email: str):
+        # Only add students that do not have a linked account
         matching_students = Student.objects.filter(email=email)
         return [
             self.StudentRepresentation(usid=str(student.id), email=student.email, phone_number=student.phone_number,
                                        full_name=student.full_name, student_id=student.school_id,
                                        parent_email=student.guardian.email, school_name=student.school.name,
-                                       in_db=True) for student in matching_students]
+                                       in_db=True) for student in matching_students if
+            student.student_user_account.all().count() == 0]
 
     def get_repr_of_students_with_name(self, full_name: str):
+        # Only add students that do not have a linked account
         matching_students = Student.objects.filter(full_name=full_name)
         return [
             self.StudentRepresentation(usid=str(student.id), email=student.email, phone_number=student.phone_number,
                                        full_name=student.full_name, student_id=student.school_id,
                                        parent_email=student.guardian.email,
                                        school_name=student.school.name,
-                                       in_db=True) for student in matching_students]
+                                       in_db=True) for student in matching_students if
+            student.student_user_account.all().count() == 0]
 
     def get_val_field_response_format(self, value, error: list, duplicates: list):
         return {"value": value, "error": error, "duplicates": duplicates}
@@ -851,8 +855,9 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
                         [self.student_to_user(student).get_representation() for student in
                          student_email_duplication[user.email]])
                 else:
-                    current_user_email_duplicates.extend([self.student_to_user(student).get_representation() for student in
-                                                          self.get_repr_of_students_with_email(user.email)])
+                    current_user_email_duplicates.extend(
+                        [self.student_to_user(student).get_representation() for student in
+                         self.get_repr_of_students_with_email(user.email)])
 
             is_valid &= len(current_user_email_duplicates) == 0
             user_email_errors = serializer_errors["users"][user_dex].get("email", [])
@@ -899,7 +904,8 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
             if student.email is not None and student.email != "":
                 if student.email in user_email_duplication and len(user_email_duplication[student.email]) > 0:
                     current_student_email_duplicates.extend(
-                        [self.user_to_student(user).get_representation() for user in user_email_duplication[student.email]])
+                        [self.user_to_student(user).get_representation() for user in
+                         user_email_duplication[student.email]])
                 else:
                     # Do a database search due to missed hit
                     current_student_email_duplicates.extend(
