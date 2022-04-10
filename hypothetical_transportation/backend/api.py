@@ -594,8 +594,9 @@ class SchoolViewSet(viewsets.ModelViewSet):
     def group_students(self, request, pk=None):
         routes = [route.id for route in Route.objects.filter(school=pk)]
         students = [{'lng': student.guardian.longitude, 'lat': student.guardian.latitude, 'id': student.id} for student
-                    in Student.objects.filter(routes__isnull=True, school=pk)]
-        content = groupStudents(students, routes)
+                    in Student.objects.filter(school=pk)]
+        content_int = groupStudents(students, routes)
+        content = {str(student_id): str(content_int[student_id]) for student_id in content_int.keys()}
         return Response(content, status.HTTP_200_OK)
 
 
