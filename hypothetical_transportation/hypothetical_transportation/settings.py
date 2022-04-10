@@ -48,7 +48,7 @@ LOGGING = {
 ALLOWED_HOSTS = [
         '0.0.0.0',
         'localhost',
-        'hypothetical-transportation.colab.duke.edu',
+        'hypothetical-transportation-legoons.colab.duke.edu',
         'ht.colab.duke.edu',
         'ht-dev.colab.duke.edu',
         'ht-test.colab.duke.edu',
