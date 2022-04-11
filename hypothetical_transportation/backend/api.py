@@ -1,4 +1,5 @@
 import requests, json
+import threading
 from django.contrib.auth import get_user_model
 from django.db import transaction
 from django_filters.rest_framework import DjangoFilterBackend
@@ -10,14 +11,14 @@ from datetime import datetime, time
 from geopy.geocoders import GoogleV3
 from accounts.models import InvitationCode
 from .time_utils import find_time_to_stops, mark_all_passed
-from .models import School, Route, Student, Stop, TransitLog, BusRun, Bus
+from .models import School, Route, Student, Stop, BusRun, Bus
 from .serializers import StartBusRunSerializer, UserSerializer, StudentSerializer, RouteSerializer, SchoolSerializer, \
     FormatStudentSerializer, \
     FormatRouteSerializer, FormatUserSerializer, EditUserSerializer, StopSerializer, CheckInrangeSerializer, \
     LoadUserSerializer, LoadModelDataSerializer, find_school_match_candidates, school_names_match, \
-    StaffEditUserSerializer, StaffEditSchoolSerializer, StaffStudentSerializer, LoadStudentSerializer, \
-    LoadStudentSerializerStrict, ExposeUserSerializer, ExposeUserInputEmailSerializer, BusSerializer, \
-    TransitLogSerializer, BusRunSerializer, FormatBusRunSerializer, BusSerializer
+    StaffEditUserSerializer, StaffEditSchoolSerializer, StaffStudentSerializer, \
+    LoadStudentSerializerStrict, ExposeUserInputEmailSerializer, BusSerializer, \
+    BusRunSerializer, FormatBusRunSerializer, BusSerializer
 from .search import DynamicSearchFilter
 from .customfilters import StudentCountShortCircuitFilter
 from .permissions import is_admin, is_school_staff, is_driver, IsAdminOrReadOnly, IsAdmin, IsSchoolStaff, is_guardian, \
@@ -106,7 +107,10 @@ def duration_check(run: BusRun):
             # run.duration = time(delta//3600, (delta%3600)//60, delta%60)
             # run.timeout = False
             run.save(update_fields=['end_time', 'duration', 'timeout'])
-        # TODO delete bus from bus table
+
+            run.route.driver = None
+            run.route.bus_number = None
+            run.route.save(update_fields=['driver', 'bus_number'])
 
 
 def get_active_bus_for_bus_number(bus_number):
@@ -521,6 +525,7 @@ class ActiveBusLocationsViewSet(viewsets.ModelViewSet):
 class TranzitTraqApi(generics.GenericAPIView):
 
     def talk_to_tranzit_traq(self, bus) -> Response:
+        print(bus.bus_number)
         try:
             url = f"http://tranzit.colab.duke.edu:8000/get"
             params = {'bus': bus.bus_number}
@@ -545,6 +550,7 @@ class TranzitTraqApi(generics.GenericAPIView):
             bus.save(update_fields=['location'])
 
         except:
+            print("oop")
             return Response("Tranzit Traq gave a poor response", status.HTTP_404_NOT_FOUND)
 
     def get(self, request, *args, **kwargs):
@@ -554,8 +560,9 @@ class TranzitTraqApi(generics.GenericAPIView):
             # bus_id=request.GET['bus']
             duration_check(bus)
             if bus.end_time is None and counter < 100:
-                self.talk_to_tranzit_traq(bus)
+                # self.talk_to_tranzit_traq(bus)
                 counter += 1
+                threading.Thread(target=self.talk_to_tranzit_traq, name='tranzit_traq_thread', args=(bus,)).start()
         return Response("done", status.HTTP_200_OK)
 
 

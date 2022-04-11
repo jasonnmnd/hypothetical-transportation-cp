@@ -56,7 +56,7 @@ function StartDriveSection(props) {
                         <Form.Control 
                             required
                             type="number"
-                            placeholder="Enter A Bus Number Between 8000-8999 ..." 
+                            placeholder="Enter A Bus Number ..." 
                             value={props.busNum == null ? "" : props.busNum}
                             onChange={(e)=> props.setBusNum(e.target.value == "" ? null : e.target.value) }
                         />

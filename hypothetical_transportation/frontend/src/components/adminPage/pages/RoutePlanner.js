@@ -16,7 +16,14 @@ import { Container, ButtonGroup, ToggleButton, Card, Button, Form, Collapse, Mod
 import IconLegend from '../../common/IconLegend';
 import { getCurRouteFromStudent } from '../../../utils/planner_maps';
 import { createMessageDispatch } from '../../../actions/messages';
-
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import InfoIcon from '@mui/icons-material/Info';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
 
 const IS_CREATE_PARAM = 'create';
 const VIEW_PARAM = 'view';
@@ -24,6 +31,7 @@ const ROUTE_PARAM = 'route';
 
 function RoutePlanner(props) {
 
+  const [openDialog, setOpenDialog] = useState(false)
   
 
   useEffect(() => {
@@ -46,6 +54,45 @@ function RoutePlanner(props) {
     })
   }
 
+  const getAutoGroupDialog = () => {
+    return (
+      <Dialog
+                                open={openDialog}
+                                onClose={() => setOpenDialog(false)}
+                                aria-labelledby="alert-dialog-title"
+                                aria-describedby="alert-dialog-description"
+                            >
+                                <DialogTitle id="alert-dialog-title">
+                                {"Auto-Grouping Students"}
+                                </DialogTitle>
+                                <DialogContent>
+                                <DialogContentText id="alert-dialog-description">
+                                  <div>
+                                    Auto-grouping the students places each student into a route based on where they live.
+                                  </div>
+                                  <br></br>
+                                  <div>
+                                    Students will be clustered into the same number of groups as there are routes for this school. Each cluster of students will then be assigned to one route. 
+                                  </div>
+                                  <br></br>
+                                  <div>
+                                    Auto-grouping will override the route placement of all students currently placed in a route. 
+                                  </div>
+                                  <br></br>
+                                  <div>
+                                    Clicking the "Auto-Group Students" button does not automatically save the results. You must still click "Save Map Changes" to save the results of the autogrouping.  
+                                  </div>
+                                    
+                                </DialogContentText>
+                                </DialogContent>
+                                    <DialogActions>
+                                        <Button variant='yellow' onClick={() => setOpenDialog(false)}>Close</Button>
+                                    </DialogActions>
+                            </Dialog>
+
+    )
+  }
+
 
   
 
@@ -53,7 +100,7 @@ function RoutePlanner(props) {
   return (
 
     <Container className="container-main d-flex flex-column" style={{gap: "10px"}}>
-        
+        {getAutoGroupDialog()}
         <Container className="container-main d-flex flex-row" style={{gap: "10px"}}>
 
             <Container className='d-flex flex-column' style={{width: "2000px"}}>
@@ -72,8 +119,16 @@ function RoutePlanner(props) {
 
                 <Container className="d-flex flex-row justify-content-center" style={{gap: "20px"}}>
                     <Button variant='yellowsubmit' onClick={props.saveRoutePlannerMapChanges}>Save Map Changes</Button>
-                    <Button variant='yellowsubmit' onClick={props.resetStudentChanges}>Reset Map Changes</Button>
-                    <Button variant='yellowsubmit' onClick={props.autoGroupStudents}>Auto-Group Students</Button>
+                    <Button variant='yellowsubmit' onClick={props.resetStudentChanges}>Reset Map Changes</Button>                    
+                </Container>
+                <br></br>
+                <Container className="d-flex flex-row justify-content-center" style={{gap: "20px"}}>
+                  <Button variant='yellowsubmit' onClick={props.autoGroupStudents}>Auto-Group Students</Button>
+                  <Tooltip title="Auto-Grouping Details">
+                      <IconButton onClick={() => setOpenDialog(true)}>
+                          <InfoIcon fontSize="medium" />
+                      </IconButton>
+                  </Tooltip>
                 </Container>
 
             </Container>

@@ -15,8 +15,10 @@ import EmailPic from '../assets/email.jpg';
 import DataPic from '../assets/bulk_import.jpg';
 import BusLogPic from '../assets/busLogPic.png'
 import AccountPic from '../assets/accountPic.png'
+import DrivePic from '../assets/drive.png'
 import isAdmin from "../../utils/user";
 import getType from "../../utils/user2";
+import isBusDriver from "../../utils/userBusDriver";
 
 //This page will be used for the admin page to declutter App.js
 function AdminPage( props ) {
@@ -114,6 +116,7 @@ function AdminPage( props ) {
                   <></>
                 }
 
+
                   <Col>
                     <Card className="text-center" style={{height:'450px', cursor: "pointer"}} onClick={() => navigate(`/bus/log`)}>
                       <Card.Img variant="top" src={BusLogPic} style={{height: '300px'}}/>
@@ -125,6 +128,23 @@ function AdminPage( props ) {
                       </Card.Body>
                     </Card>
                   </Col>
+
+
+                {isBusDriver(props.user)?
+                  <Col>
+                    <Card className="text-center" style={{height:'450px', cursor: "pointer"}} onClick={() => navigate(`/drive`)}>
+                      <Card.Img variant="top" src={DrivePic} style={{height: '300px'}}/>
+                      <Card.Body>
+                        <Card.Title><strong>Drive</strong></Card.Title>
+                        <Card.Text>
+                          Drive Actions
+                        </Card.Text>
+                      </Card.Body>
+                    </Card>
+                  </Col>
+                  :
+                  <></>
+                }
 
                   <Col>
                     <Card className="text-center" style={{height:'450px', cursor: "pointer"}} onClick={() => navigate(`/account`)}>
