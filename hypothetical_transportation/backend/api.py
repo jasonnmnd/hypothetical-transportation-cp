@@ -32,7 +32,7 @@ from .student_account_managers import send_invite_email
 from .custom_geocoder import CachedGoogleV3
 from .group_algo import groupStudents
 
-BUS_RUN_TIMEOUT_THRESHOLD = 3 * 3600
+BUS_RUN_TIMEOUT_THRESHOLD = 3 * 60#3600
 
 
 def get_filter_dict(model):
@@ -522,6 +522,7 @@ class ActiveBusLocationsViewSet(viewsets.ModelViewSet):
 class TranzitTraqApi(generics.GenericAPIView):
 
     def talk_to_tranzit_traq(self, bus) -> Response:
+        print(bus.bus_number)
         try:
             url = f"http://tranzit.colab.duke.edu:8000/get"
             params = {'bus': bus.bus_number}
@@ -546,6 +547,7 @@ class TranzitTraqApi(generics.GenericAPIView):
             bus.save(update_fields=['location'])
 
         except:
+            print("oop")
             return Response("Tranzit Traq gave a poor response", status.HTTP_404_NOT_FOUND)
 
     def get(self, request, *args, **kwargs):
