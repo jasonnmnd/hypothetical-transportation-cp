@@ -110,6 +110,19 @@ const applyTimezoneOffset = (date, time, offset) => {
             
         }
         
+    } else if(offsetHour > 23){
+        offsetHour = offsetHour - 24;
+        let offsetDay = offsetDay + 1;
+        if(offsetDay > 30){
+            offsetDay = 1;
+            let offsetMonth = offsetMonth + 1;
+            if(offsetMonth > 12){
+                offsetMonth = 1
+                let offsetYear = offsetYear + 1;
+            }
+    
+            
+        }
     }
     return `${offsetMonth}/${offsetDay}/${offsetYear}  ${offsetHour}:${minute}`
 }   
@@ -130,6 +143,31 @@ export const DATE_TIME_TO_STRING = (dateTime) => {
     } catch (error) {
         console.log(error);
         return dateTime
+    }
+
+}
+
+export const TIME_TO_STRING = (time) => {
+    console.log(time)
+    const timezoneOffset = (new Date()).getTimezoneOffset();
+    const hourOffset = timezoneOffset / 60;
+    console.log(hourOffset)
+
+    try {
+        const timeParts = time.split(":");
+        const preHour = parseInt(timeParts[0]);
+        let offsetHour = preHour - hourOffset;
+        if(offsetHour < 0){
+            offsetHour = 24 + offsetHour;
+        } else if(offsetHour > 23) {
+            offsetHour = offsetHour - 24;
+        }
+        
+
+        return `${offsetHour}:${timeParts[1]}:${timeParts[2]}`
+    } catch (error) {
+        console.log(error);
+        return time
     }
 
 }
