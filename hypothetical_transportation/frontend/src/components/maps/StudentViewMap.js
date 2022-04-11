@@ -10,6 +10,8 @@ function StudentViewMap(props) {
   const [pinData, setPinData] = useState([]);
   const [extraComponents, setExtraComponents] = useState(null);
   const [extraComponentBus, setExtraComponentBus] = useState(null);
+  const [extraComponentStop, setExtraComponentStop] = useState(null);
+
 
 
     useEffect(()=>{
@@ -27,6 +29,17 @@ function StudentViewMap(props) {
                     lng: props.activeRun.location.longitude
                 }
                 createInfoWindow(newPosition, getBusInfoForWindow(props.activeRun))
+            }
+        } else if(extraComponentStop != null){
+            if(extraComponentStop.latitude == null || extraComponentStop.longitude == null){
+                setExtraComponentStop(null);
+                setExtraComponents(null);
+            } else {
+                const newPosition = {
+                    lat: extraComponentStop.latitude,
+                    lng: extraComponentStop.longitude
+                }
+                createInfoWindow(newPosition, getStopInfoForWindow(extraComponentStop))
             }
         }
         
@@ -107,7 +120,7 @@ function StudentViewMap(props) {
     }
 
     const createInfoWindow = (position, windowComponents) => {
-        setExtraComponents(<InfoWindow position={position} onCloseClick={() => {setExtraComponents(null); setExtraComponentBus(null);}}>{windowComponents}</InfoWindow>)
+        setExtraComponents(<InfoWindow position={position} onCloseClick={() => {setExtraComponents(null); setExtraComponentBus(null); setExtraComponentStop(null);}}>{windowComponents}</InfoWindow>)
     }
 
 
@@ -126,15 +139,20 @@ function StudentViewMap(props) {
         ]
     }
 
-    const onStopClick = (pinStuff, position) => {
-        createInfoWindow(position, 
+    const getStopInfoForWindow = (pinStuff) => {
+        return (
             <div>
                 <h5>Name:{pinStuff.name}</h5>
                 <h5>Pick Up: {pinStuff.pickup_time}</h5>
                 <h5>Drop Off: {pinStuff.dropoff_time}</h5>
-                <h5>ETA: {pinStuff.eta==null ? "The bus is not in route to this stop" : TIME_TO_STRING(pinStuff.eta)}</h5>
+                <h5>ETA: {pinStuff.eta==null ? "Not Currently Available" : TIME_TO_STRING(pinStuff.eta)}</h5>
             </div>
         )
+    }
+
+    const onStopClick = (pinStuff, position) => {
+        setExtraComponentStop(pinStuff)
+        createInfoWindow(position, getStopInfoForWindow(pinStuff))
     }
 
     const onStudentClick = (pinStuff, position) => {
