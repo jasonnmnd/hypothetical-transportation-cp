@@ -792,8 +792,8 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
                                        full_name=student.full_name, student_id=student.school_id,
                                        parent_email=student.guardian.email,
                                        school_name=student.school.name,
-                                       in_db=True) for student in matching_students if
-            student.student_user_account.all().count() == 0]
+                                       in_db=True) for student in matching_students]
+
 
     def get_val_field_response_format(self, value, error: list, duplicates: list):
         return {"value": value, "error": error, "duplicates": duplicates}
