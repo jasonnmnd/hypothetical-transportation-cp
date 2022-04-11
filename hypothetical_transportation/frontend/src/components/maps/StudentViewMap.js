@@ -31,7 +31,7 @@ function StudentViewMap(props) {
                 createInfoWindow(newPosition, getBusInfoForWindow(props.activeRun))
             }
         } else if(extraComponentStop != null){
-            if(extraComponentStop.latitude == null || extraComponentStop.longitude == null{
+            if(extraComponentStop.latitude == null || extraComponentStop.longitude == null){
                 setExtraComponentStop(null);
                 setExtraComponents(null);
             } else {
@@ -39,7 +39,7 @@ function StudentViewMap(props) {
                     lat: extraComponentStop.latitude,
                     lng: extraComponentStop.longitude
                 }
-                createInfoWindow(newPosition, getBusInfoForWindow(extraComponentStop))
+                createInfoWindow(newPosition, getStopInfoForWindow(extraComponentStop))
             }
         }
         
@@ -139,9 +139,8 @@ function StudentViewMap(props) {
         ]
     }
 
-    const onStopClick = (pinStuff, position) => {
-        setExtraComponentStop(pinStuff)
-        createInfoWindow(position, 
+    const getStopInfoForWindow = (pinStuff) => {
+        return (
             <div>
                 <h5>Name:{pinStuff.name}</h5>
                 <h5>Pick Up: {pinStuff.pickup_time}</h5>
@@ -149,6 +148,11 @@ function StudentViewMap(props) {
                 <h5>ETA: {pinStuff.eta==null ? "Not Currently Available" : TIME_TO_STRING(pinStuff.eta)}</h5>
             </div>
         )
+    }
+
+    const onStopClick = (pinStuff, position) => {
+        setExtraComponentStop(pinStuff)
+        createInfoWindow(position, getStopInfoForWindow(pinStuff))
     }
 
     const onStudentClick = (pinStuff, position) => {
