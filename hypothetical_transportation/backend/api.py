@@ -1,4 +1,3 @@
-from turtle import update
 import requests, json
 import threading
 from django.contrib.auth import get_user_model
@@ -12,14 +11,14 @@ from datetime import datetime, time
 from geopy.geocoders import GoogleV3
 from accounts.models import InvitationCode
 from .time_utils import find_time_to_stops, mark_all_passed
-from .models import School, Route, Student, Stop, TransitLog, BusRun, Bus
+from .models import School, Route, Student, Stop, BusRun, Bus
 from .serializers import StartBusRunSerializer, UserSerializer, StudentSerializer, RouteSerializer, SchoolSerializer, \
     FormatStudentSerializer, \
     FormatRouteSerializer, FormatUserSerializer, EditUserSerializer, StopSerializer, CheckInrangeSerializer, \
     LoadUserSerializer, LoadModelDataSerializer, find_school_match_candidates, school_names_match, \
-    StaffEditUserSerializer, StaffEditSchoolSerializer, StaffStudentSerializer, LoadStudentSerializer, \
-    LoadStudentSerializerStrict, ExposeUserSerializer, ExposeUserInputEmailSerializer, BusSerializer, \
-    TransitLogSerializer, BusRunSerializer, FormatBusRunSerializer, BusSerializer
+    StaffEditUserSerializer, StaffEditSchoolSerializer, StaffStudentSerializer, \
+    LoadStudentSerializerStrict, ExposeUserInputEmailSerializer, BusSerializer, \
+    BusRunSerializer, FormatBusRunSerializer, BusSerializer
 from .search import DynamicSearchFilter
 from .customfilters import StudentCountShortCircuitFilter
 from .permissions import is_admin, is_school_staff, is_driver, IsAdminOrReadOnly, IsAdmin, IsSchoolStaff, is_guardian, \
@@ -33,7 +32,7 @@ from .student_account_managers import send_invite_email
 from .custom_geocoder import CachedGoogleV3
 from .group_algo import groupStudents
 
-BUS_RUN_TIMEOUT_THRESHOLD = 3 * 60#3600
+BUS_RUN_TIMEOUT_THRESHOLD = 3 * 3600
 
 
 def get_filter_dict(model):
