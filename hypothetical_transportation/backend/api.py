@@ -1,3 +1,4 @@
+from turtle import update
 import requests, json
 import threading
 from django.contrib.auth import get_user_model
@@ -107,7 +108,10 @@ def duration_check(run: BusRun):
             # run.duration = time(delta//3600, (delta%3600)//60, delta%60)
             # run.timeout = False
             run.save(update_fields=['end_time', 'duration', 'timeout'])
-        # TODO delete bus from bus table
+
+            run.route.driver = None
+            run.route.bus_number = None
+            run.route.save(update_fields=['driver', 'bus_number'])
 
 
 def get_active_bus_for_bus_number(bus_number):
