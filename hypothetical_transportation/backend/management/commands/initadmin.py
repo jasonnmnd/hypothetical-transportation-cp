@@ -21,7 +21,7 @@ class Command(BaseCommand):
             admin = get_user_model().objects.create_verified_user(email=options['email'], password=options['password'],
                                                                   full_name=options['fullname'],
                                                                   phone_number="9198706050",
-                                                                  address=options['address'],
+                                                                  address=None,
                                                                   latitude=36.00361593027557,
                                                                   longitude=-78.93813641560669)
             admin.groups.add(admin_group.id)
