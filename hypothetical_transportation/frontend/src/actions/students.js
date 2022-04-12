@@ -1,11 +1,12 @@
 import axios from 'axios';
 import config from '../utils/config';
+import { NO_ROUTE } from '../utils/utils';
 
 import { tokenConfig } from './auth';
 
 import { createMessage, returnErrors } from './messages';
 
-import {GET_IN_RANGE_STOP, ADD_STUDENT, GET_STUDENT, CREATE_MESSAGE, GET_STUDENTS, DELETE_STUDENT, POPULATE_TABLE, DELETE_ITEM, UPDATE_STUDENT, RESET_EXPOSED_USER } from './types';
+import {GET_IN_RANGE_STOP, ADD_STUDENT, GET_STUDENT, CREATE_MESSAGE, GET_STUDENTS, DELETE_STUDENT, POPULATE_TABLE, DELETE_ITEM, UPDATE_STUDENT, RESET_EXPOSED_USER, LOAD_SHIT } from './types';
 import { getOffsetString, getQueryStringsFormatted, getParameters } from './utils';
 
 
@@ -174,25 +175,63 @@ export const updateStudent = (student, id) => (dispatch, getState) => {
           }).catch(err => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});
 }
 
-export const patchStudent = (student, id) => (dispatch, getState) => {
-  
-  
-  axios
-          .patch(`/api/student/${id}/`,student, tokenConfig(getState))
+export const patchStudent = (studentChanges) => (dispatch, getState) => {
+  dispatch({
+    type: LOAD_SHIT,
+    payload: true
+  })
+  Object.keys(studentChanges).forEach((student, ind) => {
+    const routeVal = studentChanges[student] == NO_ROUTE ? null : studentChanges[student]
+    axios
+          .patch(`/api/student/${student}/`, {routes: routeVal}, tokenConfig(getState))
           .then(res =>{
-            // dispatch(createMessage({ student: 'Student Updated' }));
+            
             dispatch({
               type: DELETE_STUDENT,
-              payload: parseInt(id)
+              payload: parseInt(student)
             })
-            //console.log(res.data);
+            
             dispatch({
               type: ADD_STUDENT,
               payload: res.data
             })
+            console.log(ind);
+            console.log(studentChanges.length)
+
+            if(ind == Object.keys(studentChanges).length - 1){
+              dispatch({
+                type: LOAD_SHIT,
+                payload: false
+              })
+            }
               
-          }).catch(err => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});
+          }).catch(err => {dispatch({
+            type: LOAD_SHIT,
+            payload: false
+          });console.log(err);dispatch(returnErrors(err.response.data, err.response.status))});
+  });
+  
 }
+
+// export const patchStudent = (student, id) => (dispatch, getState) => {
+  
+  
+//   axios
+//           .patch(`/api/student/${id}/`,student, tokenConfig(getState))
+//           .then(res =>{
+//             // dispatch(createMessage({ student: 'Student Updated' }));
+//             dispatch({
+//               type: DELETE_STUDENT,
+//               payload: parseInt(id)
+//             })
+//             //console.log(res.data);
+//             dispatch({
+//               type: ADD_STUDENT,
+//               payload: res.data
+//             })
+              
+//           }).catch(err => {/*console.log(err);*/dispatch(returnErrors(err.response.data, err.response.status))});
+// }
 
 
 export const searchStudents = (filter, value, sort, pageNum = -1) => (dispatch, getState) => {

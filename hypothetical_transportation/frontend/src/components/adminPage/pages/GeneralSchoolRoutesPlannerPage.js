@@ -156,12 +156,13 @@ function SchoolRoutesPlannerPage(props) {
   }
 
   const saveRoutePlannerMapChanges = () => {
-    Object.keys(studentChanges).forEach(student => {
-      const routeVal = studentChanges[student] == NO_ROUTE ? null : studentChanges[student]
-      props.patchStudent({
-        routes: routeVal
-      }, student);
-    });
+    props.patchStudent(studentChanges);
+    // Object.keys(studentChanges).forEach(student => {
+    //   const routeVal = studentChanges[student] == NO_ROUTE ? null : studentChanges[student]
+    //   props.patchStudent({
+    //     routes: routeVal
+    //   }, student);
+    // });
     resetStudentChanges();
   }
 
@@ -286,7 +287,7 @@ function SchoolRoutesPlannerPage(props) {
     )
   }
 
-  if(routesLoading){
+  if(routesLoading || props.loadingShit){
     return (
       <>
         <Header shouldShowOptions={true}></Header>
@@ -430,6 +431,7 @@ const mapStateToProps = (state) => ({
   studentsInSchool: state.students.students.results,
   postedRoute: state.routeplanner.postedRoute,
   stops: state.stop.stops.results,
+  loadingShit: state.routeplanner.loading
 });
 
 export default connect(mapStateToProps, {deleteStop, createStop, updateStop, createMessageDispatch, resetPosted, patchStudent, getRouteInfo, updateRoute, getSchool, createRoute, getRoutes, getStudents, resetViewedRoute})(SchoolRoutesPlannerPage)
