@@ -4,12 +4,14 @@ import PropTypes from 'prop-types';
 import "./generalTable.css";
 import { Button, Table } from 'react-bootstrap';
 import { useSearchParams } from "react-router-dom";
-import { DATE_TIME_TO_STRING } from "../../utils/drive";
+import { DATE_TIME_TO_STRING, TIME_TO_STRING } from "../../utils/drive";
 
 function GeneralTable( props ) {
   let [searchParams, setSearchParams] = useSearchParams();
 
   const getValueFromPath = (path, obj) => {
+    console.log(path);
+    console.log(obj);
     var res = path.split('.').reduce(function(currentObj, currentPathSection) {
       return currentObj && currentObj[currentPathSection];
     }, obj);
@@ -55,6 +57,10 @@ function GeneralTable( props ) {
 
                     if(columnInfo.dataPath == "start_time"){
                       cellData = DATE_TIME_TO_STRING(cellData);
+                    }
+
+                    if(columnInfo.dataPath == "eta"){
+                      cellData = TIME_TO_STRING(cellData);
                     }
                     return (
                         <td key={`${cellData}--${index}`}>

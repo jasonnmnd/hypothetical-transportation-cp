@@ -4,7 +4,7 @@ import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import axios from "axios";
-import config from "../../../utils/config";
+import config, { getColumns } from "../../../utils/config";
 import { getStudentInfo,getInRangeStop } from '../../../actions/students';
 import { Container, Card, Button, Row, Col, Form } from 'react-bootstrap';
 import GeneralAdminTableView from "../../adminPage/components/views/GeneralAdminTableView";
@@ -18,6 +18,14 @@ import isSchoolStaff from "../../../utils/userSchoolStaff";
 import { getRunByRoute } from "../../../actions/drive";
 import { runCallEveryPeriod } from "../../../utils/live_updating";
 import StudentViewMap from "../../maps/StudentViewMap";
+
+const STOP_COLS = [
+    "name",
+    "drop_off",
+    "pick_up",
+    "stop_number",
+    "eta"
+]
 
 function ParentStudentDetails(props){
     const param = useParams();
@@ -201,7 +209,7 @@ function ParentStudentDetails(props){
         <Card as={Col} style={{padding: "0px"}}>
                 <Card.Header as="h5">In Range Stops</Card.Header>
                 <Card.Body>
-                    <GeneralAdminTableView title='In Range Stops' tableType='stop' search="stop" values={props.stops} action={doNothing} totalCount={props.stopCount}/>
+                    <GeneralAdminTableView title='In Range Stops' columnNames={props.activeRun.driver == null ? null : getColumns('stop', STOP_COLS)} tableType='stop' search="stop" values={props.stops} action={doNothing} totalCount={props.stopCount}/>
                 </Card.Body>
             </Card>
         </Row>

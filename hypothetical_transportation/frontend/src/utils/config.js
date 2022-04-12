@@ -94,6 +94,14 @@ const stopColumns = {
         search_key: "",
         sortable: false,
         filterable: false
+    },
+
+    eta: {
+        colTitle: "ETA",
+        dataPath: "eta",
+        search_key: "",
+        sortable: false,
+        filterable: false
     }
 }
 
