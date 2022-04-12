@@ -14,6 +14,15 @@ import getType from '../../utils/user2';
 import { InfoWindow } from '@react-google-maps/api';
 import StudentViewMap from '../maps/StudentViewMap';
 import { runCallEveryPeriod } from '../../utils/live_updating';
+import { getColumns } from '../../utils/config';
+
+const STOP_COLS = [
+    "name",
+    "drop_off",
+    "pick_up",
+    "stop_number",
+    "eta"
+]
 
 function StudentPage(props) {
 
@@ -178,7 +187,7 @@ function StudentPage(props) {
                 <Card as={Col} style={{padding: "0px"}}>
                     <Card.Header as="h5">In Range Stops</Card.Header>
                     <Card.Body>
-                        <GeneralAdminTableView title='In Range Stops' tableType='stop' search="stop" values={props.stops} action={doNothing} totalCount={props.stopCount}/>
+                        <GeneralAdminTableView title='In Range Stops' columnNames={props.activeRun.driver == null ? null : getColumns('stop', STOP_COLS)} tableType='stop' search="stop" values={props.stops} action={doNothing} totalCount={props.stopCount}/>
                     </Card.Body>
                 </Card>
             </Row>
