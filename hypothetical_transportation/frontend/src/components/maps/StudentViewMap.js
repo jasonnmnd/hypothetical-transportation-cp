@@ -10,7 +10,6 @@ function StudentViewMap(props) {
   const [pinData, setPinData] = useState([]);
   const [extraComponents, setExtraComponents] = useState(null);
   const [extraComponentBus, setExtraComponentBus] = useState(null);
-  const [extraComponentStop, setExtraComponentStop] = useState(null);
 
 
 
@@ -30,18 +29,7 @@ function StudentViewMap(props) {
                 }
                 createInfoWindow(newPosition, getBusInfoForWindow(props.activeRun))
             }
-        } else if(extraComponentStop != null){
-            if(extraComponentStop.latitude == null || extraComponentStop.longitude == null){
-                setExtraComponentStop(null);
-                setExtraComponents(null);
-            } else {
-                const newPosition = {
-                    lat: extraComponentStop.latitude,
-                    lng: extraComponentStop.longitude
-                }
-                createInfoWindow(newPosition, getStopInfoForWindow(extraComponentStop))
-            }
-        }
+        } 
         
     }, [props.activeRun]);
 
@@ -120,7 +108,7 @@ function StudentViewMap(props) {
     }
 
     const createInfoWindow = (position, windowComponents) => {
-        setExtraComponents(<InfoWindow position={position} onCloseClick={() => {setExtraComponents(null); setExtraComponentBus(null); setExtraComponentStop(null);}}>{windowComponents}</InfoWindow>)
+        setExtraComponents(<InfoWindow position={position} onCloseClick={() => {setExtraComponents(null); setExtraComponentBus(null);}}>{windowComponents}</InfoWindow>)
     }
 
 
@@ -151,7 +139,6 @@ function StudentViewMap(props) {
     }
 
     const onStopClick = (pinStuff, position) => {
-        setExtraComponentStop(pinStuff)
         createInfoWindow(position, getStopInfoForWindow(pinStuff))
     }
 
