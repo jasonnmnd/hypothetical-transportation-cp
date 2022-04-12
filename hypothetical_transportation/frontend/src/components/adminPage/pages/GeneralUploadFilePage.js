@@ -68,6 +68,7 @@ function GeneralUploadFilePage(props) {
             setWarning(false)
             props.validate(jsonRes, () => {navigate("/upload_data")}, (err) => {
                 if(err.response.status == 413){
+                    setLoading(false);
                     alert("File(s) too large. Please split up any CSV files over ")
                 }
             })
