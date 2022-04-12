@@ -66,7 +66,11 @@ function GeneralUploadFilePage(props) {
         if(userOK && studentOK){
             setLoading(true)
             setWarning(false)
-            props.validate(jsonRes, () => {navigate("/upload_data")})
+            props.validate(jsonRes, () => {navigate("/upload_data")}, (err) => {
+                if(err.response.status == 413){
+                    alert("File(s) too large. Please split up any CSV files over ")
+                }
+            })
         }
         else{
 
