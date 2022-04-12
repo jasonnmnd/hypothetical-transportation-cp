@@ -11,14 +11,14 @@ from datetime import datetime, time
 from geopy.geocoders import GoogleV3
 from accounts.models import InvitationCode
 from .time_utils import find_time_to_stops, mark_all_passed
-from .models import School, Route, Student, Stop, TransitLog, BusRun, Bus
+from .models import School, Route, Student, Stop, BusRun, Bus
 from .serializers import StartBusRunSerializer, UserSerializer, StudentSerializer, RouteSerializer, SchoolSerializer, \
     FormatStudentSerializer, \
     FormatRouteSerializer, FormatUserSerializer, EditUserSerializer, StopSerializer, CheckInrangeSerializer, \
     LoadUserSerializer, LoadModelDataSerializer, find_school_match_candidates, school_names_match, \
-    StaffEditUserSerializer, StaffEditSchoolSerializer, StaffStudentSerializer, LoadStudentSerializer, \
-    LoadStudentSerializerStrict, ExposeUserSerializer, ExposeUserInputEmailSerializer, BusSerializer, \
-    TransitLogSerializer, BusRunSerializer, FormatBusRunSerializer, BusSerializer
+    StaffEditUserSerializer, StaffEditSchoolSerializer, StaffStudentSerializer, \
+    LoadStudentSerializerStrict, ExposeUserInputEmailSerializer, BusSerializer, \
+    BusRunSerializer, FormatBusRunSerializer, BusSerializer
 from .search import DynamicSearchFilter
 from .customfilters import StudentCountShortCircuitFilter
 from .permissions import is_admin, is_school_staff, is_driver, IsAdminOrReadOnly, IsAdmin, IsSchoolStaff, is_guardian, \
@@ -107,7 +107,10 @@ def duration_check(run: BusRun):
             # run.duration = time(delta//3600, (delta%3600)//60, delta%60)
             # run.timeout = False
             run.save(update_fields=['end_time', 'duration', 'timeout'])
-        # TODO delete bus from bus table
+
+            run.route.driver = None
+            run.route.bus_number = None
+            run.route.save(update_fields=['driver', 'bus_number'])
 
 
 def get_active_bus_for_bus_number(bus_number):
@@ -796,8 +799,8 @@ class VerifyLoadedDataAPI(generics.GenericAPIView):
                                        full_name=student.full_name, student_id=student.school_id,
                                        parent_email=student.guardian.email,
                                        school_name=student.school.name,
-                                       in_db=True) for student in matching_students if
-            student.student_user_account.all().count() == 0]
+                                       in_db=True) for student in matching_students]
+
 
     def get_val_field_response_format(self, value, error: list, duplicates: list):
         return {"value": value, "error": error, "duplicates": duplicates}
