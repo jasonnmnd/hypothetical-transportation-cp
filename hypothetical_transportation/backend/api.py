@@ -32,7 +32,7 @@ from .student_account_managers import send_invite_email
 from .custom_geocoder import CachedGoogleV3
 from .group_algo import groupStudents
 
-BUS_RUN_TIMEOUT_THRESHOLD = 3 * 60#3600
+BUS_RUN_TIMEOUT_THRESHOLD = 3 * 3600
 
 
 def get_filter_dict(model):
