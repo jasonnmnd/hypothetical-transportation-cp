@@ -1,6 +1,8 @@
 # ECE-458 LeGoons
 
 Senior design course project!
+
+Finished project demo video here: https://www.youtube.com/watch?v=b4JE0oSs-bY
  
 ## Getting Started
 
